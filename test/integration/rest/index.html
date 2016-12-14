@@ -1,0 +1,21 @@
+<!doctype html>
+<title>Enigma browser test</title>
+<script src="../../../dist/enigma.js"></script>
+<script>
+const cfg = {
+  unsecure: true,
+  host: '127.0.0.1',
+  port: 4848,
+  services: [{ id: 'capability', version: 'v1' }],
+};
+
+enigma.getService('rest', cfg).then((services) => {
+  console.log(services.capability.default.help());
+  return services.capability.default.get_v1_list().then((caps) => {
+    console.log(caps.obj);
+  });
+}).catch((err) => {
+  console.log('Error fetching REST service:', err);
+  process.exit();
+});
+</script>

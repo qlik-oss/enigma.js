@@ -1,0 +1,133 @@
+Name,Miles Per Gallon,"Accceleration, 0-60",Horsepower,Weight,Year,Price,Country,Cylinders
+Volkswagen Rabbit Dl,44.3,21.7,48,2085,80,3900,Germany,4
+Ford Fiesta,36.1,14.4,66,1800,78,1900,Germany,4
+Mazda GLC Deluxe,34.1,15.2,65,1975,79,2750,Japan,4
+Datsun B210 GX,39.4,18.6,70,2070,78,2725,Japan,4
+Honda Civic CVCC,36.1,16.4,60,1800,78,2250,Japan,4
+Oldsmobile Cutlass,23.9,22.2,90,3420,79,4050,USA,8
+Dodge Diplomat,19.4,13.2,140,3735,78,3125,USA,8
+Mercury Monarch,20.2,12.8,139,3570,78,2850,USA,8
+Pontiac Phoenix,27,18,90,2735,82,5650,USA,4
+Chevrolet Malibu,20.5,18.2,95,3155,78,3275,USA,6
+Ford Fairmont A,20.2,15.8,85,2965,78,2375,USA,6
+Ford Fairmont M,25.1,15.4,88,2720,78,2275,USA,4
+Plymouth Volare,20.5,17.2,100,3430,78,2700,USA,6
+AMC Concord,24.3,20.1,90,3003,80,3625,USA,4
+Buick Century,22.4,15.8,110,3415,81,6675,USA,6
+Mercury Zephyr,20.8,16.7,85,3070,78,2425,USA,6
+Dodge Aspen,19.1,18.7,90,3381,80,3700,USA,6
+AMC Concord D1,18.1,15.1,120,3410,78,2425,USA,6
+Chevrolet MonteCarlo,19.2,13.2,145,3425,78,3900,USA,8
+Buick RegalTurbo,17.7,13.4,165,3445,78,4400,USA,6
+Ford Futura,18.1,11.2,139,3205,78,2525,Germany,8
+Dodge Magnum XE,17.5,13.7,140,4080,78,3000,USA,8
+Chevrolet Chevette,32.1,15.5,70,2120,80,2900,USA,4
+Toyota Corona,27.5,14.2,95,2560,78,2975,Japan,4
+Datsun 510,27.2,14.7,97,2300,78,2775,Japan,4
+Dodge Omni,30.9,14.5,75,2230,78,2250,USA,4
+Toyota Celica GT,32,13.9,96,2665,82,7700,Japan,4
+Plymouth Sapporo,23.2,16.7,105,2745,78,3200,USA,4
+Oldsmobile Starfire,23.8,17.6,85,2855,78,2400,USA,4
+Datsun 200-SX,23.9,14.9,97,2405,78,2975,Japan,4
+Audi 5000,20.3,15.9,103,2830,78,4475,Germany,5
+Volvo 264GL,17,13.6,125,3140,78,5875,Sweden,6
+Saab 99GLE,21.6,15.7,115,2795,78,4200,Sweden,4
+Peugeot 604SL,16.2,15.8,133,3410,78,5450,France,6
+Volkswagen Scirocco,31.5,14.9,71,1990,78,3675,Germany,4
+Honda Accord LX,29.5,16.6,68,2135,78,3425,Japan,4
+Pontiac Lemans V6,21.5,15.4,115,3245,79,3925,USA,6
+Mercury Zephyr 6,19.8,18.2,85,2990,79,3200,USA,6
+Ford Fairmont 4,22.3,17.3,88,2890,79,2975,Germany,4
+AMC ConcordDL6,20.2,18.2,90,3265,79,3150,USA,6
+Dodge Aspen 6,20.6,16.6,110,3360,79,3325,USA,6
+Chevrolet Caprice Cl,17,15.4,130,3840,79,4650,USA,8
+Ford LTD Landau,17.6,13.4,129,3725,79,4850,Germany,8
+Mercury GrandMarqs,16.5,13.2,138,3955,79,5725,USA,8
+Dodge St. Regis,18.2,15.2,135,3830,79,4025,USA,8
+Buick Estate SW,16.9,14.9,155,4360,79,5225,USA,8
+Ford Country SW,15.5,14.3,142,4054,79,4825,USA,8
+Chevrolet Malibu SW,19.2,15,125,3605,79,4100,USA,8
+Chrysler Lebaron SW,18.5,13,150,3940,79,4725,USA,8
+Volkswagen Rabbit Cus,31.9,14,71,1925,79,3100,Germany,4
+Dodge Colt Hatch,35.7,14.4,80,1915,79,2700,USA,4
+AMC Spirit DL,27.4,15,80,2670,79,2725,USA,4
+Mercedes 300D,25.4,20.1,77,3530,79,15475,Germany,5
+Cadillac Eldorado,23,17.4,125,3900,79,9900,USA,8
+Peugeot 504,27.2,24.8,71,3190,79,4675,France,4
+Plymouth Horizon,38,14.7,63,2125,82,4350,USA,4
+Plymouth HorizonTC3,34.5,14.9,70,2150,79,2775,USA,4
+Datsun 210,37,19.4,65,1975,81,3775,Japan,4
+Fiat Strada Cus,37.3,14.7,69,2130,79,2275,Italy,4
+Buick SkylarkLim,28.4,16,90,2670,79,3525,USA,4
+Chevrolet Citation,23.5,12.6,110,2725,81,4550,USA,6
+Oldsmobile Omega,26.8,12.9,115,2700,79,3525,USA,6
+Volkswagen Rabbit,29.8,15.3,62,1845,80,7000,Germany,4
+Toyota CorollaTer,38.1,18.8,60,1968,80,3850,Japan,4
+Datsun 310,37.2,16.4,65,2019,80,3525,Japan,4
+Ford Fairmont,24,16.4,92,2865,82,5225,USA,4
+Audi 4000,34.3,15.8,78,2188,80,5900,Germany,4
+Toyota Corona LB,29.8,15.5,90,2711,80,5500,Japan,4
+Mazda 626,31.6,18.3,74,2635,81,5650,Japan,4
+Datsun 510 Hatch,37,15,92,2434,80,4050,Japan,4
+Toyota Corolla,34,16.9,70,2245,82,5425,Japan,4
+Mazda GLC,46.6,17.9,65,2110,80,3350,Japan,4
+Dodge Colt,27.9,14.4,105,2800,80,3200,USA,4
+Volkswagen Dasher Dl,43.4,23.7,48,2335,80,3825,Germany,4
+Audi 5000S Dl,36.4,19.9,67,2950,80,7975,Germany,5
+Mercedes 240D,30.4,21.8,67,3250,80,14275,Germany,4
+Honda Civic1500G,44.6,13.8,67,1850,80,3925,Japan,4
+Renault LeCar Delx,40.9,17.3,65,1835,80,2575,France,4
+Subaru DL,33.8,18,67,2145,80,3625,USA,4
+Datsun 280-ZX,32.7,11.4,132,2910,80,8150,Japan,6
+Mazda RX-7 GS,23.7,12.5,100,2420,80,7250,Japan,3
+Triumph TR7 Coupe,35,15.1,88,2500,80,5000,Germany,4
+Ford Must Cobra,23.6,14.3,96,2905,80,4250,USA,4
+Honda Accord,36,14.5,75,2205,82,6500,Japan,4
+Plymouth Reliant,30,12.9,84,2385,81,4900,USA,4
+Buick Skylark,26.6,16.4,84,2635,81,5175,USA,4
+Dodge Aries SW,25.8,14.4,92,2620,81,4950,USA,4
+Toyota Starlet,39.1,16.9,58,1755,81,4400,Japan,4
+Plymouth Champ,39,16.4,64,1875,81,3600,USA,4
+Honda Civic1300,35.1,16.1,60,1760,81,4000,Japan,4
+Subaru,32.3,17.8,67,2065,81,3950,Japan,4
+Toyota Tercel,37.7,17.3,62,2050,81,4475,Japan,4
+Mazda GLC 4,34.1,16,68,1985,81,3975,Japan,4
+Plymouth Horizon 4,34.7,14.9,63,2215,81,3450,USA,4
+Ford Escort 4W,34.4,16.2,65,2045,81,3850,Germany,4
+Ford Escort 2H,29.9,20.7,65,2380,81,4100,Germany,4
+Volkswagen Jetta,33,14.2,74,2190,81,5650,Germany,4
+Renault 18I,34.5,15.8,96,2320,81,4600,France,4
+Honda Prelude,33.7,14.4,75,2210,81,5550,Japan,4
+Datsun 200SX,32.9,14.8,100,2615,81,5825,Japan,4
+Peugeot 505S Dl,28.1,20.4,80,3230,81,8500,France,4
+Saab 900S,30.1,15.4,110,2800,81,8225,Sweden,4
+Volvo Diesel,30.7,19.6,76,3160,81,8550,Sweden,6
+Toyota Cressida,25.4,12.6,116,2900,81,9475,Japan,6
+Datsun 810 Maxima,24.2,13.8,120,2930,81,8375,Japan,6
+Oldsmobile Cutlass LS,26.6,19,105,3725,81,6875,USA,8
+Ford Granada GL,20.2,17.1,88,3060,81,5450,USA,6
+Chrysler Lebaron,26,14.5,92,2585,82,6000,USA,4
+Chevrolet Cavalier,28,19.6,88,2605,82,5275,USA,4
+Chevrolet CavalierSW,27,18.6,88,2640,82,5500,USA,4
+Chevrolet Cavalier2D,34,18,88,2395,82,5175,USA,4
+Pontiac 1200 Hatch,31,16.2,85,2575,82,5650,USA,4
+Dodge Aries SE,29,16,84,2525,82,6250,USA,4
+AMC Concord Dl,23,20.5,86,3035,82,5150,USA,4
+Volkswagen Rabbit L,36,15.3,74,1980,82,5200,Germany,4
+Mazda GLC Cust,37,18.2,68,2025,82,4900,Japan,4
+Mazda GLC Custom,31,17.6,68,1970,82,5100,Japan,4
+Mercury Lynx l,36,17.3,70,2125,82,4550,USA,4
+Nissan Stanza XE,36,14.5,88,2160,82,6350,Japan,4
+Honda Civic M,38,15,67,1965,82,4625,Japan,4
+Honda Civic A,32,15.7,67,1965,82,4875,Japan,4
+Datsun 310 GX,38,16.2,67,1995,82,5075,Japan,4
+Buick CenturyLmt,25,16.4,110,2945,82,7300,USA,6
+Oldsmobile Cutlass Dl,38,17,85,3015,82,7450,USA,6
+Ford Granada l,22,14.7,112,2835,82,6100,USA,6
+Dodge Charger2.2,36,13,84,2370,82,5475,USA,4
+Chevrolet Camaro,27,17.3,90,2950,82,8400,USA,4
+Ford MustangGL,27,15.6,86,2790,82,5975,USA,4
+Volkswagen Pickup,44,24.6,52,2130,82,5075,Germany,4
+Dodge Rampage,32,11.6,84,2295,82,5650,USA,4
+Ford Ranger,28,18.6,79,2625,82,4925,USA,4
+Chevrolet S-10,31,19.4,82,2720,82,6050,USA,4

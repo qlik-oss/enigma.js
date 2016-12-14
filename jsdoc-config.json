@@ -1,0 +1,11 @@
+{
+	"templates": {
+		"default": {
+			"staticFiles": {
+				"include": ["./"],
+				"includePattern": ".png",
+				"exclude": ["./node_modules", "./coverage", "./git"]
+			}
+		}
+	}
+}

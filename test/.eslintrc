@@ -1,0 +1,13 @@
+{
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "globals": {
+    "chai": false,
+    "expect": false,
+    "sinon": false
+  },
+  "extends": "./../.eslintrc",
+  "rules": {}
+}

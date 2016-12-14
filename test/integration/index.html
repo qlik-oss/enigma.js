@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Enigma browser test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <pre></pre>
+    <script src="enigma.js"></script>
+    <script>
+        function lazyAuth() {
+            //Just do a request and the proxy will try to do a ntlm auth
+            return fetch("https://localhost/", { credentials: "include", mode: "no-cors" } );
+        }
+        function run() {
+            enigma.getService( "qix", {
+                listeners: {
+                    "notification:OnAuthenticationInformation": function ( data ) {
+                		if ( data.mustAuthenticate === true ) {
+                			lazyAuth().then( run );
+                		}
+                	}
+                }
+            } ).then( qix => {
+                qix.global.getDocList().then( list => {
+                    var pre = document.querySelector( "pre" );
+                    pre.innerHTML = JSON.stringify( list, null, "\t" );
+                } );
+            } );
+        }
+        run();
+    </script>
+  </body>
+</html>

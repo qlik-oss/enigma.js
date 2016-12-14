@@ -1,0 +1,26 @@
+{
+  "name": "create-app",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Create app browser example",
+  "scripts": {
+    "start": "webpack-dev-server --quiet"
+  },
+  "author": "Qlik",
+  "license": "MIT",
+  "dependencies": {
+    "enigma.js": "^1.0.0",
+    "angular": "^1.5.8",
+    "d3": "^4.2.2",
+    "ws": "^1.1.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "json-loader": "^0.5.4",
+    "raw-loader": "^0.5.1",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.1"
+  }
+}

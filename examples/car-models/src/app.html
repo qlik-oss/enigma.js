@@ -1,0 +1,15 @@
+<div class="container" ng-if="!$ctrl.connected">
+	{{$ctrl.error ? $ctrl.error : "Connecting"}}
+</div>
+<div class="container"  ng-if="$ctrl.connected">
+	<h1>Car models</h1>
+	<p>Comparison of <b>Horse power</b> across different car models.</p>
+	<div style="margin-bottom: 10px;" ng-if="$ctrl.painted">
+		<a href="#" ng-click="$ctrl.sortByModel()">Sort by model</a>
+		&nbsp;&nbsp;
+		<a href="#" ng-click="$ctrl.sortByHorsepower()">Sort by horsepower</a>
+	</div>
+	<div id="bar-chart-container">
+		<svg class="chart"></svg>
+	</div>
+</div>
