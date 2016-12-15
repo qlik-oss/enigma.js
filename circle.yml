@@ -8,8 +8,8 @@ general:
     - "jsdoc"
 
 dependencies:
-  override:
-    - npm install
+  post:
+    - npm run build
 
 test:
   post:
