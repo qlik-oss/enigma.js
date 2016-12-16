@@ -5,8 +5,8 @@
   "author": "QlikTech International AB",
   "license": "MIT",
   "scripts": {
-    "build": "webpack",
-    "build-watch": "webpack --config ./webpack.config-dev.js --watch",
+    "build": "NODE_ENV=production webpack",
+    "build-watch": "webpack --watch",
     "test": "aw-test-runner ./test/unit ./test/component --compilers js:babel-register",
     "test:watch": "aw-test-runner ./test -w --compilers js:babel-register",
     "test:unit": "aw-test-runner ./test/unit --compilers js:babel-register",
