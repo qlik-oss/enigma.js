@@ -1,5 +1,3 @@
-const PRODUCTION = process.env.NODE_ENV === 'production';
-
 const path = require('path');
 const Webpack = require('webpack');
 
@@ -49,4 +47,4 @@ function createConfig(isDebug) {
   return config;
 }
 
-module.exports = createConfig(!PRODUCTION);
+module.exports = [true, false].map(createConfig);
