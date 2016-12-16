@@ -19,7 +19,7 @@ function createConfig(isDebug) {
         test: /\.js$/,
         include: [srcDir],
         exclude: /node_modules/,
-        loader: 'babel'
+        loader: 'babel',
       }],
     },
     devtool: 'source-map',
@@ -38,14 +38,14 @@ function createConfig(isDebug) {
     config.output.filename = 'enigma.min.js';
     config.plugins.push(new Webpack.optimize.UglifyJsPlugin({
       compress: {
-        warnings: false
-      }
+        warnings: false,
+      },
     }));
 
-    config.devtool = null
+    config.devtool = null;
   }
 
   return config;
 }
 
-module.exports = createConfig(process.env.NODE_ENV === 'production')
+module.exports = createConfig(process.env.NODE_ENV === 'production');
