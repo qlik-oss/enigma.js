@@ -1,3 +1,5 @@
+const PRODUCTION = process.env.NODE_ENV === 'production'
+
 const path = require('path');
 const Webpack = require('webpack');
 
@@ -10,7 +12,7 @@ function createConfig(isDebug) {
     entry: entryPoint,
     output: {
       path: outputPath,
-      filename: 'enigma.js',
+      filename: `enigma${isDebug ? '' : '.min'}.js`,
       library: 'enigma',
       libraryTarget: 'umd',
     },
@@ -35,7 +37,6 @@ function createConfig(isDebug) {
   if (isDebug) {
     config.debug = true;
   } else {
-    config.output.filename = 'enigma.min.js';
     config.plugins.push(new Webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
@@ -48,4 +49,4 @@ function createConfig(isDebug) {
   return config;
 }
 
-module.exports = createConfig(process.env.NODE_ENV === 'production');
+module.exports = createConfig(!PRODUCTION);
