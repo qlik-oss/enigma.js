@@ -27,7 +27,7 @@
     "/dist",
     "/schemas"
   ],
-  "main": "src/index.js",
+  "main": "dist/enigma.js",
   "devDependencies": {
     "after-work.js": "^1.0.0",
     "babel-core": "^6.10.4",

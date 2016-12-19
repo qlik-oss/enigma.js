@@ -40,8 +40,6 @@ function createConfig(isDebug) {
         warnings: false,
       },
     }));
-
-    config.devtool = null;
   }
 
   return config;
