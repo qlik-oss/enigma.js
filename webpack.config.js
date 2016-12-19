@@ -10,7 +10,7 @@ function createConfig(isDebug) {
     entry: entryPoint,
     output: {
       path: outputPath,
-      filename: 'enigma.js',
+      filename: `enigma${isDebug ? '' : '.min'}.js`,
       library: 'enigma',
       libraryTarget: 'umd',
     },
@@ -20,9 +20,6 @@ function createConfig(isDebug) {
         include: [srcDir],
         exclude: /node_modules/,
         loader: 'babel',
-        query: {
-          presets: ['es2015'],
-        },
       }],
     },
     devtool: 'source-map',
@@ -38,14 +35,14 @@ function createConfig(isDebug) {
   if (isDebug) {
     config.debug = true;
   } else {
-    config.output.filename = 'enigma.min.js';
-    config.plugins.push(new Webpack.optimize.UglifyJsPlugin());
+    config.plugins.push(new Webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+      },
+    }));
   }
 
   return config;
 }
 
-module.exports = [
-  createConfig(true),
-  createConfig(false),
-];
+module.exports = [true, false].map(createConfig);
