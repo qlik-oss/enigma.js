@@ -32,26 +32,38 @@ describe('Qix', () => {
   });
 
   it('should build an url depending on config', () => {
-    expect(qix.buildUrl({})).to.equal('wss://localhost/?reloadUri=');
-    expect(qix.buildUrl({}, 'myApp1')).to.equal('wss://localhost/app/myApp1?reloadUri=');
+    expect(qix.buildUrl({})).to.equal('wss://localhost');
+    expect(qix.buildUrl({}, 'myApp1')).to.equal('wss://localhost/app/myApp1');
     expect(qix.buildUrl({
       port: 666,
-    }, 'myApp3')).to.equal('wss://localhost:666/app/myApp3?reloadUri=');
+    }, 'myApp3')).to.equal('wss://localhost:666/app/myApp3');
     expect(qix.buildUrl({
       host: 'foo.com',
-    }, 'myApp3')).to.equal('wss://foo.com/app/myApp3?reloadUri=');
+    }, 'myApp3')).to.equal('wss://foo.com/app/myApp3');
     expect(qix.buildUrl({
       unsecure: true,
       host: 'foo.com',
-    }, 'myApp3')).to.equal('ws://foo.com/app/myApp3?reloadUri=');
+    }, 'myApp3')).to.equal('ws://foo.com/app/myApp3');
     expect(qix.buildUrl({
       port: 666,
       route: 'myroute',
-    })).to.equal('wss://localhost:666/myroute?reloadUri=');
+    })).to.equal('wss://localhost:666/myroute');
+    expect(qix.buildUrl({
+      port: 666,
+      route: '/myroute',
+    })).to.equal('wss://localhost:666/myroute');
+    expect(qix.buildUrl({
+      port: 666,
+      route: 'myroute/',
+    })).to.equal('wss://localhost:666/myroute');
+    expect(qix.buildUrl({
+      port: 666,
+      route: '/my/route/',
+    })).to.equal('wss://localhost:666/my/route');
     expect(qix.buildUrl({
       port: 4848,
       prefix: '/myproxy/',
-    }, 'myApp4')).to.equal('wss://localhost:4848/myproxy/app/myApp4?reloadUri=');
+    }, 'myApp4')).to.equal('wss://localhost:4848/myproxy/app/myApp4');
     expect(qix.buildUrl({
       port: 4848,
       prefix: '/myproxy/',
@@ -67,7 +79,7 @@ describe('Qix', () => {
       port: 4848,
       prefix: '/myproxy/',
       subpath: 'dataprepservice',
-    }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp7?reloadUri=');
+    }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp7');
   });
 
   describe('getGlobal', () => {
