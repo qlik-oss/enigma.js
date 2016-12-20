@@ -4,6 +4,10 @@ import Schema from './schema';
 import RPC from './rpc';
 import KeyValueCache from '../../cache';
 
+function replaceLeadingAndTrailingSlashes(str) {
+  return str.replace(/(^[/]+)|([/]+$)/g, '');
+}
+
 /**
 * The configuration object for how to connect and retrieve end QIX APIs.
 * @typedef {Object} Configuration
@@ -82,31 +86,34 @@ export default class Qix {
     const { unsecure, host, port, prefix, subpath, route, identity, reloadURI } = sessionConfig;
     let url = '';
 
-    url += unsecure ? 'ws' : 'wss';
-    url += '://';
+    url += `${unsecure ? 'ws' : 'wss'}://`;
     url += host || 'localhost';
 
     if (port) {
       url += `:${port}`;
     }
 
-    url += prefix || '/';
+    if (prefix) {
+      url += `/${replaceLeadingAndTrailingSlashes(prefix)}`;
+    }
 
     if (subpath) {
-      url += `${subpath}/`;
+      url += `/${replaceLeadingAndTrailingSlashes(subpath)}`;
     }
 
     if (route) {
-      url += route;
+      url += `/${replaceLeadingAndTrailingSlashes(route)}`;
     } else if (appId && appId !== '') {
-      url += `app/${encodeURIComponent(appId)}`;
+      url += `/app/${encodeURIComponent(appId)}`;
     }
 
     if (identity) {
       url += `/identity/${encodeURIComponent(identity)}`;
     }
 
-    url += `?reloadUri=${reloadURI ? encodeURIComponent(reloadURI) : ''}`;
+    if (reloadURI) {
+      url += `?reloadUri=${encodeURIComponent(reloadURI)}`;
+    }
 
     return url;
   }
