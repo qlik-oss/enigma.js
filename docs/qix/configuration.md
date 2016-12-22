@@ -25,7 +25,7 @@ The `config` object has the following parameters:
 | `listeners` | Object | Yes | Key-value map of listeners that will be registered, listeners can be notifications (of the form `notification:OnSessionClosed`) or session events, read more about notifications that may be bound on https://help.qlik.com/en-US/sense-developer/Subsystems/ProxyServiceAPI/Content/ProxyServiceAPI/ProxyServiceAPI-Msgs-Proxy-Clients.htm |
 | `session` | Object | Yes | Session-specific parameters |
 | `session.host` | String | Yes | Default is `localhost` |
-| `session.port` | Number | Yes | Default is `4747` |
+| `session.port` | Number | Yes | Default is `80` or `443` depending on HTTP protocol used |
 | `session.unsecure` | Boolean | Yes | Set to `true` to use an unsecure WebSocket connection (`ws://`), default is `false` |
 | `session.prefix` | String | Yes | Absolute base path to use when connecting, used for proxy prefixes |
 | `session.route` | String | Yes | Initial route to open the WebSocket against, default is `app/engineData` |
