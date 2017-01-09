@@ -19,4 +19,4 @@ performs CRUD (create, read, update and delete) operations on apps and other ent
 
 ## Contributing
 
-Please follow the instructions in [CONTRIBUTING.md](CONTRIBUTING.md).
+Please follow the instructions in [CONTRIBUTING.md](.github/CONTRIBUTING.md).
