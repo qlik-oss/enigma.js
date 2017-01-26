@@ -340,7 +340,7 @@ app.createObject( {
 
 - `properties` Object - The property structure.
 
-Creates a session object. Session objects are temporary objects that are persisted when the session is closed.
+Creates a session object. Session objects are temporary objects that are **not** persisted when the session is closed.
 
 **Note:** You can create objects that are linked to other objects. The linking object is defined in the properties of the linked object (in `qExtendsId`). The linked object has the same properties as the linking object. The linking object cannot be a session object.
 
