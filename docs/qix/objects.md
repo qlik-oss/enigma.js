@@ -364,3 +364,10 @@ Returns the type of the object and the corresponding handle.
 - `id` String - The id of the object to delete.
 
 Removes an object from the app. If the object has any children, these are removed as well.
+
+
+### `app.destroySessionObject( id )`
+
+- `id` String - The id of the session object to delete.
+
+Removes a session object from the session.
