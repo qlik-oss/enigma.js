@@ -2,7 +2,7 @@
 const WebSocket = require('ws');
 const Registry = require('../../dist/enigma');
 
-const schema = require('../../schemas/qix/3.1/schema.json');
+const schema = require('../../schemas/qix/3.2/schema.json');
 
 const cfg = {
   schema,

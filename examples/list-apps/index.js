@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const WebSocket = require('ws');
 const enigma = require('enigma.js');
-const qixSchema = require('./node_modules/enigma.js/schemas/qix/3.1/schema.json');
+const qixSchema = require('./node_modules/enigma.js/schemas/qix/3.2/schema.json');
 
 const certificateDir = 'C:/ProgramData/Qlik/Sense/Repository/Exported Certificates/.Local Certificates';
 

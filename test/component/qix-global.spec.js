@@ -1,5 +1,5 @@
 import Promise from 'bluebird';
-import Schema from '../../schemas/qix/3.1/schema.json';
+import Schema from '../../schemas/qix/3.2/schema.json';
 import Qix from '../../src/services/qix/index';
 import SocketMock from '../mocks/socket-mock';
 
