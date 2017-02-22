@@ -25,7 +25,7 @@ enigma.js can connect to any supported version of Qlik Sense by using the schema
 
 ```javascript
 const enigma = require('enigma.js');
-const qixSchema = require('./node_modules/enigma.js/schemas/qix/3.1/schema.json');
+const qixSchema = require('./node_modules/enigma.js/schemas/qix/3.2/schema.json');
 const config = {
   schema: qixSchema,
   session: {

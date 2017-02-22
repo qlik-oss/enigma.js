@@ -49,7 +49,7 @@ The `qix` object retrieved when calling `getService('qix', config).then((qix) =>
 This example opens the app "AppId" in a Qlik Sense Enterprise environment located on `hostname.hostdomain.com`. It requires the user to already be authenticated.
 
 ```javascript
-const schema = require('<path-to-schemas>/3.1/schema.json');
+const schema = require('<path-to-schemas>/3.2/schema.json');
 
 const config = {
   schema,
@@ -72,7 +72,7 @@ const config = {
 This example opens the same app using the `ws` library (https://github.com/websockets/ws) and it uses the server certificates.
 
 ```javascript
-const schema = require('<path-to-schemas>/3.1/schema.json');
+const schema = require('<path-to-schemas>/3.2/schema.json');
 const certificateDir = 'C:/ProgramData/Qlik/Sense/Repository/Exported Certificates/.Local Certificates';
 const config = {
   schema: schema,

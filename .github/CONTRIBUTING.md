@@ -118,7 +118,7 @@ _WARNING: Squashing or reverting commits and force-pushing thereafter may remove
 
 There are currently no conventions on how to format commit messages. We'd like you to follow some rules on the content however:
 
-- Use the present form, e.g. _Add schema file for Qlik Sense 3.1_
+- Use the present form, e.g. _Add schema file for Qlik Sense 3.x_
 - Be descriptive and avoid messages like _Minor fix_.
 - If the change is breaking an API, add a _[breaking]_ tag in the message.
 

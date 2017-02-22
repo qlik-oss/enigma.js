@@ -4,7 +4,7 @@
 import angular from 'angular';
 import enigma from 'enigma.js';
 
-import qixSchema from 'json!../node_modules/enigma.js/schemas/qix/3.1/schema.json';
+import qixSchema from 'json!../node_modules/enigma.js/schemas/qix/3.2/schema.json';
 import template from 'raw!./app.html';
 import csv from 'raw!../data.csv';
 import paintBarchart from './chart';
