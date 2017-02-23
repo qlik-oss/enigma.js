@@ -65,6 +65,13 @@ Linting files:
 $ npm run lint
 ```
 
+If you have issues with line-endings, make sure your git
+repository is set to LF (unix line-endings):
+
+```sh
+$ git config core.autocrlf false
+```
+
 ## <a name="git"></a> Git Guidelines
 
 Generally, development should be done directly towards the `master` branch.
