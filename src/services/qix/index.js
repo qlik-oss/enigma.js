@@ -34,6 +34,7 @@ function replaceLeadingAndTrailingSlashes(str) {
 * @property {String} [route=""] Used to instruct Proxy to route to the correct receiver.
 * @property {String} [identity=""] Identity to use.
 * @property {String} [reloadURI=""] The reloadURI.
+* @property {String} [qlikTicket=""] Used to authenticate with a ticket issued by the QPS.
 * @property {String} [disableCache=false] Set to true if you want a new Session.
 */
 
@@ -83,8 +84,10 @@ export default class Qix {
   * @returns {String} Returns the URL.
   */
   buildUrl(sessionConfig, appId) {
-    const { unsecure, host, port, prefix, subpath, route, identity, reloadURI } = sessionConfig;
+    const { unsecure, host, port, prefix, subpath,
+            route, identity, reloadURI, ticket } = sessionConfig;
     let url = '';
+    let urlParams;
 
     url += `${unsecure ? 'ws' : 'wss'}://`;
     url += host || 'localhost';
@@ -111,9 +114,21 @@ export default class Qix {
       url += `/identity/${encodeURIComponent(identity)}`;
     }
 
+    urlParams = [];
+
     if (reloadURI) {
-      url += `?reloadUri=${encodeURIComponent(reloadURI)}`;
+      urlParams.push(`reloadUri=${encodeURIComponent(reloadURI)}`);
     }
+
+    if (ticket) {
+      urlParams.push(`qlikTicket=${encodeURIComponent(ticket)}`);
+    }
+
+    if (urlParams.length > 0) {
+      url += `?${urlParams.join('&')}`;
+    }
+
+    urlParams = null;
 
     return url;
   }
