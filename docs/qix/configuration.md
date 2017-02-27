@@ -29,7 +29,7 @@ The `config` object has the following parameters:
 | `session.unsecure` | Boolean | Yes | Set to `true` to use an unsecure WebSocket connection (`ws://`), default is `false` |
 | `session.prefix` | String | Yes | Absolute base path to use when connecting, used for proxy prefixes |
 | `session.route` | String | Yes | Initial route to open the WebSocket against, default is `app/engineData` |
-| `session.reloadURI` | String | Yes | URI which the browser can use to refresh the page after the WebSocket connection has been established |
+| `session.urlParams` | Object | Yes | Additional parameters to be added to WebSocket Url |
 | `session.subpath` | String | Yes | Subpath to use, used to connect to dataprepservice in a server environment |
 | `session.identity` | String | Yes | Identity (session ID) to use |
 | `session.disableCache` | String | Yes | Disable caching of sessions, set to `true` to create a new session every time |

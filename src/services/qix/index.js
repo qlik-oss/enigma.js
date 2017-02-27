@@ -33,8 +33,7 @@ function replaceLeadingAndTrailingSlashes(str) {
 * @property {String} [subpath=""] The subpath.
 * @property {String} [route=""] Used to instruct Proxy to route to the correct receiver.
 * @property {String} [identity=""] Identity to use.
-* @property {String} [reloadURI=""] The reloadURI.
-* @property {String} [qlikTicket=""] Used to authenticate with a ticket issued by the QPS.
+* @property {Object} [urlParams={}] Used to add parameters to the WebSocket URL.
 * @property {String} [disableCache=false] Set to true if you want a new Session.
 */
 
@@ -84,10 +83,8 @@ export default class Qix {
   * @returns {String} Returns the URL.
   */
   buildUrl(sessionConfig, appId) {
-    const { unsecure, host, port, prefix, subpath,
-            route, identity, reloadURI, ticket } = sessionConfig;
+    const { unsecure, host, port, prefix, subpath, route, identity, urlParams } = sessionConfig;
     let url = '';
-    let urlParams;
 
     url += `${unsecure ? 'ws' : 'wss'}://`;
     url += host || 'localhost';
@@ -114,21 +111,17 @@ export default class Qix {
       url += `/identity/${encodeURIComponent(identity)}`;
     }
 
-    urlParams = [];
+    let urlParamKeys;
 
-    if (reloadURI) {
-      urlParams.push(`reloadUri=${encodeURIComponent(reloadURI)}`);
+    if (urlParams) {
+      urlParamKeys = Object.keys(urlParams);
+      url += '?';
+      for (let i = 0; i < urlParamKeys.length; i += 1) {
+        url += `${urlParamKeys[i]}=${encodeURIComponent(urlParams[urlParamKeys[i]])}`;
+      }
     }
 
-    if (ticket) {
-      urlParams.push(`qlikTicket=${encodeURIComponent(ticket)}`);
-    }
-
-    if (urlParams.length > 0) {
-      url += `?${urlParams.join('&')}`;
-    }
-
-    urlParams = null;
+    urlParamKeys = null;
 
     return url;
   }

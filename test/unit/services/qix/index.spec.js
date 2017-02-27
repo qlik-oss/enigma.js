@@ -67,12 +67,16 @@ describe('Qix', () => {
     expect(qix.buildUrl({
       port: 4848,
       prefix: '/myproxy/',
-      reloadURI: 'http://qlik.com',
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+      },
     }, 'myApp5')).to.equal('wss://localhost:4848/myproxy/app/myApp5?reloadUri=http%3A%2F%2Fqlik.com');
     expect(qix.buildUrl({
       port: 4848,
       prefix: '/myproxy/',
-      reloadURI: 'http://qlik.com',
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+      },
       identity: 'migration-service',
     }, 'myApp6')).to.equal('wss://localhost:4848/myproxy/app/myApp6/identity/migration-service?reloadUri=http%3A%2F%2Fqlik.com');
     expect(qix.buildUrl({
@@ -281,13 +285,13 @@ describe('Qix', () => {
         session: {
           host: 'localhost',
           route: 'app/engineData',
-          reloadURI: undefined,
+          urlParams: undefined,
         },
         mixins: [],
       });
     });
 
-    it('should use custom parameters', () => {
+    it('should use custom url parameters (reloadUri)', () => {
       const createSocket = sinon.stub();
       config.createSocket = createSocket;
       config.Promise = Promise;
@@ -295,7 +299,9 @@ describe('Qix', () => {
       config.session = {
         host: 'xyz.com',
         port: 5959,
-        reloadURI: 'xyz',
+        urlParams: {
+          reloadUri: 'xyz',
+        },
       };
       qix.connect(config);
       expect(qix.getSession).to.be.calledWithMatch({
@@ -305,7 +311,37 @@ describe('Qix', () => {
         session: {
           host: 'xyz.com',
           port: 5959,
-          reloadURI: 'xyz',
+          urlParams: {
+            reloadUri: 'xyz',
+          },
+          route: undefined,
+        },
+      });
+    });
+
+    it('should use custom url parameters (qlikTicket)', () => {
+      const createSocket = sinon.stub();
+      config.createSocket = createSocket;
+      config.Promise = Promise;
+      config.appId = 'MyApp';
+      config.session = {
+        host: 'xyz.com',
+        port: 5959,
+        urlParams: {
+          qlikTicket: 'xyzabc123789',
+        },
+      };
+      qix.connect(config);
+      expect(qix.getSession).to.be.calledWithMatch({
+        Promise,
+        createSocket,
+        appId: 'MyApp',
+        session: {
+          host: 'xyz.com',
+          port: 5959,
+          urlParams: {
+            qlikTicket: 'xyzabc123789',
+          },
           route: undefined,
         },
       });
