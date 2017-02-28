@@ -33,6 +33,7 @@ function replaceLeadingAndTrailingSlashes(str) {
 * @property {String} [subpath=""] The subpath.
 * @property {String} [route=""] Used to instruct Proxy to route to the correct receiver.
 * @property {String} [identity=""] Identity to use.
+* @property {String} [reloadURI=""] The reloadURI.
 * @property {Object} [urlParams={}] Used to add parameters to the WebSocket URL.
 * @property {String} [disableCache=false] Set to true if you want a new Session.
 */
@@ -83,7 +84,8 @@ export default class Qix {
   * @returns {String} Returns the URL.
   */
   buildUrl(sessionConfig, appId) {
-    const { unsecure, host, port, prefix, subpath, route, identity, urlParams } = sessionConfig;
+    const { unsecure, host, port, prefix, subpath, route, identity,
+      reloadURI, urlParams } = sessionConfig;
     let url = '';
 
     url += `${unsecure ? 'ws' : 'wss'}://`;
@@ -113,9 +115,15 @@ export default class Qix {
 
     let urlParamKeys;
 
+    if (reloadURI) {
+      url += `?reloadUri=${encodeURIComponent(reloadURI)}`;
+    }
+
     if (urlParams) {
       urlParamKeys = Object.keys(urlParams);
-      url += '?';
+      if (url.indexOf('?') === -1) {
+        url += '?';
+      }
       for (let i = 0; i < urlParamKeys.length; i += 1) {
         url += `${urlParamKeys[i]}=${encodeURIComponent(urlParams[urlParamKeys[i]])}`;
       }

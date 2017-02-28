@@ -291,6 +291,30 @@ describe('Qix', () => {
       });
     });
 
+    it('should accept a reloadUri parameter', () => {
+      const createSocket = sinon.stub();
+      config.createSocket = createSocket;
+      config.Promise = Promise;
+      config.appId = 'MyApp';
+      config.session = {
+        host: 'xyz.com',
+        port: 5959,
+        reloadURI: 'xyz',
+      };
+      qix.connect(config);
+      expect(qix.getSession).to.be.calledWithMatch({
+        Promise,
+        createSocket,
+        appId: 'MyApp',
+        session: {
+          host: 'xyz.com',
+          port: 5959,
+          reloadURI: 'xyz',
+          route: undefined,
+        },
+      });
+    });
+
     it('should use custom url parameters (reloadUri)', () => {
       const createSocket = sinon.stub();
       config.createSocket = createSocket;
