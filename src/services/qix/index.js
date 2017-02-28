@@ -34,6 +34,7 @@ function replaceLeadingAndTrailingSlashes(str) {
 * @property {String} [route=""] Used to instruct Proxy to route to the correct receiver.
 * @property {String} [identity=""] Identity to use.
 * @property {String} [reloadURI=""] The reloadURI.
+*                             DEPRECATED owing to the urlParams property.
 * @property {Object} [urlParams={}] Used to add parameters to the WebSocket URL.
 * @property {String} [disableCache=false] Set to true if you want a new Session.
 */
