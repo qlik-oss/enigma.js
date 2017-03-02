@@ -78,12 +78,18 @@ export default class Qix {
 
   /**
   * Function used to build an URL.
-  * @param {SessionConfiguration} sessionConfig - The session configuration object.
+  * @param {SessionConfiguration} sessionConfigOrUrl - The session configuration object or the url.
   * @param {String} [appId] The optional app id.
   * @returns {String} Returns the URL.
   */
-  buildUrl(sessionConfig, appId) {
-    const { unsecure, host, port, prefix, subpath, route, identity, reloadURI } = sessionConfig;
+  buildUrl(sessionConfigOrUrl, appId) {
+    if (typeof sessionConfigOrUrl === 'string') {
+      return sessionConfigOrUrl;
+    }
+
+    const {
+      unsecure, host, port, prefix, subpath, route, identity, reloadURI,
+    } = sessionConfigOrUrl;
     let url = '';
 
     url += `${unsecure ? 'ws' : 'wss'}://`;

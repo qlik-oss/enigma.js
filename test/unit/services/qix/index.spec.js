@@ -80,6 +80,11 @@ describe('Qix', () => {
       prefix: '/myproxy/',
       subpath: 'dataprepservice',
     }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp7');
+
+    expect(qix.buildUrl('')).to.equal('');
+    expect(qix.buildUrl(
+      'wss://localhost:4848/myproxy/app/myApp6/identity/migration-service?reloadUri=http%3A%2F%2Fqlik.com'
+    )).to.equal('wss://localhost:4848/myproxy/app/myApp6/identity/migration-service?reloadUri=http%3A%2F%2Fqlik.com');
   });
 
   describe('getGlobal', () => {
