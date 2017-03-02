@@ -30,6 +30,12 @@ describe('Rest', () => {
       expect(() => {
         Rest.validateRestOptions(restOptions);
       }).to.not.throw();
+
+      expect(() => {
+        Rest.validateRestOptions({
+          rootUrl: 'http://localhost:60000/custom/api',
+        });
+      }).to.not.throw();
     });
 
     it('should throw errors when service id is missing', () => {
@@ -96,6 +102,14 @@ describe('Rest', () => {
       restOptions.unsecure = false;
       const generatedUrl = Rest.generateRootUrl(restOptions);
       expect(generatedUrl.indexOf('https://') > -1).to.equal(true);
+    });
+
+    it('should support provding a root url', () => {
+      const testedRootUrl = 'http://localhost:60000/custom/api';
+      const generatedUrl = Rest.generateRootUrl({
+        rootUrl: testedRootUrl,
+      });
+      expect(generatedUrl).to.equal(testedRootUrl);
     });
   });
 

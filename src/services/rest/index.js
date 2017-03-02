@@ -6,6 +6,7 @@ import HttpClient from './http-client';
 *
 * @typedef RestOptions
 * @prop {Object} Promise The ES6-compatible Promise-implementation to use.
+* @prop {String} rootUrl The full root url to connect against.
 * @prop {String} host The host to connect against.
 * @prop {String} [port] The port to connect against, defaults to 80 for HTTP, 443 for HTTPS.
 * @prop {Object} [headers] Additional headers to inject for each request.
@@ -57,8 +58,12 @@ export default class Rest {
       throw new Error('Your environment has no Promise implementation. You must provide a Promise implementation in the config.');
     }
 
-    if (!restOptions.host) {
+    if (!restOptions.host && !restOptions.rootUrl) {
       throw new Error('You must provide a host in the config');
+    }
+
+    if (restOptions.host && restOptions.rootUrl) {
+      throw new Error('You must either provide a host or a rootUrl in the config');
     }
 
     if (restOptions.services) {
@@ -100,6 +105,9 @@ export default class Rest {
   }
 
   static generateRootUrl(restOptions) {
+    if (restOptions.rootUrl) {
+      return restOptions.rootUrl;
+    }
     let url = `${restOptions.unsecure ? 'http' : 'https'}://${restOptions.host}`;
 
     if (restOptions.port) {
