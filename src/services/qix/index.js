@@ -117,19 +117,22 @@ export default class Qix {
     let urlParamKeys;
 
     if (reloadURI) {
-      url += `?reloadUri=${encodeURIComponent(reloadURI)}`;
+      if (!urlParams || !urlParams.reloadUri) {
+        url += `?reloadUri=${encodeURIComponent(reloadURI)}`;
+      }
     }
+
+    let queryString = [];
 
     if (urlParams) {
       urlParamKeys = Object.keys(urlParams);
-      if (url.indexOf('?') === -1) {
-        url += '?';
-      }
       for (let i = 0; i < urlParamKeys.length; i += 1) {
-        url += `${urlParamKeys[i]}=${encodeURIComponent(urlParams[urlParamKeys[i]])}`;
+        queryString.push(`${encodeURIComponent(urlParamKeys[i])}=${encodeURIComponent(urlParams[urlParamKeys[i]])}`);
       }
+      url += `?${queryString.join('&')}`;
     }
 
+    queryString = null;
     urlParamKeys = null;
 
     return url;

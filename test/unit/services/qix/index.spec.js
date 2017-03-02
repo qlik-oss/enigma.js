@@ -84,6 +84,27 @@ describe('Qix', () => {
       prefix: '/myproxy/',
       subpath: 'dataprepservice',
     }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp7');
+    expect(qix.buildUrl({
+      port: 4848,
+      urlParams: {
+        qlikTicket: 'abcdefg123456',
+      },
+    }, 'myApp8')).to.equal('wss://localhost:4848/app/myApp8?qlikTicket=abcdefg123456');
+    expect(qix.buildUrl({
+      port: 4848,
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+        qlikTicket: 'abcdefg123456',
+      },
+    }, 'myApp9')).to.equal('wss://localhost:4848/app/myApp9?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
+    expect(qix.buildUrl({
+      port: 4848,
+      reloadUri: 'http://community.qlik.com',
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+        qlikTicket: 'abcdefg123456',
+      },
+    }, 'myApp10')).to.equal('wss://localhost:4848/app/myApp10?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
   });
 
   describe('getGlobal', () => {
