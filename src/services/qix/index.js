@@ -1,3 +1,4 @@
+import QueryString from 'querystring';
 import Patch from '../../json-patch';
 import Session from './session';
 import Schema from './schema';
@@ -114,26 +115,15 @@ export default class Qix {
       url += `/identity/${encodeURIComponent(identity)}`;
     }
 
-    let urlParamKeys;
-
     if (reloadURI) {
       if (!urlParams || !urlParams.reloadUri) {
         url += `?reloadUri=${encodeURIComponent(reloadURI)}`;
       }
     }
 
-    let queryString = [];
-
     if (urlParams) {
-      urlParamKeys = Object.keys(urlParams);
-      for (let i = 0; i < urlParamKeys.length; i += 1) {
-        queryString.push(`${encodeURIComponent(urlParamKeys[i])}=${encodeURIComponent(urlParams[urlParamKeys[i]])}`);
-      }
-      url += `?${queryString.join('&')}`;
+      url += `?${QueryString.stringify(urlParams)}`;
     }
-
-    queryString = null;
-    urlParamKeys = null;
 
     return url;
   }
