@@ -72,14 +72,44 @@ describe('Qix', () => {
     expect(qix.buildUrl({
       port: 4848,
       prefix: '/myproxy/',
-      reloadURI: 'http://qlik.com',
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+      },
+    }, 'myApp6')).to.equal('wss://localhost:4848/myproxy/app/myApp6?reloadUri=http%3A%2F%2Fqlik.com');
+    expect(qix.buildUrl({
+      port: 4848,
+      prefix: '/myproxy/',
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+      },
       identity: 'migration-service',
-    }, 'myApp6')).to.equal('wss://localhost:4848/myproxy/app/myApp6/identity/migration-service?reloadUri=http%3A%2F%2Fqlik.com');
+    }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/app/myApp7/identity/migration-service?reloadUri=http%3A%2F%2Fqlik.com');
     expect(qix.buildUrl({
       port: 4848,
       prefix: '/myproxy/',
       subpath: 'dataprepservice',
-    }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp7');
+    }, 'myApp8')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp8');
+    expect(qix.buildUrl({
+      port: 4848,
+      urlParams: {
+        qlikTicket: 'abcdefg123456',
+      },
+    }, 'myApp9')).to.equal('wss://localhost:4848/app/myApp9?qlikTicket=abcdefg123456');
+    expect(qix.buildUrl({
+      port: 4848,
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+        qlikTicket: 'abcdefg123456',
+      },
+    }, 'myApp10')).to.equal('wss://localhost:4848/app/myApp10?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
+    expect(qix.buildUrl({
+      port: 4848,
+      reloadURI: 'http://community.qlik.com',
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+        qlikTicket: 'abcdefg123456',
+      },
+    }, 'myApp11')).to.equal('wss://localhost:4848/app/myApp11?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
   });
 
   describe('getGlobal', () => {
@@ -281,13 +311,13 @@ describe('Qix', () => {
         session: {
           host: 'localhost',
           route: 'app/engineData',
-          reloadURI: undefined,
+          urlParams: undefined,
         },
         mixins: [],
       });
     });
 
-    it('should use custom parameters', () => {
+    it('should accept a reloadUri parameter', () => {
       const createSocket = sinon.stub();
       config.createSocket = createSocket;
       config.Promise = Promise;
@@ -306,6 +336,62 @@ describe('Qix', () => {
           host: 'xyz.com',
           port: 5959,
           reloadURI: 'xyz',
+          route: undefined,
+        },
+      });
+    });
+
+    it('should use custom url parameters (reloadUri)', () => {
+      const createSocket = sinon.stub();
+      config.createSocket = createSocket;
+      config.Promise = Promise;
+      config.appId = 'MyApp';
+      config.session = {
+        host: 'xyz.com',
+        port: 5959,
+        urlParams: {
+          reloadUri: 'xyz',
+        },
+      };
+      qix.connect(config);
+      expect(qix.getSession).to.be.calledWithMatch({
+        Promise,
+        createSocket,
+        appId: 'MyApp',
+        session: {
+          host: 'xyz.com',
+          port: 5959,
+          urlParams: {
+            reloadUri: 'xyz',
+          },
+          route: undefined,
+        },
+      });
+    });
+
+    it('should use custom url parameters (qlikTicket)', () => {
+      const createSocket = sinon.stub();
+      config.createSocket = createSocket;
+      config.Promise = Promise;
+      config.appId = 'MyApp';
+      config.session = {
+        host: 'xyz.com',
+        port: 5959,
+        urlParams: {
+          qlikTicket: 'xyzabc123789',
+        },
+      };
+      qix.connect(config);
+      expect(qix.getSession).to.be.calledWithMatch({
+        Promise,
+        createSocket,
+        appId: 'MyApp',
+        session: {
+          host: 'xyz.com',
+          port: 5959,
+          urlParams: {
+            qlikTicket: 'xyzabc123789',
+          },
           route: undefined,
         },
       });

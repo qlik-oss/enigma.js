@@ -37,7 +37,9 @@ angular.module('app', []).component('app', {
         session: {
           host: HOST,
           route: 'app/engineData',
-          reloadURI: `https://${HOST}/content/Default/redirect.html`,
+          urlParams: {
+            reloadURI: `https://${HOST}/content/Default/redirect.html`,
+          },
         },
         listeners: {
           'notification:OnAuthenticationInformation': (authInfo) => {
