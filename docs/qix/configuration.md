@@ -41,7 +41,7 @@ The `config` object has the following parameters:
 The `qix` object retrieved when calling `getService('qix', config).then((qix) => {})` has the following properties:
 
 * `qix.global` Object - The global instance
-* `qix.app` Object (optional) - The opened app instance if `config.session.appId` was specified.
+* `qix.app` Object (optional) - The opened app instance if `config.appId` was specified.
 
 
 ## Example using the browser
