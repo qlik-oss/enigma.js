@@ -71,10 +71,10 @@ describe('Rest', () => {
     });
 
     it('should convert unsecure parameter to secure if the secure parameter is not set', () => {
-      restOptions.unsecure = false;
+      restOptions.unsecure = true;
       restOptions.secure = undefined;
       Rest.validateRestOptions(restOptions);
-      expect(restOptions.secure).to.equal(true);
+      expect(restOptions.secure).to.equal(false);
     });
   });
 

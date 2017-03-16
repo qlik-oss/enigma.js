@@ -425,6 +425,7 @@ describe('Qix', () => {
       expect(registerMixin).to.have.been.calledWith(bar);
     });
   });
+
   describe('configureDefaults', () => {
     let config;
 

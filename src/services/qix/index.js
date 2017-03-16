@@ -250,8 +250,10 @@ export default class Qix {
     if (!config.Promise && typeof Promise === 'undefined') {
       throw new Error('Your environment has no Promise implementation. You must provide a Promise implementation in the config.');
     }
+
     config.Promise = config.Promise || Promise;
     config.session = config.session || {};
+
     if (!config.session.host) {
       if (typeof location !== 'undefined' && typeof location.hostname === 'string') { // eslint-disable-line no-undef
         config.session.host = location.hostname; // eslint-disable-line no-undef
@@ -259,18 +261,23 @@ export default class Qix {
         config.session.host = 'localhost';
       }
     }
+
     if (typeof config.secure === 'undefined') {
       config.secure = !config.unsecure;
     }
+
     if (!config.appId && !config.session.route) {
       config.session.route = 'app/engineData';
     }
+
     if (typeof config.createSocket !== 'function' && typeof WebSocket === 'function') {
       config.createSocket = url => new WebSocket(url); // eslint-disable-line no-undef
     }
+
     if (!(config.schema instanceof Schema)) {
       config.schema = new Schema(config.Promise, config.schema);
     }
+
     config.mixins = config.mixins || [];
     config.JSONPatch = config.JSONPatch || Patch;
   }
