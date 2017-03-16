@@ -10,8 +10,8 @@ can be used with the enigma.js REST service.
 | `port` | String | Yes | The port to connect against, defaults to 80 for unsecure connections, 443 for secure connections. |
 | `headers` | Object | Yes | Key/value of additional headers to send in each request. |
 | `services` | Array | Yes | A list of service entries (see below) to retrieve APIs for. |
-| `unsecure` | Boolean | Yes | Whether to use HTTP, defaults to `false` (HTTPS). |
-| `certs` | Object | In a browser, required in Node.js when `unsecure` is `false` | The certificates to use when connecting securely. |
+| `secure` | Boolean | Yes | Whether to use HTTP, defaults to `true` (HTTPS). |
+| `certs` | Object | In a browser, required in Node.js when `secure` is `true` | The certificates to use when connecting securely. |
 | `certs.ca` | Array | No | An array of root certificates to validate certificates against. |
 | `certs.cert` | Buffer | No | The client certificate to use. |
 | `certs.key` | Buffer | No | The client key to use. |

@@ -4,10 +4,10 @@ import url from 'url';
 
 const IS_NODE = typeof window === 'undefined';
 
-function getDefaultHTTPModule(unsecure) {
+function getDefaultHTTPModule(secure) {
   /* eslint no-eval:0, global-require:0 */
   if (IS_NODE) {
-    const lib = unsecure ? 'http' : 'https';
+    const lib = secure ? 'https' : 'http';
     // avoid webpack grabbing this dependency and cause havoc:
     return eval(`require('${lib}')`);
   }
@@ -72,7 +72,7 @@ export function createRequestSettings(restOpts, reqOpts) {
     Object.assign(settings.headers, restOpts.headers);
   }
 
-  if (!restOpts.unsecure && restOpts.certs) {
+  if (restOpts.secure && restOpts.certs) {
     settings.ca = restOpts.certs.ca;
     settings.cert = restOpts.certs.cert;
     settings.key = restOpts.certs.key;
@@ -104,7 +104,7 @@ export default class HttpClient {
     this.serviceOpts = opts;
     this.restOpts = restOpts;
     /* istanbul ignore next */
-    this.httpModule = restOpts.httpModule || getDefaultHTTPModule(restOpts.unsecure);
+    this.httpModule = restOpts.httpModule || getDefaultHTTPModule(restOpts.secure);
   }
 
   /*

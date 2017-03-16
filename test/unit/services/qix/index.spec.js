@@ -41,7 +41,7 @@ describe('Qix', () => {
       host: 'foo.com',
     }, 'myApp3')).to.equal('wss://foo.com/app/myApp3');
     expect(qix.buildUrl({
-      unsecure: true,
+      secure: false,
       host: 'foo.com',
     }, 'myApp3')).to.equal('ws://foo.com/app/myApp3');
     expect(qix.buildUrl({

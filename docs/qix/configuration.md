@@ -26,7 +26,7 @@ The `config` object has the following parameters:
 | `session` | Object | Yes | Session-specific parameters |
 | `session.host` | String | Yes | Default is `localhost` |
 | `session.port` | Number | Yes | Default is `80` or `443` depending on HTTP protocol used |
-| `session.unsecure` | Boolean | Yes | Set to `true` to use an unsecure WebSocket connection (`ws://`), default is `false` |
+| `session.secure` | Boolean | Yes | Set to `false` to use an unsecure WebSocket connection (`ws://`), default is `true` |
 | `session.prefix` | String | Yes | Absolute base path to use when connecting, used for proxy prefixes |
 | `session.route` | String | Yes | Initial route to open the WebSocket against, default is `app/engineData` |
 | `session.urlParams` | Object | Yes | Additional parameters to be added to WebSocket Url |

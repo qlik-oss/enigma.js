@@ -2,7 +2,7 @@
 const Registry = require('../../dist/enigma');
 
 const cfg = {
-  unsecure: true,
+  secure: false,
   host: '127.0.0.1',
   port: 4848,
   services: [{ id: 'capability', version: 'v1' }],

@@ -15,7 +15,7 @@ describe('Rest', () => {
       port: 60000,
       services: [],
       certs: {},
-      unsecure: true,
+      secure: false,
     };
   });
 
@@ -93,7 +93,7 @@ describe('Rest', () => {
     });
 
     it('should use the correct protocol', () => {
-      restOptions.unsecure = false;
+      restOptions.secure = true;
       const generatedUrl = Rest.generateRootUrl(restOptions);
       expect(generatedUrl.indexOf('https://') > -1).to.equal(true);
     });

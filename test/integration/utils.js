@@ -24,7 +24,7 @@ export default {
         isServer,
         isInstalled,
         session: {
-          unsecure: !isServer,
+          secure: isServer,
           host,
           port: isServer ? 4747 : 4848,
         },
