@@ -27,6 +27,8 @@ function replaceLeadingAndTrailingSlashes(str) {
 * The session configuration object.
 * @typedef {Object} SessionConfiguration
 * @property {Boolean} [secure=true] Set to false if an unsecure WebSocket should be used.
+* @property {Boolean} [unsecure=false] Set to true if an unsecure WebSocket should be used.
+                              DEPRECATED owing to the secure property.
 * @property {String} [host] Host address.
 * @property {Number} [port] Port to connect to.
 * @property {String} [prefix="/"] The absolute base path to use when connecting.
