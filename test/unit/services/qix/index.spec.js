@@ -411,4 +411,20 @@ describe('Qix', () => {
       expect(registerMixin).to.have.been.calledWith(bar);
     });
   });
+
+  describe('configureDefaults', () => {
+
+    let config;
+
+    beforeEach(() => {
+      config = {};
+    });
+
+    it('should convert unsecure parameter to secure if the secure parameter is not set', () => {
+      config.unsecure = false;
+      Qix.configureDefaults(config)
+      expect(config.secure).to.equal(true);
+    });
+
+  });
 });

@@ -61,6 +61,10 @@ export default class Rest {
       throw new Error('You must provide a host in the config');
     }
 
+    if (typeof restOptions.secure === 'undefined') {
+      restOptions.secure = !restOptions.unsecure;
+    }
+
     if (restOptions.services) {
       restOptions.services.forEach((svc) => {
         if (!svc.id) {

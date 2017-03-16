@@ -69,6 +69,13 @@ describe('Rest', () => {
         Rest.validateRestOptions(restOptions);
       }).to.throw();
     });
+
+    it('should convert unsecure parameter to secure if the secure parameter is not set', () => {
+      restOptions.unsecure = false;
+      restOptions.secure = undefined;
+      Rest.validateRestOptions(restOptions)
+      expect(restOptions.secure).to.equal(true);
+    });
   });
 
   describe('generateOpenAPIConfig()', () => {

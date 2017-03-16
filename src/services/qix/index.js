@@ -90,7 +90,7 @@ export default class Qix {
       reloadURI, urlParams } = sessionConfig;
     let url = '';
 
-    url += `${secure || secure == undefined ? 'wss' : 'ws'}://`;
+    url += `${secure || secure === undefined ? 'wss' : 'ws'}://`;
     url += host || 'localhost';
 
     if (port) {
@@ -256,6 +256,9 @@ export default class Qix {
       } else {
         config.session.host = 'localhost';
       }
+    }
+    if (typeof config.secure === 'undefined') {
+      config.secure = !config.unsecure;
     }
     if (!config.appId && !config.session.route) {
       config.session.route = 'app/engineData';
