@@ -26,7 +26,9 @@ function replaceLeadingAndTrailingSlashes(str) {
 /**
 * The session configuration object.
 * @typedef {Object} SessionConfiguration
+* @property {Boolean} [secure=true] Set to false if an unsecure WebSocket should be used.
 * @property {Boolean} [unsecure=false] Set to true if an unsecure WebSocket should be used.
+                              DEPRECATED owing to the secure property.
 * @property {String} [host] Host address.
 * @property {Number} [port] Port to connect to.
 * @property {String} [prefix="/"] The absolute base path to use when connecting.
@@ -86,11 +88,11 @@ export default class Qix {
   * @returns {String} Returns the URL.
   */
   buildUrl(sessionConfig, appId) {
-    const { unsecure, host, port, prefix, subpath, route, identity,
+    const { secure, host, port, prefix, subpath, route, identity,
       reloadURI, urlParams } = sessionConfig;
     let url = '';
 
-    url += `${unsecure ? 'ws' : 'wss'}://`;
+    url += `${secure ? 'wss' : 'ws'}://`;
     url += host || 'localhost';
 
     if (port) {
@@ -248,8 +250,10 @@ export default class Qix {
     if (!config.Promise && typeof Promise === 'undefined') {
       throw new Error('Your environment has no Promise implementation. You must provide a Promise implementation in the config.');
     }
+
     config.Promise = config.Promise || Promise;
     config.session = config.session || {};
+
     if (!config.session.host) {
       if (typeof location !== 'undefined' && typeof location.hostname === 'string') { // eslint-disable-line no-undef
         config.session.host = location.hostname; // eslint-disable-line no-undef
@@ -257,15 +261,23 @@ export default class Qix {
         config.session.host = 'localhost';
       }
     }
+
+    if (typeof config.secure === 'undefined') {
+      config.secure = !config.unsecure;
+    }
+
     if (!config.appId && !config.session.route) {
       config.session.route = 'app/engineData';
     }
+
     if (typeof config.createSocket !== 'function' && typeof WebSocket === 'function') {
       config.createSocket = url => new WebSocket(url); // eslint-disable-line no-undef
     }
+
     if (!(config.schema instanceof Schema)) {
       config.schema = new Schema(config.Promise, config.schema);
     }
+
     config.mixins = config.mixins || [];
     config.JSONPatch = config.JSONPatch || Patch;
   }

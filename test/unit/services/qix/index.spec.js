@@ -32,44 +32,53 @@ describe('Qix', () => {
   });
 
   it('should build an url depending on config', () => {
-    expect(qix.buildUrl({})).to.equal('wss://localhost');
-    expect(qix.buildUrl({}, 'myApp1')).to.equal('wss://localhost/app/myApp1');
+    expect(qix.buildUrl({ secure: true })).to.equal('wss://localhost');
+    expect(qix.buildUrl({ secure: true }, 'myApp1')).to.equal('wss://localhost/app/myApp1');
     expect(qix.buildUrl({
+      secure: true,
       port: 666,
     }, 'myApp3')).to.equal('wss://localhost:666/app/myApp3');
     expect(qix.buildUrl({
+      secure: true,
       host: 'foo.com',
     }, 'myApp3')).to.equal('wss://foo.com/app/myApp3');
     expect(qix.buildUrl({
-      unsecure: true,
+      secure: false,
       host: 'foo.com',
     }, 'myApp3')).to.equal('ws://foo.com/app/myApp3');
     expect(qix.buildUrl({
+      secure: true,
       port: 666,
       route: 'myroute',
     })).to.equal('wss://localhost:666/myroute');
     expect(qix.buildUrl({
+      secure: true,
       port: 666,
       route: '/myroute',
     })).to.equal('wss://localhost:666/myroute');
     expect(qix.buildUrl({
+      secure: true,
       port: 666,
       route: 'myroute/',
     })).to.equal('wss://localhost:666/myroute');
     expect(qix.buildUrl({
+      secure: true,
       port: 666,
       route: '/my/route/',
     })).to.equal('wss://localhost:666/my/route');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       prefix: '/myproxy/',
     }, 'myApp4')).to.equal('wss://localhost:4848/myproxy/app/myApp4');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       prefix: '/myproxy/',
       reloadURI: 'http://qlik.com',
     }, 'myApp5')).to.equal('wss://localhost:4848/myproxy/app/myApp5?reloadUri=http%3A%2F%2Fqlik.com');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       prefix: '/myproxy/',
       urlParams: {
@@ -77,6 +86,7 @@ describe('Qix', () => {
       },
     }, 'myApp6')).to.equal('wss://localhost:4848/myproxy/app/myApp6?reloadUri=http%3A%2F%2Fqlik.com');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       prefix: '/myproxy/',
       urlParams: {
@@ -85,17 +95,20 @@ describe('Qix', () => {
       identity: 'migration-service',
     }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/app/myApp7/identity/migration-service?reloadUri=http%3A%2F%2Fqlik.com');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       prefix: '/myproxy/',
       subpath: 'dataprepservice',
     }, 'myApp8')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp8');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       urlParams: {
         qlikTicket: 'abcdefg123456',
       },
     }, 'myApp9')).to.equal('wss://localhost:4848/app/myApp9?qlikTicket=abcdefg123456');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       urlParams: {
         reloadUri: 'http://qlik.com',
@@ -103,6 +116,7 @@ describe('Qix', () => {
       },
     }, 'myApp10')).to.equal('wss://localhost:4848/app/myApp10?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       reloadURI: 'http://community.qlik.com',
       urlParams: {
@@ -409,6 +423,20 @@ describe('Qix', () => {
       qix.connect(config);
       expect(registerMixin).to.have.been.calledWith(foo);
       expect(registerMixin).to.have.been.calledWith(bar);
+    });
+  });
+
+  describe('configureDefaults', () => {
+    let config;
+
+    beforeEach(() => {
+      config = {};
+    });
+
+    it('should convert unsecure parameter to secure if the secure parameter is not set', () => {
+      config.unsecure = false;
+      Qix.configureDefaults(config);
+      expect(config.secure).to.equal(true);
     });
   });
 });
