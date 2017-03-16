@@ -92,7 +92,7 @@ export default class Qix {
       reloadURI, urlParams } = sessionConfig;
     let url = '';
 
-    url += `${secure || secure === undefined ? 'wss' : 'ws'}://`;
+    url += `${secure ? 'wss' : 'ws'}://`;
     url += host || 'localhost';
 
     if (port) {
