@@ -430,13 +430,27 @@ describe('Qix', () => {
     let config;
 
     beforeEach(() => {
-      config = {};
+      config = {
+        session: {},
+      };
+    });
+
+    it('should set secure by default', () => {
+      Qix.configureDefaults(config);
+      expect(config.session.secure).to.equal(true);
     });
 
     it('should convert unsecure parameter to secure if the secure parameter is not set', () => {
-      config.unsecure = false;
+      config.session.unsecure = false;
       Qix.configureDefaults(config);
-      expect(config.secure).to.equal(true);
+      expect(config.session.secure).to.equal(true);
+    });
+
+    it('should give secure precedence', () => {
+      config.session.secure = true;
+      config.session.unsecure = true;
+      Qix.configureDefaults(config);
+      expect(config.session.secure).to.equal(true);
     });
   });
 });
