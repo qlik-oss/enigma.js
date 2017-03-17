@@ -262,8 +262,8 @@ export default class Qix {
       }
     }
 
-    if (typeof config.secure === 'undefined') {
-      config.secure = !config.unsecure;
+    if (typeof config.session.secure === 'undefined') {
+      config.session.secure = !config.session.unsecure;
     }
 
     if (!config.appId && !config.session.route) {
