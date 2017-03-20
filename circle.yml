@@ -9,8 +9,9 @@ general:
     - "jsdoc"
 
 dependencies:
-  post:
-    - npm run build
+  override:
+    - yarn
+    - npm run webpack
 
 test:
   override:
