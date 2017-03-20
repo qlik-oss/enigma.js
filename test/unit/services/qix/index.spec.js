@@ -32,54 +32,98 @@ describe('Qix', () => {
   });
 
   it('should build an url depending on config', () => {
-    expect(qix.buildUrl({})).to.equal('wss://localhost');
-    expect(qix.buildUrl({}, 'myApp1')).to.equal('wss://localhost/app/myApp1');
+    expect(qix.buildUrl({ secure: true })).to.equal('wss://localhost');
+    expect(qix.buildUrl({ secure: true }, 'myApp1')).to.equal('wss://localhost/app/myApp1');
     expect(qix.buildUrl({
+      secure: true,
       port: 666,
     }, 'myApp3')).to.equal('wss://localhost:666/app/myApp3');
     expect(qix.buildUrl({
+      secure: true,
       host: 'foo.com',
     }, 'myApp3')).to.equal('wss://foo.com/app/myApp3');
     expect(qix.buildUrl({
-      unsecure: true,
+      secure: false,
       host: 'foo.com',
     }, 'myApp3')).to.equal('ws://foo.com/app/myApp3');
     expect(qix.buildUrl({
+      secure: true,
       port: 666,
       route: 'myroute',
     })).to.equal('wss://localhost:666/myroute');
     expect(qix.buildUrl({
+      secure: true,
       port: 666,
       route: '/myroute',
     })).to.equal('wss://localhost:666/myroute');
     expect(qix.buildUrl({
+      secure: true,
       port: 666,
       route: 'myroute/',
     })).to.equal('wss://localhost:666/myroute');
     expect(qix.buildUrl({
+      secure: true,
       port: 666,
       route: '/my/route/',
     })).to.equal('wss://localhost:666/my/route');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       prefix: '/myproxy/',
     }, 'myApp4')).to.equal('wss://localhost:4848/myproxy/app/myApp4');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       prefix: '/myproxy/',
       reloadURI: 'http://qlik.com',
     }, 'myApp5')).to.equal('wss://localhost:4848/myproxy/app/myApp5?reloadUri=http%3A%2F%2Fqlik.com');
     expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       prefix: '/myproxy/',
-      reloadURI: 'http://qlik.com',
-      identity: 'migration-service',
-    }, 'myApp6')).to.equal('wss://localhost:4848/myproxy/app/myApp6/identity/migration-service?reloadUri=http%3A%2F%2Fqlik.com');
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+      },
+    }, 'myApp6')).to.equal('wss://localhost:4848/myproxy/app/myApp6?reloadUri=http%3A%2F%2Fqlik.com');
     expect(qix.buildUrl({
+      secure: true,
+      port: 4848,
+      prefix: '/myproxy/',
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+      },
+      identity: 'migration-service',
+    }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/app/myApp7/identity/migration-service?reloadUri=http%3A%2F%2Fqlik.com');
+    expect(qix.buildUrl({
+      secure: true,
       port: 4848,
       prefix: '/myproxy/',
       subpath: 'dataprepservice',
-    }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp7');
+    }, 'myApp8')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp8');
+    expect(qix.buildUrl({
+      secure: true,
+      port: 4848,
+      urlParams: {
+        qlikTicket: 'abcdefg123456',
+      },
+    }, 'myApp9')).to.equal('wss://localhost:4848/app/myApp9?qlikTicket=abcdefg123456');
+    expect(qix.buildUrl({
+      secure: true,
+      port: 4848,
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+        qlikTicket: 'abcdefg123456',
+      },
+    }, 'myApp10')).to.equal('wss://localhost:4848/app/myApp10?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
+    expect(qix.buildUrl({
+      secure: true,
+      port: 4848,
+      reloadURI: 'http://community.qlik.com',
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+        qlikTicket: 'abcdefg123456',
+      },
+    }, 'myApp11')).to.equal('wss://localhost:4848/app/myApp11?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
   });
 
   describe('getGlobal', () => {
@@ -281,13 +325,13 @@ describe('Qix', () => {
         session: {
           host: 'localhost',
           route: 'app/engineData',
-          reloadURI: undefined,
+          urlParams: undefined,
         },
         mixins: [],
       });
     });
 
-    it('should use custom parameters', () => {
+    it('should accept a reloadUri parameter', () => {
       const createSocket = sinon.stub();
       config.createSocket = createSocket;
       config.Promise = Promise;
@@ -311,6 +355,62 @@ describe('Qix', () => {
       });
     });
 
+    it('should use custom url parameters (reloadUri)', () => {
+      const createSocket = sinon.stub();
+      config.createSocket = createSocket;
+      config.Promise = Promise;
+      config.appId = 'MyApp';
+      config.session = {
+        host: 'xyz.com',
+        port: 5959,
+        urlParams: {
+          reloadUri: 'xyz',
+        },
+      };
+      qix.connect(config);
+      expect(qix.getSession).to.be.calledWithMatch({
+        Promise,
+        createSocket,
+        appId: 'MyApp',
+        session: {
+          host: 'xyz.com',
+          port: 5959,
+          urlParams: {
+            reloadUri: 'xyz',
+          },
+          route: undefined,
+        },
+      });
+    });
+
+    it('should use custom url parameters (qlikTicket)', () => {
+      const createSocket = sinon.stub();
+      config.createSocket = createSocket;
+      config.Promise = Promise;
+      config.appId = 'MyApp';
+      config.session = {
+        host: 'xyz.com',
+        port: 5959,
+        urlParams: {
+          qlikTicket: 'xyzabc123789',
+        },
+      };
+      qix.connect(config);
+      expect(qix.getSession).to.be.calledWithMatch({
+        Promise,
+        createSocket,
+        appId: 'MyApp',
+        session: {
+          host: 'xyz.com',
+          port: 5959,
+          urlParams: {
+            qlikTicket: 'xyzabc123789',
+          },
+          route: undefined,
+        },
+      });
+    });
+
     it('should register mixins', () => {
       const foo = { type: 'Foo', extend: { foo() {} } };
       const bar = { type: 'Bar', extend: { bar() {} } };
@@ -323,6 +423,34 @@ describe('Qix', () => {
       qix.connect(config);
       expect(registerMixin).to.have.been.calledWith(foo);
       expect(registerMixin).to.have.been.calledWith(bar);
+    });
+  });
+
+  describe('configureDefaults', () => {
+    let config;
+
+    beforeEach(() => {
+      config = {
+        session: {},
+      };
+    });
+
+    it('should set secure by default', () => {
+      Qix.configureDefaults(config);
+      expect(config.session.secure).to.equal(true);
+    });
+
+    it('should convert unsecure parameter to secure if the secure parameter is not set', () => {
+      config.session.unsecure = false;
+      Qix.configureDefaults(config);
+      expect(config.session.secure).to.equal(true);
+    });
+
+    it('should give secure precedence', () => {
+      config.session.secure = true;
+      config.session.unsecure = true;
+      Qix.configureDefaults(config);
+      expect(config.session.secure).to.equal(true);
     });
   });
 });

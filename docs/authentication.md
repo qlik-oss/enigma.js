@@ -19,7 +19,9 @@ A simple example:
 const cfg = {
     schema: {},
     session: {
+      urlParams: {
         reloadUri: location.href
+      }
     },
     listeners: {
         "notification:OnAuthenticationInformation": ( authInfo ) => {
@@ -58,4 +60,3 @@ The X-Qlik-User header contains the unique user ID of the authenticated user. It
 The header has the following format:
 
 `"X-Qlik-User": "UserDirectory=<directory>; UserId=<userid>"`
-

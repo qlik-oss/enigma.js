@@ -1,3 +1,4 @@
+import QueryString from 'querystring';
 import Patch from '../../json-patch';
 import Session from './session';
 import Schema from './schema';
@@ -25,7 +26,9 @@ function replaceLeadingAndTrailingSlashes(str) {
 /**
 * The session configuration object.
 * @typedef {Object} SessionConfiguration
+* @property {Boolean} [secure=true] Set to false if an unsecure WebSocket should be used.
 * @property {Boolean} [unsecure=false] Set to true if an unsecure WebSocket should be used.
+                              DEPRECATED owing to the secure property.
 * @property {String} [host] Host address.
 * @property {Number} [port] Port to connect to.
 * @property {String} [prefix="/"] The absolute base path to use when connecting.
@@ -34,6 +37,8 @@ function replaceLeadingAndTrailingSlashes(str) {
 * @property {String} [route=""] Used to instruct Proxy to route to the correct receiver.
 * @property {String} [identity=""] Identity to use.
 * @property {String} [reloadURI=""] The reloadURI.
+*                             DEPRECATED owing to the urlParams property.
+* @property {Object} [urlParams={}] Used to add parameters to the WebSocket URL.
 * @property {String} [disableCache=false] Set to true if you want a new Session.
 */
 
@@ -84,10 +89,11 @@ export default class Qix {
   * @returns {String} Returns the URL.
   */
   buildUrl(sessionConfig, appId) {
-    const { unsecure, host, port, prefix, subpath, route, identity, reloadURI } = sessionConfig;
+    const { secure, host, port, prefix, subpath, route, identity,
+      reloadURI, urlParams } = sessionConfig;
     let url = '';
 
-    url += `${unsecure ? 'ws' : 'wss'}://`;
+    url += `${secure ? 'wss' : 'ws'}://`;
     url += host || 'localhost';
 
     if (port) {
@@ -113,7 +119,13 @@ export default class Qix {
     }
 
     if (reloadURI) {
-      url += `?reloadUri=${encodeURIComponent(reloadURI)}`;
+      if (!urlParams || !urlParams.reloadUri) {
+        url += `?reloadUri=${encodeURIComponent(reloadURI)}`;
+      }
+    }
+
+    if (urlParams) {
+      url += `?${QueryString.stringify(urlParams)}`;
     }
 
     return url;
@@ -240,8 +252,10 @@ export default class Qix {
     if (!config.Promise && typeof Promise === 'undefined') {
       throw new Error('Your environment has no Promise implementation. You must provide a Promise implementation in the config.');
     }
+
     config.Promise = config.Promise || Promise;
     config.session = config.session || {};
+
     if (!config.session.host) {
       if (typeof location !== 'undefined' && typeof location.hostname === 'string') { // eslint-disable-line no-undef
         config.session.host = location.hostname; // eslint-disable-line no-undef
@@ -249,15 +263,23 @@ export default class Qix {
         config.session.host = 'localhost';
       }
     }
+
+    if (typeof config.session.secure === 'undefined') {
+      config.session.secure = !config.session.unsecure;
+    }
+
     if (!config.appId && !config.session.route) {
       config.session.route = 'app/engineData';
     }
+
     if (typeof config.createSocket !== 'function' && typeof WebSocket === 'function') {
       config.createSocket = url => new WebSocket(url); // eslint-disable-line no-undef
     }
+
     if (!(config.schema instanceof Schema)) {
       config.schema = new Schema(config.Promise, config.schema);
     }
+
     config.mixins = config.mixins || [];
     config.JSONPatch = config.JSONPatch || Patch;
   }

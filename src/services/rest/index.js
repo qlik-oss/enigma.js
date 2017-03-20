@@ -11,7 +11,7 @@ import HttpClient from './http-client';
 * @prop {Object} [headers] Additional headers to inject for each request.
 * @prop {Array.RestMixin} [mixins] Mixins to use.
 * @prop {Array.<RestServiceConfig>} [services] An array of RestServiceConfig's.
-* @prop {Boolean} [unsecure] Whether to use HTTP, defaults to false.
+* @prop {Boolean} [secure] Whether to use HTTPS, defaults to true.
 * @prop {CertificateOptions} [certs] The certificates to use, required when using
 *                                    HTTPS and running in Node.
 * @prop {Object} [httpModule] HTTP module to use, should only be used for testing.
@@ -61,6 +61,10 @@ export default class Rest {
       throw new Error('You must provide a host in the config');
     }
 
+    if (typeof restOptions.secure === 'undefined') {
+      restOptions.secure = !restOptions.unsecure;
+    }
+
     if (restOptions.services) {
       restOptions.services.forEach((svc) => {
         if (!svc.id) {
@@ -83,7 +87,7 @@ export default class Rest {
     /* istanbul ignore next */
     restOptions.Promise = restOptions.Promise || Promise;
 
-    // Optional: certs, headers, mixins, unsecure
+    // Optional: certs, headers, mixins, secure
   }
 
   static generateOpenAPIConfig(serviceConfig, rootUrl) {
@@ -100,7 +104,7 @@ export default class Rest {
   }
 
   static generateRootUrl(restOptions) {
-    let url = `${restOptions.unsecure ? 'http' : 'https'}://${restOptions.host}`;
+    let url = `${restOptions.secure ? 'https' : 'http'}://${restOptions.host}`;
 
     if (restOptions.port) {
       url += `:${restOptions.port}`;

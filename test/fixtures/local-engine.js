@@ -11,7 +11,7 @@ const cfg = {
     return new WebSocket(url);
   },
   session: {
-    unsecure: true,
+    secure: false,
     port: 4848,
   },
 };

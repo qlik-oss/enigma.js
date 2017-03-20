@@ -15,7 +15,7 @@ describe('Rest', () => {
       port: 60000,
       services: [],
       certs: {},
-      unsecure: true,
+      secure: false,
     };
   });
 
@@ -69,6 +69,13 @@ describe('Rest', () => {
         Rest.validateRestOptions(restOptions);
       }).to.throw();
     });
+
+    it('should convert unsecure parameter to secure if the secure parameter is not set', () => {
+      restOptions.unsecure = true;
+      restOptions.secure = undefined;
+      Rest.validateRestOptions(restOptions);
+      expect(restOptions.secure).to.equal(false);
+    });
   });
 
   describe('generateOpenAPIConfig()', () => {
@@ -93,7 +100,7 @@ describe('Rest', () => {
     });
 
     it('should use the correct protocol', () => {
-      restOptions.unsecure = false;
+      restOptions.secure = true;
       const generatedUrl = Rest.generateRootUrl(restOptions);
       expect(generatedUrl.indexOf('https://') > -1).to.equal(true);
     });
