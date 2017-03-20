@@ -9,8 +9,11 @@ general:
     - "jsdoc"
 
 dependencies:
-  post:
-    - npm run build
+  cache_directories:
+    - ~/.cache/yarn
+  override:
+    - yarn
+    - npm run webpack
 
 test:
   override:
