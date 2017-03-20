@@ -33,6 +33,7 @@ The `config` object has the following parameters:
 | `session.subpath` | String | Yes | Subpath to use, used to connect to dataprepservice in a server environment |
 | `session.identity` | String | Yes | Identity (session ID) to use |
 | `session.disableCache` | String | Yes | Disable caching of sessions, set to `true` to create a new session every time |
+| `handleLog` | Function | Yes | Traffic log listener. |
 
 **Note:** Notifications are triggered by the Proxy and are thus only available on Qlik Sense Enterprise.
 

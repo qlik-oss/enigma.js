@@ -15,6 +15,7 @@ can be used with the enigma.js REST service.
 | `certs.ca` | Array | No | An array of root certificates to validate certificates against. |
 | `certs.cert` | Buffer | No | The client certificate to use. |
 | `certs.key` | Buffer | No | The client key to use. |
+| `handleLog` | Function | Yes | Traffic log listener. |
 
 ## Service entries
 
