@@ -46,7 +46,7 @@ export function responseHandler(opts, res, handleLog) {
       // do not set out.obj
     }
     if (handleLog) {
-      handleLog({ msg: 'Response', res: { data: res.data } });
+      handleLog({ msg: 'Received', data: { body: res.data } });
     }
     opts.on.response(res);
   });
@@ -142,8 +142,8 @@ export default class HttpClient {
 
     if (restOpts.handleLog) {
       restOpts.handleLog(hasBody ?
-           { msg: 'Request', req: settings, body: opts.body } :
-           { msg: 'Request', req: settings });
+           { msg: 'Sent', data: { request: settings, body: opts.body } } :
+           { msg: 'Sent', data: { request: settings } });
     }
     req.on('error', opts.on.error);
     /* istanbul ignore next */

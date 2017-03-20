@@ -38,18 +38,19 @@ describe('rest-logging', () => {
       // Verify that the log spy has received the request and response
       // (skip first two logs since that's the open api json being fetched)
       expect(logSpy.getCall(2).args[0]).to.containSubset({
-        msg: 'Request',
-        req: {
-          host: 'localhost',
-          port: '4848',
-          path: '/api/about/v1/components',
-          method: 'GET',
-          headers: {} } });
+        msg: 'Sent',
+        data: {
+          request: {
+            host: 'localhost',
+            port: '4848',
+            path: '/api/about/v1/components',
+            method: 'GET',
+            headers: {} } } });
       expect(logSpy.getCall(3).args[0]).to.containSubset({
-        msg: 'Response',
-        res: { } });
+        msg: 'Received',
+        data: { } });
       // Extra check to see that the data contains what we expect
-      expect(logSpy.getCall(3).args[0].res.data).to.contain('QIX Engine');
+      expect(logSpy.getCall(3).args[0].data.body).to.contain('QIX Engine');
     })
   );
 });

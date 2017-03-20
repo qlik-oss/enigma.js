@@ -25,6 +25,7 @@ const config = {
       },
     });
   },
+  handleLog: logRow => console.log(logRow),
 };
 
 console.log('Connecting to Engine');

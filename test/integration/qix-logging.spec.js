@@ -37,8 +37,8 @@ describe('qix-logging', () => {
   it('should log qix traffic', () =>
     qixGlobal.allowCreateApp().then(() => {
       expect(config.handleLog.firstCall.args[0]).to.deep.equal({
-        msg: 'Request',
-        req: {
+        msg: 'Sent',
+        data: {
           method: 'AllowCreateApp',
           handle: -1,
           params: [],
@@ -47,19 +47,12 @@ describe('qix-logging', () => {
           id: 1 } });
 
       expect(config.handleLog.secondCall.args[0]).to.deep.equal({
-        msg: 'Response',
-        res: {
+        msg: 'Received',
+        data: {
           id: 1,
           jsonrpc: '2.0',
           result: {
-            qReturn: true } },
-        meta: {
-          method: 'AllowCreateApp',
-          handle: -1,
-          params: [],
-          delta: false,
-          outKey: -1,
-          id: 1 } });
+            qReturn: true } } });
     })
   );
 });

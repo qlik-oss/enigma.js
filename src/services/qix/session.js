@@ -122,7 +122,7 @@ class Session {
     request.id = data.id;
 
     if (this.handleLog) { // Log after the request is sent to get the request id into the logs
-      this.handleLog({ msg: 'Request', req: request });
+      this.handleLog({ msg: 'Sent', data: request });
     }
 
     const promise = this.intercept(response, this.responseInterceptors, request);
@@ -246,7 +246,7 @@ class Session {
    */
   processLogInterceptor(meta, response) {
     if (this.handleLog) {
-      this.handleLog({ msg: 'Response', res: response, meta });
+      this.handleLog({ msg: 'Received', data: response });
     }
     return response;
   }
