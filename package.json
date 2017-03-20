@@ -36,6 +36,7 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-register": "^6.7.2",
     "bluebird": "^3.4.6",
+    "chai-subset": "^1.5.0",
     "concurrently": "^3.1.0",
     "empty-module": "0.0.2",
     "eslint": "^3.8.0",

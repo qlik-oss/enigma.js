@@ -31,8 +31,9 @@ export function generateXrfKey() {
  * @private
  * @param {ServiceRequestOptions} opts The options for the service request.
  * @param {Object} res The HTTP response object.
+ * @param {Function} handleLog Logging callback
  */
-export function responseHandler(opts, res) {
+export function responseHandler(opts, res, handleLog) {
   const data = [];
   // res.setEncoding('utf-8');
   res.on('data', data.push.bind(data));
@@ -43,6 +44,9 @@ export function responseHandler(opts, res) {
       res.obj = JSON.parse(response);
     } catch (ex) {
       // do not set out.obj
+    }
+    if (handleLog) {
+      handleLog({ msg: 'Response', res: { data: res.data } });
     }
     opts.on.response(res);
   });
@@ -78,7 +82,6 @@ export function createRequestSettings(restOpts, reqOpts) {
     settings.key = restOpts.certs.key;
     settings.rejectUnauthorized = true;
   }
-
   return settings;
 }
 
@@ -132,13 +135,19 @@ export default class HttpClient {
     const settings = createRequestSettings(restOpts, opts);
     const req = this.httpModule.request(settings);
 
-    if (typeof opts.body !== 'undefined') {
+    const hasBody = typeof opts.body !== 'undefined';
+    if (hasBody) {
       req.write(opts.body);
     }
 
+    if (restOpts.handleLog) {
+      restOpts.handleLog(hasBody ?
+           { msg: 'Request', req: settings, body: opts.body } :
+           { msg: 'Request', req: settings });
+    }
     req.on('error', opts.on.error);
     /* istanbul ignore next */
-    req.on('response', res => responseHandler(opts, res));
+    req.on('response', res => responseHandler(opts, res, restOpts.handleLog));
     req.end();
   }
 

@@ -58,10 +58,11 @@ export default class Qix {
   * @param {Function} Promise The promise constructor.
   * @param {Object} listeners A key-value map of listeners.
   * @param {Array} interceptors An array of interceptors.
+  * @param {Function} log handler callback
   * @returns {Object} Returns an instance of Session.
   */
-  createSession(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors) {
-    return new Session(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors);
+  createSession(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog) {
+    return new Session(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog);
   }
 
   /**
@@ -141,7 +142,8 @@ export default class Qix {
         config.JSONPatch,
         config.Promise,
         config.listeners,
-        config.responseInterceptors
+        config.responseInterceptors,
+        config.handleLog
       );
       if (!disableCache) {
         this.sessions.add(url, session);

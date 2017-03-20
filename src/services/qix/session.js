@@ -19,7 +19,8 @@ class Session {
   * @param {Array} interceptors An array of interceptors.
   * @param {Function} Promise - The promise constructor.
   */
-  constructor(rpc, delta, definition, JSONPatch, Promise, listeners = {}, interceptors = []) {
+  constructor(rpc, delta, definition, JSONPatch, Promise, listeners = {},
+              interceptors = [], handleLog) {
     Events.mixin(this);
     this.rpc = rpc;
     this.delta = delta;
@@ -27,7 +28,10 @@ class Session {
     this.JSONPatch = JSONPatch;
     this.Promise = Promise;
     this.apis = new ApiCache();
+    this.handleLog = handleLog;
     this.responseInterceptors = [{
+      onFulfilled: this.processLogInterceptor,
+    }, {
       onFulfilled: this.processErrorInterceptor,
     }, {
       onFulfilled: this.processDeltaInterceptor,
@@ -116,6 +120,10 @@ class Session {
     };
     const response = this.rpc.send(data);
     request.id = data.id;
+
+    if (this.handleLog) { // Log after the request is sent to get the request id into the logs
+      this.handleLog({ msg: 'Request', req: request });
+    }
 
     const promise = this.intercept(response, this.responseInterceptors, request);
     Session.addToPromiseChain(promise, 'requestId', request.id);
@@ -229,6 +237,20 @@ class Session {
       , promise
     );
   }
+
+  /**
+   * Log interceptor.
+   * @param {Object} meta - The meta info about the request.
+   * @param response - The response.
+   * @returns {Object} - Returns the defined error for an error, else the response.
+   */
+  processLogInterceptor(meta, response) {
+    if (this.handleLog) {
+      this.handleLog({ msg: 'Response', res: response, meta });
+    }
+    return response;
+  }
+
 
   /**
   * Process error interceptor.
