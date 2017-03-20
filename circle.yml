@@ -9,8 +9,6 @@ general:
     - "jsdoc"
 
 dependencies:
-  cache_directories:
-    - ~/.cache/yarn
   override:
     - yarn
     - npm run webpack
