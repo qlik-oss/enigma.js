@@ -36,7 +36,7 @@ describe('qix-logging', () => {
 
   it('should log qix traffic', () =>
     qixGlobal.allowCreateApp().then(() => {
-      expect(config.handleLog.firstCall.args[0]).to.deep.equal({
+      expect(config.handleLog.firstCall.args[0]).to.containSubset({
         msg: 'Sent',
         data: {
           method: 'AllowCreateApp',
@@ -46,7 +46,7 @@ describe('qix-logging', () => {
           outKey: -1,
           id: 1 } });
 
-      expect(config.handleLog.secondCall.args[0]).to.deep.equal({
+      expect(config.handleLog.secondCall.args[0]).to.containSubset({
         msg: 'Received',
         data: {
           id: 1,
