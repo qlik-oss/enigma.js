@@ -4,6 +4,7 @@ import ApiCache from './api-cache';
 const RETURN_KEY = 'qReturn';
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
+let connectionIdCounter = 0;
 /**
 * Session - Handles a session against an endpoint
 */
@@ -29,6 +30,7 @@ class Session {
     this.Promise = Promise;
     this.apis = new ApiCache();
     this.handleLog = handleLog;
+    this.connectionId = connectionIdCounter += 1;
     this.responseInterceptors = [{
       onFulfilled: this.processLogInterceptor,
     }, {
@@ -122,7 +124,7 @@ class Session {
     request.id = data.id;
 
     if (this.handleLog) { // Log after the request is sent to get the request id into the logs
-      this.handleLog({ msg: 'Sent', data: request });
+      this.handleLog({ msg: 'Sent', connection: this.connectionId, data: request });
     }
 
     const promise = this.intercept(response, this.responseInterceptors, request);
@@ -246,7 +248,7 @@ class Session {
    */
   processLogInterceptor(meta, response) {
     if (this.handleLog) {
-      this.handleLog({ msg: 'Received', data: response });
+      this.handleLog({ msg: 'Received', connection: this.connectionId, data: response });
     }
     return response;
   }
