@@ -12,7 +12,7 @@ describe('rest-logging', () => {
     logSpy = sandbox.spy();
 
     const cfg = {
-      unsecure: true,
+      secure: false,
       host: 'localhost',
       port: 4848,
       headers: { 'x-qlik-capabilities': 'about' },
