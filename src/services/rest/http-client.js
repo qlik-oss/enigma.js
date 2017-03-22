@@ -141,9 +141,7 @@ export default class HttpClient {
     }
 
     if (restOpts.handleLog) {
-      restOpts.handleLog(hasBody ?
-           { msg: 'Sent', data: { request: settings, body: opts.body } } :
-           { msg: 'Sent', data: { request: settings } });
+      restOpts.handleLog({ msg: 'Sent', data: { request: settings, body: opts.body || null } });
     }
     req.on('error', opts.on.error);
     /* istanbul ignore next */
