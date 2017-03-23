@@ -1,5 +1,5 @@
 /* eslint-env browser*/
-/* eslint import/no-unresolved:0, import/extensions:0 */
+/* eslint import/no-unresolved:0, import/extensions:0, no-console:0 */
 
 import angular from 'angular';
 import enigma from 'enigma.js';
@@ -48,6 +48,7 @@ angular.module('app', []).component('app', {
             }
           },
         },
+        handleLog: logRow => console.log(logRow),
       };
       enigma.getService('qix', config).then((qix) => {
         this.connected = true;

@@ -147,7 +147,7 @@ export default class Rest {
   *                             API has been generated.
   */
   connect(opts) {
-    const restOptions = JSON.parse(JSON.stringify(opts));
+    const restOptions = Object.assign({}, opts);
     Rest.validateRestOptions(restOptions);
     const services = restOptions.services;
     const rootUrl = Rest.generateRootUrl(restOptions);

@@ -4,6 +4,7 @@ import ApiCache from './api-cache';
 const RETURN_KEY = 'qReturn';
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
+let connectionIdCounter = 0;
 /**
 * Session - Handles a session against an endpoint
 */
@@ -19,7 +20,8 @@ class Session {
   * @param {Array} interceptors An array of interceptors.
   * @param {Function} Promise - The promise constructor.
   */
-  constructor(rpc, delta, definition, JSONPatch, Promise, listeners = {}, interceptors = []) {
+  constructor(rpc, delta, definition, JSONPatch, Promise, listeners = {},
+              interceptors = [], handleLog) {
     Events.mixin(this);
     this.rpc = rpc;
     this.delta = delta;
@@ -27,7 +29,11 @@ class Session {
     this.JSONPatch = JSONPatch;
     this.Promise = Promise;
     this.apis = new ApiCache();
+    this.handleLog = handleLog;
+    this.connectionId = connectionIdCounter += 1;
     this.responseInterceptors = [{
+      onFulfilled: this.processLogInterceptor,
+    }, {
       onFulfilled: this.processErrorInterceptor,
     }, {
       onFulfilled: this.processDeltaInterceptor,
@@ -116,6 +122,10 @@ class Session {
     };
     const response = this.rpc.send(data);
     request.id = data.id;
+
+    if (this.handleLog) { // Log after the request is sent to get the request id into the logs
+      this.handleLog({ msg: 'Sent', connection: this.connectionId, data: request });
+    }
 
     const promise = this.intercept(response, this.responseInterceptors, request);
     Session.addToPromiseChain(promise, 'requestId', request.id);
@@ -229,6 +239,20 @@ class Session {
       , promise
     );
   }
+
+  /**
+   * Log interceptor.
+   * @param {Object} meta - The meta info about the request.
+   * @param response - The response.
+   * @returns {Object} - Returns the defined error for an error, else the response.
+   */
+  processLogInterceptor(meta, response) {
+    if (this.handleLog) {
+      this.handleLog({ msg: 'Received', connection: this.connectionId, data: response });
+    }
+    return response;
+  }
+
 
   /**
   * Process error interceptor.
