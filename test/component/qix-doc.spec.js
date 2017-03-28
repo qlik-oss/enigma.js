@@ -59,7 +59,7 @@ describe('QIX Doc', () => {
 
   it('should have the right type', () => {
     expect(qixDoc.type).to.equal('Doc');
-    expect(qixDoc.customType).to.equal(undefined);
+    expect(qixDoc.genericType).to.equal(undefined);
   });
 
   describe('Calling GetObject', () => {
@@ -76,7 +76,7 @@ describe('QIX Doc', () => {
       );
       expect(Object.keys(Object.getPrototypeOf(barchartObject))).to.include.members(keys);
       expect(barchartObject.type).to.equal('GenericObject');
-      expect(barchartObject.customType).to.equal('barchart');
+      expect(barchartObject.genericType).to.equal('barchart');
     });
   });
 });

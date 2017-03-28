@@ -119,7 +119,7 @@ class Schema {
           enumerable: true,
           value: typeKey,
         },
-        customType: {
+        genericType: {
           enumerable: true,
           value: customKey,
         },
