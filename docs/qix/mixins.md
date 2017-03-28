@@ -3,7 +3,10 @@
 The *mixin* concept allows you to add or overwrite Qlik Engine API functionality. A mixin is basically a JavaScript object, or a
 function, that returns a JavaScript object containing functions that are applied to an API of a specified type.
 
-Generic types like for example `GenericObject`, `Doc`, `GenericBookmark`, are supported but also GenericObject types such as `barchart`, `story` and `myCustomType`.
+Generic types like for example `GenericObject`, `Doc`, `GenericBookmark`, are supported but also custom GenericObject types such as `barchart`, `story` and `myCustomType`. 
+
+Mixins that are bound to several different types can find the current object type in the `customType` or `type` members of the object. `this.type` would for instance return `GenericObject` and this.customType would return `barchart`   
+
 
 
 ```javascript

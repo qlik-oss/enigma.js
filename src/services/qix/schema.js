@@ -115,6 +115,14 @@ class Schema {
           enumerable: true,
           value: delta,
         },
+        type: {
+          enumerable: true,
+          value: typeKey,
+        },
+        genericType: {
+          enumerable: true,
+          value: customKey,
+        },
       });
 
       let mixinList = this.mixins.get(typeKey) || [];
