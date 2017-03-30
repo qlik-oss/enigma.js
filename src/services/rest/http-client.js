@@ -59,7 +59,7 @@ export function responseHandler(opts, res, handleLog) {
       opts.on.response(res);
     } else {
       if (handleLog) {
-        handleLog({ msg: 'Error', data: res });
+        handleLog({ msg: 'Received', data: { status: res.status, statusText: res.statusText } });
       }
       opts.on.error(res);
     }
@@ -74,9 +74,6 @@ export function responseHandler(opts, res, handleLog) {
  * @param {Function} handleLog Logging callback
  */
 export function errorHandler(opts, res, handleLog) {
-  if (handleLog) {
-    handleLog({ msg: 'Error', data: res });
-  }
   // Setup an error object compatible with swagger-client
   const error = {
     status: res.code,
@@ -87,6 +84,9 @@ export function errorHandler(opts, res, handleLog) {
     error.errObj.message = '';
   }
 
+  if (handleLog) {
+    handleLog({ msg: 'Received', data: { status: error.status, statusText: error.statusText } });
+  }
   opts.on.error(error);
 }
 
