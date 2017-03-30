@@ -43,7 +43,7 @@ export function responseHandler(opts, res, handleLog) {
     const response = data.join('');
 
     // Add additional fields compatible with swagger-client
-    res.status = res.statusCode
+    res.status = res.statusCode;
     res.statusText = res.statusMessage;
 
     if (HTTP_200_OK_RANGE_START <= res.statusCode && res.statusCode <= HTTP_200_OK_RANGE_END) {
@@ -80,9 +80,13 @@ export function errorHandler(opts, res, handleLog) {
   // Setup an error object compatible with swagger-client
   const error = {
     status: res.code,
-    statusText: res.message,
+    statusText: res.message || '',
     errObj: res,
   };
+  if (!error.errObj.message) {
+    error.errObj.message = '';
+  }
+
   opts.on.error(error);
 }
 
