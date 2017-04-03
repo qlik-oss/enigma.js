@@ -3,6 +3,8 @@ import url from 'url';
 // see getDefaultHTTPModule for additional imports due to webpack
 
 const IS_NODE = typeof window === 'undefined';
+const HTTP_200_OK_RANGE_START = 200;
+const HTTP_200_OK_RANGE_END = 299;
 
 function getDefaultHTTPModule(secure) {
   /* eslint no-eval:0, global-require:0 */
@@ -39,17 +41,53 @@ export function responseHandler(opts, res, handleLog) {
   res.on('data', data.push.bind(data));
   res.on('end', () => {
     const response = data.join('');
-    res.data = response;
-    try {
-      res.obj = JSON.parse(response);
-    } catch (ex) {
-      // do not set out.obj
+
+    // Add additional fields compatible with swagger-client
+    res.status = res.statusCode;
+    res.statusText = res.statusMessage;
+
+    if (HTTP_200_OK_RANGE_START <= res.statusCode && res.statusCode <= HTTP_200_OK_RANGE_END) {
+      res.data = response;
+      try {
+        res.obj = JSON.parse(response);
+      } catch (ex) {
+        // do not set out.obj
+      }
+      if (handleLog) {
+        handleLog({ msg: 'Received', data: { body: res.data } });
+      }
+      opts.on.response(res);
+    } else {
+      if (handleLog) {
+        handleLog({ msg: 'Received', data: { status: res.status, statusText: res.statusText } });
+      }
+      opts.on.error(res);
     }
-    if (handleLog) {
-      handleLog({ msg: 'Received', data: { body: res.data } });
-    }
-    opts.on.response(res);
   });
+}
+
+/**
+ * Handles connection errors
+ * @private
+ * @param {ServiceRequestOptions} opts The options for the service request.
+ * @param {Object} res The HTTP response object.
+ * @param {Function} handleLog Logging callback
+ */
+export function errorHandler(opts, res, handleLog) {
+  // Setup an error object compatible with swagger-client
+  const error = {
+    status: res.code,
+    statusText: res.message || '',
+    errObj: res,
+  };
+  if (!error.errObj.message) {
+    error.errObj.message = '';
+  }
+
+  if (handleLog) {
+    handleLog({ msg: 'Received', data: { status: error.status, statusText: error.statusText } });
+  }
+  opts.on.error(error);
 }
 
 /**
@@ -143,7 +181,8 @@ export default class HttpClient {
     if (restOpts.handleLog) {
       restOpts.handleLog({ msg: 'Sent', data: { request: settings, body: opts.body || null } });
     }
-    req.on('error', opts.on.error);
+    /* istanbul ignore next */
+    req.on('error', err => errorHandler(opts, err, restOpts.handleLog));
     /* istanbul ignore next */
     req.on('response', res => responseHandler(opts, res, restOpts.handleLog));
     req.end();

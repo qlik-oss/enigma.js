@@ -50,7 +50,9 @@
     "rimraf": "^2.5.1",
     "swagger-client": "^2.1.23",
     "webpack": "^1.13.1",
-    "ws": "^1.1.1"
+    "ws": "^1.1.1",
+    "nock": "^9.0.10"
   },
-  "dependencies": {}
+  "dependencies": {
+  }
 }

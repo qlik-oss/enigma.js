@@ -155,7 +155,7 @@ describe('HttpClient (swagger.js compatible)', () => {
     });
 
     it('should handle successful responses', () => {
-      const res = { setEncoding: sinon.spy(), on: sinon.spy() };
+      const res = { statusCode: 200, setEncoding: sinon.spy(), on: sinon.spy() };
       responseHandler(opts, res);
       const dataCallback = res.on.args[0][1];
       dataCallback('Hello');
