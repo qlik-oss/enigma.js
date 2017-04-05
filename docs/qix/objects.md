@@ -4,17 +4,26 @@ An object, or a generic object, binds to data using hypercubes, listobjects and 
 
 A generic object has a hierarchic structure, a data structure and properties, and after it has been calculated, it also has a layout.
 
-
-## Properties
+## Properties and layout
 
 Generic objects has properties in a structure that you define yourself. There are two kinds of properties:
-- User defined: persisted by Qlik Sense and included as-is in the layout.
-- QIX defined: validated by the Qlik engine and replaced in the output, that is the layout, by the calculated counterparts.
+- QIX defined: validated by the Qlik engine and replaced in the output, that is the layout, by the calculated counterparts. These properties are prefixed with `q`, such as `qId` and `qHyperCubeDef`.
+- User defined: Properties without the `q`-prefix are _dynamic properties_. They are persisted by Qlik Sense and included as-is in the layout.
+
+The concept of properties is discussed in detail [here](https://help.qlik.com/en-US/sense-developer/Subsystems/Platform/Content/Concepts/Properties.htm).
+
+### States
+
+Generic objects can be in either of these three states:
+
+* **Invalid** - When something relating to the object's data has changed, it will be set to an invalid state. Either it's a change on the data model (typically a selection) or a property has been changed with a SetProperties command.
+* **Validating** - When an object is invalid and a GetLayout of the object is invoked it will start a validation process and the state of the object will be set to Validating.
+* **Valid** -When the validation of the object is finished the object's state is set to Valid which means that the layout asked for in the GetLayout command now can be returned.
 
 
 **Engine API reference**
 - [Properties that can be set](https://help.qlik.com/en-US/sense-developer/Subsystems/EngineAPI/Content/GenericObject/PropertyLevel/properties-that-can-be-set.htm)
-- [Properties that can be rendered](https://help.qlik.com/en-US/sense-developer/Subsystems/EngineAPI/Content/GenericObject/PropertyLevel/properties-that-can-be-rendered.htm) (layout)
+- [Properties that can be rendered](https://help.qlik.com/en-US/sense-developer/Subsystems/EngineAPI/Content/GenericObject/LayoutLevel/properties-that-can-be-rendered.htm) (layout)
 
 
 ### Expressions
@@ -150,7 +159,7 @@ object.setProperties( properties ).then( () => {
 - `patches` Array - Array of patches
 - `softPatch` Boolean - If set to `true`, the properties to apply are not persistent, it is a soft patch. Default is `false`.
 
-Applies a patch to the properties of an object. Allows an update to some of the properties. 
+Applies a patch to the properties of an object. Allows an update to some of the properties.
 
 You can apply a patch to the properties of a generic object, that is not persistent. Such a patch is called a *soft patch*.
 
