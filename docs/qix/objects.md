@@ -10,6 +10,8 @@ Generic objects has properties in a structure that you define yourself. There ar
 - QIX defined: validated by the Qlik engine and replaced in the output, that is the layout, by the calculated counterparts. These properties are prefixed with `q`, such as `qId` and `qHyperCubeDef`.
 - User defined: Properties without the `q`-prefix are _dynamic properties_. They are persisted by Qlik Sense and included as-is in the layout.
 
+The concept of properties is discussed in detail [here](https://help.qlik.com/en-US/sense-developer/Subsystems/Platform/Content/Concepts/Properties.htm).
+
 ### States
 
 Generic objects can be in either of these three states:
@@ -21,7 +23,7 @@ Generic objects can be in either of these three states:
 
 **Engine API reference**
 - [Properties that can be set](https://help.qlik.com/en-US/sense-developer/Subsystems/EngineAPI/Content/GenericObject/PropertyLevel/properties-that-can-be-set.htm)
-- [Properties that can be rendered](https://help.qlik.com/en-US/sense-developer/Subsystems/EngineAPI/Content/GenericObject/PropertyLevel/properties-that-can-be-rendered.htm) (layout)
+- [Properties that can be rendered](https://help.qlik.com/en-US/sense-developer/Subsystems/EngineAPI/Content/GenericObject/LayoutLevel/properties-that-can-be-rendered.htm) (layout)
 
 
 ### Expressions
