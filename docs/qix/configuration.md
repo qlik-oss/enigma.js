@@ -23,7 +23,7 @@ The `config` object has the following parameters:
 | `createSocket` | Function | In browser | A function to use when instantiating the WebSocket, mandatory for NodeJS |
 | `Promise` | Promise | Yes | ES6-compatible Promise library, default is global `Promise` |
 | `handleLog` | Function | Yes | Traffic log listener. |
-| `listeners` | Object | Yes | Key-value map of listeners that will be registered, listeners can be notifications (of the form `notification:OnSessionClosed`) or session events, read more about notifications that may be bound on https://help.qlik.com/en-US/sense-developer/Subsystems/ProxyServiceAPI/Content/ProxyServiceAPI/ProxyServiceAPI-Msgs-Proxy-Clients.htm |
+| `listeners` | Object | Yes | Key-value map of session listeners that will be registered. See [Session](session.md) for details |
 | `session` | Object | Yes | Session-specific parameters |
 | `session.host` | String | Yes | Default is `localhost` |
 | `session.port` | Number | Yes | Default is `80` or `443` depending on HTTP protocol used |
@@ -36,8 +36,6 @@ The `config` object has the following parameters:
 | `session.subpath` | String | Yes | Subpath to use, used to connect to dataprepservice in a server environment |
 | `session.identity` | String | Yes | Identity (session ID) to use |
 | `session.disableCache` | String | Yes | Disable caching of sessions, set to `true` to create a new session every time |
-
-**Note:** Notifications are triggered by the Proxy and are thus only available on Qlik Sense Enterprise.
 
 ## `qix` object
 
