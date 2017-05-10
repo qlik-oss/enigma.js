@@ -155,11 +155,6 @@ describe('Session', () => {
     rpc.emit('message', { close: [8, 11] });
     expect(emit.calledTwice).to.equal(true);
     expect(emit).to.have.been.calledWith('handle-closed');
-
-    const send = sinon.spy();
-    sinon.stub(rpc, 'send', send);
-    rpc.emit('message', { suspend: [-1] });
-    expect(send.calledOnce).to.equal(true);
   });
 
   it('should emit socket error', () => {
