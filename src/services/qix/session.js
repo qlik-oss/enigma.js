@@ -103,7 +103,8 @@ class Session {
     this.rpc.on('socket-error', err => this.emit('socket-error', err));
     this.rpc.on('closed', evt => {
       if ((this.suspendOnClose && evt.code !== 1000) || evt.code === MANUAL_SUSPEND) {
-        this.emit('suspended');
+        this.emit('suspended',
+          { initiator: evt.code === MANUAL_SUSPEND ? 'manual' : 'network' });
       } else {
         this.emit('closed', evt);
       }
