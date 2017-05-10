@@ -106,6 +106,7 @@ class Schema {
         handle: {
           enumerable: true,
           value: handle,
+          writable: true,
         },
         id: {
           enumerable: true,
@@ -122,6 +123,10 @@ class Schema {
         genericType: {
           enumerable: true,
           value: customKey,
+        },
+        getMethodName: {
+          enumerable: true,
+          value: (typeKey === 'Field' || typeKey === 'Variable' || typeKey === 'GenericVariable') ? undefined : typeKey.replace('Generic', 'Get'), //TODO: This should be verified against the schema. Also, this is a very long line.
         },
       });
 

@@ -64,10 +64,13 @@ export default class Qix {
   * @param {Object} listeners A key-value map of listeners.
   * @param {Array} interceptors An array of interceptors.
   * @param {Function} log handler callback
+  * @param {String} appId - the appId for this session.
+  * @param {Boolean} noData - if true, the app was opened without data.
+  * @param {Boolean} suspendOnClose - if true, the session will be suspended if the underlying websocket closes unexpectedly.
   * @returns {Object} Returns an instance of Session.
   */
-  createSession(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog) {
-    return new Session(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog);
+  createSession(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog, appId, noData, suspendOnClose) {
+    return new Session(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog, appId, noData, suspendOnClose);
   }
 
   /**
@@ -90,7 +93,7 @@ export default class Qix {
   */
   buildUrl(sessionConfig, appId) {
     const { secure, host, port, prefix, subpath, route, identity,
-      reloadURI, urlParams } = sessionConfig;
+      reloadURI, urlParams, ttl } = sessionConfig;
     let url = '';
 
     url += `${secure ? 'wss' : 'ws'}://`;
@@ -116,6 +119,10 @@ export default class Qix {
 
     if (identity) {
       url += `/identity/${encodeURIComponent(identity)}`;
+    }
+
+    if (ttl) {
+      url += `/ttl/${ttl}`;
     }
 
     if (reloadURI) {
@@ -155,7 +162,10 @@ export default class Qix {
         config.Promise,
         config.listeners,
         config.responseInterceptors,
-        config.handleLog
+        config.handleLog,
+        config.appId,
+        config.noData,
+        config.session.suspendOnClose
       );
       if (!disableCache) {
         this.sessions.add(url, session);
@@ -177,6 +187,9 @@ export default class Qix {
       const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: config.delta };
       const globalApi = session.getObjectApi(args);
       globalApi.openApp = globalApi.openDoc = (appId, user = '', password = '', serial = '', noData = false) => {
+        // TODO: appId and noData should be stored in a better way. (Preferably in the the app instance instead?)
+        session.appId = appId;
+        session.noData = noData;
         config.session.route = '';
         config.appId = appId;
 
@@ -266,6 +279,10 @@ export default class Qix {
 
     if (typeof config.session.secure === 'undefined') {
       config.session.secure = !config.session.unsecure;
+    }
+
+    if (typeof config.session.suspendOnClose === 'undefined') {
+      config.session.suspendOnClose = false;
     }
 
     if (!config.appId && !config.session.route) {

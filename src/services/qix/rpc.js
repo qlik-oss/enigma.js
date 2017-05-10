@@ -26,10 +26,11 @@ class RPC {
 
   /**
   * Opens a connection to the configured endpoint.
+  * @param {Boolean} force - ignores all previous and outstanding open calls if set to true.
   * @returns {Object} A promise instance.
   */
-  open() {
-    if (this.openedPromise) {
+  open(force = false) {
+    if (!force && this.openedPromise) {
       return this.openedPromise;
     }
 
@@ -46,6 +47,43 @@ class RPC {
     this.openedPromise = new this.Promise((resolve, reject) => this.registerResolver('opened', resolve, reject));
     this.closedPromise = new this.Promise((resolve, reject) => this.registerResolver('closed', resolve, reject));
     return this.openedPromise;
+  }
+
+  /**
+  * Reopens the connection and waits for the OnConnected notification.
+  * @param {Number} timeout - The time to wait for the OnConnected notification.
+  * @returns {Object} A promise containing the session state (SESSION_CREATED or SESSION_ATTACHED).
+  */
+  reopen(timeout){
+    let timer = undefined;
+    let resolver = undefined;
+    const waitForNotification = new this.Promise((resolve , reject) => resolver = resolve);
+
+    const onNotification = (data) => {
+      if (data.method !== 'OnConnected') return;
+      clearTimeout(timer);
+      resolver(data.params.qConnectedState);
+    };
+
+    const onTimeout = () => {
+      resolver('SESSION_CREATED');
+    };
+
+    const cleanUpAndReturn = (obj, func) => {
+      this.removeListener('notification', onNotification);
+      return func(obj);
+    }
+
+    this.on('notification', onNotification);
+    return this.open(true)
+      .then(() => timer = setTimeout(onTimeout, timeout))
+      .then(() => waitForNotification)
+      .then(state => {
+        return cleanUpAndReturn(state, this.Promise.resolve);
+      })
+      .catch(err => {
+        return cleanUpAndReturn(err, this.Promise.reject);
+      })
   }
 
   /**
@@ -153,8 +191,10 @@ class RPC {
     }
     data.jsonrpc = '2.0';
     data.id = this.requestId += 1;
-    this.socket.send(JSON.stringify(data));
-    return new this.Promise((resolve, reject) => this.registerResolver(data.id, resolve, reject));
+    return new this.Promise((resolve, reject) => {
+      this.socket.send(JSON.stringify(data));
+      return this.registerResolver(data.id, resolve, reject);
+    });
   }
 }
 

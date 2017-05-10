@@ -124,6 +124,16 @@ describe('Qix', () => {
         qlikTicket: 'abcdefg123456',
       },
     }, 'myApp11')).to.equal('wss://localhost:4848/app/myApp11?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
+    expect(qix.buildUrl({
+      secure: true,
+      port: 4848,
+      reloadURI: 'http://community.qlik.com',
+      urlParams: {
+        reloadUri: 'http://qlik.com',
+        qlikTicket: 'abcdefg123456',
+      },
+      ttl: 1000,
+    }, 'myApp11')).to.equal('wss://localhost:4848/app/myApp11/ttl/1000?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
   });
 
   describe('getGlobal', () => {

@@ -47,6 +47,16 @@ class ApiCache extends KeyValueCache {
   }
 
   /**
+  * Gets a list of APIs with a given type.
+  * @function ApiCache#getApisByType
+  * @param {String} type - The type of APIs to get.
+  * @returns {Array} The list of entries including `handle` and `api` properties for each entry.
+  */
+  getApisByType(type) {
+    return this.getApis().filter(entry => entry.api.type === type)
+  }
+
+  /**
   * Gets a patchee.
   * @function ApiCache#getPatchee
   * @param {Number} handle - The handle for the API to patch.
