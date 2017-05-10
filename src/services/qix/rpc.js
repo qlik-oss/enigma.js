@@ -54,10 +54,10 @@ class RPC {
   * @param {Number} timeout - The time to wait for the OnConnected notification.
   * @returns {Object} A promise containing the session state (SESSION_CREATED or SESSION_ATTACHED).
   */
-  reopen(timeout){
-    let timer = undefined;
-    let resolver = undefined;
-    const waitForNotification = new this.Promise((resolve , reject) => resolver = resolve);
+  reopen(timeout) {
+    let timer;
+    let resolver;
+    const waitForNotification = new this.Promise((resolve) => { resolver = resolve; });
 
     const onNotification = (data) => {
       if (data.method !== 'OnConnected') return;
@@ -72,18 +72,14 @@ class RPC {
     const cleanUpAndReturn = (obj, func) => {
       this.removeListener('notification', onNotification);
       return func(obj);
-    }
+    };
 
     this.on('notification', onNotification);
     return this.open(true)
-      .then(() => timer = setTimeout(onTimeout, timeout))
+      .then(() => { timer = setTimeout(onTimeout, timeout); })
       .then(() => waitForNotification)
-      .then(state => {
-        return cleanUpAndReturn(state, this.Promise.resolve);
-      })
-      .catch(err => {
-        return cleanUpAndReturn(err, this.Promise.reject);
-      })
+      .then(state => cleanUpAndReturn(state, this.Promise.resolve))
+      .catch(err => cleanUpAndReturn(err, this.Promise.reject));
   }
 
   /**

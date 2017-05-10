@@ -66,11 +66,14 @@ export default class Qix {
   * @param {Function} log handler callback
   * @param {String} appId - the appId for this session.
   * @param {Boolean} noData - if true, the app was opened without data.
-  * @param {Boolean} suspendOnClose - if true, the session will be suspended if the underlying websocket closes unexpectedly.
+  * @param {Boolean} suspendOnClose - when true, the session will be suspended if the underlying
+  *                                   websocket closes unexpectedly.
   * @returns {Object} Returns an instance of Session.
   */
-  createSession(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog, appId, noData, suspendOnClose) {
-    return new Session(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog, appId, noData, suspendOnClose);
+  createSession(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog,
+    appId, noData, suspendOnClose) {
+    return new Session(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog,
+      appId, noData, suspendOnClose);
   }
 
   /**
@@ -186,8 +189,10 @@ export default class Qix {
     return session.connect().then(() => {
       const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: config.delta };
       const globalApi = session.getObjectApi(args);
-      globalApi.openApp = globalApi.openDoc = (appId, user = '', password = '', serial = '', noData = false) => {
-        // TODO: appId and noData should be stored in a better way. (Preferably in the the app instance instead?)
+      globalApi.openApp = globalApi.openDoc =
+      (appId, user = '', password = '', serial = '', noData = false) => {
+        // TODO: appId and noData should be stored in a better way.
+        // (Preferably in the the app instance instead?)
         session.appId = appId;
         session.noData = noData;
         config.session.route = '';
