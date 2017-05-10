@@ -290,6 +290,7 @@ class Session {
         this.apis.getApis().filter(entry => entry.api.type !== 'Global').forEach(entry => {
           entry.api.emit('changed');
         });
+        this.emit('resumed');
       })
       .catch(err => {
         return this.rpc.close().then(() => {
