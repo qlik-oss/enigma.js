@@ -40,6 +40,10 @@ function replaceLeadingAndTrailingSlashes(str) {
 *                             DEPRECATED owing to the urlParams property.
 * @property {Object} [urlParams={}] Used to add parameters to the WebSocket URL.
 * @property {String} [disableCache=false] Set to true if you want a new Session.
+* @property {Boolean} [suspendOnClose=false] Set to true if the session should be suspended
+*                             and not closed if the WebSocket is closed unexpectedly.
+* @property {Number} [ttl] A value in seconds that QIX Engine should keep the session
+*                             alive after socket disconnect (only works if QIX Engine supports it).
 */
 
 /**

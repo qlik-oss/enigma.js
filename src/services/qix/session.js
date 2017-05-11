@@ -2,8 +2,8 @@ import Events from '../../event-emitter';
 import ApiCache from './api-cache';
 
 const RETURN_KEY = 'qReturn';
-const MANUAL_SUSPEND = 4000;
-const ON_ATTACHED_TIMEOUT = 5000;
+const MANUAL_SUSPEND_CODE = 4000;
+const ON_ATTACHED_TIMEOUT_MS = 5000;
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 let connectionIdCounter = 0;
@@ -96,30 +96,36 @@ class Session {
     this.emit('session-created', this);
   }
 
+  onRpcSocketError(err) {
+    this.emit('socket-error', err);
+  }
+
+  onRpcClosed(evt) {
+    if ((this.suspendOnClose && evt.code !== 1000) || evt.code === MANUAL_SUSPEND_CODE) {
+      this.emit('suspended',
+        { initiator: evt.code === MANUAL_SUSPEND_CODE ? 'manual' : 'network' });
+    } else {
+      this.emit('closed', evt);
+    }
+  }
+
+  onRpcMessage(response) {
+    if (response.change) {
+      response.change.forEach(handle => this.emit('handle-changed', handle));
+    }
+    if (response.close) {
+      response.close.forEach(handle => this.emit('handle-closed', handle));
+    }
+  }
+
   // TODO: Rename as this does not register the notification listerners.
   /**
   * Function used register the RPC listerners except for the notification listeners
   */
   registerRpcListeners() {
-    this.rpc.on('socket-error', err => this.emit('socket-error', err));
-    this.rpc.on('closed', (evt) => {
-      if ((this.suspendOnClose && evt.code !== 1000) || evt.code === MANUAL_SUSPEND) {
-        this.emit('suspended',
-          { initiator: evt.code === MANUAL_SUSPEND ? 'manual' : 'network' });
-      } else {
-        this.emit('closed', evt);
-      }
-    });
-
-    this.rpc.on('message', (response) => {
-      if (response.change) {
-        response.change.forEach(handle => this.emit('handle-changed', handle));
-      }
-
-      if (response.close) {
-        response.close.forEach(handle => this.emit('handle-closed', handle));
-      }
-    });
+    this.rpc.on('socket-error', this.onRpcSocketError.bind(this));
+    this.rpc.on('closed', this.onRpcClosed.bind(this));
+    this.rpc.on('message', this.onRpcMessage.bind(this));
   }
 
   // TODO: Rename as this does not unregister the notification listerners.
@@ -127,9 +133,9 @@ class Session {
   * Function used unregister the RPC listerners except for the notification listeners
   */
   unregisterRpcListeners() {
-    this.rpc.removeAllListeners('socket-error');
-    this.rpc.removeAllListeners('closed');
-    this.rpc.removeAllListeners('message');
+    this.removeListener('socket-error', this.onRpcSocketError);
+    this.removeListener('closed', this.onRpcClosed);
+    this.removeListener('message', this.onRpcMessage);
   }
 
   /**
@@ -174,7 +180,7 @@ class Session {
   * @returns {Object} Returns a promise instance.
   */
   suspend() {
-    return this.rpc.close(MANUAL_SUSPEND);
+    return this.rpc.close(MANUAL_SUSPEND_CODE);
   }
 
   /**
@@ -246,14 +252,14 @@ class Session {
           handle: doc.handle,
           params: [api.id],
         })
-        .then((response) => {
-          if (response.error || !response.result.qReturn.qHandle) {
-            closed.push(api);
-          } else {
-            api.handle = response.result.qReturn.qHandle;
-            restoredApis.add(api.handle, api);
-          }
-        });
+          .then((response) => {
+            if (response.error || !response.result.qReturn.qHandle) {
+              closed.push(api);
+            } else {
+              api.handle = response.result.qReturn.qHandle;
+              restoredApis.add(api.handle, api);
+            }
+          });
         tasks.push(request);
       }
     });
@@ -267,14 +273,14 @@ class Session {
   */
   resume(onlyIfAttached) {
     if (!this.suspended) {
-      return this.Promise.reject(new Error('Not suspended'));
+      return this.Promise.resolve();
     }
 
     this.unregisterRpcListeners();
     const restoredApis = new ApiCache();
     const closed = [];
 
-    return this.rpc.reopen(ON_ATTACHED_TIMEOUT)
+    return this.rpc.reopen(ON_ATTACHED_TIMEOUT_MS)
       .then((sessionState) => {
         if (sessionState === 'SESSION_CREATED' && onlyIfAttached) {
           return this.Promise.reject(new Error('Not attached'));
@@ -332,8 +338,8 @@ class Session {
       return api;
     }
     api = this.definition
-    .generate(type)
-    .create(this, handle, id, delta, customType);
+      .generate(type)
+      .create(this, handle, id, delta, customType);
     this.apis.add(handle, api);
     return api;
   }
@@ -347,9 +353,9 @@ class Session {
     // It's only `add` and `replace` that has a
     // value property according to the jsonpatch spec
     return patches.length === 1 &&
-    ['add', 'replace'].indexOf(patches[0].op) !== -1 &&
-    this.isPrimitiveValue(patches[0].value) &&
-    patches[0].path === '/';
+      ['add', 'replace'].indexOf(patches[0].op) !== -1 &&
+      this.isPrimitiveValue(patches[0].value) &&
+      patches[0].path === '/';
   }
 
   /**
@@ -408,8 +414,8 @@ class Session {
   intercept(promise, interceptors, meta) {
     return interceptors.reduce((interception, interceptor) =>
       interception.then(
-      interceptor.onFulfilled && interceptor.onFulfilled.bind(this, meta),
-      interceptor.onRejected && interceptor.onRejected.bind(this, meta))
+        interceptor.onFulfilled && interceptor.onFulfilled.bind(this, meta),
+        interceptor.onRejected && interceptor.onRejected.bind(this, meta))
       , promise
     );
   }

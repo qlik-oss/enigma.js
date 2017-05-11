@@ -57,16 +57,16 @@ class RPC {
   reopen(timeout) {
     let timer;
     let resolver;
-    const waitForNotification = new this.Promise((resolve) => { resolver = resolve; });
+
+    const waitForNotification = () => {
+      timer = setTimeout(() => resolver('SESSION_CREATED'), timeout);
+      return new this.Promise((resolve) => { resolver = resolve; });
+    };
 
     const onNotification = (data) => {
       if (data.method !== 'OnConnected') return;
       clearTimeout(timer);
       resolver(data.params.qConnectedState);
-    };
-
-    const onTimeout = () => {
-      resolver('SESSION_CREATED');
     };
 
     const cleanUpAndReturn = (obj, func) => {
@@ -76,8 +76,7 @@ class RPC {
 
     this.on('notification', onNotification);
     return this.open(true)
-      .then(() => { timer = setTimeout(onTimeout, timeout); })
-      .then(() => waitForNotification)
+      .then(waitForNotification)
       .then(state => cleanUpAndReturn(state, this.Promise.resolve))
       .catch(err => cleanUpAndReturn(err, this.Promise.reject));
   }
