@@ -107,9 +107,12 @@ class Session {
   * Internal event handler for RPC closed.
   */
   onRpcClosed(evt) {
-    if ((this.suspendOnClose && evt.code !== 1000) || evt.code === MANUAL_SUSPEND_CODE) {
-      this.emit('suspended',
-        { initiator: evt.code === MANUAL_SUSPEND_CODE ? 'manual' : 'network' });
+    if (evt.code === 1000 || evt.code === MANUAL_SUSPEND_CODE) {
+      return;
+    }
+
+    if (this.suspendOnClose) {
+      this.emit('suspended', { initiator: 'network' });
     } else {
       this.emit('closed', evt);
     }
@@ -189,7 +192,8 @@ class Session {
   * @returns {Object} Returns a promise instance.
   */
   suspend() {
-    return this.rpc.close(MANUAL_SUSPEND_CODE);
+    return this.rpc.close(MANUAL_SUSPEND_CODE)
+    .then(() => this.emit('suspended', { initiator: 'manual' }));
   }
 
   /**
@@ -332,7 +336,7 @@ class Session {
   * @returns {Object} Returns a promise instance.
   */
   close() {
-    return this.rpc.close();
+    return this.rpc.close().then(evt => this.emit('closed', evt));
   }
 
   /**
