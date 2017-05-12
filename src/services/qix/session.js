@@ -13,20 +13,20 @@ let connectionIdCounter = 0;
 class Session {
 
   /**
-   * Constructor
-   * @param {Object} rpc - The RPC instance used by the session.
-   * @param {Boolean} delta=true - Flag to determine delta handling.
-   * @param {Object} definition - The definition instance used by the session.
-   * @param {Object} JSONPatch - JSON patch object.
-   * @param {Function} Promise - The promise constructor.
-   * @param {Object} listeners - A key-value map of listeners.
-   * @param {Array} interceptors - An array of interceptors.
-   * @param {Function} handleLog - log handler callback
-   * @param {String} appId - the appId for this session.
-   * @param {Boolean} noData - if true, the app was opened without data.
-   * @param {Boolean} suspendOnClose - when true, the session will be suspended if the underlying
-   *                                   websocket closes unexpectedly.
-   */
+  * Constructor
+  * @param {Object} rpc - The RPC instance used by the session.
+  * @param {Boolean} delta=true - Flag to determine delta handling.
+  * @param {Object} definition - The definition instance used by the session.
+  * @param {Object} JSONPatch - JSON patch object.
+  * @param {Function} Promise - The promise constructor.
+  * @param {Object} listeners - A key-value map of listeners.
+  * @param {Array} interceptors - An array of interceptors.
+  * @param {Function} handleLog - log handler callback
+  * @param {String} appId - the appId for this session.
+  * @param {Boolean} noData - if true, the app was opened without data.
+  * @param {Boolean} suspendOnClose - when true, the session will be suspended if the underlying
+  *                                   websocket closes unexpectedly.
+  */
   constructor(rpc, delta, definition, JSONPatch, Promise, listeners = {},
     interceptors = [], handleLog, appId, noData, suspendOnClose) {
     Events.mixin(this);
@@ -96,10 +96,16 @@ class Session {
     this.emit('session-created', this);
   }
 
+  /**
+  * Internal event handler for RPC socket errors.
+  */
   onRpcSocketError(err) {
     this.emit('socket-error', err);
   }
 
+  /**
+  * Internal event handler for RPC closed.
+  */
   onRpcClosed(evt) {
     if ((this.suspendOnClose && evt.code !== 1000) || evt.code === MANUAL_SUSPEND_CODE) {
       this.emit('suspended',
@@ -109,6 +115,9 @@ class Session {
     }
   }
 
+  /**
+  * Internal event handler for RPC messages.
+  */
   onRpcMessage(response) {
     if (response.change) {
       response.change.forEach(handle => this.emit('handle-changed', handle));
@@ -183,6 +192,12 @@ class Session {
     return this.rpc.close(MANUAL_SUSPEND_CODE);
   }
 
+  /**
+  * Function used to restore the rpc connection.
+  * @param {Boolean} onlyIfAttached - if true, the returned promise will resolve
+  *                                   only if the session can be re-attached.
+  * @returns {Object} Returns a promise instance.
+  */
   restoreRpcConnection(onlyIfAttached) {
     return this.rpc.reopen(ON_ATTACHED_TIMEOUT_MS).then((sessionState) => {
       if (sessionState === 'SESSION_CREATED' && onlyIfAttached) {
@@ -194,7 +209,7 @@ class Session {
 
   /**
   * Function used to restore the global API.
-  * @param {Object} restoredApis - The API-cache containing restored APIs.
+  * @param {Object} changed - A list where the restored APIs will be added.
   * @returns {Object} Returns a promise instance.
   */
   restoreGlobal(changed) {
@@ -206,7 +221,7 @@ class Session {
   /**
   * Function used to restore the doc API.
   * @param {String} sessionState - The state of the session, attached or created.
-  * @param {Object} restoredApis - The API-cache containing restored APIs.
+  * @param {Object} changed - A list where the restored APIs will be added.
   * @returns {Object} Returns a promise instance.
   */
   restoreDoc(changed) {
@@ -242,11 +257,11 @@ class Session {
   /**
   * Function used to restore the APIs on the doc.
   * @param {Object} doc - The doc API on which the APIs we want to restore exist.
-  * @param {Object} restoredApis - The API-cache containing restored APIs.
-  * @param {Array} closed - A list of APIs that has been closed when resuming the session.
+  * @param {Array} closed - A list where the closed of APIs APIs will be added.
+  * @param {Object} changed - A list where the restored APIs will be added.
   * @returns {Object} Returns a promise instance.
   */
-  restoreDocObjects(doc, changed, closed) {
+  restoreDocObjects(doc, closed, changed) {
     if (!doc) {
       return this.Promise.resolve();
     }
@@ -296,7 +311,7 @@ class Session {
     return this.restoreRpcConnection(onlyIfAttached)
       .then(() => this.restoreGlobal(changed))
       .then(() => this.restoreDoc(changed))
-      .then(doc => this.restoreDocObjects(doc, changed, closed))
+      .then(doc => this.restoreDocObjects(doc, closed, changed))
       .then(() => {
         this.apis = new ApiCache(changed);
         this.suspended = false;
@@ -338,8 +353,8 @@ class Session {
       return api;
     }
     api = this.definition
-      .generate(type)
-      .create(this, handle, id, delta, customType);
+    .generate(type)
+    .create(this, handle, id, delta, customType);
     this.apis.add(handle, api);
     return api;
   }
@@ -353,9 +368,9 @@ class Session {
     // It's only `add` and `replace` that has a
     // value property according to the jsonpatch spec
     return patches.length === 1 &&
-      ['add', 'replace'].indexOf(patches[0].op) !== -1 &&
-      this.isPrimitiveValue(patches[0].value) &&
-      patches[0].path === '/';
+    ['add', 'replace'].indexOf(patches[0].op) !== -1 &&
+    this.isPrimitiveValue(patches[0].value) &&
+    patches[0].path === '/';
   }
 
   /**
@@ -414,8 +429,8 @@ class Session {
   intercept(promise, interceptors, meta) {
     return interceptors.reduce((interception, interceptor) =>
       interception.then(
-        interceptor.onFulfilled && interceptor.onFulfilled.bind(this, meta),
-        interceptor.onRejected && interceptor.onRejected.bind(this, meta))
+      interceptor.onFulfilled && interceptor.onFulfilled.bind(this, meta),
+      interceptor.onRejected && interceptor.onRejected.bind(this, meta))
       , promise
     );
   }

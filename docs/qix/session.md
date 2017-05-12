@@ -8,7 +8,7 @@ All [instances](instances.md) contains a `session` property that can be used to 
 |--------|-------------|---------|
 `session.close()` | Closes the WebSocket | A promise that resolves once the WebSocket is closed |
 `session.suspend()` | Suspends the session | A promise that resolves once the session is suspended |
-`session.resume([onlyIfAttached=false])` | Resumes a suspended session. If `onlyIfAttached` is set to true, resume resolve only if the session can be re-attached. | A promise that resolves if the session is resumed (and rejects otherwise) |
+`session.resume([onlyIfAttached=false])` | Resumes a suspended session. If `onlyIfAttached` is set to true, resume will resolve only if the session can be re-attached. | A promise that resolves if the session is resumed (and rejects otherwise) |
 
 ## Events
 
