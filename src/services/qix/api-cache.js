@@ -5,6 +5,11 @@ import KeyValueCache from '../../cache';
 * @extends KeyValueCache
 */
 class ApiCache extends KeyValueCache {
+
+  constructor(apis = []) {
+    super();
+    apis.forEach(api => this.add(api.handle, api));
+  }
   /**
   * Adds an API.
   * @function ApiCache#add

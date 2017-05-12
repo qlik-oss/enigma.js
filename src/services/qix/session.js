@@ -183,14 +183,23 @@ class Session {
     return this.rpc.close(MANUAL_SUSPEND_CODE);
   }
 
+  restoreRpcConnection(onlyIfAttached) {
+    return this.rpc.reopen(ON_ATTACHED_TIMEOUT_MS).then((sessionState) => {
+      if (sessionState === 'SESSION_CREATED' && onlyIfAttached) {
+        return this.Promise.reject(new Error('Not attached'));
+      }
+      return this.Promise.resolve();
+    });
+  }
+
   /**
   * Function used to restore the global API.
   * @param {Object} restoredApis - The API-cache containing restored APIs.
   * @returns {Object} Returns a promise instance.
   */
-  restoreGlobal(restoredApis) {
+  restoreGlobal(changed) {
     const global = this.apis.getApisByType('Global').pop();
-    restoredApis.add(global.handle, global.api);
+    changed.push(global.api);
     return this.Promise.resolve();
   }
 
@@ -200,32 +209,34 @@ class Session {
   * @param {Object} restoredApis - The API-cache containing restored APIs.
   * @returns {Object} Returns a promise instance.
   */
-  restoreDoc(sessionState, restoredApis) {
+  restoreDoc(changed) {
     const app = this.apis.getApisByType('Doc').pop();
+
     if (!app) {
       return this.Promise.resolve();
     }
 
-    const attached = sessionState === 'SESSION_ATTACHED';
-    const method = attached ? 'GetActiveDoc' : 'OpenDoc';
-    const params = attached ? [] : [this.appId, '', '', '', !!this.noData];
-    const request = {
-      method,
+    return this.rpc.send({
+      method: 'GetActiveDoc',
       handle: -1,
-      params,
-    };
-
-    return this.rpc.send(request)
-      .then((response) => {
-        if (response.error) {
-          return this.Promise.reject(new Error(response.error.message));
-        }
-
-        const handle = response.result.qReturn.qHandle;
-        app.api.handle = handle;
-        restoredApis.add(handle, app.api);
-        return this.Promise.resolve(app.api);
-      });
+    }).then((response) => {
+      if (response.error) {
+        return this.rpc.send({
+          method: 'OpenDoc',
+          handle: -1,
+          params: [this.appId, '', '', '', !!this.noData],
+        });
+      }
+      return response;
+    }).then((response) => {
+      if (response.error) {
+        return this.Promise.reject(new Error(response.error.message));
+      }
+      const handle = response.result.qReturn.qHandle;
+      app.api.handle = handle;
+      changed.push(app.api);
+      return this.Promise.resolve(app.api);
+    });
   }
 
   /**
@@ -235,9 +246,12 @@ class Session {
   * @param {Array} closed - A list of APIs that has been closed when resuming the session.
   * @returns {Object} Returns a promise instance.
   */
-  restoreDocObjects(doc, restoredApis, closed) {
-    const tasks = [];
+  restoreDocObjects(doc, changed, closed) {
+    if (!doc) {
+      return this.Promise.resolve();
+    }
 
+    const tasks = [];
     const entries = this.apis.getApis().filter(entry => entry.api.type !== 'Global' && entry.api.type !== 'Doc');
 
     entries.forEach((entry) => {
@@ -251,15 +265,14 @@ class Session {
           method,
           handle: doc.handle,
           params: [api.id],
-        })
-          .then((response) => {
-            if (response.error || !response.result.qReturn.qHandle) {
-              closed.push(api);
-            } else {
-              api.handle = response.result.qReturn.qHandle;
-              restoredApis.add(api.handle, api);
-            }
-          });
+        }).then((response) => {
+          if (response.error || !response.result.qReturn.qHandle) {
+            closed.push(api);
+          } else {
+            api.handle = response.result.qReturn.qHandle;
+            changed.push(api);
+          }
+        });
         tasks.push(request);
       }
     });
@@ -271,39 +284,26 @@ class Session {
   * @param {Boolean} onlyIfAttached - if true, resume only if the session was re-attached.
   * @returns {Object} Returns a promise instance.
   */
-  resume(onlyIfAttached) {
+  resume(onlyIfAttached = false) {
     if (!this.suspended) {
       return this.Promise.resolve();
     }
 
     this.unregisterRpcListeners();
-    const restoredApis = new ApiCache();
+    const changed = [];
     const closed = [];
 
-    return this.rpc.reopen(ON_ATTACHED_TIMEOUT_MS)
-      .then((sessionState) => {
-        if (sessionState === 'SESSION_CREATED' && onlyIfAttached) {
-          return this.Promise.reject(new Error('Not attached'));
-        }
-        return this.Promise.resolve(sessionState);
-      })
-      .then(sessionState => this.restoreGlobal(restoredApis)
-        .then(() => this.restoreDoc(sessionState, restoredApis))
-        .then((doc) => {
-          if (doc) {
-            return this.restoreDocObjects(doc, restoredApis, closed);
-          }
-          return this.Promise.resolve();
-        })
-      )
+    return this.restoreRpcConnection(onlyIfAttached)
+      .then(() => this.restoreGlobal(changed))
+      .then(() => this.restoreDoc(changed))
+      .then(doc => this.restoreDocObjects(doc, changed, closed))
       .then(() => {
-        this.apis = restoredApis;
+        this.apis = new ApiCache(changed);
         this.suspended = false;
         this.registerRpcListeners();
+
         closed.forEach(api => api.emit('closed'));
-        this.apis.getApis().filter(entry => entry.api.type !== 'Global').forEach((entry) => {
-          entry.api.emit('changed');
-        });
+        changed.forEach(api => api.emit('changed'));
         this.emit('resumed');
       })
       .catch(err => this.rpc.close().then(() => {
