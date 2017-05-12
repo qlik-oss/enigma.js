@@ -57,11 +57,6 @@ class Session {
     this.responseInterceptors.push(...interceptors);
     this.registerRpcListeners();
 
-    this.rpc.on('notification', (response) => {
-      this.emit('notification:*', response.method, response.params);
-      this.emit(`notification:${response.method}`, response.params);
-    });
-
     this.suspended = false;
 
     this.on('handle-changed', (handle) => {
@@ -97,57 +92,51 @@ class Session {
   }
 
   /**
-  * Internal event handler for RPC socket errors.
-  */
-  onRpcSocketError(err) {
-    this.emit('socket-error', err);
-  }
-
-  /**
-  * Internal event handler for RPC closed.
-  */
-  onRpcClosed(evt) {
-    if (evt.code === 1000 || evt.code === MANUAL_SUSPEND_CODE) {
-      return;
-    }
-
-    if (this.suspendOnClose) {
-      this.emit('suspended', { initiator: 'network' });
-    } else {
-      this.emit('closed', evt);
-    }
-  }
-
-  /**
-  * Internal event handler for RPC messages.
-  */
-  onRpcMessage(response) {
-    if (response.change) {
-      response.change.forEach(handle => this.emit('handle-changed', handle));
-    }
-    if (response.close) {
-      response.close.forEach(handle => this.emit('handle-closed', handle));
-    }
-  }
-
-  // TODO: Rename as this does not register the notification listerners.
-  /**
   * Function used register the RPC listerners except for the notification listeners
   */
   registerRpcListeners() {
-    this.rpc.on('socket-error', this.onRpcSocketError.bind(this));
-    this.rpc.on('closed', this.onRpcClosed.bind(this));
-    this.rpc.on('message', this.onRpcMessage.bind(this));
-  }
+    const onError = (err) => {
+      if (this.suspended) {
+        return;
+      }
+      this.emit('socket-error', err);
+    };
 
-  // TODO: Rename as this does not unregister the notification listerners.
-  /**
-  * Function used unregister the RPC listerners except for the notification listeners
-  */
-  unregisterRpcListeners() {
-    this.removeListener('socket-error', this.onRpcSocketError);
-    this.removeListener('closed', this.onRpcClosed);
-    this.removeListener('message', this.onRpcMessage);
+    const onClosed = (evt) => {
+      if (this.suspended) {
+        return;
+      }
+      if (evt.code === 1000 || evt.code === MANUAL_SUSPEND_CODE) {
+        return;
+      }
+      if (this.suspendOnClose) {
+        this.emit('suspended', { initiator: 'network' });
+      } else {
+        this.emit('closed', evt);
+      }
+    };
+
+    const onMessage = (response) => {
+      if (this.suspended) {
+        return;
+      }
+      if (response.change) {
+        response.change.forEach(handle => this.emit('handle-changed', handle));
+      }
+      if (response.close) {
+        response.close.forEach(handle => this.emit('handle-closed', handle));
+      }
+    };
+
+    const onNotification = (response) => {
+      this.emit('notification:*', response.method, response.params);
+      this.emit(`notification:${response.method}`, response.params);
+    };
+
+    this.rpc.on('socket-error', onError);
+    this.rpc.on('closed', onClosed);
+    this.rpc.on('message', onMessage);
+    this.rpc.on('notification', onNotification);
   }
 
   /**
@@ -193,7 +182,7 @@ class Session {
   */
   suspend() {
     return this.rpc.close(MANUAL_SUSPEND_CODE)
-    .then(() => this.emit('suspended', { initiator: 'manual' }));
+      .then(() => this.emit('suspended', { initiator: 'manual' }));
   }
 
   /**
@@ -308,7 +297,6 @@ class Session {
       return this.Promise.resolve();
     }
 
-    this.unregisterRpcListeners();
     const changed = [];
     const closed = [];
 
@@ -319,16 +307,11 @@ class Session {
       .then(() => {
         this.apis = new ApiCache(changed);
         this.suspended = false;
-        this.registerRpcListeners();
-
         closed.forEach(api => api.emit('closed'));
         changed.forEach(api => api.emit('changed'));
         this.emit('resumed');
       })
-      .catch(err => this.rpc.close().then(() => {
-        this.registerRpcListeners();
-        return this.Promise.reject(err);
-      }));
+      .catch(err => this.rpc.close().then(() => this.Promise.reject(err)));
   }
 
   /**
