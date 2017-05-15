@@ -81,7 +81,7 @@ instance.session.on('suspended', (data) => {
 Called when a session is resumed.
 
 ```javascript
-instance.session.on('resumed', ()) => {
+instance.session.on('resumed', () => {
   // Session is resumed
 });
 ```

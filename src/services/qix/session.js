@@ -248,6 +248,21 @@ class Session {
   }
 
   /**
+  * Function used to build the get method names for Doc APIs.
+  * @param {String} type - The API type.
+  * @returns {String} Returns the get method name, or undefined if the type cannot be restored.
+  */
+  buildGetMethodName(type) {
+    if (type === 'Field' || type === 'Variable') {
+      return undefined;
+    } else if (type === 'GenericVariable') {
+      return 'GetVariableById';
+    }
+    return type.replace('Generic', 'Get');
+  }
+
+
+  /**
   * Function used to restore the APIs on the doc.
   * @param {Object} doc - The doc API on which the APIs we want to restore exist.
   * @param {Array} closed - A list where the closed of APIs APIs will be added.
@@ -264,7 +279,7 @@ class Session {
 
     entries.forEach((entry) => {
       const api = entry.api;
-      const method = api.getMethodName;
+      const method = this.buildGetMethodName(api.type);
 
       if (!method) {
         closed.push(api);
