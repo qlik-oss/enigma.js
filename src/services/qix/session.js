@@ -228,6 +228,7 @@ class Session {
     return this.rpc.send({
       method: 'GetActiveDoc',
       handle: -1,
+      params: [],
     }).then((response) => {
       if (response.error) {
         return this.rpc.send({
