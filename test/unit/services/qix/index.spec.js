@@ -462,5 +462,10 @@ describe('Qix', () => {
       Qix.configureDefaults(config);
       expect(config.session.secure).to.equal(true);
     });
+
+    it('should set suspendOnClose to false by default', () => {
+      Qix.configureDefaults(config);
+      expect(config.session.suspendOnClose).to.equal(false);
+    });
   });
 });

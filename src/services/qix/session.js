@@ -2,7 +2,8 @@ import Events from '../../event-emitter';
 import ApiCache from './api-cache';
 
 const RETURN_KEY = 'qReturn';
-const MANUAL_SUSPEND_CODE = 4000;
+const RPC_CLOSE_NORMAL = 1000;
+const RPC_CLOSE_MANUAL_SUSPEND = 4000;
 const ON_ATTACHED_TIMEOUT_MS = 5000;
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -106,7 +107,7 @@ class Session {
       if (this.suspended) {
         return;
       }
-      if (evt.code === 1000 || evt.code === MANUAL_SUSPEND_CODE) {
+      if (evt.code === RPC_CLOSE_NORMAL || evt.code === RPC_CLOSE_MANUAL_SUSPEND) {
         return;
       }
       if (this.suspendOnClose) {
@@ -181,7 +182,7 @@ class Session {
   * @returns {Object} Returns a promise instance.
   */
   suspend() {
-    return this.rpc.close(MANUAL_SUSPEND_CODE)
+    return this.rpc.close(RPC_CLOSE_MANUAL_SUSPEND)
       .then(() => this.emit('suspended', { initiator: 'manual' }));
   }
 
@@ -218,9 +219,9 @@ class Session {
   * @returns {Object} Returns a promise instance.
   */
   restoreDoc(changed) {
-    const app = this.apis.getApisByType('Doc').pop();
+    const doc = this.apis.getApisByType('Doc').pop();
 
-    if (!app) {
+    if (!doc) {
       return this.Promise.resolve();
     }
 
@@ -241,26 +242,11 @@ class Session {
         return this.Promise.reject(new Error(response.error.message));
       }
       const handle = response.result.qReturn.qHandle;
-      app.api.handle = handle;
-      changed.push(app.api);
-      return this.Promise.resolve(app.api);
+      doc.api.handle = handle;
+      changed.push(doc.api);
+      return this.Promise.resolve(doc.api);
     });
   }
-
-  /**
-  * Function used to build the get method names for Doc APIs.
-  * @param {String} type - The API type.
-  * @returns {String} Returns the get method name, or undefined if the type cannot be restored.
-  */
-  buildGetMethodName(type) {
-    if (type === 'Field' || type === 'Variable') {
-      return undefined;
-    } else if (type === 'GenericVariable') {
-      return 'GetVariableById';
-    }
-    return type.replace('Generic', 'Get');
-  }
-
 
   /**
   * Function used to restore the APIs on the doc.
@@ -279,7 +265,7 @@ class Session {
 
     entries.forEach((entry) => {
       const api = entry.api;
-      const method = this.buildGetMethodName(api.type);
+      const method = Session.buildGetMethodName(api.type);
 
       if (!method) {
         closed.push(api);
@@ -323,7 +309,7 @@ class Session {
         this.apis = new ApiCache(changed);
         this.suspended = false;
         closed.forEach(api => api.emit('closed'));
-        changed.forEach(api => api.emit('changed'));
+        changed.filter(api => api.type !== 'Global').forEach(api => api.emit('changed'));
         this.emit('resumed');
       })
       .catch(err => this.rpc.close().then(() => this.Promise.reject(err)));
@@ -552,6 +538,20 @@ class Session {
       Session.addToPromiseChain(chain, name, value);
       return chain;
     };
+  }
+
+  /**
+  * Function used to build the get method names for Doc APIs.
+  * @param {String} type - The API type.
+  * @returns {String} Returns the get method name, or undefined if the type cannot be restored.
+  */
+  static buildGetMethodName(type) {
+    if (type === 'Field' || type === 'Variable') {
+      return undefined;
+    } else if (type === 'GenericVariable') {
+      return 'GetVariableById';
+    }
+    return type.replace('Generic', 'Get');
   }
 }
 
