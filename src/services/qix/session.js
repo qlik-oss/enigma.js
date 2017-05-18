@@ -548,7 +548,7 @@ class Session {
   */
   static buildGetMethodName(type) {
     if (type === 'Field' || type === 'Variable') {
-      return undefined;
+      return null;
     } else if (type === 'GenericVariable') {
       return 'GetVariableById';
     }
