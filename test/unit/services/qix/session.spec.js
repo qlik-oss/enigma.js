@@ -1,5 +1,6 @@
 import Promise from 'bluebird';
 import Session from '../../../../src/services/qix/session';
+import RPC from '../../../../src/services/qix/rpc';
 import RPCMock from '../../../mocks/rpc-mock';
 import SocketMock from '../../../mocks/socket-mock';
 import ApiCache from '../../../../src/services/qix/api-cache';
@@ -115,6 +116,109 @@ describe('Session', () => {
     });
   });
 
+  describe('Suspend', () => {
+    beforeEach(() => {
+      SocketMock.on('created', socket => socket.open());
+    });
+
+    afterEach(() => {
+      SocketMock.removeAllListeners('created');
+    });
+
+    it('should close rpc and set suspended flag on call to suspend()', () => {
+      const rpcClose = sinon.spy(session.rpc, 'close');
+      return session.connect().then(() => session.suspend()).then(() => {
+        expect(rpcClose.calledOnce).to.equal(true);
+        expect(session.suspended).to.equal(true);
+      });
+    });
+
+    it('should emit the suspended event when suspended', () => {
+      const emit = sinon.spy(session, 'emit');
+      return session.connect().then(() => session.suspend()).then(() => {
+        expect(emit).to.have.been.calledWith('suspended', { initiator: 'manual' });
+      });
+    });
+
+    it('should suspend on unexpected rpc close when suspendOnClose is true', () => {
+      session.suspendOnClose = true;
+      const emit = sinon.spy(session, 'emit');
+      return session.connect().then(() => session.rpc.close(1006)).then(() => {
+        expect(session.suspended).to.equal(true);
+        expect(emit).to.have.been.calledWith('suspended', { initiator: 'network' });
+      });
+    });
+
+    it('should close on unexpected rpc close when suspendOnClose is false', () => {
+      const emit = sinon.spy(session, 'emit');
+      return session.connect().then(() => session.rpc.close(1006)).then(() => {
+        expect(session.suspended).to.equal(false);
+        expect(emit).to.have.been.calledWith('closed');
+      });
+    });
+  });
+
+  describe('Resume', () => {
+    beforeEach(() => {
+      SocketMock.on('created', socket => socket.open());
+      class Dummy extends RPC { reopen() { return super.reopen(5); } }
+      const rpc = new Dummy(Promise, 'http://localhost:4848', url => new SocketMock(url, false));
+      createSession(false, rpc);
+    });
+
+    afterEach(() => {
+      SocketMock.removeAllListeners('created');
+    });
+
+    it('should reject created sessions when onlyIfAttached is true', () => {
+      const p = session.connect().then(() => session.suspend()).then(() => session.resume(true));
+      expect(p).to.eventually.be.rejectedWith('Not attached');
+    });
+
+    it('should restore global', () => {
+      const apis = new ApiCache();
+      apis.add(-1, { emit: sinon.stub(), handle: -1, type: 'Global' });
+      return session.resume().then(() => expect(apis.getApi(-1).emit.notCalled).to.equal(true));
+    });
+
+    it('should restore doc and objects', () => {
+      const apisToChange = [
+        { emit: sinon.stub(), handle: 1, type: 'Doc', id: 1 },
+        { emit: sinon.stub(), handle: 2, type: 'GenericObject', id: 2 },
+        { emit: sinon.stub(), handle: 3, type: 'GenericVariable', id: 3 },
+      ];
+      const apisToClose = [
+        { emit: sinon.stub(), handle: 4, type: 'Field', id: 4 },
+        { emit: sinon.stub(), handle: 5, type: 'GenericDummy', id: 5 },
+        { emit: sinon.stub(), handle: 6, type: 'GenericBookmark', id: 6 },
+      ];
+
+      const apis = new ApiCache(apisToChange.concat(apisToClose));
+      apis.add(-1, { emit: sinon.stub(), handle: -1, type: 'Global' });
+
+      SocketMock.on('created', (socket) => {
+        socket.intercept('GetActiveDoc').return({ result: { qReturn: { qHandle: 101 } } });
+        socket.intercept('GetObject').return({ result: { qReturn: { qHandle: 102 } } });
+        socket.intercept('GetVariableById').return({ result: { qReturn: { qHandle: 103 } } });
+        socket.intercept('GetDummy').return({ error: {} });
+        socket.intercept('GetBookmark').return({ result: { qReturn: { qHandle: null } } });
+      });
+
+      session.apis = apis;
+      session.suspended = true;
+
+      return session.resume(true).catch(() => {
+        apisToChange.forEach(api => expect(api.emit.notCalled).to.equal(true));
+        apisToClose.forEach(api => expect(api.emit.notCalled).to.equal(true));
+        expect(session.apis).to.deep.equal(apis);
+      }).then(() => session.resume(false)).then(() => {
+        expect(session.apis.getApis().length).to.equal(4);
+        apisToChange.forEach(api => expect(api.emit).to.have.been.calledWith('changed'));
+        apisToClose.forEach(api => expect(api.emit).to.have.been.calledWith('closed'));
+      });
+    });
+  });
+
   it('should listen to notification and message', () => {
     const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
     const rpcSpy = sinon.spy(rpc, 'on');
@@ -155,11 +259,6 @@ describe('Session', () => {
     rpc.emit('message', { close: [8, 11] });
     expect(emit.calledTwice).to.equal(true);
     expect(emit).to.have.been.calledWith('handle-closed');
-
-    const send = sinon.spy();
-    sinon.stub(rpc, 'send', send);
-    rpc.emit('message', { suspend: [-1] });
-    expect(send.calledOnce).to.equal(true);
   });
 
   it('should emit socket error', () => {

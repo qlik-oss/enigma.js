@@ -106,6 +106,7 @@ class Schema {
         handle: {
           enumerable: true,
           value: handle,
+          writable: true,
         },
         id: {
           enumerable: true,

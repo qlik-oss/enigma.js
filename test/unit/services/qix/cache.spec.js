@@ -72,6 +72,14 @@ describe('Cache', () => {
       expect(ApiCache).to.throw();
     });
 
+    it('should be able to pre-populate the cache', () => {
+      const apis = [{ handle: '0', value: 'foo' }, { handle: '1', value: 'bar' }];
+      apiCache = new ApiCache(apis);
+      expect(apiCache.getApis().length).to.equal(2);
+      expect(apiCache.entries['0'].api).to.deep.equal(apis[0]);
+      expect(apiCache.entries['1'].api).to.deep.equal(apis[1]);
+    });
+
     it('should add an api', () => {
       const api = {};
       const entry = apiCache.add(1, api);

@@ -6,7 +6,9 @@ All [instances](instances.md) contains a `session` property that can be used to 
 
 | Method | Description | Returns |
 |--------|-------------|---------|
-`session.close()` | Closes the WebSocket | A promise that resolves once the web socket is closed |
+`session.close()` | Closes the WebSocket | A promise that resolves once the WebSocket is closed |
+`session.suspend()` | Suspends the session | A promise that resolves once the session is suspended |
+`session.resume([onlyIfAttached=false])` | Resumes a suspended session. If `onlyIfAttached` is set to true, resume will resolve only if the session can be re-attached. | A promise that resolves if the session is resumed (and rejects otherwise) |
 
 ## Events
 
@@ -56,3 +58,32 @@ instance.session.on('socket-error', error => {
   // WebSocket error occured
 });
 ```
+
+### `suspended` event
+
+Called when the session is suspended. An `Object` containing the `initiator` of the suspension is passed to the event listener.
+
+```javascript
+instance.session.on('suspended', (data) => {
+  // Session was suspended
+  if (data.initiator === 'manual') {
+    // The session was suspended due to a call to session.suspend()
+  }
+
+  if (data.initiator === 'network') {
+    // The session was suspended due to a network problem
+  }
+});
+```
+
+### `resumed` event
+
+Called when a session is resumed.
+
+```javascript
+instance.session.on('resumed', () => {
+  // Session is resumed
+});
+```
+
+

@@ -2,6 +2,9 @@ import Events from '../../event-emitter';
 import ApiCache from './api-cache';
 
 const RETURN_KEY = 'qReturn';
+const RPC_CLOSE_NORMAL = 1000;
+const RPC_CLOSE_MANUAL_SUSPEND = 4000;
+const ON_ATTACHED_TIMEOUT_MS = 5000;
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 let connectionIdCounter = 0;
@@ -16,12 +19,17 @@ class Session {
   * @param {Boolean} delta=true - Flag to determine delta handling.
   * @param {Object} definition - The definition instance used by the session.
   * @param {Object} JSONPatch - JSON patch object.
-  * @param {Object} listeners A key-value map of listeners.
-  * @param {Array} interceptors An array of interceptors.
   * @param {Function} Promise - The promise constructor.
+  * @param {Object} listeners - A key-value map of listeners.
+  * @param {Array} interceptors - An array of interceptors.
+  * @param {Function} handleLog - log handler callback
+  * @param {String} appId - the appId for this session.
+  * @param {Boolean} noData - if true, the app was opened without data.
+  * @param {Boolean} suspendOnClose - when true, the session will be suspended if the underlying
+  *                                   websocket closes unexpectedly.
   */
   constructor(rpc, delta, definition, JSONPatch, Promise, listeners = {},
-              interceptors = [], handleLog) {
+    interceptors = [], handleLog, appId, noData, suspendOnClose) {
     Events.mixin(this);
     this.rpc = rpc;
     this.delta = delta;
@@ -30,6 +38,9 @@ class Session {
     this.Promise = Promise;
     this.apis = new ApiCache();
     this.handleLog = handleLog;
+    this.appId = appId;
+    this.noData = noData;
+    this.suspendOnClose = suspendOnClose;
     this.connectionId = connectionIdCounter += 1;
     this.responseInterceptors = [{
       onFulfilled: this.processLogInterceptor,
@@ -45,31 +56,9 @@ class Session {
       onFulfilled: this.processObjectApiInterceptor,
     }];
     this.responseInterceptors.push(...interceptors);
+    this.registerRpcListeners();
 
-    rpc.on('socket-error', err => this.emit('socket-error', err));
-    rpc.on('closed', evt => this.emit('closed', evt));
-    rpc.on('notification', (response) => {
-      this.emit('notification:*', response.method, response.params);
-      this.emit(`notification:${response.method}`, response.params);
-    });
-
-    rpc.on('message', (response) => {
-      if (response.change) {
-        response.change.forEach(handle => this.emit('handle-changed', handle));
-      }
-
-      if (response.close) {
-        response.close.forEach(handle => this.emit('handle-closed', handle));
-      }
-
-      if (response.suspend) {
-        this.rpc.send({
-          method: 'Resume',
-          params: [],
-          handle: response.suspend[0],
-        });
-      }
-    });
+    this.suspended = false;
 
     this.on('handle-changed', (handle) => {
       const api = this.apis.getApi(handle);
@@ -86,6 +75,10 @@ class Session {
       }
     });
 
+    this.on('suspended', () => {
+      this.suspended = true;
+    });
+
     this.on('closed', () => {
       this.removeAllListeners();
       this.apis.getApis().forEach((entry) => {
@@ -97,6 +90,54 @@ class Session {
 
     Object.keys(listeners).forEach(key => this.on(key, listeners[key]));
     this.emit('session-created', this);
+  }
+
+  /**
+  * Function used register the RPC listerners except for the notification listeners
+  */
+  registerRpcListeners() {
+    const onError = (err) => {
+      if (this.suspended) {
+        return;
+      }
+      this.emit('socket-error', err);
+    };
+
+    const onClosed = (evt) => {
+      if (this.suspended) {
+        return;
+      }
+      if (evt.code === RPC_CLOSE_NORMAL || evt.code === RPC_CLOSE_MANUAL_SUSPEND) {
+        return;
+      }
+      if (this.suspendOnClose) {
+        this.emit('suspended', { initiator: 'network' });
+      } else {
+        this.emit('closed', evt);
+      }
+    };
+
+    const onMessage = (response) => {
+      if (this.suspended) {
+        return;
+      }
+      if (response.change) {
+        response.change.forEach(handle => this.emit('handle-changed', handle));
+      }
+      if (response.close) {
+        response.close.forEach(handle => this.emit('handle-closed', handle));
+      }
+    };
+
+    const onNotification = (response) => {
+      this.emit('notification:*', response.method, response.params);
+      this.emit(`notification:${response.method}`, response.params);
+    };
+
+    this.rpc.on('socket-error', onError);
+    this.rpc.on('closed', onClosed);
+    this.rpc.on('message', onMessage);
+    this.rpc.on('notification', onNotification);
   }
 
   /**
@@ -113,6 +154,10 @@ class Session {
   * @returns {Object} Returns a promise instance.
   */
   send(request) {
+    if (this.suspended) {
+      return this.Promise.reject(new Error('Session suspended'));
+    }
+
     const data = {
       method: request.method,
       handle: request.handle,
@@ -133,11 +178,150 @@ class Session {
   }
 
   /**
+  * Function used to suspend the session.
+  * @returns {Object} Returns a promise instance.
+  */
+  suspend() {
+    return this.rpc.close(RPC_CLOSE_MANUAL_SUSPEND)
+      .then(() => this.emit('suspended', { initiator: 'manual' }));
+  }
+
+  /**
+  * Function used to restore the rpc connection.
+  * @param {Boolean} onlyIfAttached - if true, the returned promise will resolve
+  *                                   only if the session can be re-attached.
+  * @returns {Object} Returns a promise instance.
+  */
+  restoreRpcConnection(onlyIfAttached) {
+    return this.rpc.reopen(ON_ATTACHED_TIMEOUT_MS).then((sessionState) => {
+      if (sessionState === 'SESSION_CREATED' && onlyIfAttached) {
+        return this.Promise.reject(new Error('Not attached'));
+      }
+      return this.Promise.resolve();
+    });
+  }
+
+  /**
+  * Function used to restore the global API.
+  * @param {Object} changed - A list where the restored APIs will be added.
+  * @returns {Object} Returns a promise instance.
+  */
+  restoreGlobal(changed) {
+    const global = this.apis.getApisByType('Global').pop();
+    changed.push(global.api);
+    return this.Promise.resolve();
+  }
+
+  /**
+  * Function used to restore the doc API.
+  * @param {String} sessionState - The state of the session, attached or created.
+  * @param {Object} changed - A list where the restored APIs will be added.
+  * @returns {Object} Returns a promise instance.
+  */
+  restoreDoc(changed) {
+    const doc = this.apis.getApisByType('Doc').pop();
+
+    if (!doc) {
+      return this.Promise.resolve();
+    }
+
+    return this.rpc.send({
+      method: 'GetActiveDoc',
+      handle: -1,
+      params: [],
+    }).then((response) => {
+      if (response.error) {
+        return this.rpc.send({
+          method: 'OpenDoc',
+          handle: -1,
+          params: [this.appId, '', '', '', !!this.noData],
+        });
+      }
+      return response;
+    }).then((response) => {
+      if (response.error) {
+        return this.Promise.reject(new Error(response.error.message));
+      }
+      const handle = response.result.qReturn.qHandle;
+      doc.api.handle = handle;
+      changed.push(doc.api);
+      return this.Promise.resolve(doc.api);
+    });
+  }
+
+  /**
+  * Function used to restore the APIs on the doc.
+  * @param {Object} doc - The doc API on which the APIs we want to restore exist.
+  * @param {Array} closed - A list where the closed of APIs APIs will be added.
+  * @param {Object} changed - A list where the restored APIs will be added.
+  * @returns {Object} Returns a promise instance.
+  */
+  restoreDocObjects(doc, closed, changed) {
+    if (!doc) {
+      return this.Promise.resolve();
+    }
+
+    const tasks = [];
+    const entries = this.apis.getApis().filter(entry => entry.api.type !== 'Global' && entry.api.type !== 'Doc');
+
+    entries.forEach((entry) => {
+      const api = entry.api;
+      const method = Session.buildGetMethodName(api.type);
+
+      if (!method) {
+        closed.push(api);
+      } else {
+        const request = this.rpc.send({
+          method,
+          handle: doc.handle,
+          params: [api.id],
+        }).then((response) => {
+          if (response.error || !response.result.qReturn.qHandle) {
+            closed.push(api);
+          } else {
+            api.handle = response.result.qReturn.qHandle;
+            changed.push(api);
+          }
+        });
+        tasks.push(request);
+      }
+    });
+    return Promise.all(tasks);
+  }
+
+  /**
+  * Function used to resume the session
+  * @param {Boolean} onlyIfAttached - if true, resume only if the session was re-attached.
+  * @returns {Object} Returns a promise instance.
+  */
+  resume(onlyIfAttached = false) {
+    if (!this.suspended) {
+      return this.Promise.resolve();
+    }
+
+    const changed = [];
+    const closed = [];
+
+    return this.restoreRpcConnection(onlyIfAttached)
+      .then(() => this.restoreGlobal(changed))
+      .then(() => this.restoreDoc(changed))
+      .then(doc => this.restoreDocObjects(doc, closed, changed))
+      .then(() => {
+        this.apis = new ApiCache(changed);
+        this.suspended = false;
+        closed.forEach(api => api.emit('closed'));
+        changed.filter(api => api.type !== 'Global').forEach(api => api.emit('changed'));
+        this.emit('resumed');
+      })
+      .catch(err => this.rpc.close().then(() => this.Promise.reject(err)));
+  }
+
+  /**
   * Function used to close the endpoint.
   * @returns {Object} Returns a promise instance.
   */
   close() {
-    return this.rpc.close();
+    return this.rpc.close().then(evt => this.emit('closed', evt));
   }
 
   /**
@@ -233,7 +417,7 @@ class Session {
   */
   intercept(promise, interceptors, meta) {
     return interceptors.reduce((interception, interceptor) =>
-    interception.then(
+      interception.then(
       interceptor.onFulfilled && interceptor.onFulfilled.bind(this, meta),
       interceptor.onRejected && interceptor.onRejected.bind(this, meta))
       , promise
@@ -355,6 +539,20 @@ class Session {
       Session.addToPromiseChain(chain, name, value);
       return chain;
     };
+  }
+
+  /**
+  * Function used to build the get method names for Doc APIs.
+  * @param {String} type - The API type.
+  * @returns {String} Returns the get method name, or undefined if the type cannot be restored.
+  */
+  static buildGetMethodName(type) {
+    if (type === 'Field' || type === 'Variable') {
+      return null;
+    } else if (type === 'GenericVariable') {
+      return 'GetVariableById';
+    }
+    return type.replace('Generic', 'Get');
   }
 }
 

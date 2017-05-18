@@ -21,6 +21,9 @@ export default class SocketMock {
     this.onopen();
   }
   close(code, reason) {
+    if (this.readyState === this.CLOSE) {
+      return;
+    }
     this.readyState = this.CLOSE;
     this.onclose({
       code,
