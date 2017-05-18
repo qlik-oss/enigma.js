@@ -195,8 +195,6 @@ export default class Qix {
       const globalApi = session.getObjectApi(args);
       globalApi.openApp = globalApi.openDoc =
       (appId, user = '', password = '', serial = '', noData = false) => {
-        // TODO: appId and noData should be stored in a better way.
-        // (Preferably in the the app instance instead?)
         session.appId = appId;
         session.noData = noData;
         config.session.route = '';
