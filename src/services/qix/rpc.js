@@ -56,17 +56,22 @@ class RPC {
   */
   reopen(timeout) {
     let timer;
-    let resolver;
+    let notificationResolve;
+    let notificationReceived = false;
+    const notificationPromise = new Promise((resolve) => { notificationResolve = resolve; });
 
     const waitForNotification = () => {
-      timer = setTimeout(() => resolver('SESSION_CREATED'), timeout);
-      return new this.Promise((resolve) => { resolver = resolve; });
+      if (!notificationReceived) {
+        timer = setTimeout(() => notificationResolve('SESSION_CREATED'), timeout);
+      }
+      return notificationPromise;
     };
 
     const onNotification = (data) => {
       if (data.method !== 'OnConnected') return;
       clearTimeout(timer);
-      resolver(data.params.qConnectedState);
+      notificationResolve(data.params.qConnectedState);
+      notificationReceived = true;
     };
 
     const cleanUpAndReturn = (obj, func) => {
