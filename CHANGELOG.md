@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+
+- Bugfix related to suspend/resume, notification should be qSessionState (not qConnectedState).
+
 ## 1.2.0
 
 ### Features

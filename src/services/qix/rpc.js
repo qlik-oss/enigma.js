@@ -70,7 +70,7 @@ class RPC {
     const onNotification = (data) => {
       if (data.method !== 'OnConnected') return;
       clearTimeout(timer);
-      notificationResolve(data.params.qConnectedState);
+      notificationResolve(data.params.qSessionState);
       notificationReceived = true;
     };
 
