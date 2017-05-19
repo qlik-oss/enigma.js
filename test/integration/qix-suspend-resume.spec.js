@@ -3,7 +3,7 @@ import WebSocket from 'ws';
 import Qix from '../../src/services/qix/index';
 import Schema from '../../schemas/qix/3.2/schema.json';
 
-// N.B. This test will only pass when run towards an enginge supporting the session TTL feature.
+// N.B. This test will only pass when run towards an engine supporting the session TTL feature.
 describe('QIX Suspend/Resume', () => {
   const qix = new Qix();
   let config;
