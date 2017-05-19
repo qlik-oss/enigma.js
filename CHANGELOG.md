@@ -1,6 +1,11 @@
 # Changelog
 
-## 1.1.0
+## 1.2.0
+
+### Features
+- Suspend/Resume: It is now possible to suspend an resume qix sessions. See [session.md](https://github.com/qlik-oss/enigma.js/blob/master/docs/qix/session.md#sessions).
+
+## 1.1.1
 
 ### Features
 
@@ -14,6 +19,10 @@
 
 - Configuration (QIX): `config.session.reloadUri` in favor of `config.session.urlParams`.
 - Configuration (QIX/REST): `config.unsecure` (default `false`) in favor of `config.secure` (default `true`).
+
+## 1.1.0
+
+Broken release. Do not use.
 
 ## 1.0.1
 
