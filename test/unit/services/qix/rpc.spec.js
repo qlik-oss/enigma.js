@@ -61,7 +61,7 @@ describe('RPC', () => {
     SocketMock.on('created', socket => socket.open());
     const reopen = rpc.reopen(1000000);
     setTimeout(() => rpc.emit('notification',
-      { method: 'OnConnected', params: { qConnectedState: 'SESSION_ATTACHED' } }), 25);
+      { method: 'OnConnected', params: { qSessionState: 'SESSION_ATTACHED' } }), 25);
 
     return reopen.then(state => expect(state).to.equal('SESSION_ATTACHED'));
   });
