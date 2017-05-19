@@ -74,16 +74,18 @@ class RPC {
       notificationReceived = true;
     };
 
-    const cleanUpAndReturn = (obj, func) => {
-      this.removeListener('notification', onNotification);
-      return func(obj);
-    };
-
     this.on('notification', onNotification);
+
     return this.open(true)
       .then(waitForNotification)
-      .then(state => cleanUpAndReturn(state, this.Promise.resolve))
-      .catch(err => cleanUpAndReturn(err, this.Promise.reject));
+      .then((state) => {
+        this.removeListener('notification', onNotification);
+        return state;
+      })
+      .catch((err) => {
+        this.removeListener('notification', onNotification);
+        return this.Promise.reject(err);
+      });
   }
 
   /**
