@@ -215,10 +215,11 @@ class Session {
   /**
   * Function used to restore the doc API.
   * @param {String} sessionState - The state of the session, attached or created.
+  * @param {Array} closed - A list where the closed of APIs APIs will be added.
   * @param {Object} changed - A list where the restored APIs will be added.
   * @returns {Object} Returns a promise instance.
   */
-  restoreDoc(changed) {
+  restoreDoc(closed, changed) {
     const doc = this.apis.getApisByType('Doc').pop();
 
     if (!doc) {
@@ -240,7 +241,8 @@ class Session {
       return response;
     }).then((response) => {
       if (response.error) {
-        return this.Promise.reject(new Error(response.error.message));
+        closed.push(doc.api);
+        return this.Promise.resolve();
       }
       const handle = response.result.qReturn.qHandle;
       doc.api.handle = handle;
@@ -257,15 +259,17 @@ class Session {
   * @returns {Object} Returns a promise instance.
   */
   restoreDocObjects(doc, closed, changed) {
+    const tasks = [];
+    const apis = this.apis.getApis()
+      .map(entry => entry.api)
+      .filter(api => api.type !== 'Global' && api.type !== 'Doc');
+
     if (!doc) {
+      apis.forEach(api => closed.push(api));
       return this.Promise.resolve();
     }
 
-    const tasks = [];
-    const entries = this.apis.getApis().filter(entry => entry.api.type !== 'Global' && entry.api.type !== 'Doc');
-
-    entries.forEach((entry) => {
-      const api = entry.api;
+    apis.forEach((api) => {
       const method = Session.buildGetMethodName(api.type);
 
       if (!method) {
@@ -304,7 +308,7 @@ class Session {
 
     return this.restoreRpcConnection(onlyIfAttached)
       .then(() => this.restoreGlobal(changed))
-      .then(() => this.restoreDoc(changed))
+      .then(() => this.restoreDoc(closed, changed))
       .then(doc => this.restoreDocObjects(doc, closed, changed))
       .then(() => {
         this.apis = new ApiCache(changed);
