@@ -181,6 +181,29 @@ describe('Session', () => {
       return session.resume().then(() => expect(apis.getApi(-1).emit.notCalled).to.equal(true));
     });
 
+    it('should close doc', () => {
+      const apisToClose = [
+        { emit: sinon.stub(), handle: 1, type: 'Doc', id: 1 },
+        { emit: sinon.stub(), handle: 2, type: 'GenericObject', id: 2 },
+      ];
+
+      const apis = new ApiCache(apisToClose);
+      apis.add(-1, { emit: sinon.stub(), handle: -1, type: 'Global' });
+
+      SocketMock.on('created', (socket) => {
+        socket.intercept('GetActiveDoc').return({ error: { message: 'Oh, no!' } });
+        socket.intercept('OpenDoc').return({ error: { message: 'Oh, no!' } });
+      });
+
+      session.apis = apis;
+      session.suspended = true;
+
+      return session.resume(false).then(() => {
+        expect(session.apis.getApis().length).to.equal(1);
+        apisToClose.forEach(api => expect(api.emit).to.have.been.calledWith('closed'));
+      });
+    });
+
     it('should restore doc and objects', () => {
       const apisToChange = [
         { emit: sinon.stub(), handle: 1, type: 'Doc', id: 1 },
