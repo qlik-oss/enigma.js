@@ -104,7 +104,7 @@ class RPC {
   onClose(event) {
     this.emit('closed', event);
     this.resolvers.closed.resolveWith(event);
-    this.rejectAllOutstandingResolvers(event);
+    this.rejectAllOutstandingResolvers({ code: -1, message: 'Socket closed' });
   }
 
   /**
@@ -131,7 +131,7 @@ class RPC {
       // as run-time ones:
       this.emit('socket-error', event);
     }
-    this.rejectAllOutstandingResolvers(event);
+    this.rejectAllOutstandingResolvers({ code: -1, message: 'Socket error' });
   }
 
   /**

@@ -187,7 +187,6 @@ describe('RPC', () => {
 
   it('should reject all outstanding resolvers on error', () => {
     const rejectWith = sandbox.spy();
-    const reason = { reason: 'Socket error' };
     rpc.resolvers = {
       1: {
         rejectWith,
@@ -196,9 +195,9 @@ describe('RPC', () => {
         rejectWith,
       },
     };
-    rpc.onError(reason);
+    rpc.onError({ dummy: 123 });
 
     expect(rejectWith.callCount).to.equal(2);
-    expect(rejectWith).to.be.calledWith(reason);
+    expect(rejectWith).to.be.calledWith({ code: -1, message: 'Socket error' });
   });
 });
