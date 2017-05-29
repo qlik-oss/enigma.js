@@ -185,7 +185,7 @@ describe('RPC', () => {
     rpc.socket.open();
   });
 
-  it('should reject all outstanding resolvers', () => {
+  it('should reject all outstanding resolvers on error', () => {
     const rejectWith = sandbox.spy();
     rpc.resolvers = {
       1: {
@@ -195,7 +195,9 @@ describe('RPC', () => {
         rejectWith,
       },
     };
-    rpc.rejectAllOutstandingResolvers();
+    rpc.onError({ dummy: 123 });
+
     expect(rejectWith.callCount).to.equal(2);
+    expect(rejectWith).to.be.calledWith({ code: -1, message: 'Socket error' });
   });
 });
