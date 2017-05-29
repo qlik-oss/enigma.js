@@ -104,7 +104,7 @@ class RPC {
   onClose(event) {
     this.emit('closed', event);
     this.resolvers.closed.resolveWith(event);
-    this.rejectAllOutstandingResolvers();
+    this.rejectAllOutstandingResolvers(event);
   }
 
   /**
@@ -131,7 +131,7 @@ class RPC {
       // as run-time ones:
       this.emit('socket-error', event);
     }
-    this.rejectAllOutstandingResolvers();
+    this.rejectAllOutstandingResolvers(event);
   }
 
   /**
@@ -150,14 +150,15 @@ class RPC {
 
   /**
   * Rejects all outstanding resolvers.
+  * @param {Object} reason - The reject reason.
   */
-  rejectAllOutstandingResolvers() {
+  rejectAllOutstandingResolvers(reason) {
     Object.keys(this.resolvers).forEach((id) => {
       if (id === 'opened' || id === 'closed') {
         return; // "opened" and "closed" should not be handled here
       }
       const resolver = this.resolvers[id];
-      resolver.rejectWith();
+      resolver.rejectWith(reason);
     });
   }
 
