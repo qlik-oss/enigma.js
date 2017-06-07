@@ -498,10 +498,10 @@ class Session {
   * @returns {Object} - Returns the out property on result
   */
   processOutInterceptor(meta, result) {
-    if (hasOwnProperty.call(result, RETURN_KEY)) {
-      return result[RETURN_KEY];
-    } else if (meta.outKey !== -1) {
+    if (meta.outKey !== -1) {
       return result[meta.outKey];
+    } else if (hasOwnProperty.call(result, RETURN_KEY)) {
+      return result[RETURN_KEY];
     }
     return result;
   }

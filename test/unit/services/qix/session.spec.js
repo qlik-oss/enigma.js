@@ -533,6 +533,11 @@ describe('Session', () => {
       expect(session.processOutInterceptor({ outKey: 'foo' }, result)).to.be.equal(result.foo);
     });
 
+    it('should return result from out key even when qReturn is defined', () => {
+      const result = { qReturn: { baz: {} }, foo: { bar: {} } };
+      expect(session.processOutInterceptor({ outKey: 'foo' }, result)).to.be.equal(result.foo);
+    });
+
     it('should return result with return key', () => {
       const result = { qReturn: { foo: {} } };
       expect(session.processOutInterceptor({ outKey: -1 }, result)).to.be.equal(result.qReturn);

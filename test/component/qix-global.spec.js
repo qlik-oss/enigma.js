@@ -94,7 +94,7 @@ describe('QIX Global', () => {
   });
 
   it('should CreateSessionApp', () => {
-    socket.intercept('CreateSessionApp').return({ result: { qReturn: { qType: 'Doc', qHandle: 1 } }, change: [1] });
+    socket.intercept('CreateSessionApp').return({ result: { qSessionAppId: { qType: 'Doc', qHandle: 1 } }, change: [1] });
     return expect(qixGlobal.createSessionApp()).to.eventually.be.an('object');
   });
 
@@ -114,13 +114,13 @@ describe('QIX Global', () => {
   });
 
   it('should GetBNF', () => {
-    socket.intercept('GetBNF').return({ result: { qReturn: [] } });
+    socket.intercept('GetBNF').return({ result: { qBnfDefs: [] } });
     return expect(qixGlobal.getBNF(0)).to.eventually.be.an('array');
   });
 
   describe('GetConfiguration', () => {
     it('should return configuration for server', () => {
-      socket.intercept('GetConfiguration').return({ result: { qReturn: { qFeatures: { qAutoSave: true, qPublishing: true, qSSOEnabled: true } } } });
+      socket.intercept('GetConfiguration').return({ result: { qConfig: { qFeatures: { qAutoSave: true, qPublishing: true, qSSOEnabled: true } } } });
       return expect(qixGlobal.getConfiguration()).to.eventually.deep.equal({
         qFeatures: {
           qAutoSave: true,
@@ -131,7 +131,7 @@ describe('QIX Global', () => {
     });
 
     it('should return configuration for desktop', () => {
-      socket.intercept('GetConfiguration').return({ result: { qReturn: { qFeatures: { qIsDesktop: true } } } });
+      socket.intercept('GetConfiguration').return({ result: { qConfig: { qFeatures: { qIsDesktop: true } } } });
       return expect(qixGlobal.getConfiguration()).to.eventually.deep.equal({
         qFeatures: {
           qIsDesktop: true,
@@ -141,37 +141,37 @@ describe('QIX Global', () => {
   });
 
   it('should GetCustomConnectors', () => {
-    socket.intercept('GetCustomConnectors').return({ result: { qReturn: [] } });
+    socket.intercept('GetCustomConnectors').return({ result: { qConnectors: [] } });
     return expect(qixGlobal.getCustomConnectors()).to.eventually.be.an('array');
   });
 
   it('should GetDefaultAppFolder', () => {
-    socket.intercept('GetDefaultAppFolder').return({ result: { qReturn: '' } });
+    socket.intercept('GetDefaultAppFolder').return({ result: { qPath: '' } });
     return expect(qixGlobal.getDefaultAppFolder()).to.eventually.be.a('string');
   });
 
   it('should GetDocList', () => {
-    socket.intercept('GetDocList').return({ result: { qReturn: [] } });
+    socket.intercept('GetDocList').return({ result: { qDocList: [] } });
     return expect(qixGlobal.getDocList()).to.eventually.be.an('array');
   });
 
   it('should GetOdbcDsns', () => {
-    socket.intercept('GetOdbcDsns').return({ result: { qReturn: [] } });
+    socket.intercept('GetOdbcDsns').return({ result: { qOdbcDsns: [] } });
     return expect(qixGlobal.getOdbcDsns()).to.eventually.be.an('array');
   });
 
   it('should GetOleDbProviders', () => {
-    socket.intercept('GetOleDbProviders').return({ result: { qReturn: [] } });
+    socket.intercept('GetOleDbProviders').return({ result: { qOleDbProviders: [] } });
     return expect(qixGlobal.getOleDbProviders()).to.eventually.be.an('array');
   });
 
   it('should GetSupportedCodePages', () => {
-    socket.intercept('GetSupportedCodePages').return({ result: { qReturn: [] } });
+    socket.intercept('GetSupportedCodePages').return({ result: { qCodePages: [] } });
     return expect(qixGlobal.getSupportedCodePages()).to.eventually.be.an('array');
   });
 
   it('should GetUniqueID', () => {
-    socket.intercept('GetUniqueID').return({ result: { qReturn: '12345678-1234-1234-1234-123456789abc' } });
+    socket.intercept('GetUniqueID').return({ result: { qUniqueID: '12345678-1234-1234-1234-123456789abc' } });
     return expect(qixGlobal.getUniqueID()).to.eventually.match(
       /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
     );
