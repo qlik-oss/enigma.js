@@ -11,7 +11,7 @@ general:
 dependencies:
   override:
     - yarn
-    - npm run webpack
+    - npm run build
 
 test:
   override:
