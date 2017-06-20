@@ -254,14 +254,13 @@ class Qix {
   * @returns {Promise<Object>} Returns a promise containing an instance for the
   *                            global API if resolved. If unresolved, an error will be thrown.
   */
-  static connect(config) {
-    const instance = new Qix();
+  connect(config) {
     Qix.configureDefaults(config);
     config.mixins.forEach((mixin) => {
       config.schema.registerMixin(mixin);
     });
-    const session = instance.getSession(config);
-    return instance.get(session, config);
+    const session = this.getSession(config);
+    return this.get(session, config);
   }
 
   /**
@@ -305,9 +304,9 @@ class Qix {
       config.createSocket = url => new WebSocket(url); // eslint-disable-line no-undef
     }
 
-    if (!config.schema) {
+    /* if (!config.schema) {
       throw new Error('You need to define a QIX Engine schema.');
-    }
+    }*/
 
     if (!(config.schema instanceof Schema)) {
       config.schema = new Schema(config.Promise, config.schema);

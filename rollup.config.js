@@ -8,8 +8,8 @@ import uglify from 'rollup-plugin-uglify';
 import filesize from 'rollup-plugin-filesize';
 
 export default {
-  entry: 'src/services/qix/index.js',
-  dest: 'dist/qix.js',
+  entry: 'src/index.js',
+  dest: 'dist/enigma.js',
   moduleName: 'enigma',
   format: 'umd',
   sourceMap: true,
