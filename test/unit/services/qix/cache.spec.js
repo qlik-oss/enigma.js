@@ -92,6 +92,18 @@ describe('Cache', () => {
       expect(apiCache.getApi(1)).to.equal(api);
     });
 
+    it('should return an undefined api if an api is not found', () => {
+      const api = {};
+      apiCache.add(1, api);
+      expect(apiCache.getApi(2)).to.equal(undefined);
+    });
+
+    it('should return an undefined api if given an undefined handle', () => {
+      const api = {};
+      apiCache.add(1, api);
+      expect(apiCache.getApi(undefined)).to.equal(undefined);
+    });
+
     it('should get all api entries', () => {
       apiCache.add('1', 'foo');
       apiCache.add('2', 'bar');

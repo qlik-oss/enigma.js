@@ -37,7 +37,7 @@ class ApiCache extends KeyValueCache {
   * @returns {*} The API for the handle.
   */
   getApi(handle) {
-    const entry = this.get(handle.toString());
+    const entry = typeof handle !== 'undefined' ? this.get(handle.toString()) : undefined;
     return entry && entry.api;
   }
 
