@@ -49,7 +49,7 @@ function replaceLeadingAndTrailingSlashes(str) {
 /**
 * Qix service.
 */
-export default class Qix {
+class Qix {
 
   /**
   * @description Create an instance of the Qix service.
@@ -254,13 +254,14 @@ export default class Qix {
   * @returns {Promise<Object>} Returns a promise containing an instance for the
   *                            global API if resolved. If unresolved, an error will be thrown.
   */
-  connect(config) {
+  static connect(config) {
+    const instance = new Qix();
     Qix.configureDefaults(config);
     config.mixins.forEach((mixin) => {
       config.schema.registerMixin(mixin);
     });
-    const session = this.getSession(config);
-    return this.get(session, config);
+    const session = instance.getSession(config);
+    return instance.get(session, config);
   }
 
   /**
@@ -269,6 +270,10 @@ export default class Qix {
   *                               and retrieve end QIX APIs.
   */
   static configureDefaults(config) {
+    if (!config) {
+      throw new Error('You need to supply a configuration.');
+    }
+
     if (!config.Promise && typeof Promise === 'undefined') {
       throw new Error('Your environment has no Promise implementation. You must provide a Promise implementation in the config.');
     }
@@ -300,6 +305,10 @@ export default class Qix {
       config.createSocket = url => new WebSocket(url); // eslint-disable-line no-undef
     }
 
+    if (!config.schema) {
+      throw new Error('You need to define a QIX Engine schema.');
+    }
+
     if (!(config.schema instanceof Schema)) {
       config.schema = new Schema(config.Promise, config.schema);
     }
@@ -308,3 +317,5 @@ export default class Qix {
     config.JSONPatch = config.JSONPatch || Patch;
   }
 }
+
+export default Qix;

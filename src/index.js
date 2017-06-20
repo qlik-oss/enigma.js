@@ -6,10 +6,9 @@ import Qix from './services/qix/index';
 import Rest from './services/rest/index';
 
 const registry = new Registry();
-const qix = new Qix();
 const rest = new Rest();
 
-registry.registerService('qix', qix.connect.bind(qix));
+registry.registerService('qix', (...args) => Qix.connect(...args));
 registry.registerService('rest', rest.connect.bind(rest));
 
 export default registry;
