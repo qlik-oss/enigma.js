@@ -304,10 +304,6 @@ class Qix {
       config.createSocket = url => new WebSocket(url); // eslint-disable-line no-undef
     }
 
-    /* if (!config.schema) {
-      throw new Error('You need to define a QIX Engine schema.');
-    }*/
-
     if (!(config.schema instanceof Schema)) {
       config.schema = new Schema(config.Promise, config.schema);
     }
