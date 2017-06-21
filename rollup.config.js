@@ -18,7 +18,7 @@ export default {
     nodeGlobals(),
     nodeBuiltins(),
     commonjs(),
-    babel({ exclude: 'node_modules/**', presets: ['es2015-rollup'], babelrc: false, plugins: ['external-helpers'] }),
+    babel({ exclude: 'node_modules/**', babelrc: false, presets: ['es2015-rollup'], plugins: ['external-helpers'] }),
     uglify(),
     filesize(),
   ],

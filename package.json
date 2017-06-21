@@ -29,7 +29,11 @@
     "/schemas"
   ],
   "main": "dist/enigma.js",
-  "module": "src/services/qix/index.js",
+  "module": "src/index.js",
+  "dependencies": {
+    "extend": "^3.0.0",
+    "node-event-emitter": "0.0.1"
+  },
   "devDependencies": {
     "after-work.js": "^2.0.0",
     "babel-core": "^6.10.4",
@@ -43,9 +47,7 @@
     "eslint": "^3.8.0",
     "eslint-config-airbnb": "^12.0.0",
     "eslint-plugin-import": "^1.16.0",
-    "extend": "^3.0.0",
     "jsdoc": "^3.4.0",
-    "node-event-emitter": "0.0.1",
     "rimraf": "^2.5.1",
     "rollup": "^0.43.0",
     "rollup-plugin-babel": "^2.7.1",
