@@ -121,6 +121,10 @@ class Session {
       if (this.suspended) {
         return;
       }
+
+      this.emit('traffic:*', 'received', response);
+      this.emit('traffic:received', response);
+
       if (response.change) {
         response.change.forEach(handle => this.emit('handle-changed', handle));
       }
@@ -168,9 +172,8 @@ class Session {
     const response = this.rpc.send(data);
     request.id = data.id;
 
-    if (this.handleLog) { // Log after the request is sent to get the request id into the logs
-      this.handleLog({ msg: 'Sent', connection: this.connectionId, data: request });
-    }
+    this.emit('traffic:*', 'sent', request);
+    this.emit('traffic:sent', request);
 
     const promise = this.intercept(response, this.responseInterceptors, request);
     Session.addToPromiseChain(promise, 'requestId', request.id);

@@ -24,9 +24,7 @@ instance.session.on('closed', event => {
 
 ### `notification` event
 
-Notification events are sent by the [Qlik Sense Proxy Service (QPS)](https://help.qlik.com/en-US/sense-developer/Subsystems/ProxyServiceAPI/Content/ProxyServiceAPI/ProxyServiceAPI-Msgs-Proxy-Clients.htm).
-
-**Note:** Notification events are triggered by the Proxy and are thus only available on Qlik Sense Enterprise.
+Notification events are sent when a JSONRPC notification is sent to enigma.js. These can be sent by for example [Qlik Sense Proxy Service (QPS)](https://help.qlik.com/en-US/sense-developer/Subsystems/ProxyServiceAPI/Content/ProxyServiceAPI/ProxyServiceAPI-Msgs-Proxy-Clients.htm).
 
 A client can register event listeners in one of two ways:
 
@@ -86,4 +84,30 @@ instance.session.on('resumed', () => {
 });
 ```
 
+### `traffic` events
 
+
+1. Single direction
+
+  Possible values: `traffic:sent`, `traffic:received`.
+
+  ```javascript
+  instance.session.on('traffic:sent', data => {
+    // 'data' - JSONRPC request object
+  });
+  ```
+
+  ```javascript
+  instance.session.on('traffic:received', data => {
+    // 'data' - JSONRPC response object
+  });
+  ```
+
+2. All directions
+
+ ```javascript
+ instance.session.on('traffic:*', (direction, data) => {
+   // 'direction' - the traffic direction, sent/received
+   // 'data' - JSONRPC request or response, depending on direction
+ });
+ ```

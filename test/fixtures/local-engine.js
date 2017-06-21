@@ -5,9 +5,13 @@ const schema = require('../../schemas/qix/3.2/schema.json');
 
 const cfg = {
   schema,
-  appId: 'test',
   createSocket(url) {
     return new WebSocket(url);
+  },
+  listeners: {
+    'traffic:sent': data => console.log('->', data),
+    'traffic:received': data => console.log('<-', data),
+    'traffic:*': (dir, data) => console.log(dir, data),
   },
   session: {
     secure: false,
@@ -15,10 +19,10 @@ const cfg = {
   },
 };
 
-enigma.create(cfg).then((qix) => {
+enigma.connect(cfg).then(qix => qix.global.createSessionApp()).then((app) => {
   const promises = [];
-  for (let i = 0; i < 1000; i += 1) {
-    const created = qix.app.createObject({ qInfo: { qType: 'CustomType' }, num: i });
+  for (let i = 0; i < 3; i += 1) {
+    const created = app.createObject({ qInfo: { qType: 'CustomType' }, num: i });
     promises.push(created);
   }
   Promise.all(promises).then((models) => {
