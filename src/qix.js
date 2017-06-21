@@ -1,9 +1,9 @@
 import QueryString from 'querystring';
-import Patch from '../../json-patch';
+import Patch from './json-patch';
 import Session from './session';
 import Schema from './schema';
 import RPC from './rpc';
-import KeyValueCache from '../../cache';
+import KeyValueCache from './cache';
 
 function replaceLeadingAndTrailingSlashes(str) {
   return str.replace(/(^[/]+)|([/]+$)/g, '');

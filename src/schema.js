@@ -1,5 +1,5 @@
-import KeyValueCache from '../../cache';
-import Events from '../../event-emitter';
+import KeyValueCache from './cache';
+import Events from './event-emitter';
 
 const IGNORE_DELTA_METHODS = [
   'GetProperties',

@@ -1,5 +1,5 @@
-import KeyValueCache from '../../../../src/cache';
-import ApiCache from '../../../../src/services/qix/api-cache';
+import KeyValueCache from '../../src/cache';
+import ApiCache from '../../src/api-cache';
 
 describe('Cache', () => {
   describe('KeyValueCache', () => {

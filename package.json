@@ -6,15 +6,12 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c",
-    "test": "aw-test-runner ./test/unit ./test/component --compilers js:babel-register",
-    "test:coverage": "aw-test-coverage --dir ./coverage/unit-component -- ./test/unit ./test/component ./src --compilers js:babel-register",
+    "test": "aw-test-coverage --dir ./coverage/unit-component -- ./test/unit ./test/component ./src --compilers js:babel-register",
     "test:watch": "aw-test-runner ./test -w --compilers js:babel-register",
-    "test:unit": "aw-test-runner ./test/unit --compilers js:babel-register",
+    "test:unit": "aw-test-coverage --dir ./coverage/unit -- ./test/unit ./src --compilers js:babel-register",
     "test:unit:watch": "aw-test-runner ./test/unit -w --compilers js:babel-register",
-    "test:unit:coverage": "aw-test-coverage --dir ./coverage/unit -- ./test/unit ./src --compilers js:babel-register",
-    "test:component": "aw-test-runner ./test/component --compilers js:babel-register",
+    "test:component": "aw-test-coverage --dir ./coverage/component -- ./test/component ./src --compilers js:babel-register",
     "test:component:watch": "aw-test-runner ./test/component -w --compilers js:babel-register",
-    "test:component:coverage": "aw-test-coverage --dir ./coverage/component -- ./test/component ./src --compilers js:babel-register",
     "test:integration": "aw-test-runner ./test/integration --compilers js:babel-register --timeout 5000",
     "lint": "eslint .",
     "jsdoc": "rimraf ./jsdoc && jsdoc ./src -c ./jsdoc-config.json -r -d ./jsdoc"
