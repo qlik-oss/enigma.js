@@ -35,7 +35,6 @@ The `config` object has the following parameters:
 | `session.urlParams` | Object | Yes | Additional parameters to be added to WebSocket URL |
 | `session.subpath` | String | Yes | Subpath to use, used to connect to dataprepservice in a server environment |
 | `session.identity` | String | Yes | Identity (session ID) to use |
-| `session.disableCache` | String | Yes | Disable caching of sessions, set to `true` to create a new session every time |
 | `session.suspendOnClose` | Boolean | Yes | Set to true if the session should be suspended and not closed if the WebSocket is closed unexpectedly |
 | `session.ttl` | Number | Yes | A value in seconds that QIX Engine should keep the session alive after socket disconnect (only works if QIX Engine supports it) |
 

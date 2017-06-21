@@ -197,40 +197,11 @@ describe('Qix', () => {
   });
 
   describe('getSession', () => {
-    const session = { on: sinon.spy() };
-    let createSession;
-    let add;
-    let remove;
     const rpc = {};
 
     beforeEach(() => {
       sandbox.stub(qix, 'buildUrl').returns('url');
-      sandbox.stub(qix.sessions, 'get').returns(undefined);
       sandbox.stub(qix, 'createRPC').returns(rpc);
-      createSession = sandbox.stub(qix, 'createSession').returns(session);
-      add = sandbox.stub(qix.sessions, 'add');
-      remove = sandbox.stub(qix.sessions, 'remove');
-    });
-
-    it('should reuse existing session', () => {
-      const cachedSession = { on: sinon.spy() };
-      qix.sessions.get.returns(cachedSession);
-      const sessionApi = qix.getSession({ delta: true, session: {} });
-      expect(sessionApi).to.equal(cachedSession);
-    });
-
-    it('should not reuse existing session if `disableCache` is truthy', () => {
-      qix.getSession({ delta: true, session: {} });
-      qix.getSession({ delta: true, session: { disableCache: true } });
-      expect(add.callCount).to.equal(1);
-      expect(session.on.callCount).to.equal(1);
-      expect(createSession.callCount).to.equal(2);
-    });
-
-    it('should remove session from cache', () => {
-      qix.getSession({ delta: true, session: {} });
-      session.on.callArg(1);
-      expect(remove).to.have.been.calledWithExactly('url');
     });
   });
 
