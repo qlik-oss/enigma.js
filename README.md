@@ -15,7 +15,6 @@ performs CRUD (create, read, update and delete) operations on apps and other ent
 - [Overview](docs/README.md)
 - [Authentication](docs/authentication.md)
 - [QIX Service](docs/qix/README.md)
-- [REST Service](docs/rest/README.md)
 
 ## Examples
 

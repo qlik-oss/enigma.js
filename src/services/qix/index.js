@@ -49,7 +49,7 @@ function replaceLeadingAndTrailingSlashes(str) {
 /**
 * Qix service.
 */
-export default class Qix {
+class Qix {
 
   /**
   * @description Create an instance of the Qix service.
@@ -269,6 +269,10 @@ export default class Qix {
   *                               and retrieve end QIX APIs.
   */
   static configureDefaults(config) {
+    if (!config) {
+      throw new Error('You need to supply a configuration.');
+    }
+
     if (!config.Promise && typeof Promise === 'undefined') {
       throw new Error('Your environment has no Promise implementation. You must provide a Promise implementation in the config.');
     }
@@ -308,3 +312,5 @@ export default class Qix {
     config.JSONPatch = config.JSONPatch || Patch;
   }
 }
+
+export default Qix;

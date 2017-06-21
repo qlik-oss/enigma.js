@@ -56,4 +56,3 @@ enigma.getService('<Service Name>', { /* Service config */ }).then((serviceInsta
 ## Services
 
 - [The QIX service](qix/README.md)
-- [The REST service](rest/README.md)
