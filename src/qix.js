@@ -3,7 +3,6 @@ import Patch from './json-patch';
 import Session from './session';
 import Schema from './schema';
 import RPC from './rpc';
-import KeyValueCache from './cache';
 
 function replaceLeadingAndTrailingSlashes(str) {
   return str.replace(/(^[/]+)|([/]+$)/g, '');
@@ -39,7 +38,6 @@ function replaceLeadingAndTrailingSlashes(str) {
 * @property {String} [reloadURI=""] The reloadURI.
 *                             DEPRECATED owing to the urlParams property.
 * @property {Object} [urlParams={}] Used to add parameters to the WebSocket URL.
-* @property {String} [disableCache=false] Set to true if you want a new Session.
 * @property {Boolean} [suspendOnClose=false] Set to true if the session should be suspended
 *                             and not closed if the WebSocket is closed unexpectedly.
 * @property {Number} [ttl] A value in seconds that QIX Engine should keep the session
@@ -50,13 +48,6 @@ function replaceLeadingAndTrailingSlashes(str) {
 * Qix service.
 */
 class Qix {
-
-  /**
-  * @description Create an instance of the Qix service.
-  */
-  constructor() {
-    this.sessions = new KeyValueCache();
-  }
 
   /**
   * Function used to create a session.
@@ -156,12 +147,8 @@ class Qix {
   */
   getSession(config) {
     const url = this.buildUrl(config.session, config.appId);
-    const { disableCache } = config.session;
-
-    let session = !disableCache && this.sessions.get(url);
-    if (!session) {
-      const rpc = this.createRPC(config.Promise, url, config.createSocket, config.session);
-      session = this.createSession(
+    const rpc = this.createRPC(config.Promise, url, config.createSocket, config.session);
+    const session = this.createSession(
         rpc,
         config.delta,
         config.schema,
@@ -174,11 +161,6 @@ class Qix {
         config.noData,
         config.session.suspendOnClose
       );
-      if (!disableCache) {
-        this.sessions.add(url, session);
-        session.on('closed', () => this.sessions.remove(url));
-      }
-    }
     return session;
   }
 
