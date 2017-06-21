@@ -5,7 +5,6 @@ import Schema from '../../schemas/qix/3.2/schema.json';
 import utils from './utils';
 
 describe('QIX Global', () => {
-  const qix = new Qix();
   let qixGlobal;
   // let isServer = true;
   const config = {};
@@ -29,7 +28,7 @@ describe('QIX Global', () => {
       new WebSocket(url, defaultConfig.socket)
       ;
 
-      return qix.connect(config).then((g) => {
+      return Qix.connect(config).then((g) => {
         qixGlobal = g.global;
       });
     })

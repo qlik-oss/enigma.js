@@ -5,7 +5,6 @@ import Schema from '../../schemas/qix/3.2/schema.json';
 import utils from './utils';
 
 describe('Sugar mixins', () => {
-  const qix = new Qix();
   let qixGlobal;
   const config = {};
 
@@ -70,7 +69,7 @@ describe('Sugar mixins', () => {
       },
     }];
 
-    return qix.connect(config).then((g) => {
+    return Qix.connect(config).then((g) => {
       qixGlobal = g.global;
     });
   }));

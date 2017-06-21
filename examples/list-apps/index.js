@@ -29,7 +29,7 @@ const config = {
 };
 
 console.log('Connecting to Engine');
-enigma.getService('qix', config).then((qix) => {
+enigma.connect(config).then((qix) => {
   console.log('Connected');
   return qix.global.getDocList().then((docList) => {
     const docs = docList.map(doc => `${doc.qDocName} - ${doc.qDocId}`).join('\n');

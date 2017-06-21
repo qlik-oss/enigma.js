@@ -34,7 +34,7 @@ const config = {
       host: location.hostname
   }
 };
-enigma.getService('qix', config).then((qix) => {
+enigma.connect(config).then((qix) => {
   const g = qix.global;
   console.log('Got the global instance');
 

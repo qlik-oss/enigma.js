@@ -7,11 +7,9 @@ import Schema from '../../src/schema';
 
 describe('Qix', () => {
   let sandbox;
-  let qix;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    qix = new Qix();
   });
 
   afterEach(() => {
@@ -24,60 +22,60 @@ describe('Qix', () => {
   });
 
   it('should create a session', () => {
-    expect(qix.createSession({ on() {} }, {}, {}, {}, () => {})).to.be.an.instanceOf(Session);
+    expect(Qix.createSession({ on() {} }, {}, {}, {}, () => {})).to.be.an.instanceOf(Session);
   });
 
   it('should create a RPC', () => {
-    expect(qix.createRPC(() => {}, () => {}, '', {})).to.be.an.instanceOf(RPC);
+    expect(Qix.createRPC(() => {}, () => {}, '', {})).to.be.an.instanceOf(RPC);
   });
 
   it('should build an url depending on config', () => {
-    expect(qix.buildUrl({ secure: true })).to.equal('wss://localhost');
-    expect(qix.buildUrl({ secure: true }, 'myApp1')).to.equal('wss://localhost/app/myApp1');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({ secure: true })).to.equal('wss://localhost');
+    expect(Qix.buildUrl({ secure: true }, 'myApp1')).to.equal('wss://localhost/app/myApp1');
+    expect(Qix.buildUrl({
       secure: true,
       port: 666,
     }, 'myApp3')).to.equal('wss://localhost:666/app/myApp3');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       host: 'foo.com',
     }, 'myApp3')).to.equal('wss://foo.com/app/myApp3');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: false,
       host: 'foo.com',
     }, 'myApp3')).to.equal('ws://foo.com/app/myApp3');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 666,
       route: 'myroute',
     })).to.equal('wss://localhost:666/myroute');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 666,
       route: '/myroute',
     })).to.equal('wss://localhost:666/myroute');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 666,
       route: 'myroute/',
     })).to.equal('wss://localhost:666/myroute');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 666,
       route: '/my/route/',
     })).to.equal('wss://localhost:666/my/route');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 4848,
       prefix: '/myproxy/',
     }, 'myApp4')).to.equal('wss://localhost:4848/myproxy/app/myApp4');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 4848,
       prefix: '/myproxy/',
       reloadURI: 'http://qlik.com',
     }, 'myApp5')).to.equal('wss://localhost:4848/myproxy/app/myApp5?reloadUri=http%3A%2F%2Fqlik.com');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 4848,
       prefix: '/myproxy/',
@@ -85,7 +83,7 @@ describe('Qix', () => {
         reloadUri: 'http://qlik.com',
       },
     }, 'myApp6')).to.equal('wss://localhost:4848/myproxy/app/myApp6?reloadUri=http%3A%2F%2Fqlik.com');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 4848,
       prefix: '/myproxy/',
@@ -94,20 +92,20 @@ describe('Qix', () => {
       },
       identity: 'migration-service',
     }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/app/myApp7/identity/migration-service?reloadUri=http%3A%2F%2Fqlik.com');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 4848,
       prefix: '/myproxy/',
       subpath: 'dataprepservice',
     }, 'myApp8')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp8');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 4848,
       urlParams: {
         qlikTicket: 'abcdefg123456',
       },
     }, 'myApp9')).to.equal('wss://localhost:4848/app/myApp9?qlikTicket=abcdefg123456');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 4848,
       urlParams: {
@@ -115,7 +113,7 @@ describe('Qix', () => {
         qlikTicket: 'abcdefg123456',
       },
     }, 'myApp10')).to.equal('wss://localhost:4848/app/myApp10?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 4848,
       reloadURI: 'http://community.qlik.com',
@@ -124,7 +122,7 @@ describe('Qix', () => {
         qlikTicket: 'abcdefg123456',
       },
     }, 'myApp11')).to.equal('wss://localhost:4848/app/myApp11?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
-    expect(qix.buildUrl({
+    expect(Qix.buildUrl({
       secure: true,
       port: 4848,
       reloadURI: 'http://community.qlik.com',
@@ -152,9 +150,9 @@ describe('Qix', () => {
         send: sinon.stub().returns(Promise.resolve()),
         getObjectApi: sinon.stub().returns(stubApi),
       };
-      sandbox.stub(qix, 'getSession').returns(session);
+      sandbox.stub(Qix, 'getSession').returns(session);
 
-      return qix.getGlobal(session, cfg).then((api) => {
+      return Qix.getGlobal(session, cfg).then((api) => {
         globalApi = api;
       });
     });
@@ -190,7 +188,7 @@ describe('Qix', () => {
 
     it('should emit close and rethrow on error', () => {
       const s = { connect: sandbox.stub().returns(Promise.reject('Foo')), emit: sandbox.spy() };
-      return qix.getGlobal(s).then(() => {}, () => {
+      return Qix.getGlobal(s).then(() => {}, () => {
         expect(s.emit).to.have.been.calledWithExactly('closed', 'Foo');
       });
     });
@@ -200,8 +198,8 @@ describe('Qix', () => {
     const rpc = {};
 
     beforeEach(() => {
-      sandbox.stub(qix, 'buildUrl').returns('url');
-      sandbox.stub(qix, 'createRPC').returns(rpc);
+      sandbox.stub(Qix, 'buildUrl').returns('url');
+      sandbox.stub(Qix, 'createRPC').returns(rpc);
     });
   });
 
@@ -216,18 +214,18 @@ describe('Qix', () => {
       globalApi = {
         openApp: sinon.stub().returns(Promise.resolve(appApi)),
       };
-      sandbox.stub(qix, 'getGlobal').returns(Promise.resolve(globalApi));
+      sandbox.stub(Qix, 'getGlobal').returns(Promise.resolve(globalApi));
     });
 
     it('should get global', (done) => {
-      qix.get(session, {}).then(({ global: g }) => {
+      Qix.get(session, {}).then(({ global: g }) => {
         expect(g).to.equal(globalApi);
         done();
       });
     });
 
     it('should get global and app', () => {
-      qix.get(session, { appId: 'foo' }).then(({ app, global: g }) => {
+      Qix.get(session, { appId: 'foo' }).then(({ app, global: g }) => {
         expect(app).to.equals(appApi);
         expect(g).to.equals(globalApi);
       });
@@ -243,35 +241,35 @@ describe('Qix', () => {
       session = {};
       result = {};
       config = {};
-      sandbox.stub(qix, 'getSession').returns(session);
-      sandbox.stub(qix, 'get').returns(result);
+      sandbox.stub(Qix, 'getSession').returns(session);
+      sandbox.stub(Qix, 'get').returns(result);
     });
 
     it('should call getSession with config', () => {
-      qix.connect(config);
-      expect(qix.getSession).to.be.calledWith(config);
+      Qix.connect(config);
+      expect(Qix.getSession).to.be.calledWith(config);
     });
 
     it('should call get with session & config', () => {
-      qix.connect(config);
-      expect(qix.get).to.be.calledWith(session, config);
+      Qix.connect(config);
+      expect(Qix.get).to.be.calledWith(session, config);
     });
 
     it('should keep constructed QixDefinition', () => {
       config.schema = new Schema(Promise, {});
-      qix.connect(config);
-      expect(qix.getSession).to.be.calledWithMatch({ schema: config.schema });
+      Qix.connect(config);
+      expect(Qix.getSession).to.be.calledWithMatch({ schema: config.schema });
     });
 
     it('should default JSONPatch', () => {
-      qix.connect(config);
-      expect(qix.getSession).to.be.calledWithMatch({ JSONPatch: Patch });
+      Qix.connect(config);
+      expect(Qix.getSession).to.be.calledWithMatch({ JSONPatch: Patch });
     });
 
     it('should throw on missing Promise implementation', () => {
       const oldPromise = global.Promise;
       delete global.Promise;
-      expect(qix.connect.bind(null, config)).to.throw();
+      expect(Qix.connect.bind(null, config)).to.throw();
       global.Promise = oldPromise;
     });
 
@@ -283,8 +281,8 @@ describe('Qix', () => {
         href: 'http://123.123.123.123:4848',
       };
       global.WebSocket = sinon.stub();
-      qix.connect(config);
-      expect(qix.getSession).to.be.calledWithMatch({
+      Qix.connect(config);
+      expect(Qix.getSession).to.be.calledWithMatch({
         Promise: global.Promise,
         session: {
           host: '123.123.123.123',
@@ -293,15 +291,15 @@ describe('Qix', () => {
         createSocket: sinon.match.func,
         mixins: [],
       });
-      qix.getSession.getCall(0).args[0].createSocket('xyz');
+      Qix.getSession.getCall(0).args[0].createSocket('xyz');
       expect(global.WebSocket).to.be.calledWith('xyz');
       global.location = oldLocation;
       global.WebSocket = oldWebSocket;
     });
 
     it('should use default parameters in NodeJS env', () => {
-      qix.connect(config);
-      expect(qix.getSession).to.be.calledWithMatch({
+      Qix.connect(config);
+      expect(Qix.getSession).to.be.calledWithMatch({
         Promise: global.Promise,
         session: {
           host: 'localhost',
@@ -322,8 +320,8 @@ describe('Qix', () => {
         port: 5959,
         reloadURI: 'xyz',
       };
-      qix.connect(config);
-      expect(qix.getSession).to.be.calledWithMatch({
+      Qix.connect(config);
+      expect(Qix.getSession).to.be.calledWithMatch({
         Promise,
         createSocket,
         appId: 'MyApp',
@@ -348,8 +346,8 @@ describe('Qix', () => {
           reloadUri: 'xyz',
         },
       };
-      qix.connect(config);
-      expect(qix.getSession).to.be.calledWithMatch({
+      Qix.connect(config);
+      expect(Qix.getSession).to.be.calledWithMatch({
         Promise,
         createSocket,
         appId: 'MyApp',
@@ -376,8 +374,8 @@ describe('Qix', () => {
           qlikTicket: 'xyzabc123789',
         },
       };
-      qix.connect(config);
-      expect(qix.getSession).to.be.calledWithMatch({
+      Qix.connect(config);
+      expect(Qix.getSession).to.be.calledWithMatch({
         Promise,
         createSocket,
         appId: 'MyApp',
@@ -401,7 +399,7 @@ describe('Qix', () => {
       ];
       const registerMixin = sandbox.stub(Schema.prototype, 'registerMixin');
       config.mixins = mixins;
-      qix.connect(config);
+      Qix.connect(config);
       expect(registerMixin).to.have.been.calledWith(foo);
       expect(registerMixin).to.have.been.calledWith(bar);
     });

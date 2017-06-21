@@ -5,7 +5,6 @@ import Schema from '../../schemas/qix/3.2/schema.json';
 
 // N.B. This test will only pass when run towards an engine supporting the session TTL feature.
 describe('QIX Suspend/Resume', () => {
-  const qix = new Qix();
   let config;
 
   before(() => {
@@ -27,7 +26,7 @@ describe('QIX Suspend/Resume', () => {
     let handleBeforeResume;
     let propertiesBeforeResume;
 
-    return qix.connect(config).then((qixService) => {
+    return Qix.connect(config).then((qixService) => {
       const global = qixService.global;
       return global.createSessionApp().then(app =>
         app.createObject({ qInfo: { qId: 'OBJ01', qType: 'abc' } })
