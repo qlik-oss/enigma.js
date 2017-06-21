@@ -1,4 +1,4 @@
-import RPC from '../../src/services/qix/rpc';
+import RPC from '../../src/rpc';
 
 export default class RPCMock extends RPC {
   send(response) {

@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
-import Schema from '../../../../src/services/qix/schema';
-import KeyValueCache from '../../../../src/cache';
+import Schema from '../../src/schema';
+import KeyValueCache from '../../src/cache';
 
 describe('Schema', () => {
   it('should be a constructor', () => {

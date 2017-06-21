@@ -1,9 +1,9 @@
 import Promise from 'bluebird';
-import Session from '../../../../src/services/qix/session';
-import RPC from '../../../../src/services/qix/rpc';
-import RPCMock from '../../../mocks/rpc-mock';
-import SocketMock from '../../../mocks/socket-mock';
-import ApiCache from '../../../../src/services/qix/api-cache';
+import Session from '../../src/session';
+import RPC from '../../src/rpc';
+import RPCMock from '../mocks/rpc-mock';
+import SocketMock from '../mocks/socket-mock';
+import ApiCache from '../../src/api-cache';
 
 describe('Session', () => {
   let session;

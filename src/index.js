@@ -2,7 +2,7 @@
  * @module index
  */
 import Registry from './registry';
-import Qix from './services/qix/index';
+import Qix from './qix';
 
 const registry = new Registry();
 const qix = new Qix();

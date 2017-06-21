@@ -1,4 +1,4 @@
-import Events from '../../event-emitter';
+import Events from './event-emitter';
 import ApiCache from './api-cache';
 
 const RETURN_KEY = 'qReturn';

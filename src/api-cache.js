@@ -1,4 +1,4 @@
-import KeyValueCache from '../../cache';
+import KeyValueCache from './cache';
 
 /**
 * API cache.

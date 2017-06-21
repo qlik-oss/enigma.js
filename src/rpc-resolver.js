@@ -1,4 +1,4 @@
-import Events from '../../event-emitter';
+import Events from './event-emitter';
 
 /**
  * Helper class for handling RPC calls

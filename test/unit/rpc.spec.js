@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
-import RPC from '../../../../src/services/qix/rpc';
-import SocketMock from '../../../mocks/socket-mock';
+import RPC from '../../src/rpc';
+import SocketMock from '../mocks/socket-mock';
 
 describe('RPC', () => {
   let rpc;

@@ -1,9 +1,9 @@
 import Promise from 'bluebird';
-import Patch from '../../../../src/json-patch';
-import RPC from '../../../../src/services/qix/rpc';
-import Qix from '../../../../src/services/qix/index';
-import Session from '../../../../src/services/qix/session';
-import Schema from '../../../../src/services/qix/schema';
+import Patch from '../../src/json-patch';
+import RPC from '../../src/rpc';
+import Qix from '../../src/qix';
+import Session from '../../src/session';
+import Schema from '../../src/schema';
 
 describe('Qix', () => {
   let sandbox;

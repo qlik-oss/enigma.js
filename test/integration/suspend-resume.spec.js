@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import WebSocket from 'ws';
-import Qix from '../../src/services/qix/index';
+import Qix from '../../src/qix';
 import Schema from '../../schemas/qix/3.2/schema.json';
 
 // N.B. This test will only pass when run towards an engine supporting the session TTL feature.
