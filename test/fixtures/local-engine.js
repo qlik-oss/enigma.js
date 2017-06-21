@@ -1,7 +1,6 @@
 /* eslint no-console:0, import/no-unresolved:0 */
 const WebSocket = require('ws');
-const Registry = require('../../dist/enigma');
-
+const enigma = require('../../dist/enigma');
 const schema = require('../../schemas/qix/3.2/schema.json');
 
 const cfg = {
@@ -16,7 +15,7 @@ const cfg = {
   },
 };
 
-Registry.getService('qix', cfg).then((qix) => {
+enigma.create(cfg).then((qix) => {
   const promises = [];
   for (let i = 0; i < 1000; i += 1) {
     const created = qix.app.createObject({ qInfo: { qType: 'CustomType' }, num: i });

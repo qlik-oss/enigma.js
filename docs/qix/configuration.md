@@ -4,7 +4,7 @@
 const enigma = require('enigma.js');
 
 const config = {};
-enigma.getService('qix', config).then((qix) => {
+enigma.connect(config).then((qix) => {
   //
 });
 ```
@@ -40,7 +40,7 @@ The `config` object has the following parameters:
 
 ## `qix` object
 
-The `qix` object retrieved when calling `getService('qix', config).then((qix) => {})` has the following properties:
+The `qix` object retrieved when calling `connect(config).then((qix) => {})` has the following properties:
 
 * `qix.global` Object - The global instance
 * `qix.app` Object (optional) - The opened app instance if `config.appId` was specified.

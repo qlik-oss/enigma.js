@@ -65,7 +65,7 @@ class Qix {
   *                                   websocket closes unexpectedly.
   * @returns {Object} Returns an instance of Session.
   */
-  createSession(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog,
+  static createSession(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog,
     appId, noData, suspendOnClose) {
     return new Session(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog,
       appId, noData, suspendOnClose);
@@ -79,7 +79,7 @@ class Qix {
   * @param {SessionConfiguration} sessionConfig - The session configuration object.
   * @returns {Object} Returns an instance of RPC.
   */
-  createRPC(Promise, url, createSocket, sessionConfig) {
+  static createRPC(Promise, url, createSocket, sessionConfig) {
     return new RPC(Promise, url, createSocket, sessionConfig);
   }
 
@@ -89,7 +89,7 @@ class Qix {
   * @param {String} [appId] The optional app id.
   * @returns {String} Returns the URL.
   */
-  buildUrl(sessionConfig, appId) {
+  static buildUrl(sessionConfig, appId) {
     const { secure, host, port, prefix, subpath, route, identity,
       reloadURI, urlParams, ttl } = sessionConfig;
     let url = '';
@@ -145,10 +145,10 @@ class Qix {
   * @param {Function} config.Promise The promise constructor.
   * @returns {Object} Returns a session instance.
   */
-  getSession(config) {
-    const url = this.buildUrl(config.session, config.appId);
-    const rpc = this.createRPC(config.Promise, url, config.createSocket, config.session);
-    const session = this.createSession(
+  static getSession(config) {
+    const url = Qix.buildUrl(config.session, config.appId);
+    const rpc = Qix.createRPC(config.Promise, url, config.createSocket, config.session);
+    const session = Qix.createSession(
         rpc,
         config.delta,
         config.schema,
@@ -171,7 +171,7 @@ class Qix {
   *                               retrieve end QIX APIs.
   * @returns {Promise<Object>} Returns a promise of an instance for the global API.
   */
-  getGlobal(session, config) {
+  static getGlobal(session, config) {
     return session.connect().then(() => {
       const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: config.delta };
       const globalApi = session.getObjectApi(args);
@@ -182,7 +182,7 @@ class Qix {
         config.session.route = '';
         config.appId = appId;
 
-        const appSession = this.getSession(config);
+        const appSession = Qix.getSession(config);
 
         if (!appSession.apiPromise) {
           appSession.apiPromise = appSession.connect().then(() =>
@@ -212,8 +212,8 @@ class Qix {
   * @returns {Promise} Returns a promise of a global API or an object
   *                    containing the global API and the app API.
   */
-  get(session, config) {
-    return this.getGlobal(session, config).then((g) => {
+  static get(session, config) {
+    return Qix.getGlobal(session, config).then((g) => {
       if (config.appId) {
         return g.openApp(
           config.appId,
@@ -236,13 +236,13 @@ class Qix {
   * @returns {Promise<Object>} Returns a promise containing an instance for the
   *                            global API if resolved. If unresolved, an error will be thrown.
   */
-  connect(config) {
+  static connect(config) {
     Qix.configureDefaults(config);
     config.mixins.forEach((mixin) => {
       config.schema.registerMixin(mixin);
     });
-    const session = this.getSession(config);
-    return this.get(session, config);
+    const session = Qix.getSession(config);
+    return Qix.get(session, config);
   }
 
   /**

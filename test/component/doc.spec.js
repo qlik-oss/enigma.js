@@ -5,7 +5,6 @@ import SocketMock from '../mocks/socket-mock';
 
 describe('QIX Doc', () => {
   let sandbox;
-  let qix;
   let qixDoc;
   let config;
   let socket;
@@ -16,7 +15,6 @@ describe('QIX Doc', () => {
       socket.intercept('OpenDoc').return({ result: { qReturn: { qType: 'Doc', qHandle: 1 } } });
       socket.open();
     });
-    qix = new Qix();
     config = {};
     sandbox = sinon.sandbox.create();
 
@@ -44,7 +42,7 @@ describe('QIX Doc', () => {
     }];
     config.appId = 'my-app';
 
-    return qix.connect(config).then((o) => {
+    return Qix.connect(config).then((o) => {
       qixDoc = o.app;
     });
   });

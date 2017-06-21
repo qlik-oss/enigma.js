@@ -50,7 +50,7 @@ angular.module('app', []).component('app', {
         },
         handleLog: logRow => console.log(logRow),
       };
-      enigma.getService('qix', config).then((qix) => {
+      enigma.connect(config).then((qix) => {
         this.connected = true;
 
         qix.global.createSessionApp()

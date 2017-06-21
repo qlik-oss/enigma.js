@@ -9,7 +9,6 @@ import utils from './utils';
 chai.use(chaiSubset);
 
 describe('qix-logging', () => {
-  const qix = new Qix();
   let qixGlobal;
   // let isServer = true;
   const config = {};
@@ -26,7 +25,7 @@ describe('qix-logging', () => {
       config.createSocket = url =>
       new WebSocket(url, defaultConfig.socket);
 
-      return qix.connect(config).then((g) => {
+      return Qix.connect(config).then((g) => {
         qixGlobal = g.global;
       });
     })

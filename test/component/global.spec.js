@@ -5,7 +5,6 @@ import SocketMock from '../mocks/socket-mock';
 
 describe('QIX Global', () => {
   let sandbox;
-  let qix;
   let qixGlobal;
   let config;
   let socket;
@@ -15,7 +14,6 @@ describe('QIX Global', () => {
       socket = s;
       socket.open();
     });
-    qix = new Qix();
     config = {};
     sandbox = sinon.sandbox.create();
 
@@ -39,7 +37,7 @@ describe('QIX Global', () => {
       },
     }];
 
-    return qix.connect(config).then((q) => {
+    return Qix.connect(config).then((q) => {
       qixGlobal = q.global;
     });
   });
