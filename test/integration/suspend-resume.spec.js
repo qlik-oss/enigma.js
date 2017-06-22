@@ -7,7 +7,7 @@ import Schema from '../../schemas/qix/3.2/schema.json';
 describe('QIX Suspend/Resume', () => {
   let config;
 
-  before(() => {
+  beforeEach(() => {
     config = {
       Promise,
       schema: Schema,
@@ -19,10 +19,11 @@ describe('QIX Suspend/Resume', () => {
         identity: Math.floor(Math.random() * 10000).toString(), // Poor man's GUID :)
       },
       createSocket: url => new WebSocket(url),
+      listeners: {},
     };
   });
 
-  it('should suspend and resume', () => {
+  it('should suspend and resume by reattaching', () => {
     let handleBeforeResume;
     let propertiesBeforeResume;
 
@@ -45,5 +46,36 @@ describe('QIX Suspend/Resume', () => {
           })
       );
     });
+  });
+
+  it('should suspend and resume by reopening the previous document', () => {
+    config.session.ttl = 0;
+    config.listeners.suspended = sinon.spy();
+    config.listeners.closed = sinon.spy();
+    let global;
+    let app;
+
+    return Qix.connect(config)
+      // save ref to global API:
+      .then(qixService => (global = qixService.global))
+      // create our test app:
+      .then(() => global.createApp(config.session.identity))
+      // open our test app:
+      .then(() => global.openDoc(config.session.identity))
+      // save ref to app API:
+      .then(_app => (app = _app))
+      // set a dummy property that we don't save:
+      .then(() => app.setAppProperties({ test: true }))
+      .then(() => app.session.suspend())
+      .then(() => expect(config.listeners.suspended.calledOnce).to.equal(true))
+      .then(() => app.session.resume())
+      .then(() => app.getAppProperties())
+      // verify that we have reconnected to a fresh app, since we never saved
+      // this property it shouldn't exist in a new one:
+      .then(props => expect(props.test).to.equal(undefined))
+      .then(() => global.deleteApp(app.id))
+      .then(() => app.session.close())
+      .then(() => global.session.close())
+      .then(() => expect(config.listeners.closed.calledTwice).to.equal(true));
   });
 });

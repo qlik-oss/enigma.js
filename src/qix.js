@@ -146,6 +146,8 @@ class Qix {
         const appSession = Qix.getSession(config);
 
         if (!appSession.apiPromise) {
+          // create a Global API for this session:
+          appSession.getObjectApi(args);
           appSession.apiPromise = appSession.connect().then(() =>
             appSession.send({
               method: 'OpenDoc',

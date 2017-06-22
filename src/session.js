@@ -22,8 +22,6 @@ class Session {
   * @param {Function} Promise - The promise constructor.
   * @param {Object} listeners - A key-value map of listeners.
   * @param {Array} interceptors - An array of interceptors.
-  * @param {String} appId - the appId for this session.
-  * @param {Boolean} noData - if true, the app was opened without data.
   * @param {Boolean} suspendOnClose - when true, the session will be suspended if the underlying
   *                                   websocket closes unexpectedly.
   */
@@ -169,6 +167,10 @@ class Session {
     this.emit('traffic:*', 'sent', request);
     this.emit('traffic:sent', request);
 
+    if (request.method === 'OpenDoc') {
+      this.openDocParams = request.params;
+    }
+
     const promise = this.intercept(response, this.responseInterceptors, request);
     Session.addToPromiseChain(promise, 'requestId', request.id);
     return promise;
@@ -228,11 +230,11 @@ class Session {
       handle: -1,
       params: [],
     }).then((response) => {
-      if (response.error) {
+      if (response.error && this.openDocParams) {
         return this.rpc.send({
           method: 'OpenDoc',
           handle: -1,
-          params: [this.appId, '', '', '', !!this.noData],
+          params: this.openDocParams,
         });
       }
       return response;
