@@ -22,7 +22,6 @@ The `config` object has the following parameters:
 | `mixins` | Array | Yes | Mixins to extend/augment the Engine API (see more on [Using mixins](mixins.md))
 | `createSocket` | Function | In browser | A function to use when instantiating the WebSocket, mandatory for NodeJS |
 | `Promise` | Promise | Yes | ES6-compatible Promise library, default is global `Promise` |
-| `handleLog` | Function | Yes | Traffic log listener. |
 | `listeners` | Object | Yes | Key-value map of session listeners that will be registered. See [Session](session.md) for details |
 | `session` | Object | Yes | Session-specific parameters |
 | `session.host` | String | Yes | Default is `localhost` |

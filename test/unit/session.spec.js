@@ -273,15 +273,17 @@ describe('Session', () => {
     createSession(false, rpc);
     session.removeAllListeners();
 
-    const emit = sinon.spy(session, 'emit');
-    rpc.emit('message', { change: [1, 2, 3] });
-    expect(emit.calledThrice).to.equal(true);
-    expect(emit).to.have.been.calledWith('handle-changed');
+    const changeSpy = sinon.spy();
+    session.on('handle-changed', changeSpy);
 
-    emit.reset();
-    rpc.emit('message', { close: [8, 11] });
-    expect(emit.calledTwice).to.equal(true);
-    expect(emit).to.have.been.calledWith('handle-closed');
+    rpc.emit('message', { change: [1, 2, 3] });
+    expect(changeSpy.calledThrice).to.equal(true);
+
+    const closeSpy = sinon.spy();
+    session.on('handle-closed', closeSpy);
+
+    rpc.emit('message', { close: [1, 2, 3] });
+    expect(closeSpy.calledThrice).to.equal(true);
   });
 
   it('should emit socket error', () => {
