@@ -19,7 +19,7 @@
     }
 
     function run() {
-      enigma.create({
+      enigma.connect({
         listeners: {
           'notification:OnAuthenticationInformation': function(data) {
             if (data.mustAuthenticate === true) {

@@ -1,8 +1,6 @@
 import Promise from 'bluebird';
 import Patch from '../../src/json-patch';
-import RPC from '../../src/rpc';
 import Qix from '../../src/qix';
-import Session from '../../src/session';
 import Schema from '../../src/schema';
 
 describe('Qix', () => {
@@ -19,14 +17,6 @@ describe('Qix', () => {
   it('should be a constructor', () => {
     expect(Qix).to.be.a('function');
     expect(Qix).to.throw();
-  });
-
-  it('should create a session', () => {
-    expect(Qix.createSession({ on() {} }, {}, {}, {}, () => {})).to.be.an.instanceOf(Session);
-  });
-
-  it('should create a RPC', () => {
-    expect(Qix.createRPC(() => {}, () => {}, '', {})).to.be.an.instanceOf(RPC);
   });
 
   it('should build an url depending on config', () => {

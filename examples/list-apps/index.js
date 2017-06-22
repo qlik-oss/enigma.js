@@ -25,7 +25,9 @@ const config = {
       },
     });
   },
-  handleLog: logRow => console.log(logRow),
+  listeners: {
+    'traffic:*': (dir, data) => console.log(dir, data),
+  },
 };
 
 console.log('Connecting to Engine');

@@ -50,40 +50,6 @@ function replaceLeadingAndTrailingSlashes(str) {
 class Qix {
 
   /**
-  * Function used to create a session.
-  * @param {Object} rpc The RPC instance used by the session.
-  * @param {Boolean} delta=true Flag to determine delta handling.
-  * @param {Object} schema The Definition used by the session.
-  * @param {Object} JSONPatch JSON patch object.
-  * @param {Function} Promise The promise constructor.
-  * @param {Object} listeners A key-value map of listeners.
-  * @param {Array} interceptors An array of interceptors.
-  * @param {Function} log handler callback
-  * @param {String} appId - the appId for this session.
-  * @param {Boolean} noData - if true, the app was opened without data.
-  * @param {Boolean} suspendOnClose - when true, the session will be suspended if the underlying
-  *                                   websocket closes unexpectedly.
-  * @returns {Object} Returns an instance of Session.
-  */
-  static createSession(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog,
-    appId, noData, suspendOnClose) {
-    return new Session(rpc, delta, schema, JSONPatch, Promise, listeners, interceptors, handleLog,
-      appId, noData, suspendOnClose);
-  }
-
-  /**
-  * Function used to create an RPC.
-  * @param {Function} Promise The promise constructor.
-  * @param {String} url The URL used to connect to an endpoint.
-  * @param {Function} createSocket The function callback to create a WebSocket.
-  * @param {SessionConfiguration} sessionConfig - The session configuration object.
-  * @returns {Object} Returns an instance of RPC.
-  */
-  static createRPC(Promise, url, createSocket, sessionConfig) {
-    return new RPC(Promise, url, createSocket, sessionConfig);
-  }
-
-  /**
   * Function used to build an URL.
   * @param {SessionConfiguration} sessionConfig - The session configuration object.
   * @param {String} [appId] The optional app id.
@@ -147,8 +113,8 @@ class Qix {
   */
   static getSession(config) {
     const url = Qix.buildUrl(config.session, config.appId);
-    const rpc = Qix.createRPC(config.Promise, url, config.createSocket, config.session);
-    const session = Qix.createSession(
+    const rpc = new RPC(config.Promise, url, config.createSocket, config.session);
+    const session = new Session(
         rpc,
         config.delta,
         config.schema,
@@ -156,9 +122,6 @@ class Qix {
         config.Promise,
         config.listeners,
         config.responseInterceptors,
-        config.handleLog,
-        config.appId,
-        config.noData,
         config.session.suspendOnClose
       );
     return session;
@@ -177,14 +140,14 @@ class Qix {
       const globalApi = session.getObjectApi(args);
       globalApi.openApp = globalApi.openDoc =
       (appId, user = '', password = '', serial = '', noData = false) => {
-        session.appId = appId;
-        session.noData = noData;
         config.session.route = '';
         config.appId = appId;
 
         const appSession = Qix.getSession(config);
 
         if (!appSession.apiPromise) {
+          // create a Global API for this session:
+          appSession.getObjectApi(args);
           appSession.apiPromise = appSession.connect().then(() =>
             appSession.send({
               method: 'OpenDoc',
