@@ -22,14 +22,13 @@ class Session {
   * @param {Function} Promise - The promise constructor.
   * @param {Object} listeners - A key-value map of listeners.
   * @param {Array} interceptors - An array of interceptors.
-  * @param {Function} handleLog - log handler callback
   * @param {String} appId - the appId for this session.
   * @param {Boolean} noData - if true, the app was opened without data.
   * @param {Boolean} suspendOnClose - when true, the session will be suspended if the underlying
   *                                   websocket closes unexpectedly.
   */
   constructor(rpc, delta, definition, JSONPatch, Promise, listeners = {},
-    interceptors = [], handleLog, appId, noData, suspendOnClose) {
+    interceptors = [], suspendOnClose) {
     Events.mixin(this);
     this.rpc = rpc;
     this.delta = delta;
@@ -37,14 +36,9 @@ class Session {
     this.JSONPatch = JSONPatch;
     this.Promise = Promise;
     this.apis = new ApiCache();
-    this.handleLog = handleLog;
-    this.appId = appId;
-    this.noData = noData;
     this.suspendOnClose = suspendOnClose;
     this.connectionId = connectionIdCounter += 1;
     this.responseInterceptors = [{
-      onFulfilled: this.processLogInterceptor,
-    }, {
       onFulfilled: this.processErrorInterceptor,
     }, {
       onFulfilled: this.processDeltaInterceptor,
@@ -430,20 +424,6 @@ class Session {
       , promise
     );
   }
-
-  /**
-   * Log interceptor.
-   * @param {Object} meta - The meta info about the request.
-   * @param response - The response.
-   * @returns {Object} - Returns the defined error for an error, else the response.
-   */
-  processLogInterceptor(meta, response) {
-    if (this.handleLog) {
-      this.handleLog({ msg: 'Received', connection: this.connectionId, data: response });
-    }
-    return response;
-  }
-
 
   /**
   * Process error interceptor.
