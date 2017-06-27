@@ -66,16 +66,15 @@ describe('QIX Suspend/Resume', () => {
       .then(_app => (app = _app))
       // set a dummy property that we don't save:
       .then(() => app.setAppProperties({ test: true }))
-      .then(() => app.session.suspend())
+      .then(() => global.session.suspend())
       .then(() => expect(config.listeners.suspended.calledOnce).to.equal(true))
-      .then(() => app.session.resume())
+      .then(() => global.session.resume())
       .then(() => app.getAppProperties())
       // verify that we have reconnected to a fresh app, since we never saved
       // this property it shouldn't exist in a new one:
       .then(props => expect(props.test).to.equal(undefined))
       .then(() => global.deleteApp(app.id))
-      .then(() => app.session.close())
       .then(() => global.session.close())
-      .then(() => expect(config.listeners.closed.calledTwice).to.equal(true));
+      .then(() => expect(config.listeners.closed.calledOnce).to.equal(true));
   });
 });

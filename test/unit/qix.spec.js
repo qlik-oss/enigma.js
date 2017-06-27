@@ -149,31 +149,7 @@ describe('Qix', () => {
 
     it('should get global', () => {
       expect(session.getObjectApi).to.have.been.calledWith({ handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: undefined });
-      expect(globalApi).to.equal(stubApi);
-      expect(globalApi.openApp).to.be.a('function');
-    });
-
-    it('should use default parameters when openApp', (done) => {
-      globalApi.openApp().then(() => {
-        expect(session.send).to.be.calledWithMatch({ params: [undefined, '', '', '', false] });
-        done();
-      });
-    });
-
-    it('should use custom parameters when openApp', (done) => {
-      globalApi.openApp('foo', 'bar', 'baz', 'serial', true).then(() => {
-        expect(session.send).to.be.calledWithMatch({ params: ['foo', 'bar', 'baz', 'serial', true] });
-        done();
-      });
-    });
-
-    it('should get same app api per session', () => {
-      const openApp = globalApi.openApp.bind(globalApi, 'foo', 'bar', 'baz', 'serial', true);
-      return openApp().then(() =>
-   openApp().then(() => {
-     expect(session.send.callCount).to.equal(1);
-   })
-);
+      expect(globalApi).to.deep.equal(stubApi);
     });
 
     it('should emit close and rethrow on error', () => {
@@ -202,7 +178,7 @@ describe('Qix', () => {
       session = {};
       appApi = {};
       globalApi = {
-        openApp: sinon.stub().returns(Promise.resolve(appApi)),
+        openDoc: sinon.stub().returns(Promise.resolve(appApi)),
       };
       sandbox.stub(Qix, 'getGlobal').returns(Promise.resolve(globalApi));
     });

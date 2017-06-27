@@ -137,31 +137,7 @@ class Qix {
   static getGlobal(session, config) {
     return session.connect().then(() => {
       const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: config.delta };
-      const globalApi = session.getObjectApi(args);
-      globalApi.openApp = globalApi.openDoc =
-      (appId, user = '', password = '', serial = '', noData = false) => {
-        config.session.route = '';
-        config.appId = appId;
-
-        const appSession = Qix.getSession(config);
-
-        if (!appSession.apiPromise) {
-          // create a Global API for this session:
-          appSession.getObjectApi(args);
-          appSession.apiPromise = appSession.connect().then(() =>
-            appSession.send({
-              method: 'OpenDoc',
-              handle: -1,
-              params: [appId, user, password, serial, !!noData],
-              delta: false,
-              outKey: -1,
-            })
-          );
-        }
-
-        return appSession.apiPromise;
-      };
-      return globalApi;
+      return session.getObjectApi(args);
     }).catch((err) => {
       session.emit('closed', err);
       throw err;
@@ -178,12 +154,12 @@ class Qix {
   static get(session, config) {
     return Qix.getGlobal(session, config).then((g) => {
       if (config.appId) {
-        return g.openApp(
+        return g.openDoc(
           config.appId,
-          config.user,
-          config.password,
-          config.serial,
-          config.noData
+          config.user || '',
+          config.password || '',
+          config.serial || '',
+          config.noData || false
         ).then(app => ({ global: g, app }));
       }
       return {

@@ -21,7 +21,7 @@ describe('Sugar mixins', () => {
       extend: {
         createAppAndLoad(appName, scriptName) {
           return qixGlobal.createApp(appName).then(appInfo =>
-            qixGlobal.openApp(appInfo.qAppId).then(app =>
+            qixGlobal.openDoc(appInfo.qAppId).then(app =>
               utils.getScript(scriptName).then(loadScript =>
                 app.setScript(loadScript).then(() =>
                   app.doReload(0, false, false).then(() => ({ app, appInfo }))
@@ -101,7 +101,7 @@ describe('Sugar mixins', () => {
     const sheetName = 'mySheetName';
 
     return qixGlobal.createApp(appName).then(appInfo =>
-      qixGlobal.openApp(appInfo.qAppId).then(app =>
+      qixGlobal.openDoc(appInfo.qAppId).then(app =>
         app.getList(listDef).then((list) => {
           expect(list.qAppObjectList.qItems.length).to.equal(0);
           return app.createSheet(sheetName).then(sheet =>
