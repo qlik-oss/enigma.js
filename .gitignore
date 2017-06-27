@@ -11,3 +11,4 @@ coverage/
 typings/
 jsconfig.json
 jsdoc/
+*.heapsnapshot
