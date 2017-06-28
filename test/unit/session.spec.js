@@ -529,6 +529,20 @@ describe('Session', () => {
     });
   });
 
+  describe('processMultipleOutParamInterceptor', () => {
+    it('should append missing qGenericId for CreateSessionApp', () => {
+      const result = { qReturn: { qHandle: 1, qType: 'Doc' }, qSessionAppId: 'test' };
+      const out = session.processMultipleOutParamInterceptor({ method: 'CreateSessionApp' }, result);
+      expect(out.qReturn.qGenericId).to.be.equal(result.qSessionAppId);
+    });
+
+    it('should remove errenous qReturn from GetInteract', () => {
+      const result = { qReturn: false, qDef: 'test' };
+      const out = session.processMultipleOutParamInterceptor({ method: 'GetInteract' }, result);
+      expect(out.qReturn).to.be.equal(undefined);
+    });
+  });
+
   describe('processOutInterceptor', () => {
     it('should return result with out key', () => {
       const result = { foo: { bar: {} } };
