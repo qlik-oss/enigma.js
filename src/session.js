@@ -43,6 +43,8 @@ class Session {
     }, {
       onFulfilled: this.processResultInterceptor,
     }, {
+      onFulfilled: this.processMultipleOutParamInterceptor,
+    }, {
       onFulfilled: this.processOutInterceptor,
     }, {
       onFulfilled: this.processObjectApiInterceptor,
@@ -477,18 +479,38 @@ class Session {
   }
 
   /**
+  * Processes specific QIX methods that are breaking the protocol specification
+  * and normalizes the response.
+  * @param {Object} meta - The meta info about the request.
+  * @param response - The response.
+  * @returns {Object} - Returns the result property on the response
+  */
+  processMultipleOutParamInterceptor(meta, response) {
+    if (meta.method === 'CreateSessionApp' || meta.method === 'CreateSessionAppFromApp') {
+      // this method returns multiple out params that we need
+      // to normalize before processing the response further:
+      response[RETURN_KEY].qGenericId = response[RETURN_KEY].qGenericId || response.qSessionAppId;
+    } else if (meta.method === 'GetInteract') {
+      // this method returns a qReturn value when it should only return
+      // meta.outKey:
+      delete response[RETURN_KEY];
+    }
+    return response;
+  }
+
+  /**
   * Process out interceptor.
   * @param {Object} meta - The meta info about the request.
   * @param response - The result.
   * @returns {Object} - Returns the out property on result
   */
-  processOutInterceptor(meta, result) {
-    if (hasOwnProperty.call(result, RETURN_KEY)) {
-      return result[RETURN_KEY];
+  processOutInterceptor(meta, response) {
+    if (hasOwnProperty.call(response, RETURN_KEY)) {
+      return response[RETURN_KEY];
     } else if (meta.outKey !== -1) {
-      return result[meta.outKey];
+      return response[meta.outKey];
     }
-    return result;
+    return response;
   }
 
   /**
@@ -499,14 +521,13 @@ class Session {
   */
   processObjectApiInterceptor(meta, response) {
     if (response.qHandle && response.qType) {
-      const args = {
+      return this.getObjectApi({
         handle: response.qHandle,
         type: response.qType,
         id: response.qGenericId,
         customType: response.qGenericType,
         delta: this.delta,
-      };
-      return this.getObjectApi(args);
+      });
     } else if (response.qHandle === null && response.qType === null) {
       return null;
     }
