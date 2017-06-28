@@ -115,6 +115,7 @@ class RPC {
   */
   close(code = 1000, reason = '') {
     this.socket.close(code, reason);
+    this.socket = null;
     return this.closedPromise;
   }
 
