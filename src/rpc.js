@@ -8,9 +8,10 @@ class RPC {
 
   /**
   * Create a new RPC instance.
-  * @param {Function} Promise - The promise constructor.
-  * @param {String} url - The URL used to connect to an endpoint.
-  * @param {Function} createSocket The function callback to create a WebSocket.
+  * @param {Object} options The configuration options for this class.
+  * @param {Function} options.Promise The promise constructor to use.
+  * @param {String} options.url The complete websocket URL used to connect.
+  * @param {Function} options.createSocket The function callback to create a WebSocket.
   */
   constructor(options) {
     Object.assign(this, options);
