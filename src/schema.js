@@ -92,6 +92,7 @@ class Schema {
 
     this.generateDefaultApi(typeDef, def); // Generate default
     this.mixinType(typeKey, typeDef); // Mixin default type
+    this.mixinNamedParamFacade(typeDef, def);
 
     const create = function create(session, handle, id, delta, customKey) {
       const api = Object.create(typeDef);
@@ -176,6 +177,35 @@ class Schema {
         writable: true,
         value: fn,
       });
+    });
+  }
+
+  mixinNamedParamFacade(api, def) {
+    function namedParamFacade(base, paramDef, ...args) {
+      let params = args;
+      if (args && args.length === 1 && typeof args[0] === 'object') {
+        const defaults = paramDef.reduce((result, item) => {
+          result[item.Name] = item.DefaultValue;
+          return result;
+        }, {});
+
+        const isNamedParameterObject = Object.keys(args[0]).reduce((result, key) =>
+          result && Object.prototype.hasOwnProperty.call(defaults, key), true);
+
+        if (isNamedParameterObject) {
+          Object.keys(args[0]).forEach((key) => { defaults[key] = args[0][key]; });
+          params = Object.keys(defaults).map(key => defaults[key]);
+        }
+      }
+      return base.apply(this, params);
+    }
+
+    Object.keys(def).forEach((key) => {
+      const fnName = key.substring(0, 1).toLowerCase() + key.substring(1);
+      const base = api[fnName];
+      api[fnName] = function wrap(...args) {
+        return namedParamFacade.apply(this, [base, def[key].In, ...args]);
+      };
     });
   }
 
