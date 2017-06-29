@@ -41,29 +41,28 @@ describe('qix-logging', () => {
     return qixGlobal.session.close();
   });
 
-  it('should log qix traffic', () => {
-    qixGlobal.allowCreateApp().then(() => {
-      const request = {
-        method: 'AllowCreateApp',
-        handle: -1,
-        params: [],
-        delta: false,
-        outKey: -1,
-        id: 1,
-      };
-      const response = {
-        id: 1,
-        jsonrpc: '2.0',
-        result: {
-          qReturn: true,
-        },
-      };
-      expect(config.listeners['traffic:sent'].firstCall.args[0]).to.containSubset(request);
-      expect(config.listeners['traffic:received'].firstCall.args[0]).to.containSubset(response);
-      expect(config.listeners['traffic:*'].firstCall.args[0]).to.equal('sent');
-      expect(config.listeners['traffic:*'].firstCall.args[1]).to.containSubset(request);
-      expect(config.listeners['traffic:*'].secondCall.args[0]).to.equal('received');
-      expect(config.listeners['traffic:*'].secondCall.args[1]).to.containSubset(response);
-    });
-  });
+  it('should log qix traffic', () => Promise.delay(100).then(() => qixGlobal.allowCreateApp().then(() => {
+    const request = {
+      method: 'AllowCreateApp',
+      handle: -1,
+      params: [],
+      delta: false,
+      id: 1,
+    };
+    const response = {
+      id: 1,
+      jsonrpc: '2.0',
+      result: {
+        qReturn: true,
+      },
+    };
+    // we have traffic:received for OnConnected notification before (so second received
+    // msg should be ours):
+    expect(config.listeners['traffic:sent'].firstCall.args[0]).to.containSubset(request);
+    expect(config.listeners['traffic:received'].secondCall.args[0]).to.containSubset(response);
+    expect(config.listeners['traffic:*'].secondCall.args[0]).to.equal('sent');
+    expect(config.listeners['traffic:*'].secondCall.args[1]).to.containSubset(request);
+    expect(config.listeners['traffic:*'].thirdCall.args[0]).to.equal('received');
+    expect(config.listeners['traffic:*'].thirdCall.args[1]).to.containSubset(response);
+  })));
 });

@@ -3,6 +3,9 @@ import Patch from './json-patch';
 import Session from './session';
 import Schema from './schema';
 import RPC from './rpc';
+import SuspendResume from './suspend-resume';
+import Intercept from './intercept';
+import ApiCache from './api-cache';
 
 function replaceLeadingAndTrailingSlashes(str) {
   return str.replace(/(^[/]+)|([/]+$)/g, '');
@@ -112,18 +115,22 @@ class Qix {
   * @returns {Object} Returns a session instance.
   */
   static getSession(config) {
+    const { listeners, createSocket, delta, Promise, interceptors, JSONPatch, schema } = config;
     const url = Qix.buildUrl(config.session, config.appId);
-    const rpc = new RPC(config.Promise, url, config.createSocket, config.session);
-    const session = new Session(
-        rpc,
-        config.delta,
-        config.schema,
-        config.JSONPatch,
-        config.Promise,
-        config.listeners,
-        config.responseInterceptors,
-        config.session.suspendOnClose
-      );
+    const apis = new ApiCache({ Promise, schema });
+    const rpc = new RPC({ url, createSocket, delta, Promise });
+    const suspendResume = new SuspendResume({ rpc, Promise, apis });
+    const intercept = new Intercept({ interceptors, JSONPatch, Promise, delta, apis });
+    const session = new Session({
+      Promise,
+      rpc,
+      suspendResume,
+      intercept,
+      apis,
+      // 'listeners' is a function from EventEmitter which is mixed into session,
+      // so we map it to a property we own:
+      eventListeners: listeners,
+    });
     return session;
   }
 
@@ -137,7 +144,7 @@ class Qix {
   static getGlobal(session, config) {
     return session.connect().then(() => {
       const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: config.delta };
-      return session.getObjectApi(args);
+      return session.apis.getObjectApi(args);
     }).catch((err) => {
       session.emit('closed', err);
       throw err;

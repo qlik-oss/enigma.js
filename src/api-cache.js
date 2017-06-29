@@ -8,12 +8,59 @@ class ApiCache extends KeyValueCache {
 
   /**
   * Constructor
-  * @param {Array} apis - a list of APIs that will be used to populate the cache.
   */
-  constructor(apis = []) {
+  constructor(opts) {
     super();
-    apis.forEach(api => this.add(api.handle, api));
+    Object.assign(this, opts);
   }
+
+  onHandleChanged(handle) {
+    const api = this.getApi(handle);
+    if (api) {
+      api.emit('changed');
+    }
+  }
+
+  onHandleClosed(handle) {
+    const api = this.getApi(handle);
+    if (api) {
+      api.emit('closed');
+      this.remove(handle);
+    }
+  }
+
+  onSessionClosed() {
+    this.getApis().forEach((entry) => {
+      entry.api.emit('closed');
+      entry.api.removeAllListeners();
+    });
+    this.clear();
+  }
+
+  /**
+  * Function used to get an API for a backend object.
+  * @param {Object} args - Arguments used to create object API.
+  * @param {Number} args.handle - Handle of the backend object.
+  * @param {String} args.id - ID of the backend object.
+  * @param {String} args.type - QIX type of the backend object. Can for example
+  *                             be "Doc" or "GenericVariable".
+  * @param {String} args.customType - Custom type of the backend object, if defined in qInfo.
+  * @param {Boolean} [args.delta=true] - Flag indicating if delta should be used or not.
+  * @returns {*} Returns the generated and possibly augmented API.
+  */
+  getObjectApi(args) {
+    const { handle, id, type, customType, delta = true } = args;
+    let api = this.getApi(handle);
+    if (api) {
+      return api;
+    }
+    api = this.schema
+      .generate(type)
+      .create(this.session, handle, id, delta, customType);
+    this.add(handle, api);
+    return api;
+  }
+
   /**
   * Adds an API.
   * @function ApiCache#add
