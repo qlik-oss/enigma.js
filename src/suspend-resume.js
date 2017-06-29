@@ -1,6 +1,13 @@
 const ON_ATTACHED_TIMEOUT_MS = 5000;
 
 class SuspendResume {
+  /**
+  * Creates a new SuspendResume instance.
+  * @param {Object} options The configuration option for this class.
+  * @param {Promise} options.Promise The promise constructor to use.
+  * @param {RPC} options.rpc The RPC instance to use when communicating towards Engine.
+  * @param {ApiCache} options.apis The ApiCache instance to use.
+  */
   constructor(options) {
     Object.assign(this, options);
     this.isSuspended = false;
@@ -118,10 +125,21 @@ class SuspendResume {
     return Promise.all(tasks);
   }
 
+  /**
+  * Set the instance as suspended.
+  */
   suspend() {
     this.isSuspended = true;
   }
 
+  /**
+  * Resumes a previously suspended RPC connection, and refreshes the API cache.
+  *                                APIs unabled to be restored has their 'closed'
+  *                                event triggered, otherwise 'changed'.
+  * @param {Boolean} onlyIfAttached if true, resume only if the session was re-attached.
+  * @returns {Promise} Eventually resolved if the RPC connection was successfully resumed,
+  *                    otherwise rejected.
+  */
   resume(onlyIfAttached) {
     const changed = [];
     const closed = [];

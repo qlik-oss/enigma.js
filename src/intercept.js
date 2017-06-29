@@ -1,6 +1,15 @@
 const RETURN_KEY = 'qReturn';
 
 class Intercept {
+  /**
+  * Create a new Intercept instance.
+  * @param {Object} options The configuration options for this class.
+  * @param {Promise} options.Promise The promise constructor to use.
+  * @param {ApiCache} options.apis The ApiCache instance to use.
+  * @param {Boolean} options.delta Whether to use the delta protocol.
+  * @param {Array} [options.interceptors] Additional interceptors to use.
+  * @param {JSONPatch} [options.JSONPatch] The JSONPatch implementation to use (for testing).
+  */
   constructor(options) {
     Object.assign(this, options);
     this.interceptors = [{
@@ -182,6 +191,13 @@ class Intercept {
     return response;
   }
 
+  /**
+  * Execute the interceptor queue, each interceptor will get the result from
+  * the previous interceptor.
+  * @param {Promise} promise The promise to chain on to.
+  * @param {Object} meta The JSONRPC request object for the intercepted response.
+  * @returns {Promise}
+  */
   execute(promise, meta) {
     return this.interceptors.reduce((interception, interceptor) =>
       interception.then(

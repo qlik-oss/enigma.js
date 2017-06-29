@@ -1,19 +1,27 @@
 import KeyValueCache from './cache';
 
 /**
-* API cache.
+* API cache for instances of QIX types, e.g. GenericObject.
 * @extends KeyValueCache
 */
 class ApiCache extends KeyValueCache {
 
   /**
-  * Constructor
+  * Create a new ApiCache instance.
+  * @param {Object} options The configuration options for this class.
+  * @param {Promise} options.Promise The promise constructor to use.
+  * @param {Schema} options.schema The schema instance to use.
   */
-  constructor(opts) {
+  constructor(options) {
     super();
-    Object.assign(this, opts);
+    Object.assign(this, options);
   }
 
+  /**
+  * Event handler for triggering API instance events when their handle
+  * is changed.
+  * @emits api#changed
+  */
   onHandleChanged(handle) {
     const api = this.getApi(handle);
     if (api) {
@@ -21,6 +29,11 @@ class ApiCache extends KeyValueCache {
     }
   }
 
+  /**
+  * Event handler for triggering API instance events when their handle
+  * is closed.
+  * @emits api#closed
+  */
   onHandleClosed(handle) {
     const api = this.getApi(handle);
     if (api) {
@@ -29,6 +42,10 @@ class ApiCache extends KeyValueCache {
     }
   }
 
+  /**
+  * Event handler for cleaning up API instances when a session has been closed.
+  * @emits api#closed
+  */
   onSessionClosed() {
     this.getApis().forEach((entry) => {
       entry.api.emit('closed');
@@ -39,6 +56,7 @@ class ApiCache extends KeyValueCache {
 
   /**
   * Function used to get an API for a backend object.
+  * Requires a session instance on `this.session`.
   * @param {Object} args - Arguments used to create object API.
   * @param {Number} args.handle - Handle of the backend object.
   * @param {String} args.id - ID of the backend object.
