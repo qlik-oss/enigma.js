@@ -153,9 +153,16 @@ class SuspendResume {
       .then(() => {
         this.isSuspended = false;
         this.apis.clear();
-        changed.forEach(entry => this.apis.add(entry.handle, entry));
-        closed.forEach(api => api.emit('closed'));
-        changed.filter(api => api.type !== 'Global').forEach(api => api.emit('changed'));
+        closed.forEach((api) => {
+          api.emit('closed');
+          api.removeAllListeners();
+        });
+        changed.forEach((api) => {
+          this.apis.add(api.handle, api);
+          if (api.type !== 'Global') {
+            api.emit('changed');
+          }
+        });
       })
       .catch(err => this.rpc.close().then(() => this.Promise.reject(err)));
   }

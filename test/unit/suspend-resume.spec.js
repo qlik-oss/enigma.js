@@ -41,8 +41,8 @@ describe('Suspend/Resume', () => {
 
     it('should close doc', () => {
       const apisToClose = [
-        { emit: sinon.stub(), handle: 1, type: 'Doc', id: 1 },
-        { emit: sinon.stub(), handle: 2, type: 'GenericObject', id: 2 },
+        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 1, type: 'Doc', id: 1 },
+        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 2, type: 'GenericObject', id: 2 },
       ];
 
       apisToClose.concat([{ emit: sinon.stub(), handle: -1, type: 'Global' }]).forEach(api => apis.add(api.handle, api));
@@ -62,14 +62,14 @@ describe('Suspend/Resume', () => {
 
     it('should restore doc and objects', () => {
       const apisToChange = [
-        { emit: sinon.stub(), handle: 1, type: 'Doc', id: 1 },
-        { emit: sinon.stub(), handle: 2, type: 'GenericObject', id: 2 },
-        { emit: sinon.stub(), handle: 3, type: 'GenericVariable', id: 3 },
+        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 1, type: 'Doc', id: 1 },
+        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 2, type: 'GenericObject', id: 2 },
+        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 3, type: 'GenericVariable', id: 3 },
       ];
       const apisToClose = [
-        { emit: sinon.stub(), handle: 4, type: 'Field', id: 4 },
-        { emit: sinon.stub(), handle: 5, type: 'GenericDummy', id: 5 },
-        { emit: sinon.stub(), handle: 6, type: 'GenericBookmark', id: 6 },
+        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 4, type: 'Field', id: 4 },
+        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 5, type: 'GenericDummy', id: 5 },
+        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 6, type: 'GenericBookmark', id: 6 },
       ];
 
       apisToChange.concat(apisToClose).concat([{ emit: sinon.stub(), handle: -1, type: 'Global' }])
