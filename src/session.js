@@ -142,11 +142,10 @@ class Session {
   /**
   * Suspends the session ("sleeping state"), and closes the RPC connection.
   * @emits suspended
-  * @param {Promise} Eventually resolved when the RPC connection is closed.
+  * @returns {Promise} Eventually resolved when the RPC connection is closed.
   */
   suspend() {
-    this.suspendResume.suspend();
-    return this.rpc.close(RPC_CLOSE_MANUAL_SUSPEND)
+    return this.suspendResume.suspend()
       .then(() => this.emit('suspended', { initiator: 'manual' }));
   }
 

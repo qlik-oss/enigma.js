@@ -1,26 +1,29 @@
 import Promise from 'bluebird';
 import Session from '../../src/session';
+import SuspendResume from '../../src/suspend-resume';
 import RPCMock from '../mocks/rpc-mock';
 import SocketMock from '../mocks/socket-mock';
 
 describe('Session', () => {
   let session;
   let sandbox;
-  const suspendResume = {};
+  let suspendResume;
   const apis = {};
   const intercept = { execute: () => Promise.resolve() };
   const createSession = (throwError, rpc, listeners) => {
+    const defaultRpc = new RPCMock({
+      Promise,
+      url: 'http://localhost:4848',
+      createSocket: url => new SocketMock(url, throwError),
+    });
+    suspendResume = new SuspendResume({ Promise, rpc: rpc || defaultRpc, apis });
     session = new Session({
       Promise,
       eventListeners: listeners,
       apis,
       suspendResume,
       intercept,
-      rpc: rpc || new RPCMock({
-        Promise,
-        url: 'http://localhost:4848',
-        createSocket: url => new SocketMock(url, throwError),
-      }),
+      rpc: rpc || defaultRpc,
     });
   };
 
@@ -214,7 +217,7 @@ describe('Session', () => {
     it('should close socket and emit suspended', () => {
       const spy = sinon.spy();
       const stub = sinon.stub(session.rpc, 'close').returns(Promise.resolve());
-      suspendResume.suspend = () => {};
+      suspendResume.suspended = () => Promise.resolve();
       session.on('suspended', spy);
       return session.suspend().then(() => {
         expect(stub.calledOnce).to.equal(true);
@@ -224,7 +227,7 @@ describe('Session', () => {
 
     it('should open socket and emit resumed', () => {
       const spy = sinon.spy();
-      suspendResume.suspend();
+      suspendResume.isSuspended = true;
       suspendResume.resume = () => Promise.resolve();
       session.on('resumed', spy);
       return session.resume().then(() => {

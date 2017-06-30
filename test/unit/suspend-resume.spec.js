@@ -15,6 +15,7 @@ describe('Suspend/Resume', () => {
     rpc = new Dummy({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url, false) });
     apis = new ApiCache({ Promise, schema: {} });
     suspendResume = new SuspendResume({ Promise, rpc, apis });
+    return rpc.open();
   });
 
   afterEach(() => {
@@ -22,22 +23,18 @@ describe('Suspend/Resume', () => {
   });
 
   describe('Suspend', () => {
-    it('should set state when suspended', () => {
-      suspendResume.suspend();
-      expect(suspendResume.isSuspended).to.equal(true);
-    });
+    it('should set state when suspended', () => suspendResume.suspend().then(() => expect(suspendResume.isSuspended).to.equal(true)));
   });
 
   describe('Resume', () => {
     it('should reject created sessions when onlyIfAttached is true', () => {
-      suspendResume.suspend();
-      const p = rpc.open().then(() => suspendResume.resume(true));
+      const p = suspendResume.suspend().then(() => suspendResume.resume(true));
       expect(p).to.eventually.be.rejectedWith('Not attached');
     });
 
     it('should restore global', () => {
       apis.add(-1, { emit: sinon.stub(), handle: -1, type: 'Global' });
-      return rpc.open()
+      return suspendResume.suspend()
         .then(() => suspendResume.resume())
         .then(() => expect(apis.getApi(-1).emit.notCalled).to.equal(true));
     });
@@ -55,9 +52,7 @@ describe('Suspend/Resume', () => {
         socket.intercept('OpenDoc').return({ error: { message: 'Oh, no!' } });
       });
 
-      suspendResume.suspend();
-
-      return rpc.open()
+      return suspendResume.suspend()
         .then(() => suspendResume.resume(false))
         .then(() => {
           expect(apis.getApis().length).to.equal(1);
@@ -88,9 +83,7 @@ describe('Suspend/Resume', () => {
         socket.intercept('GetBookmark').return({ result: { qReturn: { qHandle: null } } });
       });
 
-      suspendResume.suspend();
-
-      return rpc.open()
+      return suspendResume.suspend()
         .then(() => suspendResume.resume(true))
         .catch(() => {
           apisToChange.forEach(api => expect(api.emit.notCalled).to.equal(true));

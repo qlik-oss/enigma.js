@@ -1,4 +1,5 @@
 const ON_ATTACHED_TIMEOUT_MS = 5000;
+const RPC_CLOSE_MANUAL_SUSPEND = 4000;
 
 class SuspendResume {
   /**
@@ -130,6 +131,7 @@ class SuspendResume {
   */
   suspend() {
     this.isSuspended = true;
+    return this.rpc.close(RPC_CLOSE_MANUAL_SUSPEND);
   }
 
   /**
