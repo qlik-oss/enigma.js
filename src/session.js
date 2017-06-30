@@ -102,7 +102,7 @@ class Session {
   * @emits traffic:sent
   * @emits traffic:received
   * @param {String} dir The traffic direction, sent or received.
-  * @param {Object} JSONRPC request/response/WebSocket message.
+  * @param {Object} data JSONRPC request/response/WebSocket message.
   */
   onTraffic(dir, data) {
     this.emit('traffic:*', dir, data);
