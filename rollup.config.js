@@ -4,10 +4,11 @@ import nodeGlobals from 'rollup-plugin-node-globals';
 import nodeBuiltins from 'rollup-plugin-node-builtins';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
+import multidest from 'rollup-plugin-multi-dest';
 import uglify from 'rollup-plugin-uglify';
 import filesize from 'rollup-plugin-filesize';
 
-export default {
+export default [{
   entry: 'src/qix.js',
   dest: 'dist/enigma.js',
   moduleName: 'enigma',
@@ -26,7 +27,13 @@ export default {
       presets: ['es2015-rollup'],
       plugins: ['external-helpers', 'transform-object-assign'],
     }),
-    uglify(),
+    multidest([{
+      dest: 'dist/enigma.min.js',
+      format: 'umd',
+      plugins: [
+        uglify(),
+      ],
+    }]),
     filesize(),
   ],
-};
+}];
