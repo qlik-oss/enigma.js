@@ -12,6 +12,9 @@ const IGNORE_DELTA_METHODS = [
 
 const SUCCESS_KEY = 'qSuccess';
 
+function toCamelCase(symbol) {
+  return symbol.substring(0, 1).toLowerCase() + symbol.substring(1);
+}
 /**
 * Qix schema definition.
 */
@@ -155,7 +158,7 @@ class Schema {
   */
   generateDefaultApi(typeDef, def) {
     Object.keys(def).forEach((key) => {
-      const fnName = key.substring(0, 1).toLowerCase() + key.substring(1);
+      const fnName = toCamelCase(key);
       const outKey = def[key].Out && def[key].Out.length === 1 ? def[key].Out[0].Name : -1;
 
       const allowDelta = IGNORE_DELTA_METHODS.indexOf(key) === -1 &&
@@ -181,30 +184,30 @@ class Schema {
   }
 
   mixinNamedParamFacade(api, def) {
-    function namedParamFacade(base, paramDef, ...args) {
-      let params = args;
+    function namedParamFacade(base, defaults, ...args) {
       if (args && args.length === 1 && typeof args[0] === 'object') {
-        const defaults = paramDef.reduce((result, item) => {
-          result[item.Name] = item.DefaultValue;
-          return result;
-        }, {});
-
-        const isNamedParameterObject = Object.keys(args[0]).reduce((result, key) =>
+        const valid = Object.keys(args[0]).reduce((result, key) =>
           result && Object.prototype.hasOwnProperty.call(defaults, key), true);
 
-        if (isNamedParameterObject) {
-          Object.keys(args[0]).forEach((key) => { defaults[key] = args[0][key]; });
-          params = Object.keys(defaults).map(key => defaults[key]);
+        if (valid) {
+          const params = [];
+          Object.keys(defaults).forEach(key => (params.push(args[0][key] || defaults[key])));
+          args = params;
         }
       }
-      return base.apply(this, params);
+      return base.apply(this, args);
     }
 
     Object.keys(def).forEach((key) => {
-      const fnName = key.substring(0, 1).toLowerCase() + key.substring(1);
+      const fnName = toCamelCase(key);
       const base = api[fnName];
+      const defaults = def[key].In.reduce((result, item) => {
+        result[item.Name] = item.DefaultValue;
+        return result;
+      }, {});
+
       api[fnName] = function wrap(...args) {
-        return namedParamFacade.apply(this, [base, def[key].In, ...args]);
+        return namedParamFacade.apply(this, [base, defaults, ...args]);
       };
     });
   }
