@@ -8,7 +8,7 @@ describe('RPC', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    rpc = new RPC(Promise, 'http://localhost:4848', url => new SocketMock(url), true);
+    rpc = new RPC({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url, false) });
   });
 
   afterEach(() => {
@@ -46,9 +46,8 @@ describe('RPC', () => {
   it('should call createSocket when open is called', () => {
     const createSocket = sandbox.spy(rpc, 'createSocket');
     rpc.url = 'foo';
-    rpc.sessionConfig = { bar: 'baz' };
     rpc.open();
-    expect(createSocket).to.have.been.calledWithExactly(rpc.url, rpc.sessionConfig);
+    expect(createSocket).to.have.been.calledWithExactly(rpc.url);
   });
 
   it('should return SESSION_CREATED when reopen hits the timeout', () => {

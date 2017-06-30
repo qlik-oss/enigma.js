@@ -1,19 +1,84 @@
 import KeyValueCache from './cache';
 
 /**
-* API cache.
+* API cache for instances of QIX types, e.g. GenericObject.
 * @extends KeyValueCache
 */
 class ApiCache extends KeyValueCache {
 
   /**
-  * Constructor
-  * @param {Array} apis - a list of APIs that will be used to populate the cache.
+  * Create a new ApiCache instance.
+  * @param {Object} options The configuration options for this class.
+  * @param {Promise} options.Promise The promise constructor to use.
+  * @param {Schema} options.schema The schema instance to use.
   */
-  constructor(apis = []) {
+  constructor(options) {
     super();
-    apis.forEach(api => this.add(api.handle, api));
+    Object.assign(this, options);
   }
+
+  /**
+  * Event handler for triggering API instance events when their handle
+  * is changed.
+  * @emits api#changed
+  */
+  onHandleChanged(handle) {
+    const api = this.getApi(handle);
+    if (api) {
+      api.emit('changed');
+    }
+  }
+
+  /**
+  * Event handler for triggering API instance events when their handle
+  * is closed.
+  * @emits api#closed
+  */
+  onHandleClosed(handle) {
+    const api = this.getApi(handle);
+    if (api) {
+      api.emit('closed');
+      this.remove(handle);
+    }
+  }
+
+  /**
+  * Event handler for cleaning up API instances when a session has been closed.
+  * @emits api#closed
+  */
+  onSessionClosed() {
+    this.getApis().forEach((entry) => {
+      entry.api.emit('closed');
+      entry.api.removeAllListeners();
+    });
+    this.clear();
+  }
+
+  /**
+  * Function used to get an API for a backend object.
+  * Requires a session instance on `this.session`.
+  * @param {Object} args - Arguments used to create object API.
+  * @param {Number} args.handle - Handle of the backend object.
+  * @param {String} args.id - ID of the backend object.
+  * @param {String} args.type - QIX type of the backend object. Can for example
+  *                             be "Doc" or "GenericVariable".
+  * @param {String} args.customType - Custom type of the backend object, if defined in qInfo.
+  * @param {Boolean} [args.delta=true] - Flag indicating if delta should be used or not.
+  * @returns {*} Returns the generated and possibly augmented API.
+  */
+  getObjectApi(args) {
+    const { handle, id, type, customType, delta = true } = args;
+    let api = this.getApi(handle);
+    if (api) {
+      return api;
+    }
+    api = this.schema
+      .generate(type)
+      .create(this.session, handle, id, delta, customType);
+    this.add(handle, api);
+    return api;
+  }
+
   /**
   * Adds an API.
   * @function ApiCache#add
