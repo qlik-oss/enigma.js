@@ -14,9 +14,35 @@ const SUCCESS_KEY = 'qSuccess';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
+/**
+* Returns the camelCase counterpart of a symbol.
+* @param {String} symbol The symbol.
+* @return the camelCase counterpart.
+*/
 function toCamelCase(symbol) {
   return symbol.substring(0, 1).toLowerCase() + symbol.substring(1);
 }
+
+/**
+ * A facade function that allows parameters to be passed either by name
+ * (through an object), or by position (through an array).
+ * @param {Function} base The function that is being overriden. Will be
+ *                        called with parameters in array-form.
+ * @param {Object} defaults Parameter list and it's default values.
+ * @param {*} params The parameters.
+ */
+function namedParamFacade(base, defaults, ...params) {
+  if (params && params.length === 1 && typeof params[0] === 'object') {
+    const valid = Object.keys(params[0]).reduce((result, key) =>
+      result && hasOwnProperty.call(defaults, key), true);
+
+    if (valid) {
+      params = Object.keys(defaults).map(key => params[0][key] || defaults[key]);
+    }
+  }
+  return base.apply(this, params);
+}
+
 /**
 * Qix schema definition.
 */
@@ -217,25 +243,11 @@ class Schema {
   }
 
   /**
-  * Function used to mixin the named parameter facade. This mixin will allow clients
-  * to pass parameters either by name (through an object), or by position (through
-  * an array).
-  * @param {String} typeKey Used to specify which mixin should be woven in.
-  * @param {Object} api The object that will be woven.
+  * Function used to mixin the named parameter facade.
+  * @param {Object} api The object API that is currently being generated.
+  * @param {Object} schema The API definition.
   */
   mixinNamedParamFacade(api, schema) {
-    function namedParamFacade(base, defaults, ...params) {
-      if (params && params.length === 1 && typeof params[0] === 'object') {
-        const valid = Object.keys(params[0]).reduce((result, key) =>
-          result && hasOwnProperty.call(defaults, key), true);
-
-        if (valid) {
-          params = Object.keys(defaults).map(key => params[0][key] || defaults[key]);
-        }
-      }
-      return base.apply(this, params);
-    }
-
     Object.keys(schema).forEach((key) => {
       const fnName = toCamelCase(key);
       const base = api[fnName];

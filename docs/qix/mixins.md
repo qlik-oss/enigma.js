@@ -3,9 +3,9 @@
 The *mixin* concept allows you to add or overwrite Qlik Engine API functionality. A mixin is basically a JavaScript object, or a
 function, that returns a JavaScript object containing functions that are applied to an API of a specified type.
 
-Generic types like for example `GenericObject`, `Doc`, `GenericBookmark`, are supported but also custom GenericObject types such as `barchart`, `story` and `myCustomType`. 
+Generic types like for example `GenericObject`, `Doc`, `GenericBookmark`, are supported but also custom GenericObject types such as `barchart`, `story` and `myCustomType`.
 
-Mixins that are bound to several different types can find the current object type in the `customType` or `type` members of the object. `this.type` would for instance return `GenericObject` and this.customType would return `barchart`   
+Mixins that are bound to several different types can find the current object type in the `customType` or `type` members of the object. `this.type` would for instance return `GenericObject` and this.customType would return `barchart`.
 
 
 
@@ -21,7 +21,7 @@ const appMixin = {
 	 * Initialization function. Called when an instance of the specified API(s) is created
 	 * before applying the mixins.
 	 * @param {Object} args - Object containing init parameters.
-	 * @param {Function} args.Promise - The promise library that was used when setting up 
+	 * @param {Function} args.Promise - The promise library that was used when setting up
 	 * the qix service
 	 * @param {Object} args.api - The object instance that was just created.
 	 */
@@ -57,15 +57,16 @@ const appMixin = {
 	override: {
 		/**
 		 * Overriding the getObject function.
-		 * @param {Function} _getObject - This is the original function that is being overridden.
+		 * @param {Function} base - This is the original function that is being overridden.
 		 * Can be used in the override.
-		 * @param {String} id - Parameter from the original function.
+		 * @param {*} params - The parameter list. Will contain default values for parameters not
+		                       supplied by the caller.
 		 * @returns {Promise<Object|null>} A promise that when resolved contains the object asked
 		 * for or null if object doesn't exist.
 		 */
-		getObject: ( _getObject, id ) => {
+		getObject: ( base, ....params) => {
 			// e.g. get object from cache, if exist and return a resolved promise. Else do this
-			return _getObject( id );
+			return base( id );
 		}
 	}
 };

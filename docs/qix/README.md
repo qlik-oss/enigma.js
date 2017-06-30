@@ -38,7 +38,7 @@ enigma.connect(config).then((qix) => {
   const g = qix.global;
   console.log('Got the global instance');
 
-  g.openApp('MyApp').then((app) => {
+  g.openDoc('MyApp').then((app) => {
     console.log('Got the app instance');
 
     app.getObject('xyz123').then((obj) => {
@@ -55,9 +55,22 @@ enigma.connect(config).then((qix) => {
 ## Naming conventions
 
 enigma.js uses camel casing (`getObject`) for method names, while Engine API uses Pascal casing (`GetObject`).
-Parameter names in the Engine API are often prefixed with a `q`, like `qName`, while in enigma.js they are just called `name`.
 
-**Note:** This does not apply for properties and layout such as `qHyperCubeDef` where the `q`-prefix has a special meaning.
+Parameters can be passed either by name through an object:
+```javascript
+enigma.connect(config).then((qix) => {
+  return qix.global.openDoc({ qDocName: 'MyApp' }).then((app) => {
+    // Parameter passed by name through an object.
+  }
+```
+
+or by position:
+```javascript
+enigma.connect(config).then((qix) => {
+  return qix.global.openDoc('MyApp').then((app) => {
+    // Parameter passed by position.
+  }
+```
 
 ## Protocol
 
