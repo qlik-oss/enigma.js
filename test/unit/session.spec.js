@@ -1,51 +1,47 @@
 import Promise from 'bluebird';
 import Session from '../../src/session';
-import RPC from '../../src/rpc';
+import SuspendResume from '../../src/suspend-resume';
 import RPCMock from '../mocks/rpc-mock';
 import SocketMock from '../mocks/socket-mock';
-import ApiCache from '../../src/api-cache';
 
 describe('Session', () => {
   let session;
   let sandbox;
-  const definition = {
-    generate: sinon.stub().returnsThis(),
-    create: sinon.stub().returnsArg(1),
-  };
-  const JSONPatchMock = { apply() {} };
-  const createSession = (throwError, rpc, listeners) => {
-    session = new Session(
-      rpc || new RPCMock(Promise, 'http://localhost:4848', url =>
-      new SocketMock(url, throwError)
-    ),
-    true,
-    definition,
-    JSONPatchMock,
-    Promise,
-    listeners);
+  let suspendResume;
+  const apis = {};
+  const intercept = { execute: () => Promise.resolve() };
+  const createSession = (throwError, rpc, listeners, suspendOnClose = false) => {
+    const defaultRpc = new RPCMock({
+      Promise,
+      url: 'http://localhost:4848',
+      createSocket: url => new SocketMock(url, throwError),
+    });
+    suspendResume = new SuspendResume({ Promise, rpc: rpc || defaultRpc, apis });
+    session = new Session({
+      Promise,
+      eventListeners: listeners,
+      apis,
+      suspendResume,
+      suspendOnClose,
+      intercept,
+      rpc: rpc || defaultRpc,
+    });
   };
 
   beforeEach(() => {
     createSession();
     sandbox = sinon.sandbox.create();
+    SocketMock.on('created', socket => socket.open());
   });
 
   afterEach(() => {
     sandbox.restore();
+    SocketMock.removeAllListeners();
   });
 
   it('should be a constructor', () => {
     expect(Session).to.be.a('function');
     expect(Session).to.throw();
-  });
-
-  it('should set instance variables', () => {
-    expect(session.rpc).to.be.an.instanceOf(RPCMock);
-    expect(session.delta).to.equal(true);
-    expect(session.apis).to.be.an.instanceOf(ApiCache);
-    expect(session.JSONPatch).to.equal(JSONPatchMock);
-    expect(session.Promise).to.equal(Promise);
-    expect(session.definition).to.equal(definition);
   });
 
   it('should return a promise when connect is called', () => {
@@ -89,7 +85,6 @@ describe('Session', () => {
         return Promise.resolve(data);
       });
 
-      sandbox.stub(session, 'intercept').returns(Promise.resolve({}));
       const fn = sandbox.stub(Session, 'addToPromiseChain');
       const request = {};
       return session.send(request).then(() => {
@@ -107,138 +102,11 @@ describe('Session', () => {
       const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
       createSession(false, rpc);
 
-      sandbox.stub(session, 'intercept').returns(Promise.resolve({}));
       const send = sinon.spy(rpc, 'send');
 
       session.send({ method: 'a', handle: 1, params: [], delta: true, xyz: 'xyz' });
       expect(send).to.have.been.calledWithExactly({ method: 'a', handle: 1, params: [], delta: true });
       expect(send).to.have.been.calledWithExactly(sinon.match(isValid));
-    });
-  });
-
-  describe('Suspend', () => {
-    beforeEach(() => {
-      SocketMock.on('created', socket => socket.open());
-    });
-
-    afterEach(() => {
-      SocketMock.removeAllListeners('created');
-    });
-
-    it('should close rpc and set suspended flag on call to suspend()', () => {
-      const rpcClose = sinon.spy(session.rpc, 'close');
-      return session.connect().then(() => session.suspend()).then(() => {
-        expect(rpcClose.calledOnce).to.equal(true);
-        expect(session.suspended).to.equal(true);
-      });
-    });
-
-    it('should emit the suspended event when suspended', () => {
-      const emit = sinon.spy(session, 'emit');
-      return session.connect().then(() => session.suspend()).then(() => {
-        expect(emit).to.have.been.calledWith('suspended', { initiator: 'manual' });
-      });
-    });
-
-    it('should suspend on unexpected rpc close when suspendOnClose is true', () => {
-      session.suspendOnClose = true;
-      const emit = sinon.spy(session, 'emit');
-      return session.connect().then(() => session.rpc.close(1006)).then(() => {
-        expect(session.suspended).to.equal(true);
-        expect(emit).to.have.been.calledWith('suspended', { initiator: 'network' });
-      });
-    });
-
-    it('should close on unexpected rpc close when suspendOnClose is false', () => {
-      const emit = sinon.spy(session, 'emit');
-      return session.connect().then(() => session.rpc.close(1006)).then(() => {
-        expect(session.suspended).to.equal(false);
-        expect(emit).to.have.been.calledWith('closed');
-      });
-    });
-  });
-
-  describe('Resume', () => {
-    beforeEach(() => {
-      SocketMock.on('created', socket => socket.open());
-      class Dummy extends RPC { reopen() { return super.reopen(5); } }
-      const rpc = new Dummy(Promise, 'http://localhost:4848', url => new SocketMock(url, false));
-      createSession(false, rpc);
-    });
-
-    afterEach(() => {
-      SocketMock.removeAllListeners('created');
-    });
-
-    it('should reject created sessions when onlyIfAttached is true', () => {
-      const p = session.connect().then(() => session.suspend()).then(() => session.resume(true));
-      expect(p).to.eventually.be.rejectedWith('Not attached');
-    });
-
-    it('should restore global', () => {
-      const apis = new ApiCache();
-      apis.add(-1, { emit: sinon.stub(), handle: -1, type: 'Global' });
-      return session.resume().then(() => expect(apis.getApi(-1).emit.notCalled).to.equal(true));
-    });
-
-    it('should close doc', () => {
-      const apisToClose = [
-        { emit: sinon.stub(), handle: 1, type: 'Doc', id: 1 },
-        { emit: sinon.stub(), handle: 2, type: 'GenericObject', id: 2 },
-      ];
-
-      const apis = new ApiCache(apisToClose);
-      apis.add(-1, { emit: sinon.stub(), handle: -1, type: 'Global' });
-
-      SocketMock.on('created', (socket) => {
-        socket.intercept('GetActiveDoc').return({ error: { message: 'Oh, no!' } });
-        socket.intercept('OpenDoc').return({ error: { message: 'Oh, no!' } });
-      });
-
-      session.apis = apis;
-      session.suspended = true;
-
-      return session.resume(false).then(() => {
-        expect(session.apis.getApis().length).to.equal(1);
-        apisToClose.forEach(api => expect(api.emit).to.have.been.calledWith('closed'));
-      });
-    });
-
-    it('should restore doc and objects', () => {
-      const apisToChange = [
-        { emit: sinon.stub(), handle: 1, type: 'Doc', id: 1 },
-        { emit: sinon.stub(), handle: 2, type: 'GenericObject', id: 2 },
-        { emit: sinon.stub(), handle: 3, type: 'GenericVariable', id: 3 },
-      ];
-      const apisToClose = [
-        { emit: sinon.stub(), handle: 4, type: 'Field', id: 4 },
-        { emit: sinon.stub(), handle: 5, type: 'GenericDummy', id: 5 },
-        { emit: sinon.stub(), handle: 6, type: 'GenericBookmark', id: 6 },
-      ];
-
-      const apis = new ApiCache(apisToChange.concat(apisToClose));
-      apis.add(-1, { emit: sinon.stub(), handle: -1, type: 'Global' });
-
-      SocketMock.on('created', (socket) => {
-        socket.intercept('GetActiveDoc').return({ result: { qReturn: { qHandle: 101 } } });
-        socket.intercept('GetObject').return({ result: { qReturn: { qHandle: 102 } } });
-        socket.intercept('GetVariableById').return({ result: { qReturn: { qHandle: 103 } } });
-        socket.intercept('GetDummy').return({ error: {} });
-        socket.intercept('GetBookmark').return({ result: { qReturn: { qHandle: null } } });
-      });
-
-      session.apis = apis;
-      session.suspended = true;
-
-      return session.resume(true).catch(() => {
-        apisToChange.forEach(api => expect(api.emit.notCalled).to.equal(true));
-        apisToClose.forEach(api => expect(api.emit.notCalled).to.equal(true));
-        expect(session.apis).to.deep.equal(apis);
-      }).then(() => session.resume(false)).then(() => {
-        expect(session.apis.getApis().length).to.equal(4);
-        apisToChange.forEach(api => expect(api.emit).to.have.been.calledWith('changed'));
-        apisToClose.forEach(api => expect(api.emit).to.have.been.calledWith('closed'));
-      });
     });
   });
 
@@ -294,289 +162,15 @@ describe('Session', () => {
     expect(emit).to.have.been.calledWith('socket-error', 'fubar');
   });
 
-  it('should emit changed on handle changed', () => {
-    const api = {
-      emit: sinon.spy(),
-    };
-    session.apis.add(10, api);
-    session.emit('handle-changed', 10);
-    expect(api.emit).to.have.been.calledWith('changed');
-  });
-
-  it("should not emit changed on handle changed if there isn't an api", () => {
-    const api = {
-      emit: sinon.spy(),
-    };
-    session.emit('handle-changed', 10);
-    expect(api.emit.callCount).to.equal(0);
-  });
-
-  it('should emit closed on handle closed', () => {
-    const api = {
-      emit: sinon.spy(),
-      removeAllListeners: () => {},
-    };
-    session.apis.add(10, api);
-    session.emit('handle-closed', 10);
-    expect(api.emit).to.have.been.calledWith('closed');
-  });
-
-  it('should remove api on handle closed', () => {
-    const api = {
-      emit: sinon.spy(),
-      removeAllListeners: () => {},
-    };
-    const remove = sinon.spy(session.apis, 'remove');
-    session.apis.add(10, api);
-    session.emit('handle-closed', 10);
-    expect(remove).to.have.been.calledWith(10);
-  });
-
-  it('should not try to remove unexisting api on handle closed', () => {
-    const remove = sinon.spy(session.apis, 'remove');
-    session.emit('handle-closed', 10);
-    expect(remove.callCount).to.equal(0);
-  });
-
-  it('should emit closed on close', () => {
-    const api2 = {
-      emit: sinon.spy(),
-      removeAllListeners: () => {},
-    };
-    session.apis.add(20, api2);
-    session.emit('closed');
-    expect(api2.emit).to.have.been.calledWith('closed');
-    expect(session.apis.getAll().length).to.be.equal(0);
-  });
 
   it('should close', () => {
-    const rpc = new RPCMock(Promise, 'http://localhost:4848', url => new SocketMock(url));
+    const rpc = new RPCMock({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url) });
     createSession(false, rpc);
     session.connect();
     const close = sinon.spy(rpc, 'close');
     const closePromise = session.close();
     expect(closePromise).to.be.an.instanceOf(Promise);
     expect(close.calledOnce).to.equal(true);
-  });
-
-  describe('getObjectApi', () => {
-    it('should get an existing api', () => {
-      const typeDef = {
-        Foo: { In: [], Out: [] },
-      };
-      session.apis.add(-1, typeDef);
-      const api = session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', customType: 'Bar', delta: false });
-      expect(api).to.equal(typeDef);
-    });
-
-    it('should create and return an api', () => {
-      session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', customType: 'Bar' });
-      expect(definition.generate).to.be.calledWith('Foo');
-      expect(definition.create).to.be.calledWith(session, -1, 'id_1234', true, 'Bar');
-    });
-  });
-
-  describe('getPatchee', () => {
-    it('should get an existing patchee', () => {
-      const patchee = {};
-      session.apis.add(-1, {});
-      session.apis.addPatchee(-1, 'Foo', patchee);
-      expect(session.getPatchee(-1, [], 'Foo')).to.equal(patchee);
-      expect(session.getPatchee(-1, [], 'Foo')).to.equal(patchee);
-    });
-
-    it('should apply and return a patchee', () => {
-      const JSONPatch = sinon.stub(JSONPatchMock, 'apply');
-      session.apis.add(-1, {});
-      session.apis.addPatchee(-1, 'Foo', {});
-      session.getPatchee(-1, [{ op: 'add', path: '/', value: {} }], 'Foo');
-      expect(JSONPatch).to.have.been.calledWith({}, [{ op: 'add', path: '/', value: {} }]);
-      JSONPatch.reset();
-      session.apis.addPatchee(-1, 'Bar', []);
-      session.getPatchee(-1, [{ op: 'add', path: '/', value: [] }], 'Bar');
-      expect(JSONPatch).to.have.been.calledWith([], [{ op: 'add', path: '/', value: [] }]);
-
-      // primitive
-      JSONPatch.reset();
-      session.apis.addPatchee(-1, 'Baz', 'my folder');
-      session.getPatchee(-1, [{ op: 'add', path: '/', value: ['my documents'] }], 'Baz');
-      expect(JSONPatch.callCount).to.equal(0);
-    });
-
-    describe('primitive patch', () => {
-      let value;
-
-      beforeEach(() => {
-        session.apis.add(-1, {});
-      });
-
-      describe('add', () => {
-        const op = 'add';
-
-        it('should return a string', () => {
-          value = session.getPatchee(-1, [{ op, path: '/', value: 'A string' }], 'Foo');
-          expect(value).to.equal('A string');
-        });
-
-        it('should return a boolean', () => {
-          value = session.getPatchee(-1, [{ op, path: '/', value: true }], 'Foo');
-          expect(value).to.equal(true);
-        });
-
-        it('should return a number', () => {
-          value = session.getPatchee(-1, [{ op, path: '/', value: 123 }], 'Foo');
-          expect(value).to.equal(123);
-        });
-      });
-
-      describe('replace', () => {
-        const op = 'replace';
-
-        it('should return a string', () => {
-          value = session.getPatchee(-1, [{ op, path: '/', value: 'A string' }], 'Foo');
-          expect(value).to.equal('A string');
-        });
-
-        it('should return a boolean', () => {
-          value = session.getPatchee(-1, [{ op, path: '/', value: true }], 'Foo');
-          expect(value).to.equal(true);
-        });
-
-        it('should return a number', () => {
-          value = session.getPatchee(-1, [{ op, path: '/', value: 123 }], 'Foo');
-          expect(value).to.equal(123);
-        });
-      });
-
-      it('should cache primitive patches', () => {
-        value = session.getPatchee(-1, [{ op: 'add', path: '/', value: 'A string' }], 'Foo');
-        expect(value).to.equal('A string');
-        expect(session.getPatchee(-1, [], 'Foo')).to.equal(value);
-      });
-
-      it('should not throw if primitive patch already exists', () => {
-        session.getPatchee(-1, [{ op: 'add', path: '/', value: 'A string' }], 'Foo');
-        expect(session.getPatchee(-1, [{ op: 'replace', path: '/', value: 'Bar' }], 'Foo')).to.equal('Bar');
-      });
-    });
-  });
-
-  describe('intercept', () => {
-    it('should call interceptors onFulfilled', () => {
-      const interceptors = [{ onFulfilled: sinon.stub().returns({ bar: {} }) }];
-      return expect(session.intercept(Promise.resolve({ foo: {} }), interceptors))
-        .to.eventually.deep.equal({ bar: {} });
-    });
-
-    it('should reject and stop the interceptor chain', () => {
-      const spyFulFilled = sinon.spy();
-      const interceptors = [{ onFulfilled() { return Promise.reject('foo'); } }, { onFulfilled: spyFulFilled }];
-      return expect(session.intercept(Promise.resolve(), interceptors).then(() => {}, (err) => {
-        expect(spyFulFilled.callCount).to.equal(0);
-        return Promise.reject(err);
-      })).to.eventually.be.rejectedWith('foo');
-    });
-
-    it('should call interceptors onRejected', () => {
-      const onRejected = sinon.stub().returns('foo');
-      const interceptors = [{ onFulfilled() { return Promise.reject('foo'); } }, { onFulfilled() {}, onRejected }];
-      return expect(session.intercept(Promise.resolve(), interceptors, {})).to.eventually.equal('foo');
-    });
-  });
-
-  describe('processErrorInterceptor', () => {
-    it('should reject and emit if the response contains an error', () => {
-      const emit = sandbox.stub(session, 'emit');
-      return session.processErrorInterceptor({}, { error: 'FUBAR' }).then(null, (err) => {
-        expect(emit).to.have.been.calledWithExactly('qix-error', 'FUBAR');
-        expect(err).to.equal('FUBAR');
-      });
-    });
-
-    it('should not reject if the response does not contain any error', () => {
-      const response = {};
-      expect(session.processErrorInterceptor({}, response)).to.equal(response);
-    });
-  });
-
-  describe('processDeltaInterceptor', () => {
-    let response = { result: { foo: {} } };
-
-    it('should call getPatchee', () => {
-      response = { result: { qReturn: [{ foo: {} }] }, delta: true };
-      const stub = sinon.stub(session, 'getPatchee').returns(response.result.qReturn);
-      session.processDeltaInterceptor({ handle: 1, method: 'Foo', outKey: -1 }, response);
-      expect(stub).to.have.been.calledWith(1, response.result.qReturn, 'Foo-qReturn');
-    });
-
-    it('should reject when response is not an array of patches', () => {
-      response = { result: { qReturn: { foo: {} } }, delta: true };
-      return expect(session.processDeltaInterceptor({ handle: 1, method: 'Foo', outKey: -1 }, response)).to.eventually.be.rejectedWith('Unexpected rpc response, expected array of patches');
-    });
-
-    it('should return response if delta is falsy', () => {
-      response = { result: { qReturn: [{ foo: {} }] }, delta: false };
-      expect(session.processDeltaInterceptor({ handle: 1, method: 'Foo', outKey: -1 }, response)).to.equal(response);
-    });
-  });
-
-  describe('processResultInterceptor', () => {
-    const response = { result: { foo: {} } };
-
-    it('should return result', () => {
-      expect(session.processResultInterceptor({ outKey: -1 }, response))
-        .to.be.equal(response.result);
-    });
-  });
-
-  describe('processMultipleOutParamInterceptor', () => {
-    it('should append missing qGenericId for CreateSessionApp', () => {
-      const result = { qReturn: { qHandle: 1, qType: 'Doc' }, qSessionAppId: 'test' };
-      const out = session.processMultipleOutParamInterceptor({ method: 'CreateSessionApp' }, result);
-      expect(out.qReturn.qGenericId).to.be.equal(result.qSessionAppId);
-    });
-
-    it('should remove errenous qReturn from GetInteract', () => {
-      const result = { qReturn: false, qDef: 'test' };
-      const out = session.processMultipleOutParamInterceptor({ method: 'GetInteract' }, result);
-      expect(out.qReturn).to.be.equal(undefined);
-    });
-  });
-
-  describe('processOutInterceptor', () => {
-    it('should return result with out key', () => {
-      const result = { foo: { bar: {} } };
-      expect(session.processOutInterceptor({ outKey: 'foo' }, result)).to.be.equal(result.foo);
-    });
-
-    it('should return result with return key', () => {
-      const result = { qReturn: { foo: {} } };
-      expect(session.processOutInterceptor({ outKey: -1 }, result)).to.be.equal(result.qReturn);
-    });
-
-    it('should return result if neither out key or return key is specified', () => {
-      const result = { foo: {} };
-      expect(session.processOutInterceptor({ outKey: -1 }, result)).to.be.equal(result);
-    });
-  });
-
-  describe('processObjectApiInterceptor', () => {
-    it('should call getObjectApi', () => {
-      const response = { qHandle: 1, qType: 'Foo', qGenericId: 'Baz', qGenericType: 'Bar' };
-      const stub = sinon.stub(session, 'getObjectApi');
-      session.processObjectApiInterceptor({}, response);
-      expect(stub).to.have.been.calledWith({ handle: 1, type: 'Foo', id: 'Baz', customType: 'Bar', delta: true });
-    });
-
-    it("should return null if requested object doesn't exist", () => {
-      const response = { qHandle: null, qType: null };
-      return expect(session.processObjectApiInterceptor({}, response)).to.equal(null);
-    });
-
-    it('should return response argument if qHandle/qType are undefined', () => {
-      const response = {};
-      return expect(session.processObjectApiInterceptor({}, response)).to.equal(response);
-    });
   });
 
   describe('addToPromiseChain', () => {
@@ -600,6 +194,60 @@ describe('Session', () => {
       Session.addToPromiseChain(promise, 'foo', 'bar');
       const p1 = promise.then(s => `${s}1`);
       return expect(p1).to.eventually.equal('baz1');
+    });
+  });
+
+  describe('suspend/resume', () => {
+    it('should reject send() calls during suspended state', () => {
+      suspendResume.isSuspended = true;
+      expect(session.send()).to.eventually.be.rejectedWith('Session suspended');
+    });
+
+    it('should not trigger events during suspended state', () => {
+      suspendResume.isSuspended = true;
+      const spy = sinon.spy();
+      session.on('socket-error', spy);
+      session.on('suspended', spy);
+      session.on('closed', spy);
+      session.on('handle-changed', spy);
+      session.on('handle-closed', spy);
+      session.onError();
+      session.onClosed();
+      session.onMessage();
+      expect(spy.callCount).to.equal(0);
+    });
+
+    it('should close socket and emit suspended', () => {
+      const spy = sinon.spy();
+      const stub = sinon.stub(session.rpc, 'close').returns(Promise.resolve());
+      session.on('suspended', spy);
+      return session.suspend().then(() => {
+        expect(suspendResume.isSuspended).to.equal(true);
+        expect(stub.calledOnce).to.equal(true);
+        expect(spy.calledOnce).to.equal(true);
+      });
+    });
+
+    it('should set session as suspended when suspendOnClose is true', () => {
+      createSession(false, null, null, true);
+      const spy = sinon.spy();
+      session.on('suspended', spy);
+      return session.connect()
+        .then(() => session.rpc.close(9999))
+        .then(() => {
+          expect(suspendResume.isSuspended).to.equal(true);
+          expect(spy.callCount).to.equal(1);
+        });
+    });
+
+    it('should open socket and emit resumed', () => {
+      const spy = sinon.spy();
+      suspendResume.isSuspended = true;
+      suspendResume.resume = () => Promise.resolve();
+      session.on('resumed', spy);
+      return session.resume().then(() => {
+        expect(spy.calledOnce).to.equal(true);
+      });
     });
   });
 });

@@ -138,7 +138,7 @@ describe('Qix', () => {
       session = {
         connect: sinon.stub().returns(Promise.resolve()),
         send: sinon.stub().returns(Promise.resolve()),
-        getObjectApi: sinon.stub().returns(stubApi),
+        apis: { getObjectApi: sinon.stub().returns(stubApi) },
       };
       sandbox.stub(Qix, 'getSession').returns(session);
 
@@ -148,7 +148,7 @@ describe('Qix', () => {
     });
 
     it('should get global', () => {
-      expect(session.getObjectApi).to.have.been.calledWith({ handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: undefined });
+      expect(session.apis.getObjectApi).to.have.been.calledWith({ handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: undefined });
       expect(globalApi).to.deep.equal(stubApi);
     });
 

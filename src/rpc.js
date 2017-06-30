@@ -8,17 +8,14 @@ class RPC {
 
   /**
   * Create a new RPC instance.
-  * @param {Function} Promise - The promise constructor.
-  * @param {String} url - The URL used to connect to an endpoint.
-  * @param {Function} createSocket The function callback to create a WebSocket.
-  * @param {Object} sessionConfig - The object to configure the session.
+  * @param {Object} options The configuration options for this class.
+  * @param {Function} options.Promise The promise constructor to use.
+  * @param {String} options.url The complete websocket URL used to connect.
+  * @param {Function} options.createSocket The function callback to create a WebSocket.
   */
-  constructor(Promise, url, createSocket, sessionConfig) {
+  constructor(options) {
+    Object.assign(this, options);
     Events.mixin(this);
-    this.Promise = Promise;
-    this.url = url;
-    this.createSocket = createSocket;
-    this.sessionConfig = sessionConfig;
     this.resolvers = {};
     this.requestId = 0;
     this.openedPromise = undefined;
@@ -35,7 +32,7 @@ class RPC {
     }
 
     try {
-      this.socket = this.createSocket(this.url, this.sessionConfig);
+      this.socket = this.createSocket(this.url);
     } catch (err) {
       return this.Promise.reject(err);
     }
@@ -141,6 +138,7 @@ class RPC {
   */
   onMessage(event) {
     const data = JSON.parse(event.data);
+    this.emit('traffic', 'received', data);
     if (typeof data.id !== 'undefined') {
       this.emit('message', data);
       this.resolvers[data.id].resolveWith(data);
@@ -197,6 +195,7 @@ class RPC {
     data.id = this.requestId += 1;
     return new this.Promise((resolve, reject) => {
       this.socket.send(JSON.stringify(data));
+      this.emit('traffic', 'sent', data);
       return this.registerResolver(data.id, resolve, reject);
     });
   }
