@@ -10,7 +10,7 @@ describe('Session', () => {
   let suspendResume;
   const apis = {};
   const intercept = { execute: () => Promise.resolve() };
-  const createSession = (throwError, rpc, listeners) => {
+  const createSession = (throwError, rpc, listeners, suspendOnClose = false) => {
     const defaultRpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
@@ -22,6 +22,7 @@ describe('Session', () => {
       eventListeners: listeners,
       apis,
       suspendResume,
+      suspendOnClose,
       intercept,
       rpc: rpc || defaultRpc,
     });
@@ -30,10 +31,12 @@ describe('Session', () => {
   beforeEach(() => {
     createSession();
     sandbox = sinon.sandbox.create();
+    SocketMock.on('created', socket => socket.open());
   });
 
   afterEach(() => {
     sandbox.restore();
+    SocketMock.removeAllListeners();
   });
 
   it('should be a constructor', () => {
@@ -217,12 +220,24 @@ describe('Session', () => {
     it('should close socket and emit suspended', () => {
       const spy = sinon.spy();
       const stub = sinon.stub(session.rpc, 'close').returns(Promise.resolve());
-      suspendResume.suspended = () => Promise.resolve();
       session.on('suspended', spy);
       return session.suspend().then(() => {
+        expect(suspendResume.isSuspended).to.equal(true);
         expect(stub.calledOnce).to.equal(true);
         expect(spy.calledOnce).to.equal(true);
       });
+    });
+
+    it('should set session as suspended when suspendOnClose is true', () => {
+      createSession(false, null, null, true);
+      const spy = sinon.spy();
+      session.on('suspended', spy);
+      return session.connect()
+        .then(() => session.rpc.close(9999))
+        .then(() => {
+          expect(suspendResume.isSuspended).to.equal(true);
+          expect(spy.callCount).to.equal(1);
+        });
     });
 
     it('should open socket and emit resumed', () => {

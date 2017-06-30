@@ -23,7 +23,7 @@ describe('Suspend/Resume', () => {
   });
 
   describe('Suspend', () => {
-    it('should set state when suspended', () => suspendResume.suspend().then(() => expect(suspendResume.isSuspended).to.equal(true)));
+    it('should set state when manually suspended', () => suspendResume.suspend().then(() => expect(suspendResume.isSuspended).to.equal(true)));
   });
 
   describe('Resume', () => {

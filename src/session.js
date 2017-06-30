@@ -61,7 +61,7 @@ class Session {
       return;
     }
     if (this.suspendOnClose) {
-      this.emit('suspended', { initiator: 'network' });
+      this.suspendResume.suspend().then(() => this.emit('suspended', { initiator: 'network' }));
     } else {
       this.emit('closed', evt);
     }
