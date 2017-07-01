@@ -25,11 +25,13 @@ const config = {
       },
     });
   },
-  handleLog: logRow => console.log(logRow),
+  listeners: {
+    'traffic:*': (dir, data) => console.log(dir, data),
+  },
 };
 
 console.log('Connecting to Engine');
-enigma.getService('qix', config).then((qix) => {
+enigma.connect(config).then((qix) => {
   console.log('Connected');
   return qix.global.getDocList().then((docList) => {
     const docs = docList.map(doc => `${doc.qDocName} - ${doc.qDocId}`).join('\n');

@@ -1,11 +1,10 @@
 import Promise from 'bluebird';
 import WebSocket from 'ws';
-import Qix from '../../src/services/qix/index';
+import Qix from '../../src/qix';
 import Schema from '../../schemas/qix/3.2/schema.json';
 import utils from './utils';
 
 describe('Sugar mixins', () => {
-  const qix = new Qix();
   let qixGlobal;
   const config = {};
 
@@ -22,7 +21,7 @@ describe('Sugar mixins', () => {
       extend: {
         createAppAndLoad(appName, scriptName) {
           return qixGlobal.createApp(appName).then(appInfo =>
-            qixGlobal.openApp(appInfo.qAppId).then(app =>
+            qixGlobal.openDoc(appInfo.qAppId).then(app =>
               utils.getScript(scriptName).then(loadScript =>
                 app.setScript(loadScript).then(() =>
                   app.doReload(0, false, false).then(() => ({ app, appInfo }))
@@ -70,7 +69,7 @@ describe('Sugar mixins', () => {
       },
     }];
 
-    return qix.connect(config).then((g) => {
+    return Qix.connect(config).then((g) => {
       qixGlobal = g.global;
     });
   }));
@@ -98,11 +97,11 @@ describe('Sugar mixins', () => {
         },
       },
     };
-    const appName = 'myAppName';
+    const appName = 'myAppName1';
     const sheetName = 'mySheetName';
 
     return qixGlobal.createApp(appName).then(appInfo =>
-      qixGlobal.openApp(appInfo.qAppId).then(app =>
+      qixGlobal.openDoc(appInfo.qAppId).then(app =>
         app.getList(listDef).then((list) => {
           expect(list.qAppObjectList.qItems.length).to.equal(0);
           return app.createSheet(sheetName).then(sheet =>
@@ -128,7 +127,7 @@ describe('Sugar mixins', () => {
       },
       qSelectionObjectDef: {},
     };
-    const appName = 'myAppName';
+    const appName = 'myAppName2';
     const scriptName = 'ctrl00.txt';
 
     return qixGlobal.createAppAndLoad(appName, scriptName).then((obj) => {
@@ -176,7 +175,7 @@ describe('Sugar mixins', () => {
         qDef: 'sum(Num)',
       },
     };
-    const appName = 'myAppName';
+    const appName = 'myAppName3';
     const scriptName = 'ctrl00.txt';
 
     return qixGlobal.createAppAndLoad(appName, scriptName).then((obj) => {
@@ -209,7 +208,7 @@ describe('Sugar mixins', () => {
         qShowSrcTables: true,
       },
     };
-    const appName = 'myAppName';
+    const appName = 'myAppName4';
     const scriptName = 'ctrl00.txt';
 
     return qixGlobal.createAppAndLoad(appName, scriptName).then((obj) => {
@@ -264,7 +263,7 @@ describe('Sugar mixins', () => {
         tags: [],
       },
     };
-    const appName = 'myAppName';
+    const appName = 'myAppName5';
     const scriptName = 'ctrl00.txt';
 
     return qixGlobal.createAppAndLoad(appName, scriptName).then((obj) => {
@@ -307,7 +306,7 @@ describe('Sugar mixins', () => {
       qComment: '',
       qDefinition: 'Month',
     };
-    const appName = 'myAppName';
+    const appName = 'myAppName6';
     const scriptName = 'ctrl00.txt';
 
     return qixGlobal.createAppAndLoad(appName, scriptName).then((obj) => {

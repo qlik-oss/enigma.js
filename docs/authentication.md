@@ -31,7 +31,7 @@ const cfg = {
         }
 };
 
-enigma.getService( "qix", cfg );
+enigma.connect(cfg);
 ```
 
 

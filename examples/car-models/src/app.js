@@ -47,10 +47,10 @@ angular.module('app', []).component('app', {
               location.href = authInfo.loginUri;
             }
           },
+          'traffic:*': (dir, data) => console.log(dir, data),
         },
-        handleLog: logRow => console.log(logRow),
       };
-      enigma.getService('qix', config).then((qix) => {
+      enigma.connect(config).then((qix) => {
         this.connected = true;
 
         qix.global.createSessionApp()

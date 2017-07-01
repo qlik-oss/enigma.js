@@ -24,12 +24,11 @@ Before you start, you will need to:
 
 enigma.js exposes an API for consuming backend services that are configured with settings.
 
-### `getService( name[, config] )`
+### `connect( config )`
 
 | Property | Type   | Description |
 |----------|--------|-------------|
-| `name`   | String | Name of the service. See the service section for alternatives. |
-| `config` | Object | Service configuration, see docs for respective service. |
+| `config` | Object | Service configuration, see docs for details. |
 
 Returns an enigma.js service used to communicate with backend services.
 
@@ -41,12 +40,12 @@ enigma.js can be used in CommonJS, AMD, and vanilla browser (global) formats. In
 npm install --save enigma.js
 ```
 
-Basic usage is to pull in the library, call `getService` and start using the API of the returned service.
+Basic usage is to pull in the library, call `connect` and start using the API of the returned service.
 
 ```javascript
 const enigma = require('enigma.js');
 
-enigma.getService('<Service Name>', { /* Service config */ }).then((serviceInstance) => {
+enigma.connect({ /* Service config */ }).then((serviceInstance) => {
   // Continue working with the instance
 }, (err) => {
   // There was an error getting the service
@@ -56,4 +55,3 @@ enigma.getService('<Service Name>', { /* Service config */ }).then((serviceInsta
 ## Services
 
 - [The QIX service](qix/README.md)
-- [The REST service](rest/README.md)

@@ -11,10 +11,10 @@ general:
 dependencies:
   override:
     - yarn
-    - npm run webpack
+    - npm run build
 
 test:
   override:
-    - npm run test:coverage
+    - npm run test
     - npm run lint
     - npm run jsdoc
