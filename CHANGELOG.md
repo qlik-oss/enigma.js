@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.0
+
+### Features
+
+- Added QIX Engine API schema 12.20.0 (Sense Enterprise June 2017)
+
+### Fixes
+
+- Fixed an issue related to closing APIs while requests could be pending
+
 ## 1.2.1
 
 - Bugfix related to suspend/resume, notification should be qSessionState (not qConnectedState).
@@ -7,6 +17,7 @@
 ## 1.2.0
 
 ### Features
+
 - Suspend/Resume: It is now possible to suspend an resume qix sessions. See [session.md](https://github.com/qlik-oss/enigma.js/blob/master/docs/qix/session.md#sessions).
 
 ## 1.1.1
