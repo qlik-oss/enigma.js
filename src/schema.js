@@ -32,7 +32,7 @@ function toCamelCase(symbol) {
  * @param {*} params The parameters.
  */
 function namedParamFacade(base, defaults, ...params) {
-  if (params && params.length === 1 && typeof params[0] === 'object') {
+  if (params.length === 1 && typeof params[0] === 'object') {
     const valid = Object.keys(params[0]).reduce((result, key) =>
       result && hasOwnProperty.call(defaults, key), true);
 
@@ -123,7 +123,7 @@ class Schema {
 
     this.generateDefaultApi(api, schema); // Generate default
     this.mixinType(type, api); // Mixin default type
-    this.mixinNamedParamFacade(api, schema);
+    this.mixinNamedParamFacade(api, schema); // Mixin named parameter support
 
     const create = function create(session, handle, id, delta, customKey) {
       const instance = Object.create(api);

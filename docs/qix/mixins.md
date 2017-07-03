@@ -59,14 +59,14 @@ const appMixin = {
 		 * Overriding the getObject function.
 		 * @param {Function} base - This is the original function that is being overridden.
 		 * Can be used in the override.
-		 * @param {*} params - The parameter list. Will contain default values for parameters not
-		                       supplied by the caller.
+		 * @param {*} params - The parameter list. When parameters are passed by name, enigma.js
+		 *                     will add default values for parameters not supplied by the caller.
 		 * @returns {Promise<Object|null>} A promise that when resolved contains the object asked
 		 * for or null if object doesn't exist.
 		 */
-		getObject: ( base, ....params) => {
+		getObject: ( base, ....params ) => {
 			// e.g. get object from cache, if exist and return a resolved promise. Else do this
-			return base( id );
+			return base( params );
 		}
 	}
 };
