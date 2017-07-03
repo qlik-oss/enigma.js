@@ -1,20 +1,34 @@
-machine:
-  node:
-    version: 6.9.5
-
-general:
-  artifacts:
-    - "coverage"
-    - "dist"
-    - "jsdoc"
-
-dependencies:
-  override:
-    - yarn
-    - npm run build
-
-test:
-  override:
-    - npm run test
-    - npm run lint
-    - npm run jsdoc
+version: 2
+jobs:
+  build:
+    working_directory: ~/enigma.js
+    docker:
+      - image: circleci/node:8.1.2
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies
+          command: npm install --silent
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Linting
+          command: npm run -s lint
+      - run:
+          name: Unit & component testing
+          command: npm run -s test
+      - run:
+          name: Build library
+          command: |
+            npm run -s build
+            npm run -s jsdoc
+      - store_artifacts:
+          path: dist
+      - store_artifacts:
+          path: jsdoc
+      - store_artifacts:
+          path: coverage
