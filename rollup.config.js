@@ -7,6 +7,9 @@ import babel from 'rollup-plugin-babel';
 import multidest from 'rollup-plugin-multi-dest';
 import uglify from 'rollup-plugin-uglify';
 import filesize from 'rollup-plugin-filesize';
+import license from 'rollup-plugin-license';
+
+const pkg = require('./package.json');
 
 export default [{
   entry: 'src/qix.js',
@@ -34,6 +37,13 @@ export default [{
         uglify(),
       ],
     }]),
+    license({
+      banner: `
+        ${pkg.name} v${pkg.version}
+        Copyright (c) ${new Date().getFullYear()} QlikTech International AB
+        This library is licensed under MIT - See the LICENSE file for full details
+      `,
+    }),
     filesize(),
   ],
 }];
