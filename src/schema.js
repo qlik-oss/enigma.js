@@ -12,6 +12,37 @@ const IGNORE_DELTA_METHODS = [
 
 const SUCCESS_KEY = 'qSuccess';
 
+const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+/**
+* Returns the camelCase counterpart of a symbol.
+* @param {String} symbol The symbol.
+* @return the camelCase counterpart.
+*/
+function toCamelCase(symbol) {
+  return symbol.substring(0, 1).toLowerCase() + symbol.substring(1);
+}
+
+/**
+ * A facade function that allows parameters to be passed either by name
+ * (through an object), or by position (through an array).
+ * @param {Function} base The function that is being overriden. Will be
+ *                        called with parameters in array-form.
+ * @param {Object} defaults Parameter list and it's default values.
+ * @param {*} params The parameters.
+ */
+function namedParamFacade(base, defaults, ...params) {
+  if (params.length === 1 && typeof params[0] === 'object') {
+    const valid = Object.keys(params[0]).reduce((result, key) =>
+      result && hasOwnProperty.call(defaults, key), true);
+
+    if (valid) {
+      params = Object.keys(defaults).map(key => params[0][key] || defaults[key]);
+    }
+  }
+  return base.apply(this, params);
+}
+
 /**
 * Qix schema definition.
 */
@@ -63,42 +94,43 @@ class Schema {
 
   /**
   * Function used to generate a type definition.
-  * @param {String} typeKey The type.
+  * @param {String} type The type.
   * @returns {{create: Function, def: Object}} Returns an object with a definition
   *          of the type and a create factory.
   */
-  generate(typeKey) {
-    const entry = this.types.get(typeKey);
+  generate(type) {
+    const entry = this.types.get(type);
     if (entry) {
       return entry;
     }
-    if (!this.def.structs[typeKey]) {
-      throw new Error(`${typeKey} not found`);
+    if (!this.def.structs[type]) {
+      throw new Error(`${type} not found`);
     }
-    const type = this.generateApi(typeKey, this.def.structs[typeKey]);
-    this.types.add(typeKey, type);
-    return type;
+    const factory = this.generateApi(type, this.def.structs[type]);
+    this.types.add(type, factory);
+    return factory;
   }
 
   /**
   * Function used to generate an API definition for a given type.
-  * @param {String} typeKey The type to generate.
-  * @param {Object} def The API definition.
+  * @param {String} type The type to generate.
+  * @param {Object} schema The schema describing the type.
   * @returns {{create: (function(session:Object, handle:Number, id:String,
   *          delta:Boolean, customKey:String)), def: Object}} Returns the API definition.
   */
-  generateApi(typeKey, def) {
-    const typeDef = Object.create({});
+  generateApi(type, schema) {
+    const api = Object.create({});
 
-    this.generateDefaultApi(typeDef, def); // Generate default
-    this.mixinType(typeKey, typeDef); // Mixin default type
+    this.generateDefaultApi(api, schema); // Generate default
+    this.mixinType(type, api); // Mixin default type
+    this.mixinNamedParamFacade(api, schema); // Mixin named parameter support
 
     const create = function create(session, handle, id, delta, customKey) {
-      const api = Object.create(typeDef);
+      const instance = Object.create(api);
 
-      Events.mixin(api); // Always mixin event-emitter per instance
+      Events.mixin(instance); // Always mixin event-emitter per instance
 
-      Object.defineProperties(api, {
+      Object.defineProperties(instance, {
         session: {
           enumerable: true,
           value: session,
@@ -118,7 +150,7 @@ class Schema {
         },
         type: {
           enumerable: true,
-          value: typeKey,
+          value: type,
         },
         genericType: {
           enumerable: true,
@@ -126,36 +158,36 @@ class Schema {
         },
       });
 
-      let mixinList = this.mixins.get(typeKey) || [];
-      if (customKey !== typeKey) {
-        this.mixinType(customKey, api); // Mixin custom types
+      let mixinList = this.mixins.get(type) || [];
+      if (customKey !== type) {
+        this.mixinType(customKey, instance); // Mixin custom types
         mixinList = mixinList.concat(this.mixins.get(customKey) || []);
       }
       mixinList.forEach((mixin) => {
         if (typeof mixin.init === 'function') {
-          mixin.init({ Promise: this.Promise, api });
+          mixin.init({ Promise: this.Promise, api: instance });
         }
       });
 
-      return api;
+      return instance;
     }.bind(this);
 
     return {
       create,
-      def: typeDef,
+      def: api,
     };
   }
 
   /**
   * Function used to generate the methods with the right handlers to the object
   * API that is being generated.
-  * @param {Object} typeDef The object API that is currently being generated.
-  * @param {Object} def The API definition.
+  * @param {Object} api The object API that is currently being generated.
+  * @param {Object} schema The API definition.
   */
-  generateDefaultApi(typeDef, def) {
-    Object.keys(def).forEach((key) => {
-      const fnName = key.substring(0, 1).toLowerCase() + key.substring(1);
-      const outKey = def[key].Out && def[key].Out.length === 1 ? def[key].Out[0].Name : -1;
+  generateDefaultApi(api, schema) {
+    Object.keys(schema).forEach((key) => {
+      const fnName = toCamelCase(key);
+      const outKey = schema[key].Out && schema[key].Out.length === 1 ? schema[key].Out[0].Name : -1;
 
       const allowDelta = IGNORE_DELTA_METHODS.indexOf(key) === -1 &&
         outKey !== -1 &&
@@ -171,7 +203,7 @@ class Schema {
         });
       }
 
-      Object.defineProperty(typeDef, fnName, {
+      Object.defineProperty(api, fnName, {
         enumerable: true,
         writable: true,
         value: fn,
@@ -181,11 +213,11 @@ class Schema {
 
   /**
   * Function used to add mixin methods to a specified API.
-  * @param {String} typeKey Used to specify which mixin should be woven in.
+  * @param {String} type Used to specify which mixin should be woven in.
   * @param {Object} api The object that will be woven.
   */
-  mixinType(typeKey, api) {
-    const mixinList = this.mixins.get(typeKey);
+  mixinType(type, api) {
+    const mixinList = this.mixins.get(type);
     if (mixinList) {
       mixinList.forEach(({ extend = {}, override = {} }) => {
         Object.keys(override).forEach((key) => {
@@ -195,19 +227,39 @@ class Schema {
               return override[key].apply(this, [baseFn.bind(this), ...args]);
             };
           } else {
-            throw new Error(`No function to override. Type: ${typeKey} function: ${key}`);
+            throw new Error(`No function to override. Type: ${type} function: ${key}`);
           }
         });
         Object.keys(extend).forEach((key) => {
           // handle overrides
           if (typeof api[key] === 'function' && typeof extend[key] === 'function') {
-            throw new Error(`Extend is not allowed for this mixin. Type: ${typeKey} function: ${key}`);
+            throw new Error(`Extend is not allowed for this mixin. Type: ${type} function: ${key}`);
           } else {
             api[key] = extend[key];
           }
         });
       });
     }
+  }
+
+  /**
+  * Function used to mixin the named parameter facade.
+  * @param {Object} api The object API that is currently being generated.
+  * @param {Object} schema The API definition.
+  */
+  mixinNamedParamFacade(api, schema) {
+    Object.keys(schema).forEach((key) => {
+      const fnName = toCamelCase(key);
+      const base = api[fnName];
+      const defaults = schema[key].In.reduce((result, item) => {
+        result[item.Name] = item.DefaultValue;
+        return result;
+      }, {});
+
+      api[fnName] = function namedParamWrapper(...params) {
+        return namedParamFacade.apply(this, [base, defaults, ...params]);
+      };
+    });
   }
 }
 

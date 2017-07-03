@@ -261,4 +261,52 @@ describe('Schema', () => {
       expect(foo.bar2).to.be.a('function');
     });
   });
+
+  describe('named parameters', () => {
+    let definition;
+
+    beforeEach(() => {
+      const json = {
+        structs: {
+          Foo: {
+            Bar: {
+              In: [{ Name: 'param1', DefaultValue: '' },
+                   { Name: 'param2', DefaultValue: '' },
+                   { Name: 'param3', DefaultValue: 'xyz' }],
+              Out: [],
+            },
+          },
+        },
+      };
+      definition = new Schema(Promise, json);
+    });
+
+    it('should call send with the correct parameter set', () => {
+      let params;
+      const send = request => (params = request.params);
+      const api = definition.generate('Foo').create({ send }, 1, 'dummy', false, 'dummy');
+      api.bar({ param1: 'abc', param2: 'def', param3: 'ghi' });
+      expect(params).to.deep.equal(['abc', 'def', 'ghi']);
+      api.bar('abc', 'def');
+      expect(params).to.deep.equal(['abc', 'def']);
+    });
+
+    it('should fill in default values when parameters are named', () => {
+      let params;
+      const send = request => (params = request.params);
+      const api = definition.generate('Foo').create({ send }, 1, 'dummy', false, 'dummy');
+      api.bar({ param1: 'abc', param2: 'def' });
+      expect(params).to.deep.equal(['abc', 'def', 'xyz']);
+    });
+
+    it('parameters should be passed as an array to mixins', () => {
+      let mixinArgs;
+      const mixin = { types: 'Foo', override: { bar: (_bar, ...args) => (mixinArgs = args) } };
+      definition.registerMixin(mixin);
+      const type = definition.generate('Foo');
+      const api = type.create({}, 0, 'id', true, 'custom');
+      api.bar({ param1: 'abc', param2: 'def', param3: 'ghi' });
+      expect(mixinArgs).to.deep.equal(['abc', 'def', 'ghi']);
+    });
+  });
 });
