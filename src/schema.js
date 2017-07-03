@@ -165,7 +165,7 @@ class Schema {
       }
       mixinList.forEach((mixin) => {
         if (typeof mixin.init === 'function') {
-          mixin.init({ Promise: this.Promise, instance });
+          mixin.init({ Promise: this.Promise, api: instance });
         }
       });
 
