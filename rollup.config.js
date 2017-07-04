@@ -13,21 +13,28 @@ const pkg = require('./package.json');
 
 const createConfig = (overrides) => {
   const config = {
-  format: 'umd',
-  sourceMap: true,
-  plugins: [
-    resolve({ jsnext: true, preferBuiltins: false }),
-    nodeGlobals(),
-    nodeBuiltins(),
-    commonjs(),
-    babel({
-      exclude: 'node_modules/**',
+    format: 'umd',
+    sourceMap: true,
+    plugins: [
+      resolve({ jsnext: true, preferBuiltins: false }),
+      nodeGlobals(),
+      nodeBuiltins(),
+      commonjs(),
+      babel({
+        exclude: 'node_modules/**',
       // we need to disable the rc file since we need the modules support
       // to run our tests (which is disabled in rollup):
-      babelrc: false,
-      presets: ['es2015-rollup'],
-      plugins: ['external-helpers', 'transform-object-assign'],
-    }),
+        babelrc: false,
+        presets: ['es2015-rollup'],
+        plugins: ['external-helpers', 'transform-object-assign'],
+      }),
+      license({
+        banner: `
+        ${pkg.name} v${pkg.version}
+        Copyright (c) ${new Date().getFullYear()} QlikTech International AB
+        This library is licensed under MIT - See the LICENSE file for full details
+      `,
+      }),
       filesize(),
     ],
   };
@@ -42,19 +49,25 @@ const enigma = createConfig({
 });
 
 enigma.plugins.push(multidest([{
-      dest: 'dist/enigma.min.js',
-      format: 'umd',
-      plugins: [
-        uglify(),
-      ],
-    }]),
-    license({
-      banner: `
-        ${pkg.name} v${pkg.version}
-        Copyright (c) ${new Date().getFullYear()} QlikTech International AB
-        This library is licensed under MIT - See the LICENSE file for full details
-      `,
-    }),
-    filesize(),
+  dest: 'dist/enigma.min.js',
+  format: 'umd',
+  plugins: [
+    uglify(),
   ],
-}];
+}]));
+
+const senseUtilities = createConfig({
+  entry: 'src/sense-utilities.js',
+  dest: 'dist/sense-utilities.js',
+  moduleName: 'senseUtilities',
+});
+
+senseUtilities.plugins.push(multidest([{
+  dest: 'dist/sense-utilities.min.js',
+  format: 'umd',
+  plugins: [
+    uglify(),
+  ],
+}]));
+
+export default [enigma, senseUtilities];
