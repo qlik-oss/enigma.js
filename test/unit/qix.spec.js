@@ -19,111 +19,6 @@ describe('Qix', () => {
     expect(Qix).to.throw();
   });
 
-  it('should build an url depending on config', () => {
-    expect(Qix.buildUrl({ secure: true })).to.equal('wss://localhost');
-    expect(Qix.buildUrl({ secure: true }, 'myApp1')).to.equal('wss://localhost/app/myApp1');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 666,
-    }, 'myApp3')).to.equal('wss://localhost:666/app/myApp3');
-    expect(Qix.buildUrl({
-      secure: true,
-      host: 'foo.com',
-    }, 'myApp3')).to.equal('wss://foo.com/app/myApp3');
-    expect(Qix.buildUrl({
-      secure: false,
-      host: 'foo.com',
-    }, 'myApp3')).to.equal('ws://foo.com/app/myApp3');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 666,
-      route: 'myroute',
-    })).to.equal('wss://localhost:666/myroute');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 666,
-      route: '/myroute',
-    })).to.equal('wss://localhost:666/myroute');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 666,
-      route: 'myroute/',
-    })).to.equal('wss://localhost:666/myroute');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 666,
-      route: '/my/route/',
-    })).to.equal('wss://localhost:666/my/route');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 4848,
-      prefix: '/myproxy/',
-    }, 'myApp4')).to.equal('wss://localhost:4848/myproxy/app/myApp4');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 4848,
-      prefix: '/myproxy/',
-      reloadURI: 'http://qlik.com',
-    }, 'myApp5')).to.equal('wss://localhost:4848/myproxy/app/myApp5?reloadUri=http%3A%2F%2Fqlik.com');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 4848,
-      prefix: '/myproxy/',
-      urlParams: {
-        reloadUri: 'http://qlik.com',
-      },
-    }, 'myApp6')).to.equal('wss://localhost:4848/myproxy/app/myApp6?reloadUri=http%3A%2F%2Fqlik.com');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 4848,
-      prefix: '/myproxy/',
-      urlParams: {
-        reloadUri: 'http://qlik.com',
-      },
-      identity: 'migration-service',
-    }, 'myApp7')).to.equal('wss://localhost:4848/myproxy/app/myApp7/identity/migration-service?reloadUri=http%3A%2F%2Fqlik.com');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 4848,
-      prefix: '/myproxy/',
-      subpath: 'dataprepservice',
-    }, 'myApp8')).to.equal('wss://localhost:4848/myproxy/dataprepservice/app/myApp8');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 4848,
-      urlParams: {
-        qlikTicket: 'abcdefg123456',
-      },
-    }, 'myApp9')).to.equal('wss://localhost:4848/app/myApp9?qlikTicket=abcdefg123456');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 4848,
-      urlParams: {
-        reloadUri: 'http://qlik.com',
-        qlikTicket: 'abcdefg123456',
-      },
-    }, 'myApp10')).to.equal('wss://localhost:4848/app/myApp10?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 4848,
-      reloadURI: 'http://community.qlik.com',
-      urlParams: {
-        reloadUri: 'http://qlik.com',
-        qlikTicket: 'abcdefg123456',
-      },
-    }, 'myApp11')).to.equal('wss://localhost:4848/app/myApp11?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
-    expect(Qix.buildUrl({
-      secure: true,
-      port: 4848,
-      reloadURI: 'http://community.qlik.com',
-      urlParams: {
-        reloadUri: 'http://qlik.com',
-        qlikTicket: 'abcdefg123456',
-      },
-      ttl: 1000,
-    }, 'myApp11')).to.equal('wss://localhost:4848/app/myApp11/ttl/1000?reloadUri=http%3A%2F%2Fqlik.com&qlikTicket=abcdefg123456');
-  });
-
   describe('getGlobal', () => {
     let cfg;
     let session;
@@ -132,7 +27,6 @@ describe('Qix', () => {
 
     beforeEach(() => {
       cfg = {
-        session: {},
       };
       stubApi = {};
       session = {
@@ -240,26 +134,16 @@ describe('Qix', () => {
     });
 
     it('should use default parameters in browser env', () => {
-      const oldLocation = global.location;
       const oldWebSocket = global.WebSocket;
-      global.location = {
-        hostname: '123.123.123.123',
-        href: 'http://123.123.123.123:4848',
-      };
       global.WebSocket = sinon.stub();
       Qix.connect(config);
       expect(Qix.getSession).to.be.calledWithMatch({
         Promise: global.Promise,
-        session: {
-          host: '123.123.123.123',
-          route: 'app/engineData',
-        },
         createSocket: sinon.match.func,
         mixins: [],
       });
       Qix.getSession.getCall(0).args[0].createSocket('xyz');
       expect(global.WebSocket).to.be.calledWith('xyz');
-      global.location = oldLocation;
       global.WebSocket = oldWebSocket;
     });
 
@@ -267,11 +151,6 @@ describe('Qix', () => {
       Qix.connect(config);
       expect(Qix.getSession).to.be.calledWithMatch({
         Promise: global.Promise,
-        session: {
-          host: 'localhost',
-          route: 'app/engineData',
-          urlParams: undefined,
-        },
         mixins: [],
       });
     });
@@ -375,32 +254,12 @@ describe('Qix', () => {
     let config;
 
     beforeEach(() => {
-      config = {
-        session: {},
-      };
-    });
-
-    it('should set secure by default', () => {
-      Qix.configureDefaults(config);
-      expect(config.session.secure).to.equal(true);
-    });
-
-    it('should convert unsecure parameter to secure if the secure parameter is not set', () => {
-      config.session.unsecure = false;
-      Qix.configureDefaults(config);
-      expect(config.session.secure).to.equal(true);
-    });
-
-    it('should give secure precedence', () => {
-      config.session.secure = true;
-      config.session.unsecure = true;
-      Qix.configureDefaults(config);
-      expect(config.session.secure).to.equal(true);
+      config = {};
     });
 
     it('should set suspendOnClose to false by default', () => {
       Qix.configureDefaults(config);
-      expect(config.session.suspendOnClose).to.equal(false);
+      expect(config.suspendOnClose).to.equal(false);
     });
   });
 });

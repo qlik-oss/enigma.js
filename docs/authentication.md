@@ -17,12 +17,8 @@ A simple example:
 
 ```javascript
 const cfg = {
+    url: 'wss://localhost/app/engineData?reloadUri=' + encodeURIComponent(location.href),
     schema: {},
-    session: {
-      urlParams: {
-        reloadUri: location.href
-      }
-    },
     listeners: {
         "notification:OnAuthenticationInformation": ( authInfo ) => {
             if ( authInfo.mustAuthenticate ) {
