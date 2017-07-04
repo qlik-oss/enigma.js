@@ -3,7 +3,7 @@ import chaiSubset from 'chai-subset';
 import Promise from 'bluebird';
 import WebSocket from 'ws';
 import Qix from '../../src/qix';
-import Schema from '../../schemas/qix/3.2/schema.json';
+import schema from '../../schemas/qix/3.2/schema.json';
 import utils from './utils';
 
 chai.use(chaiSubset);
@@ -20,7 +20,7 @@ describe('qix-logging', () => {
       sandbox = sinon.sandbox.create();
       // isServer = defaultConfig.isServer;
       config.Promise = Promise;
-      config.schema = Schema;
+      config.schema = schema;
       config.listeners = {
         'traffic:sent': sinon.spy(),
         'traffic:received': sinon.spy(),

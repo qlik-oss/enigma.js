@@ -116,9 +116,9 @@ describe('Qix', () => {
     });
 
     it('should keep constructed QixDefinition', () => {
-      config.schema = new Schema(Promise, {});
+      config.definition = new Schema(Promise, {});
       Qix.connect(config);
-      expect(Qix.getSession).to.be.calledWithMatch({ schema: config.schema });
+      expect(Qix.getSession).to.be.calledWithMatch({ definition: config.definition });
     });
 
     it('should default JSONPatch', () => {

@@ -50,13 +50,13 @@ class Schema {
 
   /**
   * Create a new schema instance.
-  * @param {Function} Promise The constructor function for a promise.
-  * @param {Object} json The JSON object that describes the API.
+  * @param {Configuration} config The configuration for QIX.
   */
-  constructor(Promise, json) {
-    this.Promise = Promise;
+  constructor(config) {
+    this.config = config;
+    this.Promise = config.Promise;
+    this.schema = config.schema;
     this.mixins = new KeyValueCache();
-    this.def = json;
     this.types = new KeyValueCache();
   }
 
@@ -103,10 +103,10 @@ class Schema {
     if (entry) {
       return entry;
     }
-    if (!this.def.structs[type]) {
+    if (!this.schema.structs[type]) {
       throw new Error(`${type} not found`);
     }
-    const factory = this.generateApi(type, this.def.structs[type]);
+    const factory = this.generateApi(type, this.schema.structs[type]);
     this.types.add(type, factory);
     return factory;
   }
@@ -165,7 +165,7 @@ class Schema {
       }
       mixinList.forEach((mixin) => {
         if (typeof mixin.init === 'function') {
-          mixin.init({ Promise: this.Promise, api: instance });
+          mixin.init({ config: this.config, api: instance });
         }
       });
 
