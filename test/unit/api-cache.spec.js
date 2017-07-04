@@ -2,14 +2,14 @@ import ApiCache from '../../src/api-cache';
 
 describe('ApiCache', () => {
   let apiCache;
-  let schema;
+  let definition;
 
   beforeEach(() => {
-    schema = {
+    definition = {
       generate: sinon.stub().returnsThis(),
       create: sinon.stub().returnsArg(1),
     };
-    apiCache = new ApiCache({ schema });
+    apiCache = new ApiCache({ definition });
     apiCache.session = {};
   });
 
@@ -128,8 +128,8 @@ describe('ApiCache', () => {
 
     it('should create and return an api', () => {
       apiCache.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', customType: 'Bar' });
-      expect(schema.generate).to.be.calledWith('Foo');
-      expect(schema.create).to.be.calledWith(apiCache.session, -1, 'id_1234', true, 'Bar');
+      expect(definition.generate).to.be.calledWith('Foo');
+      expect(definition.create).to.be.calledWith(apiCache.session, -1, 'id_1234', true, 'Bar');
     });
   });
 });

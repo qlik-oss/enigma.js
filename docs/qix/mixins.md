@@ -15,14 +15,13 @@ const appMixin = {
 	* An array of strings specifying which api types this mixin applies to. It works with a single
 	* string as well.
 	*/
-	types: ["Doc"], // An app has the typename "Doc" which is a QlikView legacy name.
+	types: ["Doc"], // An app has the typename "Doc".
 
 	/**
 	 * Initialization function. Called when an instance of the specified API(s) is created
 	 * before applying the mixins.
 	 * @param {Object} args - Object containing init parameters.
-	 * @param {Function} args.Promise - The promise library that was used when setting up
-	 * the qix service
+	 * @param {Configuration} args.config - The enigma.js configuration.
 	 * @param {Object} args.api - The object instance that was just created.
 	 */
 	init: ( args ) => {

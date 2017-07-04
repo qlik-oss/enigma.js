@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import WebSocket from 'ws';
 import Qix from '../../src/qix';
-import Schema from '../../schemas/qix/3.2/schema.json';
+import schema from '../../schemas/qix/3.2/schema.json';
 import utils from './utils';
 
 describe('Sugar mixins', () => {
@@ -14,7 +14,7 @@ describe('Sugar mixins', () => {
     config.createSocket = url =>
       new WebSocket(url, config.socket);
     config.Promise = Promise;
-    config.schema = Schema;
+    config.schema = schema;
     config.mixins = [{
       types: 'Global',
       extend: {

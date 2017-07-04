@@ -10,7 +10,7 @@ class ApiCache extends KeyValueCache {
   * Create a new ApiCache instance.
   * @param {Object} options The configuration options for this class.
   * @param {Promise} options.Promise The promise constructor to use.
-  * @param {Schema} options.schema The schema instance to use.
+  * @param {Schema} options.definition The definition instance to use.
   */
   constructor(options) {
     super();
@@ -72,7 +72,7 @@ class ApiCache extends KeyValueCache {
     if (api) {
       return api;
     }
-    api = this.schema
+    api = this.definition
       .generate(type)
       .create(this.session, handle, id, delta, customType);
     this.add(handle, api);

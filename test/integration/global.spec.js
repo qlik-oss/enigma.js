@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import WebSocket from 'ws';
 import Qix from '../../src/qix';
-import Schema from '../../schemas/qix/3.2/schema.json';
+import schema from '../../schemas/qix/3.2/schema.json';
 import utils from './utils';
 
 describe('QIX Global', () => {
@@ -13,7 +13,7 @@ describe('QIX Global', () => {
     utils.getDefaultConfig().then((cfg) => {
       config = cfg;
       config.Promise = Promise;
-      config.schema = Schema;
+      config.schema = schema;
       config.mixins = [{
         types: 'Global',
         extend: {

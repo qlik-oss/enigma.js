@@ -15,7 +15,7 @@ class Qix {
   * @typedef {Object} Configuration
   * @property {Function} createSocket A function to use when instantiating the WebSocket.
   *                                   Mandatory for NodeJS.
-  * @property {Object} schema The JSON object describing the api.
+  * @property {Object} schema The JSON object describing the API.
   * @property {Promise} [Promise] The promise constructor to use.
   * @property {Boolean} [suspendOnClose=false] Set to true if the session should be suspended
   *                             and not closed if the WebSocket is closed unexpectedly.
@@ -42,9 +42,9 @@ class Qix {
       Promise,
       responseInterceptors,
       JSONPatch,
-      schema,
+      definition,
     } = config;
-    const apis = new ApiCache({ Promise, schema });
+    const apis = new ApiCache({ Promise, definition });
     const rpc = new RPC({ url, createSocket, delta, Promise });
     const suspendResume = new SuspendResume({ rpc, Promise, apis });
     const intercept = new Intercept({
@@ -118,7 +118,7 @@ class Qix {
   static connect(config) {
     Qix.configureDefaults(config);
     config.mixins.forEach((mixin) => {
-      config.schema.registerMixin(mixin);
+      config.definition.registerMixin(mixin);
     });
     const session = Qix.getSession(config);
     return Qix.get(session, config);
@@ -146,13 +146,10 @@ class Qix {
       config.suspendOnClose = false;
     }
 
-    if (!(config.schema instanceof Schema)) {
-      config.schema = new Schema(config.Promise, config.schema);
-    }
-
     config.Promise = config.Promise || Promise;
     config.mixins = config.mixins || [];
     config.JSONPatch = config.JSONPatch || Patch;
+    config.definition = config.definition || new Schema(config);
   }
 }
 

@@ -10,14 +10,14 @@ describe('Schema', () => {
 
   it('should add a definition', () => {
     const json = { structs: { Foo: { Bar: { In: [], Out: [] } } } };
-    const definition = new Schema(Promise, json);
-    expect(definition.def).to.deep.equal(json);
+    const definition = new Schema({ Promise, schema: json });
+    expect(definition.schema).to.deep.equal(json);
     expect(definition.types).to.be.an.instanceOf(KeyValueCache);
   });
 
   it('should generate a type', () => {
     const json = { structs: { Foo: { Bar: { In: [], Out: [] } } } };
-    const definition = new Schema(Promise, json);
+    const definition = new Schema({ Promise, schema: json });
     const type = definition.generate('Foo');
     expect(type.create).to.be.a('function');
     expect(type.def).to.be.an('object');
@@ -25,13 +25,13 @@ describe('Schema', () => {
 
   it('should throw if type is not defined', () => {
     const json = { structs: { Foo: { Bar: { In: [], Out: [] } } } };
-    const definition = new Schema(Promise, json);
+    const definition = new Schema({ Promise, schema: json });
     expect(definition.generate.bind(definition, 'Foo1')).to.throw();
   });
 
   it('should return cached type', () => {
     const json = { structs: { Foo: { Bar: { In: [], Out: [] } } } };
-    const definition = new Schema(Promise, json);
+    const definition = new Schema({ Promise, schema: json });
     const type = definition.generate('Foo');
     // what kind of test is this??
     expect(definition.generate('Foo')).to.equal(type);
@@ -44,7 +44,7 @@ describe('Schema', () => {
 
     beforeEach(() => {
       mixin = { types: 'Foo', extend: { tweet() { /* dummy*/ } } };
-      definition = new Schema(Promise, json);
+      definition = new Schema({ Promise, schema: json });
     });
 
     it('should add mixins to cache', () => {
@@ -116,15 +116,17 @@ describe('Schema', () => {
     });
 
     it('call mixin init function with correct parameters', () => {
+      const def = new Schema({ Promise, schema: json, customProp: true });
       let mixinArgs = {};
       mixin.types = ['custom'];
       mixin.init = function init(initArgs) {
         mixinArgs = initArgs;
       };
-      definition.registerMixin(mixin);
-      const type = definition.generate('Foo');
+      def.registerMixin(mixin);
+      const type = def.generate('Foo');
       type.create({}, 0, 'id', true, 'custom');
-      expect(mixinArgs.Promise).to.be.equal(Promise);
+      expect(mixinArgs.config.Promise).to.be.equal(Promise);
+      expect(mixinArgs.config.customProp).to.be.equal(true);
       expect(mixinArgs.api.bar).to.be.a('function');
       expect(mixinArgs.api.tweet).to.be.a('function');
     });
@@ -140,7 +142,7 @@ describe('Schema', () => {
     let definition;
     beforeEach(() => {
       const json = null;
-      definition = new Schema(Promise, json);
+      definition = new Schema({ Promise, schema: json });
     });
 
     it('should add method', (done) => {
@@ -228,7 +230,7 @@ describe('Schema', () => {
   describe('generate', () => {
     const json = { structs: { Foo: { Bar: { In: [], Out: [] } } } };
     it('should return a definition', () => {
-      const definition = new Schema(Promise, json);
+      const definition = new Schema({ Promise, schema: json });
       const entry = definition.generate('Foo');
 
       expect(entry.def).to.be.an('object');
@@ -238,7 +240,7 @@ describe('Schema', () => {
     });
 
     it('should create an api', () => {
-      const definition = new Schema(Promise, json);
+      const definition = new Schema({ Promise, schema: json });
       const entry = definition.generate('Foo');
       const session = {};
       const foo = entry.create(session, 1, 'id', true);
@@ -250,11 +252,16 @@ describe('Schema', () => {
     });
 
     it('should configure types', () => {
-      const definition = new Schema(Promise, { structs: {
-        Foo: {
-          Bar2: { In: [], Out: [] },
+      const definition = new Schema({
+        Promise,
+        schema: {
+          structs: {
+            Foo: {
+              Bar2: { In: [], Out: [] },
+            },
+          },
         },
-      } });
+      });
       const entry = definition.generate('Foo');
       const session = {};
       const foo = entry.create(session, 1, true);
@@ -278,7 +285,7 @@ describe('Schema', () => {
           },
         },
       };
-      definition = new Schema(Promise, json);
+      definition = new Schema({ Promise, schema: json });
     });
 
     it('should call send with the correct parameter set', () => {
