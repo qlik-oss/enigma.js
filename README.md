@@ -12,6 +12,8 @@ performs CRUD (create, read, update and delete) operations on apps and other ent
 
 ## Documentation
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/qlik-oss/enigma.js.svg)](https://greenkeeper.io/)
+
 - [Overview](docs/README.md)
 - [Authentication](docs/authentication.md)
 - [QIX Service](docs/qix/README.md)
