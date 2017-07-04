@@ -56,7 +56,7 @@ enigma.js uses camel casing (`getObject`) for method names, while Engine API use
 
 Parameters can be passed either by name through an object:
 
-```js
+```javascript
 enigma.connect(config).then((qix) => {
   return qix.global.openDoc({ qDocName: 'MyApp' }).then((app) => {
     // Parameter passed by name through an object.
@@ -66,7 +66,7 @@ enigma.connect(config).then((qix) => {
 
 or by position:
 
-```js
+```javascript
 enigma.connect(config).then((qix) => {
   return qix.global.openDoc('MyApp').then((app) => {
     // Parameter passed by position.
@@ -86,7 +86,7 @@ ongoing calculations.
 
 Example:
 
-```js
+```javascript
 const promise = myObject.getLayout();
 global.cancelRequest(promise.requestId);
 ```
