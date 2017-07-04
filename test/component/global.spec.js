@@ -19,14 +19,8 @@ describe('QIX Global', () => {
 
     config.Promise = Promise;
     config.schema = schema;
-    config.session = {
-      route: 'app/engineData',
-      host: 'mocked',
-      port: 1337,
-    };
-    config.createSocket = url =>
-    new SocketMock(url)
-    ;
+    config.url = 'ws://mocked:1337/app/engineData';
+    config.createSocket = url => new SocketMock(url);
 
     config.mixins = [{
       types: 'Global',
@@ -37,8 +31,8 @@ describe('QIX Global', () => {
       },
     }];
 
-    return Qix.connect(config).then((q) => {
-      qixGlobal = q.global;
+    return Qix.create(config).open().then((global) => {
+      qixGlobal = global;
     });
   });
 

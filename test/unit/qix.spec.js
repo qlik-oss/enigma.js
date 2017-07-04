@@ -19,124 +19,43 @@ describe('Qix', () => {
     expect(Qix).to.throw();
   });
 
-  describe('getGlobal', () => {
-    let cfg;
+  describe('create', () => {
     let session;
-    let stubApi;
-    let globalApi;
-
-    beforeEach(() => {
-      cfg = {
-      };
-      stubApi = {};
-      session = {
-        connect: sinon.stub().returns(Promise.resolve()),
-        send: sinon.stub().returns(Promise.resolve()),
-        apis: { getObjectApi: sinon.stub().returns(stubApi) },
-      };
-      sandbox.stub(Qix, 'getSession').returns(session);
-
-      return Qix.getGlobal(session, cfg).then((api) => {
-        globalApi = api;
-      });
-    });
-
-    it('should get global', () => {
-      expect(session.apis.getObjectApi).to.have.been.calledWith({ handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: undefined });
-      expect(globalApi).to.deep.equal(stubApi);
-    });
-
-    it('should emit close and rethrow on error', () => {
-      const s = { connect: sandbox.stub().returns(Promise.reject('Foo')), emit: sandbox.spy() };
-      return Qix.getGlobal(s).then(() => {}, () => {
-        expect(s.emit).to.have.been.calledWithExactly('closed', 'Foo');
-      });
-    });
-  });
-
-  describe('getSession', () => {
-    const rpc = {};
-
-    beforeEach(() => {
-      sandbox.stub(Qix, 'buildUrl').returns('url');
-      sandbox.stub(Qix, 'createRPC').returns(rpc);
-    });
-  });
-
-  describe('get', () => {
-    let appApi;
-    let globalApi;
-    let session;
-
-    beforeEach(() => {
-      session = {};
-      appApi = {};
-      globalApi = {
-        openDoc: sinon.stub().returns(Promise.resolve(appApi)),
-      };
-      sandbox.stub(Qix, 'getGlobal').returns(Promise.resolve(globalApi));
-    });
-
-    it('should get global', (done) => {
-      Qix.get(session, {}).then(({ global: g }) => {
-        expect(g).to.equal(globalApi);
-        done();
-      });
-    });
-
-    it('should get global and app', () => {
-      Qix.get(session, { appId: 'foo' }).then(({ app, global: g }) => {
-        expect(app).to.equals(appApi);
-        expect(g).to.equals(globalApi);
-      });
-    });
-  });
-
-  describe('connect', () => {
-    let session;
-    let result;
     let config;
 
     beforeEach(() => {
       session = {};
-      result = {};
       config = {};
       sandbox.stub(Qix, 'getSession').returns(session);
-      sandbox.stub(Qix, 'get').returns(result);
     });
 
     it('should call getSession with config', () => {
-      Qix.connect(config);
+      Qix.create(config);
       expect(Qix.getSession).to.be.calledWith(config);
-    });
-
-    it('should call get with session & config', () => {
-      Qix.connect(config);
-      expect(Qix.get).to.be.calledWith(session, config);
     });
 
     it('should keep constructed QixDefinition', () => {
       config.definition = new Schema(Promise, {});
-      Qix.connect(config);
-      expect(Qix.getSession).to.be.calledWithMatch({ definition: config.definition });
+      Qix.create(config);
+      expect(Qix.getSession).to.be.calledWithMatch({ schema: config.schema });
     });
 
     it('should default JSONPatch', () => {
-      Qix.connect(config);
+      Qix.create(config);
       expect(Qix.getSession).to.be.calledWithMatch({ JSONPatch: Patch });
     });
 
     it('should throw on missing Promise implementation', () => {
       const oldPromise = global.Promise;
       delete global.Promise;
-      expect(Qix.connect.bind(null, config)).to.throw();
+      expect(Qix.create.bind(null, config)).to.throw();
       global.Promise = oldPromise;
     });
 
     it('should use default parameters in browser env', () => {
       const oldWebSocket = global.WebSocket;
       global.WebSocket = sinon.stub();
-      Qix.connect(config);
+      Qix.create(config);
       expect(Qix.getSession).to.be.calledWithMatch({
         Promise: global.Promise,
         createSocket: sinon.match.func,
@@ -148,7 +67,7 @@ describe('Qix', () => {
     });
 
     it('should use default parameters in NodeJS env', () => {
-      Qix.connect(config);
+      Qix.create(config);
       expect(Qix.getSession).to.be.calledWithMatch({
         Promise: global.Promise,
         mixins: [],
@@ -165,7 +84,7 @@ describe('Qix', () => {
         port: 5959,
         reloadURI: 'xyz',
       };
-      Qix.connect(config);
+      Qix.create(config);
       expect(Qix.getSession).to.be.calledWithMatch({
         Promise,
         createSocket,
@@ -191,7 +110,7 @@ describe('Qix', () => {
           reloadUri: 'xyz',
         },
       };
-      Qix.connect(config);
+      Qix.create(config);
       expect(Qix.getSession).to.be.calledWithMatch({
         Promise,
         createSocket,
@@ -219,7 +138,7 @@ describe('Qix', () => {
           qlikTicket: 'xyzabc123789',
         },
       };
-      Qix.connect(config);
+      Qix.create(config);
       expect(Qix.getSession).to.be.calledWithMatch({
         Promise,
         createSocket,
@@ -244,7 +163,7 @@ describe('Qix', () => {
       ];
       const registerMixin = sandbox.stub(Schema.prototype, 'registerMixin');
       config.mixins = mixins;
-      Qix.connect(config);
+      Qix.create(config);
       expect(registerMixin).to.have.been.calledWith(foo);
       expect(registerMixin).to.have.been.calledWith(bar);
     });
