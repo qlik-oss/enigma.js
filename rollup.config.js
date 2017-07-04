@@ -22,8 +22,8 @@ const createConfig = (overrides) => {
       commonjs(),
       babel({
         exclude: 'node_modules/**',
-      // we need to disable the rc file since we need the modules support
-      // to run our tests (which is disabled in rollup):
+        // we need to disable the rc file since we need the modules support
+        // to run our tests (which is disabled in rollup):
         babelrc: false,
         presets: ['es2015-rollup'],
         plugins: ['external-helpers', 'transform-object-assign'],
@@ -35,6 +35,13 @@ const createConfig = (overrides) => {
         This library is licensed under MIT - See the LICENSE file for full details
       `,
       }),
+      multidest([{
+        dest: overrides.dest.replace('.js', '.min.js'),
+        format: 'umd',
+        plugins: [
+          uglify(),
+        ],
+      }]),
       filesize(),
     ],
   };
@@ -48,26 +55,10 @@ const enigma = createConfig({
   moduleName: 'enigma',
 });
 
-enigma.plugins.push(multidest([{
-  dest: 'dist/enigma.min.js',
-  format: 'umd',
-  plugins: [
-    uglify(),
-  ],
-}]));
-
 const senseUtilities = createConfig({
   entry: 'src/sense-utilities.js',
   dest: 'dist/sense-utilities.js',
   moduleName: 'senseUtilities',
 });
-
-senseUtilities.plugins.push(multidest([{
-  dest: 'dist/sense-utilities.min.js',
-  format: 'umd',
-  plugins: [
-    uglify(),
-  ],
-}]));
 
 export default [enigma, senseUtilities];
