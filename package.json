@@ -35,9 +35,9 @@
     "babel-register": "^6.7.2",
     "bluebird": "^3.4.6",
     "chai-subset": "^1.5.0",
-    "eslint": "^3.8.0",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-plugin-import": "^1.16.0",
+    "eslint": "^4.1.1",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-plugin-import": "^2.6.1",
     "extend": "^3.0.0",
     "heapdump": "^0.3.9",
     "jsdoc": "^3.4.0",
@@ -53,6 +53,6 @@
     "rollup-plugin-node-globals": "^1.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-uglify": "^2.0.1",
-    "ws": "^1.1.1"
+    "ws": "^3.0.0"
   }
 }
