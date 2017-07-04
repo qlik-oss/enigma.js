@@ -55,19 +55,40 @@ enigma.connect(config).then((qix) => {
 enigma.js uses camel casing (`getObject`) for method names, while Engine API uses Pascal casing (`GetObject`).
 
 Parameters can be passed either by name through an object:
+
 ```javascript
 enigma.connect(config).then((qix) => {
   return qix.global.openDoc({ qDocName: 'MyApp' }).then((app) => {
     // Parameter passed by name through an object.
-  }
+  });
+});
 ```
 
 or by position:
+
 ```javascript
 enigma.connect(config).then((qix) => {
   return qix.global.openDoc('MyApp').then((app) => {
     // Parameter passed by position.
-  }
+  });
+});
+```
+
+## Promises
+
+All generated API methods return promises. In addition to the default values
+of promises, we add these to all promises that is created from a method call.
+
+### `promise.requestId`: The JSON-RPC request id
+
+This id is a required parameter into some Engine methods for e.g. cancelling
+ongoing calculations.
+
+Example:
+
+```javascript
+const promise = myObject.getLayout();
+global.cancelRequest(promise.requestId);
 ```
 
 ## Protocol
@@ -75,7 +96,8 @@ enigma.connect(config).then((qix) => {
 The client interacts with engine through an extended version of the JSON-RPC protocol. The engine returns handles
 
 Request:
-```
+
+```json
 {
   "handle": 1,
   "id": 10,
@@ -97,7 +119,8 @@ Request:
 ```
 
 Response:
-```
+
+```json
 {
   "id": 10,
   "jsonrpc": "2.0",
