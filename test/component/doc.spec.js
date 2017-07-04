@@ -70,7 +70,7 @@ describe('QIX Doc', () => {
     });
     it('should return a barchart GenericObject with the expected members', () => {
       const keys = Object.keys(schema.structs.GenericObject).map(key =>
-        key.substring(0, 1).toLowerCase() + key.substring(1)
+        key.substring(0, 1).toLowerCase() + key.substring(1),
       );
       expect(Object.keys(Object.getPrototypeOf(barchartObject))).to.include.members(keys);
       expect(barchartObject.type).to.equal('GenericObject');

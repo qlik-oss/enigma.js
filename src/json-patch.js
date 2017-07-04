@@ -56,9 +56,10 @@ function getParent(data, str) {
     }
     numPart = +part;
     const newPart = !isNaN(numPart) ? [] : {};
-    data = data[numPart || part] = isUndef(data[numPart || part]) ?
+    data[numPart || part] = isUndef(data[numPart || part]) ?
       newPart :
       data[part];
+    data = data[numPart || part];
   });
 
   return data;

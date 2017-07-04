@@ -90,7 +90,7 @@ class RPC {
   */
   onOpen() {
     this.resolvers.opened.resolveWith(
-      () => this.closedPromise
+      () => this.closedPromise,
     );
   }
 
@@ -177,7 +177,8 @@ class RPC {
   * @returns {Function} The promise executor function.
   */
   registerResolver(id, resolve, reject) {
-    const resolver = this.resolvers[id] = new RPCResolver(id, resolve, reject);
+    const resolver = new RPCResolver(id, resolve, reject);
+    this.resolvers[id] = resolver;
     resolver.on('resolved', resolvedId => this.unregisterResolver(resolvedId));
     resolver.on('rejected', rejectedId => this.unregisterResolver(rejectedId));
   }
@@ -191,8 +192,9 @@ class RPC {
     if (!this.socket || this.socket.readyState !== this.socket.OPEN) {
       return this.Promise.reject(new Error('Not connected'));
     }
+    this.requestId += 1;
     data.jsonrpc = '2.0';
-    data.id = this.requestId += 1;
+    data.id = this.requestId;
     return new this.Promise((resolve, reject) => {
       this.socket.send(JSON.stringify(data));
       this.emit('traffic', 'sent', data);

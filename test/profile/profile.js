@@ -55,7 +55,7 @@ async function next() {
       props.test = objectNumber + iterationNumber;
       await obj.setProperties(props);
       await obj.getProperties();
-      return await doc.destroyObject(obj.id);
+      return doc.destroyObject(obj.id);
     }
 
 

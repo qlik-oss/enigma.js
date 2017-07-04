@@ -61,7 +61,7 @@ class KeyValueCache {
       ({
         key,
         value: this.entries[key],
-      })
+      }),
     );
   }
 
@@ -73,7 +73,7 @@ class KeyValueCache {
   */
   getKey(entry) {
     return Object.keys(this.entries).filter(key =>
-      this.entries[key] === entry
+      this.entries[key] === entry,
     )[0];
   }
 

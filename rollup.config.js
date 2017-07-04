@@ -1,6 +1,6 @@
 // rollup.config.js
 import resolve from 'rollup-plugin-node-resolve';
-import nodeGlobals from 'rollup-plugin-node-globals';
+// import nodeGlobals from 'rollup-plugin-node-globals';
 import nodeBuiltins from 'rollup-plugin-node-builtins';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
@@ -17,16 +17,13 @@ const createConfig = (overrides) => {
     sourceMap: true,
     plugins: [
       resolve({ jsnext: true, preferBuiltins: false }),
-      nodeGlobals(),
+      // nodeGlobals() is disabled right now due to a bug: https://github.com/calvinmetcalf/rollup-plugin-node-globals/issues/9
+      // nodeGlobals(),
       nodeBuiltins(),
       commonjs(),
       babel({
         exclude: 'node_modules/**',
-        // we need to disable the rc file since we need the modules support
-        // to run our tests (which is disabled in rollup):
-        babelrc: false,
-        presets: ['es2015-rollup'],
-        plugins: ['external-helpers', 'transform-object-assign'],
+        plugins: ['external-helpers'],
       }),
       license({
         banner: `

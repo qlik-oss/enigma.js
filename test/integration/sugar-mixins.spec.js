@@ -23,14 +23,14 @@ describe('Sugar mixins', () => {
             qixGlobal.openDoc(appInfo.qAppId).then(app =>
               utils.getScript(scriptName).then(loadScript =>
                 app.setScript(loadScript).then(() =>
-                  app.doReload(0, false, false).then(() => ({ app, appInfo }))
-                )
-              )
+                  app.doReload(0, false, false).then(() => ({ app, appInfo })),
+                ),
+              ),
             ).catch(err =>
               qixGlobal.deleteApp(appInfo.qAppId).then(() => {
                 throw err;
-              })
-            )
+              }),
+            ),
           );
         },
       },
@@ -41,7 +41,7 @@ describe('Sugar mixins', () => {
           return this.getObject(listDef.qInfo.qId)
           .then(o => o || this.createSessionObject(listDef))
           .then(obj =>
-            obj.getLayout()
+            obj.getLayout(),
           );
         },
         createSheet(title, description, thumbnail) {
@@ -108,14 +108,14 @@ describe('Sugar mixins', () => {
               expect(listAfter.qAppObjectList.qItems.length).to.equal(1);
               expect(listAfter.qAppObjectList.qItems[0].qInfo.qId).to.equal(sheet.id);
               return qixGlobal.deleteApp(appInfo.qAppId);
-            })
+            }),
           );
-        })
+        }),
       ).catch(err =>
         qixGlobal.deleteApp(appInfo.qAppId).then(() => {
           throw err;
-        })
-      )
+        }),
+      ),
     );
   });
 
@@ -137,12 +137,12 @@ describe('Sugar mixins', () => {
           app.getList(listDef).then((list) => {
             expect(list.qSelectionObject.qSelections[0].qSelectedCount).to.equal(26);
             return qixGlobal.deleteApp(appInfo.qAppId);
-          })
-        )
+          }),
+        ),
       ).catch(err =>
         qixGlobal.deleteApp(appInfo.qAppId).then(() => {
           throw err;
-        })
+        }),
       );
     });
   });
@@ -186,11 +186,11 @@ describe('Sugar mixins', () => {
           const listMeasure = list.qMeasureList.qItems[0].qInfo.qId;
           expect(createdMeasureId).to.equal(listMeasure);
           return qixGlobal.deleteApp(appInfo.qAppId);
-        })
+        }),
       ).catch(err =>
         qixGlobal.deleteApp(appInfo.qAppId).then(() => {
           throw err;
-        })
+        }),
       );
     });
   });
@@ -215,14 +215,14 @@ describe('Sugar mixins', () => {
       const appInfo = obj.appInfo;
       return app.getList(listDef).then((list) => {
         const userFields = list.qFieldList.qItems.filter(qField =>
-          qField.qIsHidden !== true
+          qField.qIsHidden !== true,
         );
         expect(userFields.length).to.equal(12);
         return qixGlobal.deleteApp(appInfo.qAppId);
       }).catch(err =>
         qixGlobal.deleteApp(appInfo.qAppId).then(() => {
           throw err;
-        })
+        }),
       );
     });
   });
@@ -274,11 +274,11 @@ describe('Sugar mixins', () => {
           const listDiemnsion = list.qDimensionList.qItems[0].qInfo.qId;
           expect(createdDimensionId).to.equal(listDiemnsion);
           return qixGlobal.deleteApp(appInfo.qAppId);
-        })
+        }),
       ).catch(err =>
         qixGlobal.deleteApp(appInfo.qAppId).then(() => {
           throw err;
-        })
+        }),
       );
     });
   });
@@ -315,15 +315,15 @@ describe('Sugar mixins', () => {
         app.getList(listDef).then((list) => {
           const createdVariableId = variable.id;
           const userVariables = list.qVariableList.qItems.filter(qVariable =>
-            qVariable.qIsReserved !== true
+            qVariable.qIsReserved !== true,
           );
           expect(userVariables[0].qInfo.qId).to.equal(createdVariableId);
           return qixGlobal.deleteApp(appInfo.qAppId);
-        })
+        }),
       ).catch(err =>
         qixGlobal.deleteApp(appInfo.qAppId).then(() => {
           throw err;
-        })
+        }),
       );
     });
   });

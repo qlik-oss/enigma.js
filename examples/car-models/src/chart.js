@@ -41,7 +41,7 @@ export default function paintBarchart(element, layout) {
   }
 
   function roundNumber(value, nrDecimals) {
-    const multiplier = Math.pow(10, nrDecimals);
+    const multiplier = 10 ** nrDecimals;
     return Math.round(value * multiplier) / multiplier;
   }
 
