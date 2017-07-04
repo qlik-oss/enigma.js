@@ -3,6 +3,15 @@ import WebSocket from 'ws';
 import Qix from '../../src/qix';
 import Schema from '../../schemas/qix/3.2/schema.json';
 
+function generateId() {
+  return Math.floor(Math.random() * 10000).toString();
+}
+
+function buildUrl(ttl) {
+  ttl = typeof ttl !== 'undefined' ? ttl : 3600;
+  return `ws://localhost:4848/app/engineData/ttl/${ttl}/identity/${generateId()}`;
+}
+
 // N.B. This test will only pass when run towards an engine supporting the session TTL feature.
 describe('QIX Suspend/Resume', () => {
   let config;
@@ -11,13 +20,7 @@ describe('QIX Suspend/Resume', () => {
     config = {
       Promise,
       schema: Schema,
-      session: {
-        host: 'localhost',
-        port: 4848,
-        secure: false,
-        ttl: 3600,
-        identity: Math.floor(Math.random() * 10000).toString(), // Poor man's GUID :)
-      },
+      url: buildUrl(),
       createSocket: url => new WebSocket(url),
       listeners: {},
     };
@@ -49,9 +52,10 @@ describe('QIX Suspend/Resume', () => {
   });
 
   it('should suspend and resume by reopening the previous document', () => {
-    config.session.ttl = 0;
+    config.url = buildUrl(0);
     config.listeners.suspended = sinon.spy();
     config.listeners.closed = sinon.spy();
+    const id = generateId();
     let global;
     let app;
 
@@ -59,9 +63,9 @@ describe('QIX Suspend/Resume', () => {
       // save ref to global API:
       .then(qixService => (global = qixService.global))
       // create our test app:
-      .then(() => global.createApp(config.session.identity))
+      .then(() => global.createApp(id))
       // open our test app:
-      .then(() => global.openDoc(config.session.identity))
+      .then(() => global.openDoc(id))
       // save ref to app API:
       .then(_app => (app = _app))
       // set a dummy property that we don't save:

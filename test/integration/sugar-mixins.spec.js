@@ -6,14 +6,13 @@ import utils from './utils';
 
 describe('Sugar mixins', () => {
   let qixGlobal;
-  const config = {};
+  let config;
 
   before(() =>
-  utils.getDefaultConfig().then((defaultConfig) => {
-    config.session = defaultConfig.session;
+  utils.getDefaultConfig().then((cfg) => {
+    config = cfg;
     config.createSocket = url =>
-    new WebSocket(url, defaultConfig.socket)
-    ;
+      new WebSocket(url, config.socket);
     config.Promise = Promise;
     config.schema = Schema;
     config.mixins = [{

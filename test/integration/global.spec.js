@@ -7,13 +7,11 @@ import utils from './utils';
 describe('QIX Global', () => {
   let qixGlobal;
   // let isServer = true;
-  const config = {};
+  let config;
 
   before(() =>
-    utils.getDefaultConfig().then((defaultConfig) => {
-      // isServer = defaultConfig.isServer;
-      config.session = defaultConfig.session;
-      config.session.route = 'app/engineData';
+    utils.getDefaultConfig().then((cfg) => {
+      config = cfg;
       config.Promise = Promise;
       config.schema = Schema;
       config.mixins = [{
@@ -25,8 +23,7 @@ describe('QIX Global', () => {
         },
       }];
       config.createSocket = url =>
-      new WebSocket(url, defaultConfig.socket)
-      ;
+        new WebSocket(url, config.socket);
 
       return Qix.connect(config).then((g) => {
         qixGlobal = g.global;

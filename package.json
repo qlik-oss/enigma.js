@@ -7,7 +7,7 @@
   "scripts": {
     "build": "rollup -c",
     "test": "aw-test-coverage --dir ./coverage/unit-component -- ./test/unit ./test/component ./src --compilers js:babel-register",
-    "test:watch": "aw-test-runner ./test -w --compilers js:babel-register",
+    "test:watch": "aw-test-runner ./test/unit ./test/component -w --compilers js:babel-register",
     "test:unit": "aw-test-coverage --dir ./coverage/unit -- ./test/unit ./src --compilers js:babel-register",
     "test:unit:watch": "aw-test-runner ./test/unit -w --compilers js:babel-register",
     "test:component": "aw-test-coverage --dir ./coverage/component -- ./test/component ./src --compilers js:babel-register",
