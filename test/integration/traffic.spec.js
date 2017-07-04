@@ -11,14 +11,14 @@ chai.use(chaiSubset);
 describe('qix-logging', () => {
   let qixGlobal;
   // let isServer = true;
-  const config = {};
+  let config;
   let sandbox;
+
   before(() =>
-    utils.getDefaultConfig().then((defaultConfig) => {
+    utils.getDefaultConfig().then((cfg) => {
+      config = cfg;
       sandbox = sinon.sandbox.create();
       // isServer = defaultConfig.isServer;
-      config.session = defaultConfig.session;
-      config.session.route = 'app/engineData';
       config.Promise = Promise;
       config.schema = Schema;
       config.listeners = {
@@ -27,7 +27,7 @@ describe('qix-logging', () => {
         'traffic:*': sinon.spy(),
       };
       config.createSocket = url =>
-      new WebSocket(url, defaultConfig.socket);
+        new WebSocket(url, config.socket);
 
       return Qix.connect(config).then((g) => {
         qixGlobal = g.global;

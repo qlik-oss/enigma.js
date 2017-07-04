@@ -11,10 +11,8 @@ import license from 'rollup-plugin-license';
 
 const pkg = require('./package.json');
 
-export default [{
-  entry: 'src/qix.js',
-  dest: 'dist/enigma.js',
-  moduleName: 'enigma',
+const createConfig = (overrides) => {
+  const config = {
   format: 'umd',
   sourceMap: true,
   plugins: [
@@ -30,7 +28,20 @@ export default [{
       presets: ['es2015-rollup'],
       plugins: ['external-helpers', 'transform-object-assign'],
     }),
-    multidest([{
+      filesize(),
+    ],
+  };
+  Object.assign(config, overrides);
+  return config;
+};
+
+const enigma = createConfig({
+  entry: 'src/qix.js',
+  dest: 'dist/enigma.js',
+  moduleName: 'enigma',
+});
+
+enigma.plugins.push(multidest([{
       dest: 'dist/enigma.min.js',
       format: 'umd',
       plugins: [
