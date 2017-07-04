@@ -32,7 +32,7 @@ describe('qix-logging', () => {
       return Qix.connect(config).then((g) => {
         qixGlobal = g.global;
       });
-    })
+    }),
   );
 
   after(() => {

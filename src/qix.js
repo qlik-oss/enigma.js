@@ -99,7 +99,7 @@ class Qix {
           config.user || '',
           config.password || '',
           config.serial || '',
-          config.noData || false
+          config.noData || false,
         ).then(app => ({ global: g, app }));
       }
       return {

@@ -203,7 +203,7 @@ class Intercept {
       interception.then(
       interceptor.onFulfilled && interceptor.onFulfilled.bind(this, meta),
       interceptor.onRejected && interceptor.onRejected.bind(this, meta))
-      , promise
+      , promise,
     );
   }
 }
