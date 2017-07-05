@@ -30,8 +30,6 @@ class Session {
     session.on('handle-changed', handle => session.apis.onHandleChanged(handle));
     session.on('handle-closed', handle => session.apis.onHandleClosed(handle));
     session.on('closed', () => session.apis.onSessionClosed());
-    Object.keys(session.eventListeners || {})
-      .forEach(key => session.on(key, session.eventListeners[key]));
     session.emit('session-created', session);
   }
 
@@ -110,11 +108,15 @@ class Session {
   }
 
   /**
-  * Establishes the RPC socket connection.
+  * Establishes the RPC socket connection and returns the Global instance.
   * @returns {Promise} Eventually resolved if the connection was successful.
   */
-  connect() {
-    return this.rpc.open();
+  open() {
+    if (!this.globalPromise) {
+      const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: this.delta };
+      this.globalPromise = this.rpc.open().then(() => this.apis.getObjectApi(args));
+    }
+    return this.globalPromise;
   }
 
   /**
@@ -167,6 +169,7 @@ class Session {
   * @returns {Promise} Eventually resolved when the RPC connection is closed.
   */
   close() {
+    this.globalPromise = undefined;
     return this.rpc.close().then(evt => this.emit('closed', evt));
   }
 

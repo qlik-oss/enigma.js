@@ -8,9 +8,9 @@ describe('Session', () => {
   let session;
   let sandbox;
   let suspendResume;
-  const apis = {};
+  const apis = { getObjectApi: () => undefined };
   const intercept = { execute: () => Promise.resolve() };
-  const createSession = (throwError, rpc, listeners, suspendOnClose = false) => {
+  const createSession = (throwError, rpc, suspendOnClose = false) => {
     const defaultRpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
@@ -19,7 +19,6 @@ describe('Session', () => {
     suspendResume = new SuspendResume({ Promise, rpc: rpc || defaultRpc, apis });
     session = new Session({
       Promise,
-      eventListeners: listeners,
       apis,
       suspendResume,
       suspendOnClose,
@@ -44,30 +43,28 @@ describe('Session', () => {
     expect(Session).to.throw();
   });
 
-  it('should return a promise when connect is called', () => {
-    const connect = session.connect();
-    expect(connect).to.be.an.instanceOf(Promise);
-    expect(session.connect()).to.equal(connect);
+  it('should return a promise when open is called', () => {
+    const open = session.open();
+    expect(open).to.be.an.instanceOf(Promise);
+    expect(session.open()).to.equal(open);
   });
 
   it("should call reject callback if connection can't be established", (done) => {
     createSession(true);
-    session.connect().then(() => {}, () => { done(); });
+    session.open().then(() => {}, () => { done(); });
   });
 
   it("should call catch reject callback if connection can't be established", (done) => {
     createSession(true);
-    session.connect().catch(() => { done(); });
+    session.open().catch(() => { done(); });
   });
 
   describe('listeners', () => {
     it('should call notification listeners', () => {
+      const event = 'notification:Foo';
       const spy = sandbox.spy();
-      const listeners = {
-        'notification:Foo': spy,
-      };
-      createSession(false, null, listeners);
-      session.emit('notification:Foo', { prop: 'foo' });
+      session.on(event, spy);
+      session.emit(event, { prop: 'foo' });
       expect(spy).to.have.been.calledWithExactly({ prop: 'foo' });
     });
   });
@@ -166,7 +163,7 @@ describe('Session', () => {
   it('should close', () => {
     const rpc = new RPCMock({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url) });
     createSession(false, rpc);
-    session.connect();
+    session.open();
     const close = sinon.spy(rpc, 'close');
     const closePromise = session.close();
     expect(closePromise).to.be.an.instanceOf(Promise);
@@ -229,10 +226,10 @@ describe('Session', () => {
     });
 
     it('should set session as suspended when suspendOnClose is true', () => {
-      createSession(false, null, null, true);
+      createSession(false, null, true);
       const spy = sinon.spy();
       session.on('suspended', spy);
-      return session.connect()
+      return session.open()
         .then(() => session.rpc.close(9999))
         .then(() => {
           expect(suspendResume.isSuspended).to.equal(true);

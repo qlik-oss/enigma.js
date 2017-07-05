@@ -4,7 +4,7 @@
 const enigma = require('enigma.js');
 
 const config = {};
-enigma.connect(config).then((qix) => {
+enigma.create(config).open().then((global) => {
   //
 });
 ```
@@ -16,13 +16,11 @@ The `config` object has the following parameters:
 | Property | Type   | Optional | Description |
 |----------|--------|----------|-------------|
 | `schema` | Object | No | JSON containing the specification for the Qix API. Originates from an Engine build and is bound to a specific version of Engine |
-| `appId` | String | Yes | Identifier for an app, if the Engine is running in a Qlik Sense Desktop environment, it is the name of the app including the full path -- omit to only get the global object |
-| `noData` | Boolean | Yes | If set to `true`, the app will be opened without data, default is `false` |
+| `url` | String | No | The URL |
 | `delta` | Boolean | Yes | If set to `true`, delta protocol will be used which can reduce the bandwidth used, default is `true` |
 | `mixins` | Array | Yes | Mixins to extend/augment the Engine API (see more on [Using mixins](mixins.md))
 | `createSocket` | Function | In browser | A function to use when instantiating the WebSocket, mandatory for NodeJS |
 | `Promise` | Promise | Yes | ES6-compatible Promise library, default is global `Promise` |
-| `listeners` | Object | Yes | Key-value map of session listeners that will be registered. See [Session](session.md) for details |
 | `responseInterceptors` | Array | Yes | An array of objects containing `onFulfilled` and/or `onRejected` that can manipulate responses before reaching mixins and the end-user |
 | `suspendOnClose` | Boolean | Yes | Set to true if the session should be suspended and not closed if the WebSocket is closed unexpectedly |
 
@@ -39,14 +37,6 @@ The `sessionConfig` object has the following parameters:
 | `identity` | String | Yes | Identity (session ID) to use |
 | `ttl` | Number | Yes | A value in seconds that QIX Engine should keep the session alive after socket disconnect (only works if QIX Engine supports it) |
 
-## `qix` object
-
-The `qix` object retrieved when calling `connect(config).then((qix) => {})` has the following properties:
-
-* `qix.global` Object - The global instance
-* `qix.app` Object (optional) - The opened app instance if `config.appId` was specified.
-
-
 ## Example using the browser
 
 This example opens the app "AppId" in a Qlik Sense Enterprise environment located on `hostname.hostdomain.com`. It requires the user to already be authenticated.
@@ -54,24 +44,21 @@ This example opens the app "AppId" in a Qlik Sense Enterprise environment locate
 ```javascript
 const enigma = require('enigma.js');
 const SenseUtilities = require('enigma.js/dist/sense-utilities');
-const schema = require('<path-to-schemas>/3.2/schema.json');
+const schema = require('enigma.js/schemas/3.2/schema.json');
 const appId = 'some-app.qvf';
 const url = SenseUtilities.buildUrl({ appId, host: 'some.domain.com' });
 
-const config = {
-  schema,
-  appId,
-  url,
-  listeners: {
-    'notification:OnAuthenticationInformation': (authInfo) => {
-      if(authInfo.mustAuthenticate) {
-        location.href = authInfo.loginUri;
-      }
-    }
-  }
-}
+const session = enigma.create({ schema, url });
 
-enigma.connect(config).then((qix) => {});
+session.on('notification:OnAuthenticationInformation', (authInfo) => {
+  if(authInfo.mustAuthenticate) {
+    location.href = authInfo.loginUri;
+  }
+});
+
+session.open()
+  .then((global) => global.openDoc(appId))
+  .then((doc) => {});
 ```
 
 ## Example using NodeJS
@@ -81,13 +68,13 @@ This example opens the same app using the `ws` library (https://github.com/webso
 ```javascript
 const enigma = require('enigma.js');
 const SenseUtilities = require('enigma.js/dist/sense-utilities');
-const schema = require('<path-to-schemas>/3.2/schema.json');
+const schema = require('enigma.js/schemas/3.2/schema.json');
 const appId = 'some-app.qvf';
 const url = SenseUtilities.buildUrl({ appId, host: 'some.domain.com' });
 const certificateDir = 'C:/ProgramData/Qlik/Sense/Repository/Exported Certificates/.Local Certificates';
+
 const config = {
   schema,
-  appId,
   url,
   createSocket: (url) => new WebSocket(url, {
     ca: [fs.readFileSync(path.resolve(certificateDir, 'root.pem'))],
@@ -99,5 +86,7 @@ const config = {
   }
 }
 
-enigma.connect(config).then((qix) => {});
+enigma.create(config).open()
+  .then((global) => global.openDoc(appId))
+  .then((doc) => {});;
 ```

@@ -24,7 +24,7 @@ Before you start, you will need to:
 
 enigma.js exposes an API for consuming backend services that are configured with settings.
 
-### `connect( config )`
+### `create( config )`
 
 | Property | Type   | Description |
 |----------|--------|-------------|
@@ -40,15 +40,15 @@ enigma.js can be used in CommonJS, AMD, and vanilla browser (global) formats. In
 npm install --save enigma.js
 ```
 
-Basic usage is to pull in the library, call `connect` and start using the API of the returned service.
+Basic usage is to pull in the library, call `create` and start using the API.
 
 ```javascript
 const enigma = require('enigma.js');
 
-enigma.connect({ /* Service config */ }).then((serviceInstance) => {
-  // Continue working with the instance
+enigma.create({ /* Service config */ }).open().then((global) => {
+  // Continue working with the global instance
 }, (err) => {
-  // There was an error getting the service
+  // There was an error getting the global instance
 });
 ```
 
