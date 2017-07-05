@@ -14,7 +14,10 @@
     "test:component:watch": "cross-env NODE_ENV=test aw-test-runner ./test/component -w --compilers js:babel-register",
     "test:integration": "cross-env NODE_ENV=test aw-test-runner ./test/integration --compilers js:babel-register --timeout 5000",
     "lint": "eslint .",
-    "jsdoc": "rimraf ./jsdoc && jsdoc ./src -c ./jsdoc-config.json -r -d ./jsdoc"
+    "jsdoc": "rimraf ./jsdoc && jsdoc ./src -c ./jsdoc-config.json -r -d ./jsdoc",
+    "preversion": "npm run test && npm run test:integration",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
