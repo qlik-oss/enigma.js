@@ -5,16 +5,11 @@ import ApiCache from '../../src/api-cache';
 describe('Intercept', () => {
   let JSONPatch;
   let intercept;
-  let schema;
   let apis;
 
   beforeEach(() => {
-    schema = {
-      generate: sinon.stub().returnsThis(),
-      create: sinon.stub().returnsArg(1),
-    };
     JSONPatch = { apply() {} };
-    apis = new ApiCache({ schema });
+    apis = new ApiCache();
     intercept = new Intercept({ Promise, JSONPatch, apis, delta: true });
   });
 
@@ -198,25 +193,6 @@ describe('Intercept', () => {
     it('should return result if neither out key or return key is specified', () => {
       const result = { foo: {} };
       expect(intercept.processOutInterceptor({ outKey: -1 }, result)).to.be.equal(result);
-    });
-  });
-
-  describe('processObjectApiInterceptor', () => {
-    it('should call getObjectApi', () => {
-      const response = { qHandle: 1, qType: 'Foo', qGenericId: 'Baz', qGenericType: 'Bar' };
-      const stub = sinon.stub(apis, 'getObjectApi');
-      intercept.processObjectApiInterceptor({}, response);
-      expect(stub).to.have.been.calledWith({ handle: 1, type: 'Foo', id: 'Baz', customType: 'Bar', delta: true });
-    });
-
-    it("should return null if requested object doesn't exist", () => {
-      const response = { qHandle: null, qType: null };
-      return expect(intercept.processObjectApiInterceptor({}, response)).to.equal(null);
-    });
-
-    it('should return response argument if qHandle/qType are undefined', () => {
-      const response = {};
-      return expect(intercept.processObjectApiInterceptor({}, response)).to.equal(response);
     });
   });
 });

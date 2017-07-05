@@ -11,6 +11,8 @@ class Session {
   * @param {ApiCache} options.apis The ApiCache instance to bridge events towards.
   * @param {Promise} options.Promise The promise constructor to use.
   * @param {RPC} options.rpc The RPC instance to use when communicating towards Engine.
+  * @param {Schema} options.definition The Schema instance to use when generating APIs.
+  * @param {Boolean} options.delta Flag indicating if delta should be used or not.
   * @param {SuspendResume} options.suspendResume The SuspendResume instance to use.
   * @param {Object} [options.eventListeners] An object containing keys (event names) and
   *                                          values (event handlers) that will be bound
@@ -30,7 +32,6 @@ class Session {
     session.on('handle-changed', handle => session.apis.onHandleChanged(handle));
     session.on('handle-closed', handle => session.apis.onHandleClosed(handle));
     session.on('closed', () => session.apis.onSessionClosed());
-    session.emit('session-created', session);
   }
 
   /**
@@ -108,13 +109,36 @@ class Session {
   }
 
   /**
+  * Function used to get an API for a backend object.
+  * @param {Object} args Arguments used to create object API.
+  * @param {Number} args.handle Handle of the backend object.
+  * @param {String} args.id ID of the backend object.
+  * @param {String} args.type QIX type of the backend object. Can for example
+  *                           be "Doc" or "GenericVariable".
+  * @param {String} args.customType Custom type of the backend object, if defined in qInfo.
+  * @returns {*} Returns the generated and possibly augmented API.
+  */
+  getObjectApi(args) {
+    const { handle, id, type, customType } = args;
+    let api = this.apis.getApi(handle);
+    if (api) {
+      return api;
+    }
+    api = this.definition
+      .generate(type)
+      .create(this, handle, id, this.delta, customType);
+    this.apis.add(handle, api);
+    return api;
+  }
+
+  /**
   * Establishes the RPC socket connection and returns the Global instance.
   * @returns {Promise} Eventually resolved if the connection was successful.
   */
   open() {
     if (!this.globalPromise) {
-      const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: this.delta };
-      this.globalPromise = this.rpc.open().then(() => this.apis.getObjectApi(args));
+      const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global' };
+      this.globalPromise = this.rpc.open().then(() => this.getObjectApi(args));
     }
     return this.globalPromise;
   }
@@ -136,7 +160,19 @@ class Session {
     };
     const response = this.rpc.send(data);
     request.id = data.id;
-    const promise = this.intercept.execute(response, request);
+
+    const promise = this.intercept.execute(response, request).then((res) => {
+      if (res.qHandle && res.qType) {
+        const args = {
+          handle: res.qHandle,
+          type: res.qType,
+          id: res.qGenericId,
+          customType: res.qGenericType,
+        };
+        return this.getObjectApi(args);
+      }
+      return res;
+    });
     Session.addToPromiseChain(promise, 'requestId', request.id);
     return promise;
   }

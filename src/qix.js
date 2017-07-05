@@ -20,13 +20,14 @@ class Qix {
     const {
       url,
       createSocket,
-      delta,
+      protocol,
       Promise,
       responseInterceptors,
       JSONPatch,
       definition,
     } = config;
-    const apis = new ApiCache({ Promise, definition });
+    const delta = protocol.delta;
+    const apis = new ApiCache();
     const rpc = new RPC({ url, createSocket, Promise });
     const suspendResume = new SuspendResume({ rpc, Promise, apis });
     const intercept = new Intercept({
@@ -43,6 +44,7 @@ class Qix {
       intercept,
       apis,
       delta,
+      definition,
     });
     return session;
   }
@@ -82,6 +84,8 @@ class Qix {
       config.suspendOnClose = false;
     }
 
+    config.protocol = config.protocol || {};
+    config.protocol.delta = config.protocol.delta || true;
     config.Promise = config.Promise || Promise;
     config.mixins = config.mixins || [];
     config.JSONPatch = config.JSONPatch || Patch;
