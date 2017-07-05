@@ -44,8 +44,7 @@ describe('QIX Suspend/Resume', () => {
               .then(() => obj.getProperties())
               .then(props => expect(propertiesBeforeResume).to.deep.equal(props))
               .then(() => global.session.close());
-          })
-      ));
+          })));
   });
 
   it('should suspend and resume by reopening the previous document', () => {
