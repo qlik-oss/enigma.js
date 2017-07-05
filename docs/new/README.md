@@ -1,0 +1,43 @@
+# Overview
+
+The enigma.js documentation is split into several sections (see below). Unless otherwise noted, all examples assumes a Node.js environment.
+
+- [Getting started](./getting-started.md#getting-started)
+- [High-level concepts](./concepts.md#high-level-concepts)
+  - [Node.js versus browser](./concepts.md#nodejs-vs-browser)
+  - [Promises](./concepts.md#promises)
+  - [Authentication](./concepts.md#authentication)
+  - [JSON-RPC protocol](./concepts.md#json-rpc-protocol)
+  - [Generic object model](./concepts.md#generic-object-model)
+- [API documentation](./api.md#api-documentation)
+  - [Configuration](./api.md#configuration)
+    - [Mixins](./api.md#mixins)
+    - [Interceptors](./api.md#interceptors)
+  - [`enigma.create(config)`](./api.md#enigmacreateconfig)
+  - [Session API](./api.md#session-api)
+    - [`session.open()`](./api.md#sessionopen)
+    - [`session.close()`](./api.md#sessionclose)
+    - [`session.suspend()`](./api.md#sessionsuspend)
+    - [`session.resume()`](./api.md#sessionresumeonlyifattachedfalse)
+    - [Event: `closed`](./api.md#event-closed)
+    - [Event: `suspended`](./api.md#event-suspended)
+    - [Event: `resumed`](./api.md#event-resumed)
+    - [Event: `notification:<name>`](./api.md#event-notificationname)
+    - [Event: `notification:*`](./api.md#event-notification)
+    - [Event: `traffic:sent`](./api.md#event-trafficsent)
+    - [Event: `traffic:received`](./api.md#event-trafficreceived)
+    - [Event: `traffic:*`](./api.md#event-traffic)
+  - [Generated API](./api.md#generated-api)
+    - [Event: `changed`](./api.md#event-changed)
+    - [Event: `closed`](./api.md#event-closed)
+  - [Sense utilities API](./api.md#sense-utilities-api)
+    - [Configuration](./api.md#configuration-1)
+    - [`SenseUtilities.buildUrl()`](./api.md#senseutilitiesbuildurlconfig)
+- Examples
+  - Sample projects
+    - X
+    - Y
+    - Z
+  - Qlik Sense
+    - [Authentication](./sense/authentication.md)
+    - [WebSocket URL](./sense/websocket-url.md)

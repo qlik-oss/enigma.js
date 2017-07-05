@@ -7,8 +7,6 @@ import QueryString from 'querystring';
 *                            Otherwise both global and app object are returned.
 * @property {Boolean} [noData=false] Whether to open the app without data.
 * @property {Boolean} [secure=true] Set to false if an unsecure WebSocket should be used.
-* @property {Boolean} [unsecure=false] Set to true if an unsecure WebSocket should be used.
-                              DEPRECATED owing to the secure property.
 * @property {String} [host] Host address.
 * @property {Number} [port] Port to connect to.
 * @property {String} [prefix="/"] The absolute base path to use when connecting.
@@ -16,8 +14,6 @@ import QueryString from 'querystring';
 * @property {String} [subpath=""] The subpath.
 * @property {String} [route=""] Used to instruct Proxy to route to the correct receiver.
 * @property {String} [identity=""] Identity to use.
-* @property {String} [reloadURI=""] The reloadURI.
-*                             DEPRECATED owing to the urlParams property.
 * @property {Object} [urlParams={}] Used to add parameters to the WebSocket URL.
 * @property {Number} [ttl] A value in seconds that QIX Engine should keep the session
 *                             alive after socket disconnect (only works if QIX Engine supports it).
@@ -37,11 +33,7 @@ class SenseUtilities {
   */
   static configureDefaults(senseConfig) {
     if (!senseConfig.host) {
-      if (typeof location !== 'undefined' && typeof location.hostname === 'string') { // eslint-disable-line no-undef
-        senseConfig.host = location.hostname; // eslint-disable-line no-undef
-      } else {
-        senseConfig.host = 'localhost';
-      }
+      senseConfig.host = 'localhost';
     }
 
     if (typeof senseConfig.secure === 'undefined') {
@@ -65,8 +57,19 @@ class SenseUtilities {
   static buildUrl(urlConfig) {
     SenseUtilities.configureDefaults(urlConfig);
 
-    const { secure, host, port, prefix, subpath, route, identity,
-      reloadURI, urlParams, ttl, appId } = urlConfig;
+    const {
+      secure,
+      host,
+      port,
+      prefix,
+      subpath,
+      route,
+      identity,
+      urlParams,
+      ttl,
+      appId,
+    } = urlConfig;
+
     let url = '';
 
     url += `${secure ? 'wss' : 'ws'}://`;
@@ -96,12 +99,6 @@ class SenseUtilities {
 
     if (ttl) {
       url += `/ttl/${ttl}`;
-    }
-
-    if (reloadURI) {
-      if (!urlParams || !urlParams.reloadUri) {
-        url += `?reloadUri=${encodeURIComponent(reloadURI)}`;
-      }
     }
 
     if (urlParams) {

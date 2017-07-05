@@ -73,13 +73,6 @@ describe('Sense Utilities', () => {
       secure: true,
       port: 4848,
       prefix: '/myproxy/',
-      reloadURI: 'http://qlik.com',
-      appId: 'myApp5',
-    })).to.equal('wss://localhost:4848/myproxy/app/myApp5?reloadUri=http%3A%2F%2Fqlik.com');
-    expect(SenseUtilities.buildUrl({
-      secure: true,
-      port: 4848,
-      prefix: '/myproxy/',
       urlParams: {
         reloadUri: 'http://qlik.com',
       },
