@@ -17,19 +17,19 @@ A simple example:
 
 ```javascript
 const cfg = {
-    url: 'wss://localhost/app/engineData?reloadUri=' + encodeURIComponent(location.href),
-    schema: {},
-    listeners: {
-        "notification:OnAuthenticationInformation": ( authInfo ) => {
-            if ( authInfo.mustAuthenticate ) {
-                location.href = authInfo.loginUri;
-            }
-        }
+  url: 'wss://localhost/app/engineData?reloadUri=' + encodeURIComponent(location.href),
+  schema: {},
 };
 
-enigma.connect(cfg);
-```
+const session = enigma.create(cfg);
+session.on('notification:OnAuthenticationInformation': ( authInfo ) => {
+  if ( authInfo.mustAuthenticate ) {
+    location.href = authInfo.loginUri;
+  }
+});
 
+session.open().then(( global ) => {});
+```
 
 ## Header authentication
 

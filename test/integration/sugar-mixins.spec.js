@@ -68,8 +68,8 @@ describe('Sugar mixins', () => {
       },
     }];
 
-    return Qix.connect(config).then((g) => {
-      qixGlobal = g.global;
+    return Qix.create(config).open().then((global) => {
+      qixGlobal = global;
     });
   }));
 

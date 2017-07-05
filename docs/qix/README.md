@@ -32,11 +32,10 @@ const config = {
   schema,
   url: 'ws://localhost:4848/app',
 };
-enigma.connect(config).then((qix) => {
-  const g = qix.global;
+enigma.create(config).open().then((global)) => {
   console.log('Got the global instance');
 
-  g.openDoc('MyApp').then((app) => {
+  global.openDoc('MyApp').then((app) => {
     console.log('Got the app instance');
 
     app.getObject('xyz123').then((obj) => {
@@ -57,8 +56,8 @@ enigma.js uses camel casing (`getObject`) for method names, while Engine API use
 Parameters can be passed either by name through an object:
 
 ```javascript
-enigma.connect(config).then((qix) => {
-  return qix.global.openDoc({ qDocName: 'MyApp' }).then((app) => {
+enigma.create(config).open().then((global) => {
+  return global.openDoc({ qDocName: 'MyApp' }).then((app) => {
     // Parameter passed by name through an object.
   });
 });
@@ -67,8 +66,8 @@ enigma.connect(config).then((qix) => {
 or by position:
 
 ```javascript
-enigma.connect(config).then((qix) => {
-  return qix.global.openDoc('MyApp').then((app) => {
+enigma.create(config).open().then((global) => {
+  return global.openDoc('MyApp').then((app) => {
     // Parameter passed by position.
   });
 });
