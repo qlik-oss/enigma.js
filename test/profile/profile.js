@@ -3,7 +3,7 @@
 const WebSocket = require('ws');
 const heapdump = require('heapdump');
 const enigma = require('../../dist/enigma');
-const schema = require('../../schemas/qix/3.2/schema.json');
+const schema = require('../../schemas/12.20.0.json');
 
 const enableHeap = process.argv.indexOf('--enable-heap') > -1;
 
