@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import WebSocket from 'ws';
 import Qix from '../../src/qix';
-import schema from '../../schemas/qix/3.2/schema.json';
+import schema from '../../schemas/12.20.0.json';
 import utils from './utils';
 
 describe('QIX Global', () => {

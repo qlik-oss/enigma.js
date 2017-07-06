@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import WebSocket from 'ws';
 import Qix from '../../src/qix';
-import Schema from '../../schemas/qix/3.2/schema.json';
+import Schema from '../../schemas/12.20.0.json';
 
 function generateId() {
   return Math.floor(Math.random() * 10000).toString();
