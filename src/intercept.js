@@ -22,8 +22,6 @@ class Intercept {
       onFulfilled: this.processMultipleOutParamInterceptor,
     }, {
       onFulfilled: this.processOutInterceptor,
-    }, {
-      onFulfilled: this.processObjectApiInterceptor,
     }, ...this.interceptors || []];
   }
 
@@ -165,28 +163,6 @@ class Intercept {
       return response[RETURN_KEY];
     } else if (meta.outKey !== -1) {
       return response[meta.outKey];
-    }
-    return response;
-  }
-
-  /**
-  * Function used to process the object API interceptor.
-  * @param {Object} meta - The meta info about the request.
-  * @param response - The response.
-  * @returns {Object} - Returns an object API or the response.
-  */
-  processObjectApiInterceptor(meta, response) {
-    if (response.qHandle && response.qType) {
-      return this.apis.getObjectApi({
-        handle: response.qHandle,
-        type: response.qType,
-        id: response.qGenericId,
-        customType: response.qGenericType,
-        delta: this.delta,
-      });
-    } else if (response.qHandle === null && response.qType === null) {
-      // TODO: reject?
-      return null;
     }
     return response;
   }

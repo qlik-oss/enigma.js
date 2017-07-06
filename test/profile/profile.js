@@ -2,7 +2,7 @@
 
 const WebSocket = require('ws');
 const heapdump = require('heapdump');
-const enigma = require('../../dist/enigma');
+const enigma = require('../../enigma');
 const schema = require('../../schemas/12.20.0.json');
 
 const enableHeap = process.argv.indexOf('--enable-heap') > -1;
