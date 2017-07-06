@@ -19,6 +19,7 @@ The enigma.js documentation is split into several sections (see below). Unless o
     - [`session.close()`](./api.md#sessionclose)
     - [`session.suspend()`](./api.md#sessionsuspend)
     - [`session.resume()`](./api.md#sessionresumeonlyifattachedfalse)
+    - [Event: `opened`](./api.md#event-opened)
     - [Event: `closed`](./api.md#event-closed)
     - [Event: `suspended`](./api.md#event-suspended)
     - [Event: `resumed`](./api.md#event-resumed)
