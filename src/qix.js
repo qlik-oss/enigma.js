@@ -18,31 +18,31 @@ class Qix {
   */
   static getSession(config) {
     const {
-      url,
       createSocket,
-      protocol,
-      Promise,
-      responseInterceptors,
-      JSONPatch,
       definition,
+      JSONPatch,
+      Promise,
+      protocol,
+      responseInterceptors,
+      url,
     } = config;
     const apis = new ApiCache();
-    const rpc = new RPC({ url, createSocket, Promise });
-    const suspendResume = new SuspendResume({ rpc, Promise, apis });
     const intercept = new Intercept({
+      apis,
       interceptors: responseInterceptors,
       JSONPatch,
       Promise,
-      apis,
     });
+    const rpc = new RPC({ createSocket, Promise, url });
+    const suspendResume = new SuspendResume({ apis, Promise, rpc });
     const session = new Session({
+      apis,
+      definition,
+      intercept,
       Promise,
+      protocol,
       rpc,
       suspendResume,
-      intercept,
-      apis,
-      protocol,
-      definition,
     });
     return session;
   }

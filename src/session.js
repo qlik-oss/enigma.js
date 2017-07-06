@@ -130,7 +130,13 @@ class Session {
     return api;
   }
 
-  handleObjectCreationResponse(response) {
+  /**
+  * Response handler for generating APIs. Handles the quirks of engine not returning an error
+  * when an object is missing.
+  * @param {Object} response The response message.
+  * @returns {Promise} A promise that resolves with the created object.
+  */
+  handleObjectReferenceResponse(response) {
     if (response.qHandle && response.qType) {
       return this.getObjectApi({
         handle: response.qHandle,
@@ -174,7 +180,7 @@ class Session {
 
     const promise = this.intercept.execute(response, request).then((res) => {
       if (typeof res.qHandle !== 'undefined' && typeof res.qType !== 'undefined') {
-        return this.handleObjectCreationResponse(res);
+        return this.handleObjectReferenceResponse(res);
       }
       return res;
     });
