@@ -93,7 +93,7 @@ const enigma = require('enigma.js');
 const schema = require('enigma.js/schemas/10.20.0.json');
 enigma
   .create({ schema, mixins: [docMixin], url: 'ws://localhost:9076/app' })
-  .connect()
+  .open()
   .then(global => global.openDoc('my-document.qvf'))
   .then(doc => doc.tweet());
 ```

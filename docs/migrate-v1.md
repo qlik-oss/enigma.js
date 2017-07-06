@@ -12,6 +12,7 @@ Table of contents
 - [Schema directory flattened](#schema-directory-flattened)
 - [Configuration overhaul](#configuration-overhaul)
 - [Entry API changed](#entry-api-changed)
+- [Session events](#session-events)
 - [Session cache and websockets](#session-cache-and-websockets)
 - [Mixin `init(args)` changed](#mixin-initargs-changed)
 
@@ -93,7 +94,7 @@ const enigma = require('enigma.js');
 const schema = require('enigma.js/schemas/4.2.0.json');
 // you are now in full control of the websocket URL:
 const config = { url: 'ws://localhost:9076/app/123' };
-enigma.create(config).connect().then((global) => {
+enigma.create(config).open().then((global) => {
   // global === QIX global interface
   global.openDoc('123').then((doc) => {
     // doc === QIX doc interface
@@ -118,7 +119,7 @@ const config = {
     secure: false,
   }),
 };
-enigma.create(config).connect().then((global) => {
+enigma.create(config).open().then((global) => {
   // global === QIX global interface
   global.openDoc('123').then((doc) => {
     // doc === QIX doc interface
@@ -130,6 +131,48 @@ Read more:
 
 * [`enigma.create(config)`](./api.md#enigmacreateconfig)
 * [`SenseUtilities.buildUrl(config)`](./api.md#senseutilitiesbuildurlconfig)
+
+[Back to top](#migrating-from-version-1x)
+
+## Session events
+
+In enigma.js version 1 you could send in a `config.listeners` object with event handlers
+for different session events. We had to add this due to the automatic opening
+of the socket when doing `enigma.getService()`.
+
+In enigma.js version 2 we only open the websocket _when you are ready_.
+This allows you to bind all events like you are used to, using `.on('event', fn)`.
+
+If you did this in version 1:
+
+```js
+const enigma = require('enigma.js');
+const config = {
+  listeners: {
+    'notification:OnAuthenticationInfo': () => {}
+  },
+};
+enigma.getService('qix', config).then((qix) => {
+  // qix.global === QIX global interface
+});
+```
+
+...you would do this in version 2:
+
+```js
+const enigma = require('enigma.js');
+const config = {};
+const session = enigma.create(config);
+session.on('notification:OnAuthenticationInfo', () => {});
+session.open().then((global) => {
+  // global === QIX global interface
+});
+```
+
+In addition to this, a couple of events were removed:
+
+* `session-created`, you may instead use the [`opened`](./api.md#event-opened) event.
+* `qix-error`, you may instead look for `data.error` using the [`traffic:received`](./api.md#event-trafficreceived) event.
 
 [Back to top](#migrating-from-version-1x)
 
@@ -153,7 +196,7 @@ function getSession(url) {
     session.on('closed', () => delete sessions[url]);
     sessions[url] = session;
   }
-  return session.connect();
+  return session.open();
 }
 
 getSession('ws://localhost:9076/app/123').then((global) => {
