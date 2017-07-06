@@ -15,7 +15,6 @@ Table of contents
 - [Session cache and websockets](#session-cache-and-websockets)
 - [Mixin `init(args)` changed](#mixin-initargs-changed)
 
-
 ---
 
 ## Service concept dropped
@@ -28,6 +27,8 @@ to _streamline enigma.js for communicating against QIX engine(s)_.
 The enigma.js REST service is no more, and we recommend using [swagger-js](https://github.com/swagger-api/swagger-js)
 to accomplish the same by using a library that is streamlined for generating and providing
 APIs based on OpenAPI/swagger definitions.
+
+[Back to top](#migrating-from-version-1x)
 
 ## Schema directory flattened
 
@@ -48,6 +49,8 @@ Read more:
 
 * [All available schemas](../schemas)
 
+[Back to top](#migrating-from-version-1x)
+
 ## Configuration overhaul
 
 The configuration has been revamped a lot in enigma.js version 2, to make it
@@ -59,6 +62,8 @@ Read more:
 
 * [enigma.js configuration](./api.md#configuration)
 * [SenseUtilities configuration](./api.md#configuration-1)
+
+[Back to top](#migrating-from-version-1x)
 
 ## Entry API changed
 
@@ -126,6 +131,8 @@ Read more:
 * [`enigma.create(config)`](./api.md#enigmacreateconfig)
 * [`SenseUtilities.buildUrl(config)`](./api.md#senseutilitiesbuildurlconfig)
 
+[Back to top](#migrating-from-version-1x)
+
 ## Session cache and websockets
 
 In enigma.js version 1, we tried to cache enigma.js sessions by storing them
@@ -153,6 +160,8 @@ getSession('ws://localhost:9076/app/123').then((global) => {
   // global === QIX global interface
 });
 ```
+
+[Back to top](#migrating-from-version-1x)
 
 ## Mixin `init(args)` changed
 
@@ -182,3 +191,5 @@ const mixin = {
 This allows the developer to access all properties sent into [`enigma.create()`](./api.md#enigmacreateconfig).
 Keep in mind that to avoid potential configuration clashes in the future, use a namespace
 in the enigma.js configuration for your mixin.
+
+[Back to top](#migrating-from-version-1x)
