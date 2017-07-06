@@ -15,6 +15,7 @@ Table of contents
   - [`session.close()`](#sessionclose)
   - [`session.suspend()`](#sessionsuspend)
   - [`session.resume()`](#sessionresumeonlyifattachedfalse)
+  - [Event: `opened`](#event-opened)
   - [Event: `closed`](#event-closed)
   - [Event: `suspended`](#event-suspended)
   - [Event: `resumed`](#event-resumed)
@@ -163,6 +164,24 @@ session.resume().then(() => console.log('Session was properly resumed'));
 
 [Back to top](#api-documentation)
 
+### Event: `opened`
+
+Handle opened state. This event is triggered whenever the websocket is connected and ready for
+communication.
+
+Example:
+
+```js
+session.on('opened', () => console.log('We are connected'));
+```
+
+### Event: `closed`
+
+Handle closed state. This event is triggered when the underlying websocket is closed
+and [`config.suspendOnClose`](#configuration) is `false`.
+
+[Back to top](#api-documentation)
+
 ### Event: `suspended`
 
 Handle suspended state. This event is triggered in two cases (listed below). It is
@@ -188,13 +207,6 @@ Possible values: `network`, `manual`.
 Handle resumed state. This event is triggered when the session was properly resumed.
 It is useful in scenarios where you for example can close blocking modal dialogs
 and allow the user to interact with your application again.
-
-[Back to top](#api-documentation)
-
-### Event: `closed`
-
-Handle closed state. This event is triggered when the underlying websocket is closed
-and [`config.suspendOnClose`](#configuration) is `false`.
 
 [Back to top](#api-documentation)
 
