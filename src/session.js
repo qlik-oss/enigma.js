@@ -11,6 +11,9 @@ class Session {
   * @param {ApiCache} options.apis The ApiCache instance to bridge events towards.
   * @param {Promise} options.Promise The promise constructor to use.
   * @param {RPC} options.rpc The RPC instance to use when communicating towards Engine.
+  * @param {Schema} options.definition The Schema instance to use when generating APIs.
+  * @param {Object} options.protocol Additional protocol properties.
+  * @param {Boolean} options.protocol.delta Flag indicating if delta should be used or not.
   * @param {SuspendResume} options.suspendResume The SuspendResume instance to use.
   * @param {Object} [options.eventListeners] An object containing keys (event names) and
   *                                          values (event handlers) that will be bound
@@ -20,8 +23,6 @@ class Session {
     const session = this;
     Object.assign(session, options);
     EventEmitter.mixin(session);
-    // api cache needs a session reference:
-    session.apis.session = session;
     session.rpc.on('socket-error', session.onError.bind(session));
     session.rpc.on('closed', session.onClosed.bind(session));
     session.rpc.on('message', session.onMessage.bind(session));
@@ -30,7 +31,6 @@ class Session {
     session.on('handle-changed', handle => session.apis.onHandleChanged(handle));
     session.on('handle-closed', handle => session.apis.onHandleClosed(handle));
     session.on('closed', () => session.apis.onSessionClosed());
-    session.emit('session-created', session);
   }
 
   /**
@@ -108,13 +108,54 @@ class Session {
   }
 
   /**
+  * Function used to get an API for a backend object.
+  * @param {Object} args Arguments used to create object API.
+  * @param {Number} args.handle Handle of the backend object.
+  * @param {String} args.id ID of the backend object.
+  * @param {String} args.type QIX type of the backend object. Can for example
+  *                           be "Doc" or "GenericVariable".
+  * @param {String} args.customType Custom type of the backend object, if defined in qInfo.
+  * @returns {*} Returns the generated and possibly augmented API.
+  */
+  getObjectApi(args) {
+    const { handle, id, type, customType } = args;
+    let api = this.apis.getApi(handle);
+    if (api) {
+      return api;
+    }
+    api = this.definition
+      .generate(type)
+      .create(this, handle, id, this.protocol.delta, customType);
+    this.apis.add(handle, api);
+    return api;
+  }
+
+  /**
+  * Response handler for generating APIs. Handles the quirks of engine not returning an error
+  * when an object is missing.
+  * @param {Object} response The response message.
+  * @returns {Promise} A promise that resolves with the created object.
+  */
+  handleObjectReferenceResponse(response) {
+    if (response.qHandle && response.qType) {
+      return this.getObjectApi({
+        handle: response.qHandle,
+        type: response.qType,
+        id: response.qGenericId,
+        customType: response.qGenericType,
+      });
+    }
+    return this.Promise.reject(new Error('Object not found'));
+  }
+
+  /**
   * Establishes the RPC socket connection and returns the Global instance.
   * @returns {Promise} Eventually resolved if the connection was successful.
   */
   open() {
     if (!this.globalPromise) {
-      const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global', delta: this.delta };
-      this.globalPromise = this.rpc.open().then(() => this.apis.getObjectApi(args));
+      const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global' };
+      this.globalPromise = this.rpc.open().then(() => this.getObjectApi(args));
     }
     return this.globalPromise;
   }
@@ -128,15 +169,21 @@ class Session {
     if (this.suspendResume.isSuspended) {
       return this.Promise.reject(new Error('Session suspended'));
     }
-    const data = {
+    const data = Object.assign({}, this.protocol, {
       method: request.method,
       handle: request.handle,
       params: request.params,
       delta: request.delta,
-    };
+    });
     const response = this.rpc.send(data);
     request.id = data.id;
-    const promise = this.intercept.execute(response, request);
+
+    const promise = this.intercept.execute(response, request).then((res) => {
+      if (typeof res.qHandle !== 'undefined' && typeof res.qType !== 'undefined') {
+        return this.handleObjectReferenceResponse(res);
+      }
+      return res;
+    });
     Session.addToPromiseChain(promise, 'requestId', request.id);
     return promise;
   }
