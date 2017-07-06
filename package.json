@@ -43,7 +43,7 @@
     "eslint-plugin-import": "2.6.1",
     "extend": "^3.0.0",
     "heapdump": "^0.3.9",
-    "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
+    "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git#a097e2f2997cc6e8b86a10a60efce7f752c629e4",
     "node-event-emitter": "0.0.1",
     "rimraf": "^2.5.1",
     "rollup": "^0.43.0",
