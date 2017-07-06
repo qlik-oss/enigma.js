@@ -13,5 +13,6 @@ jsconfig.json
 *.heapsnapshot
 
 # distribution files:
-/enigma.*
+/enigma.js*
+/enigma.min*
 /sense-utilities.*

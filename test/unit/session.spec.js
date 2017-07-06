@@ -48,9 +48,16 @@ describe('Session', () => {
   });
 
   it('should return a promise when open is called', () => {
+    session.getObjectApi = () => {};
     const open = session.open();
+    const anotherOpen = session.open();
+    const spy = sinon.spy();
+    session.on('opened', spy);
     expect(open).to.be.an.instanceOf(Promise);
-    expect(session.open()).to.equal(open);
+    expect(anotherOpen).to.equal(open);
+    return open.then(() => {
+      expect(spy.calledOnce).to.equal(true);
+    });
   });
 
   it("should call reject callback if connection can't be established", (done) => {
