@@ -18,12 +18,6 @@ Table of contents
 
 enigma.js as a library can be used both in a Node.js environment, as well as in a browser. This enables you to build projects that are portable, and behaves similarly on top of enigma.js. But this compatibility also introduces a few differences in configuration that we explain more in detail under the [Configuration section](./api.md#configuration).
 
-TODO:
-
-* Performance considerations?
-* Environment feature parity?
-*
-
 [Back to top](#high-level-concepts)
 
 ## Promises
@@ -38,14 +32,17 @@ enigma.js makes heavy use of promises because we believe that it gives you sever
 
 All generated APIs from enigma.js returns a promise.
 
+Read more: [Promises on MDN(https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+
 [Back to top](#high-level-concepts)
 
 ## Authentication
 
-TODO:
+enigma.js does not handle authentication due to the simple reason that different products and deployments
+handle it differently. We do however provide a couple of examples for the more common use cases which you can
+find on the link below.
 
-* Briefly describe that authentication is not something enigma.js handles (and why), but refer to e.g. Sense examples of
-  how one can solve it.
+Read more: [Authentication examples](../examples/authentication)
   
 [Back to top](#high-level-concepts)
 

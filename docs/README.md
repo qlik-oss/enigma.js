@@ -1,57 +1,43 @@
 # Overview
 
-The enigma.js documentation is separated into three sections:
+The enigma.js documentation is split into several sections (see below). Unless otherwise noted, all examples assumes a Node.js environment.
 
-- To get started using enigma.js, see the getting started section below.
-- Explanations around authentication in a browser or via header authentication can be found in the [Authentication](authentication.md) section.
-- For technical documentation around how to use the different services, see the [Services](#services) section.
-
-In addition, the technical details around the top-level API are described below.
-
-## Getting started
-
-enigma.js is a framework that communicates with Qlik Sense backend services. It can be used in the browser or in a Node.js environment, acting as an SDK by doing CRUD (create, read, update and delete) operations on apps and entities. You can also use it to build your own analytics tools or to build your own Node.js service.
-
-Before you start, you will need to:
-
-- install Node.js from the [Node.js](https://nodejs.org) website
-- have a Qlik Sense Enterprise (or desktop) running, preferably on your local machine
-- have experience of working with promises
-
-**Note:** enigma.js uses promises extensively, so you are highly recommended to read up on them on for example [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
-
-## Top-level API
-
-enigma.js exposes an API for consuming backend services that are configured with settings.
-
-### `connect( config )`
-
-| Property | Type   | Description |
-|----------|--------|-------------|
-| `config` | Object | Service configuration, see docs for details. |
-
-Returns an enigma.js service used to communicate with backend services.
-
-## Usage
-
-enigma.js can be used in CommonJS, AMD, and vanilla browser (global) formats. Install it by running:
-
-```sh
-npm install --save enigma.js
-```
-
-Basic usage is to pull in the library, call `connect` and start using the API of the returned service.
-
-```javascript
-const enigma = require('enigma.js');
-
-enigma.connect({ /* Service config */ }).then((serviceInstance) => {
-  // Continue working with the instance
-}, (err) => {
-  // There was an error getting the service
-});
-```
-
-## Services
-
-- [The QIX service](qix/README.md)
+- [Getting started](#getting-started)
+- [High-level concepts](./concepts.md#high-level-concepts)
+  - [Node.js versus browser](./concepts.md#nodejs-vs-browser)
+  - [Promises](./concepts.md#promises)
+  - [Authentication](./concepts.md#authentication)
+  - [JSON-RPC protocol](./concepts.md#json-rpc-protocol)
+  - [Generic object model](./concepts.md#generic-object-model)
+- [API documentation](./api.md#api-documentation)
+  - [Configuration](./api.md#configuration)
+    - [Mixins](./api.md#mixins)
+    - [Interceptors](./api.md#interceptors)
+  - [`enigma.create(config)`](./api.md#enigmacreateconfig)
+  - [Session API](./api.md#session-api)
+    - [`session.open()`](./api.md#sessionopen)
+    - [`session.close()`](./api.md#sessionclose)
+    - [`session.suspend()`](./api.md#sessionsuspend)
+    - [`session.resume()`](./api.md#sessionresumeonlyifattachedfalse)
+    - [Event: `closed`](./api.md#event-closed)
+    - [Event: `suspended`](./api.md#event-suspended)
+    - [Event: `resumed`](./api.md#event-resumed)
+    - [Event: `notification:<name>`](./api.md#event-notificationname)
+    - [Event: `notification:*`](./api.md#event-notification)
+    - [Event: `traffic:sent`](./api.md#event-trafficsent)
+    - [Event: `traffic:received`](./api.md#event-trafficreceived)
+    - [Event: `traffic:*`](./api.md#event-traffic)
+  - [Generated API](./api.md#generated-api)
+    - [Event: `changed`](./api.md#event-changed)
+    - [Event: `closed`](./api.md#event-closed)
+  - [Sense utilities API](./api.md#sense-utilities-api)
+    - [Configuration](./api.md#configuration-1)
+    - [`SenseUtilities.buildUrl()`](./api.md#senseutilitiesbuildurlconfig)
+- Examples
+  - Sample projects
+    - X
+    - Y
+    - Z
+  - Qlik Sense
+    - [Authentication](./sense/authentication.md)
+    - [WebSocket URL](./sense/websocket-url.md)

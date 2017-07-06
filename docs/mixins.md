@@ -90,7 +90,7 @@ const docMixin = {
 };
 
 const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/qix/10.20.0/schema.json');
+const schema = require('enigma.js/schemas/10.20.0.json');
 enigma
   .create({ schema, mixins: [docMixin], url: 'ws://localhost:9076/app' })
   .connect()
