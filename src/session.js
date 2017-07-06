@@ -12,7 +12,8 @@ class Session {
   * @param {Promise} options.Promise The promise constructor to use.
   * @param {RPC} options.rpc The RPC instance to use when communicating towards Engine.
   * @param {Schema} options.definition The Schema instance to use when generating APIs.
-  * @param {Boolean} options.delta Flag indicating if delta should be used or not.
+  * @param {Object} options.protocol Additional protocol properties.
+  * @param {Boolean} options.protocol.delta Flag indicating if delta should be used or not.
   * @param {SuspendResume} options.suspendResume The SuspendResume instance to use.
   * @param {Object} [options.eventListeners] An object containing keys (event names) and
   *                                          values (event handlers) that will be bound
@@ -22,8 +23,6 @@ class Session {
     const session = this;
     Object.assign(session, options);
     EventEmitter.mixin(session);
-    // api cache needs a session reference:
-    session.apis.session = session;
     session.rpc.on('socket-error', session.onError.bind(session));
     session.rpc.on('closed', session.onClosed.bind(session));
     session.rpc.on('message', session.onMessage.bind(session));
@@ -126,9 +125,21 @@ class Session {
     }
     api = this.definition
       .generate(type)
-      .create(this, handle, id, this.delta, customType);
+      .create(this, handle, id, this.protocol.delta, customType);
     this.apis.add(handle, api);
     return api;
+  }
+
+  handleObjectCreationResponse(response) {
+    if (response.qHandle && response.qType) {
+      return this.getObjectApi({
+        handle: response.qHandle,
+        type: response.qType,
+        id: response.qGenericId,
+        customType: response.qGenericType,
+      });
+    }
+    return this.Promise.reject(new Error('Object not found'));
   }
 
   /**
@@ -152,24 +163,18 @@ class Session {
     if (this.suspendResume.isSuspended) {
       return this.Promise.reject(new Error('Session suspended'));
     }
-    const data = {
+    const data = Object.assign({}, this.protocol, {
       method: request.method,
       handle: request.handle,
       params: request.params,
       delta: request.delta,
-    };
+    });
     const response = this.rpc.send(data);
     request.id = data.id;
 
     const promise = this.intercept.execute(response, request).then((res) => {
-      if (res.qHandle && res.qType) {
-        const args = {
-          handle: res.qHandle,
-          type: res.qType,
-          id: res.qGenericId,
-          customType: res.qGenericType,
-        };
-        return this.getObjectApi(args);
+      if (typeof res.qHandle !== 'undefined' && typeof res.qType !== 'undefined') {
+        return this.handleObjectCreationResponse(res);
       }
       return res;
     });

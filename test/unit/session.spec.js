@@ -27,7 +27,7 @@ describe('Session', () => {
       suspendOnClose,
       intercept,
       rpc: rpc || defaultRpc,
-      delta: true,
+      protocol: { delta: true },
     });
   };
 
@@ -124,6 +124,30 @@ describe('Session', () => {
       return session.send(request).then((response) => {
         expect(response).to.deep.equal({ message: 'hello!' });
       });
+    });
+
+    it('should add additional protocol parameters to request object', () => {
+      const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+      createSession(false, rpc);
+      session.intercept = { execute: promise => (promise) };
+      session.protocol.foo = 'bar';
+
+      const send = sinon.spy(rpc, 'send');
+
+      return session.send({ method: 'a', handle: 1, params: [], delta: true, xyz: 'xyz' })
+        .then(() => expect(send.lastCall.args[0].foo).to.equal('bar'));
+    });
+
+    it('should honor delta blacklist', () => {
+      const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+      createSession(false, rpc);
+      session.intercept = { execute: promise => (promise) };
+      session.protocol.delta = true;
+
+      const send = sinon.spy(rpc, 'send');
+
+      return session.send({ method: 'a', handle: 1, params: [], delta: false, xyz: 'xyz' })
+        .then(() => expect(send.lastCall.args[0].delta).to.equal(false));
     });
   });
 

@@ -26,7 +26,6 @@ class Qix {
       JSONPatch,
       definition,
     } = config;
-    const delta = protocol.delta;
     const apis = new ApiCache();
     const rpc = new RPC({ url, createSocket, Promise });
     const suspendResume = new SuspendResume({ rpc, Promise, apis });
@@ -34,7 +33,6 @@ class Qix {
       interceptors: responseInterceptors,
       JSONPatch,
       Promise,
-      delta,
       apis,
     });
     const session = new Session({
@@ -43,7 +41,7 @@ class Qix {
       suspendResume,
       intercept,
       apis,
-      delta,
+      protocol,
       definition,
     });
     return session;
