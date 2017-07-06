@@ -15,6 +15,7 @@ Table of contents
 - [Session events](#session-events)
 - [Session cache and websockets](#session-cache-and-websockets)
 - [Mixin `init(args)` changed](#mixin-initargs-changed)
+- [Trying to fetch non-existing objects](#trying-to-fetch-non-existing-objects)
 
 ---
 
@@ -234,5 +235,30 @@ const mixin = {
 This allows the developer to access all properties sent into [`enigma.create()`](./api.md#enigmacreateconfig).
 Keep in mind that to avoid potential configuration clashes in the future, use a namespace
 in the enigma.js configuration for your mixin.
+
+[Back to top](#migrating-from-version-1x)
+
+## Trying to fetch non-existing objects
+
+In enigma.js we never normalized the QIX Engine API in regards to fetching objects.
+
+In version 1, the promise would be resolved with a null value:
+
+```js
+doc.getObject('non-existing-id').then((api) => {
+  // api === null
+  if (api) {
+    // run your code using 'api'
+  }
+});
+```
+
+In version 2, it will be rejected:
+
+```js
+doc.getObject('non-existing-id').then((api) => {
+  // run your code using 'api' safely
+}).catch(err => console.log('Object did not exist'));
+```
 
 [Back to top](#migrating-from-version-1x)
