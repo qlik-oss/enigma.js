@@ -240,9 +240,8 @@ in the enigma.js configuration for your mixin.
 
 ## Trying to fetch non-existing objects
 
-In enigma.js we never normalized the QIX Engine API in regards to fetching objects.
-
-In version 1, the promise would be resolved with a null value:
+In enigma.js version 1 we never normalized the QIX Engine API in regards to fetching objects, which
+caused the promise to be resolved with a null value:
 
 ```js
 doc.getObject('non-existing-id').then((api) => {
