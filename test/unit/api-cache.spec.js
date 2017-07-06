@@ -115,21 +115,4 @@ describe('ApiCache', () => {
     expect(api2.emit).to.have.been.calledWith('closed');
     expect(apiCache.getAll().length).to.be.equal(0);
   });
-
-  describe('getObjectApi', () => {
-    it('should get an existing api', () => {
-      const typeDef = {
-        Foo: { In: [], Out: [] },
-      };
-      apiCache.add(-1, typeDef);
-      const api = apiCache.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', customType: 'Bar', delta: false });
-      expect(api).to.equal(typeDef);
-    });
-
-    it('should create and return an api', () => {
-      apiCache.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', customType: 'Bar' });
-      expect(definition.generate).to.be.calledWith('Foo');
-      expect(definition.create).to.be.calledWith(apiCache.session, -1, 'id_1234', true, 'Bar');
-    });
-  });
 });

@@ -1,6 +1,7 @@
 import Promise from 'bluebird';
 import Session from '../../src/session';
 import SuspendResume from '../../src/suspend-resume';
+import ApiCache from '../../src/api-cache';
 import RPCMock from '../mocks/rpc-mock';
 import SocketMock from '../mocks/socket-mock';
 
@@ -8,7 +9,8 @@ describe('Session', () => {
   let session;
   let sandbox;
   let suspendResume;
-  const apis = { getObjectApi: () => undefined };
+  let apis;
+
   const intercept = { execute: () => Promise.resolve() };
   const createSession = (throwError, rpc, suspendOnClose = false) => {
     const defaultRpc = new RPCMock({
@@ -16,6 +18,7 @@ describe('Session', () => {
       url: 'http://localhost:4848',
       createSocket: url => new SocketMock(url, throwError),
     });
+    apis = new ApiCache();
     suspendResume = new SuspendResume({ Promise, rpc: rpc || defaultRpc, apis });
     session = new Session({
       Promise,
@@ -24,6 +27,7 @@ describe('Session', () => {
       suspendOnClose,
       intercept,
       rpc: rpc || defaultRpc,
+      protocol: { delta: true },
     });
   };
 
@@ -77,6 +81,7 @@ describe('Session', () => {
     it('should call `addToPromiseChain` for `requestId`', () => {
       const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
       createSession(false, rpc);
+      session.intercept = { execute: promise => (promise) };
       sinon.stub(rpc, 'send', (data) => {
         data.id = 1;
         return Promise.resolve(data);
@@ -104,6 +109,45 @@ describe('Session', () => {
       session.send({ method: 'a', handle: 1, params: [], delta: true, xyz: 'xyz' });
       expect(send).to.have.been.calledWithExactly({ method: 'a', handle: 1, params: [], delta: true });
       expect(send).to.have.been.calledWithExactly(sinon.match(isValid));
+    });
+
+    it('should return response argument if qHandle/qType are undefined', () => {
+      const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+      createSession(false, rpc);
+      session.intercept = { execute: promise => (promise) };
+      sinon.stub(rpc, 'send', (data) => {
+        data.id = 1;
+        return Promise.resolve({ message: 'hello!' });
+      });
+
+      const request = {};
+      return session.send(request).then((response) => {
+        expect(response).to.deep.equal({ message: 'hello!' });
+      });
+    });
+
+    it('should add additional protocol parameters to request object', () => {
+      const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+      createSession(false, rpc);
+      session.intercept = { execute: promise => (promise) };
+      session.protocol.foo = 'bar';
+
+      const send = sinon.spy(rpc, 'send');
+
+      return session.send({ method: 'a', handle: 1, params: [], delta: true, xyz: 'xyz' })
+        .then(() => expect(send.lastCall.args[0].foo).to.equal('bar'));
+    });
+
+    it('should honor delta blacklist', () => {
+      const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+      createSession(false, rpc);
+      session.intercept = { execute: promise => (promise) };
+      session.protocol.delta = true;
+
+      const send = sinon.spy(rpc, 'send');
+
+      return session.send({ method: 'a', handle: 1, params: [], delta: false, xyz: 'xyz' })
+        .then(() => expect(send.lastCall.args[0].delta).to.equal(false));
     });
   });
 
@@ -227,6 +271,7 @@ describe('Session', () => {
 
     it('should set session as suspended when suspendOnClose is true', () => {
       createSession(false, null, true);
+      apis.add(-1, {});
       const spy = sinon.spy();
       session.on('suspended', spy);
       return session.open()
@@ -245,6 +290,26 @@ describe('Session', () => {
       return session.resume().then(() => {
         expect(spy.calledOnce).to.equal(true);
       });
+    });
+  });
+
+  describe('getObjectApi', () => {
+    it('should return an existing api', () => {
+      const cacheEntry = {
+        Foo: 'bar',
+      };
+      apis.add(-1, cacheEntry);
+      const api = session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', customType: 'Bar' });
+      expect(api).to.equal(cacheEntry);
+    });
+
+    it('should create and return an api', () => {
+      const create = sinon.stub();
+      const generate = sinon.stub().returns({ create });
+      session.definition = { generate };
+      session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', customType: 'Bar' });
+      expect(generate).to.be.calledWith('Foo');
+      expect(create).to.be.calledWith(session, -1, 'id_1234', true, 'Bar');
     });
   });
 });
