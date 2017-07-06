@@ -4,11 +4,14 @@
 *.log
 .DS_Store
 node_modules/
-dist/
 coverage/
 .idea/
 .vscode/
 typings/
-jsconfig.json
 jsdoc/
+jsconfig.json
 *.heapsnapshot
+
+# distribution files:
+/enigma.*
+/sense-utilities.*
