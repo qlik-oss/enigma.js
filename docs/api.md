@@ -42,12 +42,34 @@ This section describes the configuration object that is sent into [`enigma.creat
 | `schema`                | Object   | No         |           | Object containing the specification for the API to generate. Corresponds to a specific version of the QIX Engine API. |
 | `url`                   | String   | No         |           | String containing a proper websocket URL to QIX Engine.
 | `createSocket`          | Function | In browser |           | A function to use when instantiating the WebSocket, mandatory for Node.js. |
-| `mixins`                | Array    | Yes        | `[]`      | Mixins to extend/augment the QIX Engine API. See [Mixins section](#mixins) for more information how each entry in this array should look like. |
-| `interceptors`          | Array    | Yes        | `[]`      | Interceptors for augmenting responses before they are passed into mixins and end-users. See [Interceptors section](#interceptors) for more information how each entry in this array should look like. |
-| `suspendOnClose`        | Boolean  | Yes        | `false`   | Set to `true` if the session should be suspended instead of closed when the websocket is closed. |
 | `Promise`               | Promise  | Yes        | `Promise` | ES6-compatible Promise library. |
+| `suspendOnClose`        | Boolean  | Yes        | `false`   | Set to `true` if the session should be suspended instead of closed when | `mixins`                | Array    | Yes        | `[]`      | Mixins to extend/augment the QIX Engine API. See [Mixins section](#mixins) for more information how each entry in this array should look like. |
+| `interceptors`          | Array    | Yes        | `[]`      | Interceptors for augmenting responses before they are passed into mixins and end-users. See [Interceptors section](#interceptors) for more information how each entry in this array should look like. |
+the websocket is closed. |
 | `protocol`              | Object   | Yes        | `{}`      | An object containing additional JSON-RPC request parameters. |
 | `protocol.delta`        | Boolean  | Yes        | `true`    | Set to `false` to disable the use of the bandwidth-reducing delta protocol. |
+
+Example:
+
+```js
+const enigma = require('enigma.js');
+const WebSocket = require('ws');
+const bluebird = require('bluebird');
+const schema = require('enigma.js/schemas/12.20.0.json');
+const url = 'ws://localhost:9076/app';
+const config = {
+  schema,
+  url,
+  createSocket: url => new WebSocket(url),
+  Promise: bluebird,
+  suspendOnClose: true,
+  mixins: [{ types: ['Global'], init: () => console.log('Mixin ran') }],
+  protocol: { delta: false },
+};
+enigma.create(config).connect((global) => {
+  // global === QIX global interface
+});
+```
 
 [Back to top](#api-documentation)
 
