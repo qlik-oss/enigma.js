@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import WebSocket from 'ws';
 import Qix from '../../src/qix';
-import Schema from '../../schemas/qix/3.2/schema.json';
+import Schema from '../../schemas/12.20.0.json';
 
 function generateId() {
   return Math.floor(Math.random() * 10000).toString();
@@ -22,7 +22,6 @@ describe('QIX Suspend/Resume', () => {
       schema: Schema,
       url: buildUrl(),
       createSocket: url => new WebSocket(url),
-      listeners: {},
     };
   });
 
@@ -30,9 +29,8 @@ describe('QIX Suspend/Resume', () => {
     let handleBeforeResume;
     let propertiesBeforeResume;
 
-    return Qix.connect(config).then((qixService) => {
-      const global = qixService.global;
-      return global.createSessionApp().then(app =>
+    return Qix.create(config).open().then(global =>
+      global.createSessionApp().then(app =>
         app.createObject({ qInfo: { qId: 'OBJ01', qType: 'abc' } })
           .then(() => app.destroyObject('OBJ01'))
           .then(() => app.createObject({ qInfo: { qId: 'OBJ02', qType: 'abc' } }))
@@ -46,22 +44,23 @@ describe('QIX Suspend/Resume', () => {
               .then(() => obj.getProperties())
               .then(props => expect(propertiesBeforeResume).to.deep.equal(props))
               .then(() => global.session.close());
-          }),
-      );
-    });
+          })));
   });
 
   it('should suspend and resume by reopening the previous document', () => {
     config.url = buildUrl(0);
-    config.listeners.suspended = sinon.spy();
-    config.listeners.closed = sinon.spy();
+    const suspended = sinon.spy();
+    const closed = sinon.spy();
+    const session = Qix.create(config);
+    session.on('suspended', suspended);
+    session.on('closed', closed);
     const id = generateId();
     let global;
     let app;
 
-    return Qix.connect(config)
+    return session.open()
       // save ref to global API:
-      .then(qixService => (global = qixService.global))
+      .then(g => (global = g))
       // create our test app:
       .then(() => global.createApp(id))
       // open our test app:
@@ -71,7 +70,7 @@ describe('QIX Suspend/Resume', () => {
       // set a dummy property that we don't save:
       .then(() => app.setAppProperties({ test: true }))
       .then(() => global.session.suspend())
-      .then(() => expect(config.listeners.suspended.calledOnce).to.equal(true))
+      .then(() => expect(suspended.calledOnce).to.equal(true))
       .then(() => global.session.resume())
       .then(() => app.getAppProperties())
       // verify that we have reconnected to a fresh app, since we never saved
@@ -79,6 +78,6 @@ describe('QIX Suspend/Resume', () => {
       .then(props => expect(props.test).to.equal(undefined))
       .then(() => global.deleteApp(app.id))
       .then(() => global.session.close())
-      .then(() => expect(config.listeners.closed.calledOnce).to.equal(true));
+      .then(() => expect(closed.calledOnce).to.equal(true));
   });
 });

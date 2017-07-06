@@ -14,7 +14,10 @@
     "test:component:watch": "cross-env NODE_ENV=test aw-test-runner ./test/component -w --compilers js:babel-register",
     "test:integration": "cross-env NODE_ENV=test aw-test-runner ./test/integration --compilers js:babel-register --timeout 5000",
     "lint": "eslint .",
-    "jsdoc": "rimraf ./jsdoc && jsdoc ./src -c ./jsdoc-config.json -r -d ./jsdoc"
+    "jsdoc": "rimraf ./jsdoc && jsdoc ./src -c ./jsdoc-config.json -r -d ./jsdoc",
+    "preversion": "npm run test && npm run test:integration",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
@@ -37,10 +40,10 @@
     "cross-env": "^5.0.1",
     "eslint": "3.19.0",
     "eslint-config-airbnb-base": "11.2.0",
-    "eslint-plugin-import": "2.6.1",
+    "eslint-plugin-import": "2.7.0",
     "extend": "^3.0.0",
     "heapdump": "^0.3.9",
-    "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
+    "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git#a097e2f2997cc6e8b86a10a60efce7f752c629e4",
     "node-event-emitter": "0.0.1",
     "rimraf": "^2.5.1",
     "rollup": "^0.43.0",

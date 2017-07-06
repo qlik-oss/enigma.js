@@ -1,5 +1,5 @@
 import Promise from 'bluebird';
-import schema from '../../schemas/qix/3.2/schema.json';
+import schema from '../../schemas/12.20.0.json';
 import Qix from '../../src/qix';
 import SocketMock from '../mocks/socket-mock';
 
@@ -20,14 +20,8 @@ describe('QIX Doc', () => {
 
     config.Promise = Promise;
     config.schema = schema;
-    config.session = {
-      route: 'app/engineData',
-      host: 'mocked',
-      port: 1337,
-    };
-    config.createSocket = url =>
-    new SocketMock(url)
-    ;
+    config.url = 'ws://mocked:1337/app/engineData';
+    config.createSocket = url => new SocketMock(url);
 
     config.mixins = [{
       type: 'Global',
@@ -40,10 +34,9 @@ describe('QIX Doc', () => {
       },
       config: {},
     }];
-    config.appId = 'my-app';
 
-    return Qix.connect(config).then((o) => {
-      qixDoc = o.app;
+    return Qix.create(config).open().then(global => global.openDoc('my-app')).then((doc) => {
+      qixDoc = doc;
     });
   });
 
