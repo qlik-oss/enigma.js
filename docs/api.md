@@ -146,9 +146,10 @@ the ones it was unable to restore, the `closed` event will be triggered.
 `onlyIfAttached` can be used to only allow resuming if the QIX Engine session
 was reattached properly.
 
-Eventually resolved when the websocket, document, and generated APIs has been restored,
-rejected when it fails any of those steps, or when `onlyIfAttached` is `true` and a
-new QIX Engine session was created.
+Eventually resolved when the websocket (and potentially the previously opened
+document, and generated APIs) has been restored, rejected when it fails any
+of those steps, or when `onlyIfAttached` is `true` and a new QIX Engine session
+was created.
 
 Example:
 

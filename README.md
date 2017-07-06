@@ -9,11 +9,11 @@ performs CRUD (create, read, update and delete) operations on Qlik documents.
 
 ---
 
-* [Getting started](#getting-started)
-* [Documentation](./docs/README.md#overview)
-* [Documentation for v1.x](https://github.com/qlik-oss/enigma.js/tree/v1.x/docs#overview)
-* [Migrating from v1.x](./docs/migrate-v1.md)
-* [Contributing](./.github/CONTRIBUTING.md)
+- [Getting started](#getting-started)
+- [Documentation](./docs/README.md#overview)
+- [Documentation for v1.x](https://github.com/qlik-oss/enigma.js/tree/v1.x/docs#overview)
+- [Migrating from v1.x](./docs/migrate-v1.md#migrating-from-version-1x)
+- [Contributing](./.github/CONTRIBUTING.md#contributing-to-enigmajs)
 
 ---
 
