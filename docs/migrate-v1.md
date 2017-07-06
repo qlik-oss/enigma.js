@@ -1,8 +1,22 @@
 # Migrating from version 1.x
 
 This document outlines how to update your application from enigma.js version 1.x to version 2.0.
-The breaking changes are limited to configuration, fetching sessions, and package file structure.
+The breaking changes are mainly limited to configuration, fetching sessions, and package file structure.
 All generated APIs from enigma.js should work just like in enigma.js version 1.
+
+---
+
+Table of contents
+
+- [Service concept dropped](#service-concept-dropped)
+- [Schema directory flattened](#schema-directory-flattened)
+- [Configuration overhaul](#configuration-overhaul)
+- [Entry API changed](#entry-api-changed)
+- [Session cache and websockets](#session-cache-and-websockets)
+- [Mixin `init(args)` changed](#mixin-initargs-changed)
+
+
+---
 
 ## Service concept dropped
 
@@ -15,7 +29,7 @@ The enigma.js REST service is no more, and we recommend using [swagger-js](https
 to accomplish the same by using a library that is streamlined for generating and providing
 APIs based on OpenAPI/swagger definitions.
 
-## Schemas
+## Schema directory flattened
 
 The `enigma.js/schemas` directory has been flattened. If you did this in enigma.js
 version 1:
@@ -34,7 +48,7 @@ Read more:
 
 * [All available schemas](../schemas)
 
-## Configuration
+## Configuration overhaul
 
 The configuration has been revamped a lot in enigma.js version 2, to make it
 easier to understand and predict. All configuration properties in `config.session`
@@ -46,7 +60,7 @@ Read more:
 * [enigma.js configuration](./api.md#configuration)
 * [SenseUtilities configuration](./api.md#configuration-1)
 
-## Entry API
+## Entry API changed
 
 Due to the service concept being dropped, the entry API for enigma.js has changed in version 2.
 
@@ -112,7 +126,7 @@ Read more:
 * [`enigma.create(config)`](./api.md#enigmacreateconfig)
 * [`SenseUtilities.buildUrl(config)`](./api.md#senseutilitiesbuildurlconfig)
 
-### Session cache and websockets
+## Session cache and websockets
 
 In enigma.js version 1, we tried to cache enigma.js sessions by storing them
 using the generated URL as cache key. This caused tricky and hard-to-find bugs in some
@@ -139,3 +153,32 @@ getSession('ws://localhost:9076/app/123').then((global) => {
   // global === QIX global interface
 });
 ```
+
+## Mixin `init(args)` changed
+
+The mixin API has been changed slightly to grant the mixin developer access
+to the enigma.js configuration.
+
+If your mixin looked like this in enigma.js version 1:
+
+```js
+const mixin = {
+  init: function (args) {
+    this.Promise = args.Promise;
+  }
+};
+```
+
+it would look like this in enigma.js version 2:
+
+```js
+const mixin = {
+  init: function (args) {
+    this.Promise = args.config.Promise;
+  }
+};
+```
+
+This allows the developer to access all properties sent into [`enigma.create()`](./api.md#enigmacreateconfig).
+Keep in mind that to avoid potential configuration clashes in the future, use a namespace
+in the enigma.js configuration for your mixin.
