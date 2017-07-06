@@ -30,9 +30,11 @@ enigma.js makes heavy use of promises because we believe that it gives you sever
 * error handling can be deferred more easily,
 * and is compatible with emerging standards (async/await).
 
-All generated APIs from enigma.js returns a promise.
+All generated API methods returns a promise.
 
-Read more: [Promises on MDN(https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+Read more:
+
+* [Promises on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
 
 [Back to top](#high-level-concepts)
 
@@ -42,15 +44,20 @@ enigma.js does not handle authentication due to the simple reason that different
 handle it differently. We do however provide a couple of examples for the more common use cases which you can
 find on the link below.
 
-Read more: [Authentication examples](../examples/authentication)
+Read more:
+
+* [Authentication examples](../examples/authentication)
   
 [Back to top](#high-level-concepts)
 
 ## JSON-RPC protocol
 
-TODO:
+QIX Engine uses JSON-RPC over websockets for communication. In short, it means the enigma.js gives you an API that will be translated into a JSON-RPC request object, and handle the JSON-RPC response sent back from QIX Engine, eventually back to you in a predictable format. Please see the links below for more details about the protocol.
 
-* Explain briefly how it works, and perhaps links into Qlik help for further reading.
+Read more:
+
+* [Qlik Engine API on Qlik Sense Help](http://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/introducing-engine-API.htm)
+* [JSON-RPC specification](http://www.jsonrpc.org/specification)
 
 [Back to top](#high-level-concepts)
 
