@@ -48,13 +48,13 @@ const createConfig = (overrides) => {
 
 const enigma = createConfig({
   entry: 'src/qix.js',
-  dest: 'dist/enigma.js',
+  dest: 'enigma.js',
   moduleName: 'enigma',
 });
 
 const senseUtilities = createConfig({
   entry: 'src/sense-utilities.js',
-  dest: 'dist/sense-utilities.js',
+  dest: 'sense-utilities.js',
   moduleName: 'senseUtilities',
 });
 
