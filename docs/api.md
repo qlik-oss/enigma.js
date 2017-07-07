@@ -206,6 +206,12 @@ session.on('opened', () => console.log('We are connected'));
 Handle closed state. This event is triggered when the underlying websocket is closed
 and [`config.suspendOnClose`](#configuration) is `false`.
 
+Example:
+
+```js
+session.on('closed', () => console.log('The session was closed'));
+```
+
 [Back to top](#api-documentation)
 
 ### Event: `suspended`
@@ -233,6 +239,12 @@ Possible values: `network`, `manual`.
 Handle resumed state. This event is triggered when the session was properly resumed.
 It is useful in scenarios where you for example can close blocking modal dialogs
 and allow the user to interact with your application again.
+
+Example:
+
+```js
+session.on('resumed', () => console.log('The session was resumed'));
+```
 
 [Back to top](#api-documentation)
 
