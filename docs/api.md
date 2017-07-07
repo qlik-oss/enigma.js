@@ -1,6 +1,6 @@
 # API documentation
 
-[Back to overview](./README.md#overview)
+[Back to overview](../README.md#readme)
 
 ---
 
@@ -398,4 +398,4 @@ const session = enigma.create({ schema, url });
 
 ---
 
-[Back to overview](./README.md#overview)
+[Back to overview](../README.md#readme)

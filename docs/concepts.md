@@ -1,6 +1,6 @@
 # High-level concepts
 
-[Back to overview](./README.md#overview)
+[Back to overview](../README.md#readme)
 
 ---
 
@@ -162,4 +162,4 @@ Read more:
 
 ---
 
-[Back to overview](./README.md#overview)
+[Back to overview](../README.md#readme)

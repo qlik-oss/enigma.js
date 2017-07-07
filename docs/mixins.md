@@ -1,8 +1,6 @@
 # Mixins
 
-[Back to overview](./README.md#overview)
-
-[Back to API documentation](./api.md#api-documentation)
+[Back to API documentation](./api.md#mixins)
 
 ---
 
@@ -99,7 +97,5 @@ enigma
 ```
 
 ---
-
-[Back to overview](./README.md#overview)
 
 [Back to API documentation](./api.md#api-documentation)
