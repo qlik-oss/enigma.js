@@ -3,6 +3,25 @@ import EventEmitter from './event-emitter';
 const RPC_CLOSE_NORMAL = 1000;
 const RPC_CLOSE_MANUAL_SUSPEND = 4000;
 
+const NOTIFICATION = 'notification';
+const NOTIFICATION_PREFIX = `${NOTIFICATION}:`;
+const TRAFFIC = 'traffic';
+const TRAFFIC_PREFIX = `${TRAFFIC}:`;
+
+const Events = {
+  OPENED: 'opened',
+  CLOSED: 'closed',
+  SUSPENDED: 'suspended',
+  HANDLE_CHANGED: 'handle-changed',
+  HANDLE_CLOSED: 'handle-closed',
+  SOCKET_ERROR: 'socket-error',
+  MESSAGE: 'message',
+  NOTIFICATION,
+  NOTIFICATION_STAR: `${NOTIFICATION_PREFIX}*`,
+  TRAFFIC,
+  TRAFFIC_STAR: `${TRAFFIC_PREFIX}*`,
+};
+
 class Session {
   /**
   * Creates a new Session instance.
@@ -23,14 +42,14 @@ class Session {
     const session = this;
     Object.assign(session, options);
     EventEmitter.mixin(session);
-    session.rpc.on('socket-error', session.onError.bind(session));
-    session.rpc.on('closed', session.onClosed.bind(session));
-    session.rpc.on('message', session.onMessage.bind(session));
-    session.rpc.on('notification', session.onNotification.bind(session));
-    session.rpc.on('traffic', session.onTraffic.bind(session));
-    session.on('handle-changed', handle => session.apis.onHandleChanged(handle));
-    session.on('handle-closed', handle => session.apis.onHandleClosed(handle));
-    session.on('closed', () => session.apis.onSessionClosed());
+    session.rpc.on(Events.SOCKET_ERROR, session.onError.bind(session));
+    session.rpc.on(Events.CLOSED, session.onClosed.bind(session));
+    session.rpc.on(Events.MESSAGE, session.onMessage.bind(session));
+    session.rpc.on(Events.NOTIFICATION, session.onNotification.bind(session));
+    session.rpc.on(Events.TRAFFIC, session.onTraffic.bind(session));
+    session.on(Events.HANDLE_CHANGED, handle => session.apis.onHandleChanged(handle));
+    session.on(Events.HANDLE_CLOSED, handle => session.apis.onHandleClosed(handle));
+    session.on(Events.CLOSED, () => session.apis.onSessionClosed());
   }
 
   /**
@@ -59,9 +78,9 @@ class Session {
       return;
     }
     if (this.suspendOnClose) {
-      this.suspendResume.suspend().then(() => this.emit('suspended', { initiator: 'network' }));
+      this.suspendResume.suspend().then(() => this.emit(Events.SUSPENDED, { initiator: 'network' }));
     } else {
-      this.emit('closed', evt);
+      this.emit(Events.CLOSED, evt);
     }
   }
 
@@ -76,10 +95,10 @@ class Session {
       return;
     }
     if (response.change) {
-      response.change.forEach(handle => this.emit('handle-changed', handle));
+      response.change.forEach(handle => this.emit(Events.HANDLE_CHANGED, handle));
     }
     if (response.close) {
-      response.close.forEach(handle => this.emit('handle-closed', handle));
+      response.close.forEach(handle => this.emit(Events.HANDLE_CLOSED, handle));
     }
   }
 
@@ -90,8 +109,8 @@ class Session {
   * @param {Object} response The JSONRPC notification.
   */
   onNotification(response) {
-    this.emit('notification:*', response.method, response.params);
-    this.emit(`notification:${response.method}`, response.params);
+    this.emit(Events.NOTIFICATION_STAR, response.method, response.params);
+    this.emit(`${NOTIFICATION_PREFIX}${response.method}`, response.params);
   }
 
   /**
@@ -103,8 +122,8 @@ class Session {
   * @param {Object} data JSONRPC request/response/WebSocket message.
   */
   onTraffic(dir, data) {
-    this.emit('traffic:*', dir, data);
-    this.emit(`traffic:${dir}`, data);
+    this.emit(Events.TRAFFIC_STAR, dir, data);
+    this.emit(`${TRAFFIC_PREFIX}${dir}`, data);
   }
 
   /**
@@ -158,7 +177,7 @@ class Session {
       this.globalPromise = this.rpc.open()
         .then(() => this.getObjectApi(args))
         .then((global) => {
-          this.emit('opened');
+          this.emit(Events.OPENED);
           return global;
         });
     }
@@ -200,7 +219,7 @@ class Session {
   */
   suspend() {
     return this.suspendResume.suspend()
-      .then(() => this.emit('suspended', { initiator: 'manual' }));
+      .then(() => this.emit(Events.SUSPENDED, { initiator: 'manual' }));
   }
 
   /**
@@ -222,7 +241,7 @@ class Session {
   */
   close() {
     this.globalPromise = undefined;
-    return this.rpc.close().then(evt => this.emit('closed', evt));
+    return this.rpc.close().then(evt => this.emit(Events.CLOSED, evt));
   }
 
   /**
