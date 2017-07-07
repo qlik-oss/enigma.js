@@ -38,6 +38,4 @@ Table of contents
 
 ---
 
-[Back to top](#runnable-examples)
-
 [Back to overview](../README.md#readme)
