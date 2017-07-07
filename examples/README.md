@@ -10,6 +10,7 @@ All example categories should have a `README.md` file containing:
 * High-level explanation (if needed)
 * Prerequisites (if more than stated above)
 * Instructions how to run (may be covered in Prerequisites)
+* Link to: `[Back to examples](/examples/README.md#runnable-examples)`
 
 ---
 
