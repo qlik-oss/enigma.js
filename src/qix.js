@@ -70,7 +70,7 @@ class Qix {
       throw new Error('You need to supply a configuration.');
     }
 
-    if (!config.Promise && typeof Promise === 'undefined') {
+    if (!config.Promise && typeof Promise === 'undefined') { // eslint-disable-line no-restricted-globals
       throw new Error('Your environment has no Promise implementation. You must provide a Promise implementation in the config.');
     }
 
@@ -84,7 +84,7 @@ class Qix {
 
     config.protocol = config.protocol || {};
     config.protocol.delta = config.protocol.delta || true;
-    config.Promise = config.Promise || Promise;
+    config.Promise = config.Promise || Promise; // eslint-disable-line no-restricted-globals
     config.mixins = config.mixins || [];
     config.JSONPatch = config.JSONPatch || Patch;
     config.definition = config.definition || new Schema(config);
