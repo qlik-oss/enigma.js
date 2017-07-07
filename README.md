@@ -11,8 +11,8 @@ performs CRUD (create, read, update and delete) operations on Qlik documents.
 
 - [Getting started](#getting-started)
 - [High-level concepts](./docs/concepts.md#high-level-concepts)
-- [API Documentation](./docs/api.md#api-documentation)
-- [API Documentation for v1.x](https://github.com/qlik-oss/enigma.js/tree/v1.x/docs#overview)
+- [API documentation](./docs/api.md#api-documentation)
+- [API documentation for v1.x](https://github.com/qlik-oss/enigma.js/tree/v1.x/docs#overview)
 - [Migrating from v1.x](./docs/migrate-v1.md#migrating-from-version-1x)
 - [Contributing](./.github/CONTRIBUTING.md#contributing-to-enigmajs)
 - [Runnable examples](./examples/README.md#runnable-examples) - WIP, most examples does not exist yet
