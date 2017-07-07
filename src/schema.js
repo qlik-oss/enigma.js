@@ -33,9 +33,7 @@ function toCamelCase(symbol) {
  */
 function namedParamFacade(base, defaults, ...params) {
   if (params.length === 1 && typeof params[0] === 'object') {
-    const valid = Object.keys(params[0]).reduce((result, key) =>
-      result && hasOwnProperty.call(defaults, key), true);
-
+    const valid = Object.keys(params[0]).every(key => hasOwnProperty.call(defaults, key));
     if (valid) {
       params = Object.keys(defaults).map(key => params[0][key] || defaults[key]);
     }
