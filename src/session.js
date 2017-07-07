@@ -28,8 +28,8 @@ class Session {
     session.rpc.on('message', session.onMessage.bind(session));
     session.rpc.on('notification', session.onNotification.bind(session));
     session.rpc.on('traffic', session.onTraffic.bind(session));
-    session.on('handle-changed', handle => session.apis.onHandleChanged(handle));
-    session.on('handle-closed', handle => session.apis.onHandleClosed(handle));
+    session.on('handle:changed', handle => session.apis.onHandleChanged(handle));
+    session.on('handle:closed', handle => session.apis.onHandleClosed(handle));
     session.on('closed', () => session.apis.onSessionClosed());
   }
 
@@ -67,8 +67,8 @@ class Session {
 
   /**
   * Event handler for the RPC message event.
-  * @emits handle-changed
-  * @emits handle-closed
+  * @emits handle:changed
+  * @emits handle:closed
   * @param {Object} response JSONRPC response.
   */
   onMessage(response) {
@@ -76,10 +76,10 @@ class Session {
       return;
     }
     if (response.change) {
-      response.change.forEach(handle => this.emit('handle-changed', handle));
+      response.change.forEach(handle => this.emit('handle:changed', handle));
     }
     if (response.close) {
-      response.close.forEach(handle => this.emit('handle-closed', handle));
+      response.close.forEach(handle => this.emit('handle:closed', handle));
     }
   }
 
