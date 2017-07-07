@@ -52,10 +52,10 @@ This section describes the configuration object that is sent into [`enigma.creat
 Example:
 
 ```js
-const enigma = require('./enigma');
+const enigma = require('enigma.js');
 const WebSocket = require('ws');
 const bluebird = require('bluebird');
-const schema = require('./schemas/12.20.0.json');
+const schema = require('enigma.js/schemas/12.20.0.json');
 
 const config = {
   schema,
