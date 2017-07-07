@@ -362,9 +362,9 @@ Example:
 
 ```js
 global.openDoc('my-document.qvf').then((doc) => {
-  doc.createObject({ qInfo: { qType: 'my-object' } }).then(api => /* do something with api */});
-  doc.getObject('object-id').then(api => /* do something with api */});
-  doc.getBookmark('bookmark-id').then(api => /* do something with api */});
+  doc.createObject({ qInfo: { qType: 'my-object' } }).then(api => { /* do something with api */ });
+  doc.getObject('object-id').then(api => { /* do something with api */ });
+  doc.getBookmark('bookmark-id').then(api => { /* do something with api */ });
 });
 ```
 

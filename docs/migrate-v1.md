@@ -40,13 +40,13 @@ The `enigma.js/schemas` directory has been flattened. If you did this in enigma.
 version 1:
 
 ```js
-const schema = require('enigma.js/schemas/qix/4.2.0/schema.json');
+const schema = require('enigma.js/schemas/qix/3.2.0/schema.json');
 ```
 
 ...you would do this in enigma.js version 2:
 
 ```js
-const schema = require('enigma.js/schemas/4.2.0.json');
+const schema = require('enigma.js/schemas/3.2.0.json');
 ```
 
 Read more:
@@ -77,7 +77,7 @@ If you used enigma.js like this in version 1:
 
 ```js
 const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/4.2.0/schema.json');
+const schema = require('enigma.js/schemas/3.2.0/schema.json');
 const config = {
   host: 'localhost',
   port: 9076,
@@ -94,7 +94,7 @@ It would look like this in enigma.js version 2:
 ```js
 const enigma = require('enigma.js');
 // schemas is flattened:
-const schema = require('enigma.js/schemas/4.2.0.json');
+const schema = require('enigma.js/schemas/3.2.0.json');
 // you are now in full control of the websocket URL:
 const config = { url: 'ws://localhost:9076/app/123' };
 enigma.create(config).open().then((global) => {
@@ -112,19 +112,14 @@ const enigma = require('enigma.js');
 // sense-utilities is a new separate module for generating Sense-compatible URLs:
 const SenseUtilities = require('enigma.js/sense-utilities');
 // schemas is flattened:
-const schema = require('enigma.js/schemas/4.2.0.json');
+const schema = require('enigma.js/schemas/3.2.0.json');
+// configuration for sense-utilities module:
+const urlConfig = { host: 'localhost', port: 9076, appId: '123', secure: false };
 // you are now in full control of the websocket URL:
-const config = {
-  url: SenseUtilities.buildUrl({
-    host: 'localhost',
-    port: 9076,
-    appId: '123',
-    secure: false,
-  }),
-};
+const config = { url: SenseUtilities.buildUrl(urlConfig) };
 enigma.create(config).open().then((global) => {
   // global === QIX global interface
-  global.openDoc('123').then((doc) => {
+  global.openDoc(config.appId).then((doc) => {
     // doc === QIX doc interface
   });
 });

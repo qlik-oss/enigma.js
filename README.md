@@ -32,7 +32,7 @@ And know of at least some these web technologies:
 
 * JavaScript
 * Promises
-* Web sockets
+* Websockets
 
 ### Usage
 

@@ -60,6 +60,20 @@ An important note is that enigma.js normalizes the QIX method names into camelCa
 while QIX Engine uses PascalCasing. `GetObject` in QIX Engine would be `getObject`
 in enigma.js.
 
+enigma.js allows you to invoke QIX methods by either using what is called 'position',
+which is an array of parameters, or by name, using an object with key/value pairs.
+
+Example of using the different parameters:
+
+```js
+doc.getObject('object-id');
+doc.getObject({ qId: 'object-id' });
+```
+
+Read more:
+
+* [Request object on Qlik Sense Help](http://help.qlik.com/en-US/sense-developer/3.2/Subsystems/EngineAPI/Content/introducing-engine-API.htm)
+
 [Back to top](#high-level-concepts)
 
 ### QIX classes, or structs
