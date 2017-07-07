@@ -172,8 +172,24 @@ session.open().then((global) => {
 
 In addition to this, a couple of events were removed:
 
-* `session-created`, you may instead use the [`opened`](./api.md#event-opened) event.
-* `qix-error`, you may instead look for `data.error` using the [`traffic:received`](./api.md#event-trafficreceived) event.
+### `session-created`
+
+You may instead use the [`opened`](./api.md#event-opened) event.
+
+
+### `qix-error`
+
+You may instead look for `data.error` using the [`traffic:received`](./api.md#event-trafficreceived) event.
+
+Example:
+
+```js
+session.on('traffic:received', (data) => {
+  if (data.error) {
+    // qix error occurred
+  }
+});
+```
 
 [Back to top](#migrating-from-version-1x)
 
