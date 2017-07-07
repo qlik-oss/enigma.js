@@ -280,4 +280,6 @@ doc.getObject('non-existing-id').then((api) => {
 
 [Back to top](#migrating-from-version-1x)
 
+---
+
 [Back to overview](../README.md#readme)
