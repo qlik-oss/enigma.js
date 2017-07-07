@@ -52,22 +52,24 @@ This section describes the configuration object that is sent into [`enigma.creat
 Example:
 
 ```js
-const enigma = require('enigma.js');
+const enigma = require('./enigma');
 const WebSocket = require('ws');
 const bluebird = require('bluebird');
-const schema = require('enigma.js/schemas/12.20.0.json');
-const url = 'ws://localhost:9076/app';
+const schema = require('./schemas/12.20.0.json');
+
 const config = {
   schema,
-  url,
+  url: 'ws://localhost:4848/app',
   createSocket: url => new WebSocket(url),
   Promise: bluebird,
   suspendOnClose: true,
   mixins: [{ types: ['Global'], init: () => console.log('Mixin ran') }],
   protocol: { delta: false },
 };
-enigma.create(config).connect((global) => {
+
+enigma.create(config).open().then((global) => {
   // global === QIX global interface
+  process.exit(0);
 });
 ```
 
