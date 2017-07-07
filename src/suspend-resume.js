@@ -123,7 +123,7 @@ class SuspendResume {
         tasks.push(request);
       }
     });
-    return Promise.all(tasks);
+    return this.Promise.all(tasks);
   }
 
   /**

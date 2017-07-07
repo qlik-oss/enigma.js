@@ -1,5 +1,6 @@
 /* eslint no-console:0, import/no-unresolved:0 */
 const WebSocket = require('ws');
+const Promise = require('bluebird');
 const enigma = require('../../enigma');
 const schema = require('../../schemas/12.20.0.json');
 
