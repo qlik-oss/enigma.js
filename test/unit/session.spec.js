@@ -193,13 +193,13 @@ describe('Session', () => {
     session.removeAllListeners();
 
     const changeSpy = sinon.spy();
-    session.on('handle-changed', changeSpy);
+    session.on('handle:changed', changeSpy);
 
     rpc.emit('message', { change: [1, 2, 3] });
     expect(changeSpy.calledThrice).to.equal(true);
 
     const closeSpy = sinon.spy();
-    session.on('handle-closed', closeSpy);
+    session.on('handle:closed', closeSpy);
 
     rpc.emit('message', { close: [1, 2, 3] });
     expect(closeSpy.calledThrice).to.equal(true);
@@ -260,8 +260,8 @@ describe('Session', () => {
       session.on('socket-error', spy);
       session.on('suspended', spy);
       session.on('closed', spy);
-      session.on('handle-changed', spy);
-      session.on('handle-closed', spy);
+      session.on('handle:changed', spy);
+      session.on('handle:closed', spy);
       session.onError();
       session.onClosed();
       session.onMessage();
