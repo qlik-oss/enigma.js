@@ -1,5 +1,7 @@
 #!/bin/sh
 
+npm install heapdump
+
 echo "Cleaning up old heapdumps..."
 rm ./*.heapsnapshot
 

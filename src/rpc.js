@@ -55,7 +55,7 @@ class RPC {
     let timer;
     let notificationResolve;
     let notificationReceived = false;
-    const notificationPromise = new Promise((resolve) => { notificationResolve = resolve; });
+    const notificationPromise = new this.Promise((resolve) => { notificationResolve = resolve; });
 
     const waitForNotification = () => {
       if (!notificationReceived) {
