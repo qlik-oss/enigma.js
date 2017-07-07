@@ -172,14 +172,13 @@ session.open().then((global) => {
 });
 ```
 
-In addition to this, a couple of events were removed:
+In addition to this, a few events were removed or renamed:
 
 ### `session-created`
 
 You may instead use the [`opened`](./api.md#event-opened) event.
 
-
-### `qix-error`
+### `qix-error` (never documented)
 
 You may instead look for `data.error` using the [`traffic:received`](./api.md#event-trafficreceived) event.
 
@@ -192,6 +191,14 @@ session.on('traffic:received', (data) => {
   }
 });
 ```
+
+### `handle-changed` (never documented)
+
+You may instead use the (now public) [`handle:changed`](./api.md#event-handlechanged) event.
+
+### `handle-closed` (never documented)
+
+You may instead use the (now public) [`handle:closed`](./api.md#event-handleclosed) event.
 
 [Back to top](#migrating-from-version-1x)
 

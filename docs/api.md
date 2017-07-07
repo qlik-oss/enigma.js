@@ -19,6 +19,8 @@ Table of contents
   - [Event: `closed`](#event-closed)
   - [Event: `suspended`](#event-suspended)
   - [Event: `resumed`](#event-resumed)
+  - [Event: `handle:changed`](#event-handlechanged)
+  - [Event: `handle:closed`](#event-handleclosed)
   - [Event: `notification:<name>`](#event-notificationname)
   - [Event: `notification:*`](#event-notification)
   - [Event: `traffic:sent`](#event-trafficsent)
@@ -231,6 +233,38 @@ Possible values: `network`, `manual`.
 Handle resumed state. This event is triggered when the session was properly resumed.
 It is useful in scenarios where you for example can close blocking modal dialogs
 and allow the user to interact with your application again.
+
+[Back to top](#api-documentation)
+
+### Event: `handle:changed`
+
+This event is triggered when QIX Engine notifies us about a QIX handle being changed.
+This means that we may fetch new information from the object (layout, properties, etc.).
+
+Mainly useful in debugging purposes, use the generated API's [`changed`](#event-changed)
+event instead.
+
+Example:
+
+```js
+session.on('handle:changed', (handle) => console.log(`Handle ${handle} was changed`));
+```
+
+[Back to top](#api-documentation)
+
+### Event: `handle:closed`
+
+This event is triggered when QIX Engine notifies us about a QIX handle being closed.
+This means that we may clean up any caches on our side.
+
+Mainly useful in debugging purposes, use the generated API's [`closed`](#event-closed)
+event instead.
+
+Example:
+
+```js
+session.on('handle:closed', (handle) => console.log(`Handle ${handle} was closed`));
+```
 
 [Back to top](#api-documentation)
 
