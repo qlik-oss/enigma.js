@@ -257,7 +257,7 @@ session.on('handle:changed', (handle) => console.log(`Handle ${handle} was chang
 This event is triggered when QIX Engine notifies us about a QIX handle being closed.
 This means that we may clean up any caches on our side.
 
-Mainly useful in debugging purposes, use the generated API's [`closed`](#event-closed)
+Mainly useful in debugging purposes, use the generated API's [`closed`](#event-closed-1)
 event instead.
 
 Example:
