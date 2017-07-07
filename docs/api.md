@@ -285,13 +285,15 @@ session.on('handle:closed', (handle) => console.log(`Handle ${handle} was closed
 Handle a specific JSON-RPC notification event. These events depend on the product
 you use QIX Engine from.
 
-TODO: Insert links to Qlik help.
-
 Example:
 
 ```js
 session.on('notification:OnConnected', (data) => console.log(data));
 ``` 
+
+Read more:
+
+* [Sense Proxy JSON-RPC notifications on Qlik Sense Help](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/ProxyServiceAPI/Content/ProxyServiceAPI/ProxyServiceAPI-Msgs-Proxy-Clients.htm)
 
 [Back to top](#api-documentation)
 
