@@ -11,7 +11,7 @@ describe('Session', () => {
   let suspendResume;
   let apis;
 
-  const intercept = { execute: promise => (promise) };
+  const intercept = { execute: promise => promise };
   const createSession = (throwError, rpc, suspendOnClose = false) => {
     const defaultRpc = new RPCMock({
       Promise,
@@ -74,20 +74,16 @@ describe('Session', () => {
       expect(spy).to.have.been.calledWithExactly({ prop: 'foo' });
     });
 
-    it('should emit the opened event', () => {
-      const callback = sinon.spy();
-      session.on('opened', callback);
-      session.getObjectApi = () => {};
-      return session.open().then(() => expect(callback.calledOnce).to.equal(true));
-    });
-
-    it('should emit the closed event', () => {
-      const callback = sinon.spy();
-      session.on('closed', callback);
+    it('should emit the opened and closed events', () => {
+      const openedCallback = sinon.spy();
+      const closedCallback = sinon.spy();
+      session.on('opened', openedCallback);
+      session.on('closed', closedCallback);
       session.getObjectApi = () => {};
       return session.open()
+        .then(() => expect(openedCallback.calledOnce).to.equal(true))
         .then(() => session.close())
-        .then(() => expect(callback.calledOnce).to.equal(true));
+        .then(() => expect(closedCallback.calledOnce).to.equal(true));
     });
   });
 
