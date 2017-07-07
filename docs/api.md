@@ -43,9 +43,9 @@ This section describes the configuration object that is sent into [`enigma.creat
 | `url`                   | String   | No         |           | String containing a proper websocket URL to QIX Engine.
 | `createSocket`          | Function | In browser |           | A function to use when instantiating the WebSocket, mandatory for Node.js. |
 | `Promise`               | Promise  | Yes        | `Promise` | ES6-compatible Promise library. |
-| `suspendOnClose`        | Boolean  | Yes        | `false`   | Set to `true` if the session should be suspended instead of closed when | `mixins`                | Array    | Yes        | `[]`      | Mixins to extend/augment the QIX Engine API. See [Mixins section](#mixins) for more information how each entry in this array should look like. |
+| `suspendOnClose`        | Boolean  | Yes        | `false`   | Set to `true` if the session should be suspended instead of closed when the websocket is closed. |
+| `mixins`                | Array    | Yes        | `[]`      | Mixins to extend/augment the QIX Engine API. See [Mixins section](#mixins) for more information how each entry in this array should look like. |
 | `interceptors`          | Array    | Yes        | `[]`      | Interceptors for augmenting responses before they are passed into mixins and end-users. See [Interceptors section](#interceptors) for more information how each entry in this array should look like. |
-the websocket is closed. |
 | `protocol`              | Object   | Yes        | `{}`      | An object containing additional JSON-RPC request parameters. |
 | `protocol.delta`        | Boolean  | Yes        | `true`    | Set to `false` to disable the use of the bandwidth-reducing delta protocol. |
 
