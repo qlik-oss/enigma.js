@@ -27,6 +27,11 @@ Table of contents
   - [Event: `traffic:received`](#event-trafficreceived)
   - [Event: `traffic:*`](#event-traffic)
 - [Generated API](#generated-api)
+  - [`api.id`](#apiid)
+  - [`api.type`](#apitype)
+  - [`api.customType`](#apicustomtype)
+  - [`api.session`](#apisession)
+  - [`api.handle`](#apihandle)
   - [Event: `changed`](#event-changed)
   - [Event: `closed`](#event-closed)
 - [Sense utilities API](#sense-utilities-api)
@@ -253,14 +258,19 @@ session.on('resumed', () => console.log('The session was resumed'));
 This event is triggered when QIX Engine notifies us about a QIX handle being changed.
 This means that we may fetch new information from the object (layout, properties, etc.).
 
-Mainly useful in debugging purposes, use the generated API's [`changed`](#event-changed)
-event instead.
+You may use this event to propagate a client-side change on a handle.
 
 Example:
 
 ```js
 session.on('handle:changed', (handle) => console.log(`Handle ${handle} was changed`));
+session.emit('handle:changed', 123);
 ```
+
+Read more:
+
+* [Event: `changed` on generated APIs](#event-changed)
+* [`api.handle`](#apihandle)
 
 [Back to top](#api-documentation)
 
@@ -269,14 +279,21 @@ session.on('handle:changed', (handle) => console.log(`Handle ${handle} was chang
 This event is triggered when QIX Engine notifies us about a QIX handle being closed.
 This means that we may clean up any caches on our side.
 
-Mainly useful in debugging purposes, use the generated API's [`closed`](#event-closed-1)
-event instead.
+You may use this event to propagate a client-side close on a handle which will also
+allow enigma.js to throw away its caches on the generated API coupled with this
+handle.
 
 Example:
 
 ```js
 session.on('handle:closed', (handle) => console.log(`Handle ${handle} was closed`));
+session.emit('handle:closed', 123);
 ```
+
+Read more:
+
+* [Event: `closed` on generated APIs](#event-closed-1)
+* [`api.handle`](#apihandle)
 
 [Back to top](#api-documentation)
 
@@ -365,6 +382,80 @@ global.openDoc('my-document.qvf').then((doc) => {
   doc.createObject({ qInfo: { qType: 'my-object' } }).then(api => { /* do something with api */ });
   doc.getObject('object-id').then(api => { /* do something with api */ });
   doc.getBookmark('bookmark-id').then(api => { /* do something with api */ });
+});
+```
+
+[Back to top](#api-documentation)
+
+### `api.id`
+
+This property contains the unique identifier for this API.
+
+Example:
+
+```js
+doc.getObject('object-id').then((api) => {
+   // api.id === 'object-id'
+});
+```
+
+[Back to top](#api-documentation)
+
+### `api.type`
+
+This property contains the schema class name for this API.
+
+Example:
+
+```js
+doc.getObject('object-id').then((api) => {
+   // api.type === 'GenericObject'
+});
+```
+
+[Back to top](#api-documentation)
+
+### `api.customType`
+
+This property contains the custom type set on this API (if any).
+
+This corresponds to the `qInfo.qType` property on your generic
+object's properties object.
+
+Example:
+
+```js
+doc.getObject('object-id').then((api) => {
+   // api.customType === 'linechart'
+});
+```
+
+[Back to top](#api-documentation)
+
+
+### `api.session`
+
+This property contains a reference to the [`session`](#session-api) that this
+API belongs to.
+
+Example:
+
+```js
+doc.session.suspend();
+```
+
+[Back to top](#api-documentation)
+
+### `api.handle`
+
+This property contains the handle to thi API that QIX Engine assigned it. Used
+internally in enigma.js for caches and [JSON-RPC requests](./concepts.md#json-rpc-protocol).
+
+Example:
+
+```js
+doc.getObject('object-id').then((api) => {
+   // typeof api.handle === 'number'
 });
 ```
 
