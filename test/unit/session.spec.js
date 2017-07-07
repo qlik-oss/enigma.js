@@ -11,7 +11,7 @@ describe('Session', () => {
   let suspendResume;
   let apis;
 
-  const intercept = { execute: () => Promise.resolve() };
+  const intercept = { execute: promise => promise };
   const createSession = (throwError, rpc, suspendOnClose = false) => {
     const defaultRpc = new RPCMock({
       Promise,
@@ -51,13 +51,8 @@ describe('Session', () => {
     session.getObjectApi = () => {};
     const open = session.open();
     const anotherOpen = session.open();
-    const spy = sinon.spy();
-    session.on('opened', spy);
     expect(open).to.be.an.instanceOf(Promise);
     expect(anotherOpen).to.equal(open);
-    return open.then(() => {
-      expect(spy.calledOnce).to.equal(true);
-    });
   });
 
   it("should call reject callback if connection can't be established", (done) => {
@@ -78,6 +73,18 @@ describe('Session', () => {
       session.emit(event, { prop: 'foo' });
       expect(spy).to.have.been.calledWithExactly({ prop: 'foo' });
     });
+
+    it('should emit the opened and closed events', () => {
+      const openedCallback = sinon.spy();
+      const closedCallback = sinon.spy();
+      session.on('opened', openedCallback);
+      session.on('closed', closedCallback);
+      session.getObjectApi = () => {};
+      return session.open()
+        .then(() => expect(openedCallback.calledOnce).to.equal(true))
+        .then(() => session.close())
+        .then(() => expect(closedCallback.calledOnce).to.equal(true));
+    });
   });
 
   describe('send', () => {
@@ -88,7 +95,6 @@ describe('Session', () => {
     it('should call `addToPromiseChain` for `requestId`', () => {
       const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
       createSession(false, rpc);
-      session.intercept = { execute: promise => (promise) };
       sinon.stub(rpc, 'send', (data) => {
         data.id = 1;
         return Promise.resolve(data);
@@ -121,7 +127,6 @@ describe('Session', () => {
     it('should return response argument if qHandle/qType are undefined', () => {
       const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
       createSession(false, rpc);
-      session.intercept = { execute: promise => (promise) };
       sinon.stub(rpc, 'send', (data) => {
         data.id = 1;
         return Promise.resolve({ message: 'hello!' });
@@ -136,7 +141,6 @@ describe('Session', () => {
     it('should add additional protocol parameters to request object', () => {
       const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
       createSession(false, rpc);
-      session.intercept = { execute: promise => (promise) };
       session.protocol.foo = 'bar';
 
       const send = sinon.spy(rpc, 'send');
@@ -148,7 +152,6 @@ describe('Session', () => {
     it('should honor delta blacklist', () => {
       const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
       createSession(false, rpc);
-      session.intercept = { execute: promise => (promise) };
       session.protocol.delta = true;
 
       const send = sinon.spy(rpc, 'send');
