@@ -448,7 +448,7 @@ doc.session.suspend();
 
 ### `api.handle`
 
-This property contains the handle to thi API that QIX Engine assigned it. Used
+This property contains the handle QIX Engine assigned to the API. Used
 internally in enigma.js for caches and [JSON-RPC requests](./concepts.md#json-rpc-protocol).
 
 Example:
