@@ -182,6 +182,10 @@ class Session {
   * @returns {Object} Returns a promise instance.
   */
   suspend() {
+    // don't rely on properly closing of websocket to set suspended flag .. need
+    // to handle cases where websocket closes abnormally as well.
+    this.suspended = true;
+
     return this.rpc.close(RPC_CLOSE_MANUAL_SUSPEND)
       .then(() => this.emit('suspended', { initiator: 'manual' }));
   }

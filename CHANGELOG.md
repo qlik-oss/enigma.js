@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1
+
+- bug fix -essentially port back a fix from v2.0 such that engima marks the session as suspended at the place/point
+           where the websocket is closed.
+
+
 ## 1.3.0
 
 ### Features
