@@ -217,6 +217,7 @@ describe('Session', () => {
   it('should close', () => {
     const rpc = new RPCMock({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url) });
     createSession(false, rpc);
+    session.getObjectApi = () => {};
     session.open();
     const close = sinon.spy(rpc, 'close');
     const closePromise = session.close();
