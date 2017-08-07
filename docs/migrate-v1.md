@@ -96,7 +96,7 @@ const enigma = require('enigma.js');
 // schemas is flattened:
 const schema = require('enigma.js/schemas/3.2.0.json');
 // you are now in full control of the websocket URL:
-const config = { url: 'ws://localhost:9076/app/123' };
+const config = { schema, url: 'ws://localhost:9076/app/123' };
 enigma.create(config).open().then((global) => {
   // global === QIX global interface
   global.openDoc('123').then((doc) => {
@@ -116,7 +116,7 @@ const schema = require('enigma.js/schemas/3.2.0.json');
 // configuration for sense-utilities module:
 const urlConfig = { host: 'localhost', port: 9076, appId: '123', secure: false };
 // you are now in full control of the websocket URL:
-const config = { url: SenseUtilities.buildUrl(urlConfig) };
+const config = { schema, url: SenseUtilities.buildUrl(urlConfig) };
 enigma.create(config).open().then((global) => {
   // global === QIX global interface
   global.openDoc(config.appId).then((doc) => {
@@ -145,7 +145,10 @@ If you did this in version 1:
 
 ```js
 const enigma = require('enigma.js');
+const schema = require('enigma.js/schemas/qix/3.2.0/schema.json');
 const config = {
+  schema,
+  host: 'localhost',
   listeners: {
     'notification:OnAuthenticationInfo': () => {}
   },
@@ -159,7 +162,8 @@ enigma.getService('qix', config).then((qix) => {
 
 ```js
 const enigma = require('enigma.js');
-const config = {};
+const schema = require('enigma.js/schemas/3.2.0.json');
+const config = { schema, url: 'ws://localhost/app/engineData' };
 const session = enigma.create(config);
 session.on('notification:OnAuthenticationInfo', () => {});
 session.open().then((global) => {
@@ -213,7 +217,7 @@ const sessions = {};
 function getSession(url) {
   let session = sessions[url];
   if (!session) {
-    session = enigma.create({ url });
+    session = enigma.create({ schema, url });
     session.on('closed', () => delete sessions[url]);
     sessions[url] = session;
   }
