@@ -46,7 +46,7 @@
     "chai-subset": "^1.5.0",
     "cross-env": "^5.0.1",
     "eslint": "3.19.0",
-    "eslint-config-airbnb-base": "11.2.0",
+    "eslint-config-airbnb-base": "11.3.1",
     "eslint-plugin-import": "2.7.0",
     "extend": "^3.0.0",
     "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git#a097e2f2997cc6e8b86a10a60efce7f752c629e4",
