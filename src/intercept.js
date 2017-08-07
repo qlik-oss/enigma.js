@@ -177,8 +177,8 @@ class Intercept {
   execute(promise, meta) {
     return this.interceptors.reduce((interception, interceptor) =>
       interception.then(
-      interceptor.onFulfilled && interceptor.onFulfilled.bind(this, meta),
-      interceptor.onRejected && interceptor.onRejected.bind(this, meta))
+        interceptor.onFulfilled && interceptor.onFulfilled.bind(this, meta),
+        interceptor.onRejected && interceptor.onRejected.bind(this, meta))
       , promise,
     );
   }

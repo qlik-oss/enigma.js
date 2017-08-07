@@ -2,7 +2,6 @@
 * Key-value cache
 */
 class KeyValueCache {
-
   constructor() {
     this.entries = {};
   }

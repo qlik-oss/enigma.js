@@ -5,7 +5,6 @@ import KeyValueCache from './cache';
 * @extends KeyValueCache
 */
 class ApiCache extends KeyValueCache {
-
   /**
   * Event handler for triggering API instance events when their handle
   * is changed.

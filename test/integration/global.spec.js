@@ -76,7 +76,7 @@ describe('QIX Global', () => {
   } else {
   return expect( qixGlobal.getAuthenticatedUser() ).to.eventually.contain( "Personal" );
   }
-  } );*/
+  } ); */
 
   it('should GetBNF', () =>
     expect(qixGlobal.getBNF(0)).to.eventually.be.an('array'),
@@ -96,7 +96,7 @@ describe('QIX Global', () => {
   } );
   }
   } );
-  } );*/
+  } ); */
 
   it('should GetCustomConnectors', () =>
     expect(qixGlobal.getCustomConnectors()).to.eventually.be.an('array'),
@@ -116,7 +116,7 @@ describe('QIX Global', () => {
 
   it( "should GetOleDbProviders", () => {
   return expect(qixGlobal.getOleDbProviders() ).to.eventually.be.an( "array" );
-  } );*/
+  } ); */
 
   it('should GetSupportedCodePages', () =>
     expect(qixGlobal.getSupportedCodePages()).to.eventually.be.an('array'),

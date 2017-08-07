@@ -37,7 +37,7 @@ describe('Intercept', () => {
 
       JSONPatchStub.reset();
 
-    // primitive
+      // primitive
       apis.addPatchee(-1, 'Baz', 'my folder');
       intercept.getPatchee(-1, [{ op: 'add', path: '/', value: ['my documents'] }], 'Baz');
       expect(JSONPatchStub.callCount).to.equal(0);

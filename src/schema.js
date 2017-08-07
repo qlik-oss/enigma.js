@@ -45,7 +45,6 @@ function namedParamFacade(base, defaults, ...params) {
 * Qix schema definition.
 */
 class Schema {
-
   /**
   * Create a new schema instance.
   * @param {Configuration} config The configuration for QIX.

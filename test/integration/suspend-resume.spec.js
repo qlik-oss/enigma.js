@@ -60,13 +60,13 @@ describe('QIX Suspend/Resume', () => {
 
     return session.open()
       // save ref to global API:
-      .then(g => (global = g))
+      .then((g) => { global = g; })
       // create our test app:
       .then(() => global.createApp(id))
       // open our test app:
       .then(() => global.openDoc(id))
       // save ref to app API:
-      .then(_app => (app = _app))
+      .then((a) => { app = a; })
       // set a dummy property that we don't save:
       .then(() => app.setAppProperties({ test: true }))
       .then(() => global.session.suspend())

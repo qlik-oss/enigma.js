@@ -43,7 +43,7 @@ describe('Schema', () => {
     let definition;
 
     beforeEach(() => {
-      mixin = { types: 'Foo', extend: { tweet() { /* dummy*/ } } };
+      mixin = { types: 'Foo', extend: { tweet() { /* dummy */ } } };
       definition = new Schema({ Promise, schema: json });
     });
 
@@ -278,8 +278,8 @@ describe('Schema', () => {
           Foo: {
             Bar: {
               In: [{ Name: 'param1', DefaultValue: '' },
-                   { Name: 'param2', DefaultValue: '' },
-                   { Name: 'param3', DefaultValue: 'xyz' }],
+                { Name: 'param2', DefaultValue: '' },
+                { Name: 'param3', DefaultValue: 'xyz' }],
               Out: [],
             },
           },
@@ -290,7 +290,7 @@ describe('Schema', () => {
 
     it('should call send with the correct parameter set', () => {
       let params;
-      const send = request => (params = request.params);
+      const send = (request) => { params = request.params; };
       const api = definition.generate('Foo').create({ send }, 1, 'dummy', false, 'dummy');
       api.bar({ param1: 'abc', param2: 'def', param3: 'ghi' });
       expect(params).to.deep.equal(['abc', 'def', 'ghi']);
@@ -300,7 +300,7 @@ describe('Schema', () => {
 
     it('should fill in default values when parameters are named', () => {
       let params;
-      const send = request => (params = request.params);
+      const send = (request) => { params = request.params; };
       const api = definition.generate('Foo').create({ send }, 1, 'dummy', false, 'dummy');
       api.bar({ param1: 'abc', param2: 'def' });
       expect(params).to.deep.equal(['abc', 'def', 'xyz']);
@@ -308,7 +308,7 @@ describe('Schema', () => {
 
     it('parameters should be passed as an array to mixins', () => {
       let mixinArgs;
-      const mixin = { types: 'Foo', override: { bar: (_bar, ...args) => (mixinArgs = args) } };
+      const mixin = { types: 'Foo', override: { bar: (_bar, ...args) => { mixinArgs = args; } } };
       definition.registerMixin(mixin);
       const type = definition.generate('Foo');
       const api = type.create({}, 0, 'id', true, 'custom');

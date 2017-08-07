@@ -1,4 +1,4 @@
-/* eslint-env browser*/
+/* eslint-env browser */
 /* eslint import/no-unresolved:0, import/extensions:0 */
 
 import * as d3 from 'd3';
