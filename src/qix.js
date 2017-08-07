@@ -10,7 +10,6 @@ import ApiCache from './api-cache';
 * Qix service.
 */
 class Qix {
-
   /**
   * Function used to get a session.
   * @param {Configuration} config The configuration object for this session.

@@ -94,14 +94,14 @@ describe('QIX Global', () => {
     it('should return string that contains `UserDirectory=` `UserId=` for server', () => {
       socket.intercept('GetAuthenticatedUser').return({ result: { qReturn: 'UserDirectory=FOO;UserId=BAR' } });
       return expect(qixGlobal.getAuthenticatedUser()).to.eventually
-      .contain('UserDirectory=').and
-      .contain('UserId=');
+        .contain('UserDirectory=').and
+        .contain('UserId=');
     });
 
     it('should return string that contains `Personal` for desktop', () => {
       socket.intercept('GetAuthenticatedUser').return({ result: { qReturn: 'Personal' } });
       return expect(qixGlobal.getAuthenticatedUser()).to.eventually
-      .contain('Personal');
+        .contain('Personal');
     });
   });
 

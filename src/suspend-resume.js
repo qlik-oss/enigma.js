@@ -94,8 +94,8 @@ class SuspendResume {
   restoreDocObjects(doc, closed, changed) {
     const tasks = [];
     const apis = this.apis.getApis()
-        .map(entry => entry.api)
-        .filter(api => api.type !== 'Global' && api.type !== 'Doc');
+      .map(entry => entry.api)
+      .filter(api => api.type !== 'Global' && api.type !== 'Doc');
 
     if (!doc) {
       apis.forEach(api => closed.push(api));

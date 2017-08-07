@@ -48,7 +48,7 @@ export default class SocketMock {
   }
   onerror() {
   }
-  onmessage(/* msg*/) {
+  onmessage(/* msg */) {
   }
   send(msg) {
     const request = JSON.parse(msg);

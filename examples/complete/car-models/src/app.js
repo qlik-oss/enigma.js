@@ -1,4 +1,4 @@
-/* eslint-env browser*/
+/* eslint-env browser */
 /* eslint import/no-unresolved:0, import/extensions:0, no-console:0 */
 
 import angular from 'angular';
@@ -54,50 +54,50 @@ angular.module('app', []).component('app', {
         this.connected = true;
 
         qix.global.createSessionApp()
-        .then(app => app.setScript(SCRIPT)
-        .then(() => app.doReload())
-        .then(() => {
-          const barchartProperties = {
-            qInfo: {
-              qType: 'visualization',
-              qId: '',
-            },
-            type: 'my-d3-barchart',
-            labels: true,
-            qHyperCubeDef: {
-              qDimensions: [{
-                qDef: {
-                  qFieldDefs: ['Name'],
-                  qSortCriterias: [{
-                    qSortByAscii: 1,
+          .then(app => app.setScript(SCRIPT)
+            .then(() => app.doReload())
+            .then(() => {
+              const barchartProperties = {
+                qInfo: {
+                  qType: 'visualization',
+                  qId: '',
+                },
+                type: 'my-d3-barchart',
+                labels: true,
+                qHyperCubeDef: {
+                  qDimensions: [{
+                    qDef: {
+                      qFieldDefs: ['Name'],
+                      qSortCriterias: [{
+                        qSortByAscii: 1,
+                      }],
+                    },
                   }],
+                  qMeasures: [{
+                    qDef: {
+                      qDef: 'Avg([Horsepower])',
+                    },
+                    qSortBy: {
+                      qSortByNumeric: -1,
+                    },
+                  }],
+                  qInterColumnSortOrder: [1, 0],
+                  qInitialDataFetch: [{ qTop: 0, qHeight: 500, qLeft: 0, qWidth: 17 }],
+                  qSuppressZero: false,
+                  qSuppressMissing: true,
                 },
-              }],
-              qMeasures: [{
-                qDef: {
-                  qDef: 'Avg([Horsepower])',
-                },
-                qSortBy: {
-                  qSortByNumeric: -1,
-                },
-              }],
-              qInterColumnSortOrder: [1, 0],
-              qInitialDataFetch: [{ qTop: 0, qHeight: 500, qLeft: 0, qWidth: 17 }],
-              qSuppressZero: false,
-              qSuppressMissing: true,
-            },
-          };
-          app.createSessionObject(barchartProperties).then((model) => {
-            object = model;
+              };
+              app.createSessionObject(barchartProperties).then((model) => {
+                object = model;
 
-            const update = () => object.getLayout().then((layout) => {
-              paintChart(layout);
-            });
+                const update = () => object.getLayout().then((layout) => {
+                  paintChart(layout);
+                });
 
-            object.on('changed', update);
-            update();
-          });
-        }));
+                object.on('changed', update);
+                update();
+              });
+            }));
       }, () => {
         this.error = 'Could not connect to QIX Engine. See console log for error details.';
       });

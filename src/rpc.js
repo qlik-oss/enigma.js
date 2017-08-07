@@ -5,7 +5,6 @@ import RPCResolver from './rpc-resolver';
 * This class handles remote procedure calls on a web socket.
 */
 class RPC {
-
   /**
   * Create a new RPC instance.
   * @param {Object} options The configuration options for this class.
