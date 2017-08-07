@@ -125,8 +125,14 @@ describe('Intercept', () => {
   });
 
   describe('processErrorInterceptor', () => {
-    it('should reject and emit if the response contains an error', () => intercept.processErrorInterceptor({}, { error: 'FUBAR' }).then(null, (err) => {
-      expect(err).to.equal('FUBAR');
+    it('should reject and emit if the response contains an error', () => intercept.processErrorInterceptor({}, { error: { code: 2, parameter: 'param', message: 'msg' } }).then(null, (err) => {
+      expect(err instanceof Error).to.equal(true);
+      expect(err.code).to.equal(2);
+      expect(err.parameter).to.equal('param');
+      expect(err.message).to.equal('msg');
+      expect(err.stack).to.be.a('string');
+      // check if the test file is included in the stack trace:
+      expect(err.stack.indexOf('intercept.spec.js')).to.not.equal(-1);
     }));
 
     it('should not reject if the response does not contain any error', () => {
