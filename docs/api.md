@@ -66,7 +66,7 @@ const schema = require('enigma.js/schemas/12.20.0.json');
 
 const config = {
   schema,
-  url: 'ws://localhost:4848/app',
+  url: 'ws://localhost:4848/app/',
   createSocket: url => new WebSocket(url),
   Promise: bluebird,
   suspendOnClose: true,
@@ -104,7 +104,7 @@ const schema = require('enigma.js/schemas/12.20.0.json');
 const WebSocket = require('ws');
 const config = {
   schema,
-  url: 'ws://localhost:9076/app',
+  url: 'ws://localhost:9076/app/',
   createSocket: url => new WebSocket(url),
 };
 const session = enigma.create(config);
