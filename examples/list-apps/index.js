@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const WebSocket = require('ws');
 const enigma = require('enigma.js');
-const schema = require('./node_modules/enigma.js/schemas/12.20.0.json');
+const schema = require('enigma.js/schemas/12.20.0.json');
 
 const certificateDir = 'C:/ProgramData/Qlik/Sense/Repository/Exported Certificates/.Local Certificates';
 const readCert = filename => fs.readFileSync(path.resolve(certificateDir, filename));
