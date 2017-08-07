@@ -4,7 +4,7 @@
 import angular from 'angular';
 import enigma from 'enigma.js';
 
-import qixSchema from 'json!../node_modules/enigma.js/schemas/12.20.0.json';
+import schema from 'json!../node_modules/enigma.js/schemas/12.20.0.json';
 import template from 'raw!./app.html';
 import csv from 'raw!../data.csv';
 import paintBarchart from './chart';
@@ -15,7 +15,8 @@ const SCRIPT =
 ];
 `;
 
-const HOST = 'my-sense-deploy.hostname.org';
+const reloadURI = encodeURIComponent(`${location.origin}/content/Default/redirect.html`);
+const url = `${location.origin.replace(/^http/, 'ws')}/app/engineData?reloadURI=${reloadURI}`;
 
 angular.module('app', []).component('app', {
   bindings: {},
@@ -31,29 +32,21 @@ angular.module('app', []).component('app', {
     };
 
     this.$onInit = () => {
-      const config = {
+      const session = enigma.create({
         Promise: $q,
-        schema: qixSchema,
-        session: {
-          host: HOST,
-          route: 'app/engineData',
-          urlParams: {
-            reloadURI: `https://${HOST}/content/Default/redirect.html`,
-          },
-        },
-        listeners: {
-          'notification:OnAuthenticationInformation': (authInfo) => {
-            if (authInfo.mustAuthenticate) {
-              location.href = authInfo.loginUri;
-            }
-          },
-          'traffic:*': (dir, data) => console.log(dir, data),
-        },
-      };
-      enigma.connect(config).then((qix) => {
+        schema,
+        url,
+      });
+      session.on('notification:OnAuthenticationInformation', (authInfo) => {
+        if (authInfo.mustAuthenticate) {
+          location.href = authInfo.loginUri;
+        }
+      });
+      session.on('traffic:*', (dir, data) => console.log(dir, data));
+      session.open().then((global) => {
         this.connected = true;
 
-        qix.global.createSessionApp()
+        global.createSessionApp()
           .then(app => app.setScript(SCRIPT)
             .then(() => app.doReload())
             .then(() => {

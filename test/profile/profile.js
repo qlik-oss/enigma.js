@@ -26,27 +26,22 @@ async function next() {
   }
 
   async function run(iterationNumber) {
-    async function cleanup(global, err) {
+    async function cleanup(session, err) {
       if (err) {
         console.error(err);
       }
 
-      await global.session.close();
+      await session.close();
 
       if (enableHeap) {
         heapdump.writeSnapshot(`./${stamp}-iteration-${iterationNumber}.heapsnapshot`);
       }
     }
 
-    const qix = await enigma.connect({
+    const session = enigma.create({
       schema,
-      session: {
-        host: 'localhost',
-        port: 4848,
-        secure: false,
-      },
+      url: 'ws://localhost:9076/app/engineData',
       createSocket: url => new WebSocket(url, { headers: { 'X-Qlik-Session': iterationNumber } }),
-      listeners: { 'qix-error': err => console.error(err) },
     });
 
     async function createObject(doc, objectNumber) {
@@ -60,7 +55,8 @@ async function next() {
 
 
     try {
-      const doc = await qix.global.createSessionApp();
+      const global = await session.open();
+      const doc = await global.createSessionApp();
       const promises = [];
 
       for (let j = 0; j < objIterations; j += 1) {
@@ -68,9 +64,9 @@ async function next() {
       }
 
       await Promise.all(promises);
-      await cleanup(qix.global);
+      await cleanup(session);
     } catch (err) {
-      await cleanup(qix.global, err);
+      await cleanup(session, err);
     }
   }
   if (enableHeap) {

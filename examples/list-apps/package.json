@@ -6,7 +6,7 @@
   "author": "Qlik",
   "license": "MIT",
   "dependencies": {
-    "enigma.js": "^1.0.0",
+    "enigma.js": "^2.0.0-0",
     "ws": "^1.1.1"
   }
 }

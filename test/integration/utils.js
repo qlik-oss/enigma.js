@@ -60,7 +60,7 @@ export default {
   },
   getScript(fileName) {
     return new Promise((resolve, reject) => {
-      const filePath = path.resolve(__dirname, 'loadScripts', fileName);
+      const filePath = path.resolve(__dirname, 'load-scripts', fileName);
 
       return this.fileExists(filePath).then((exists) => {
         if (exists) {
