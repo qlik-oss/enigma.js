@@ -26,7 +26,7 @@ class SuspendResume {
   * @returns {Object} Returns a promise instance.
   */
   restoreRpcConnection(onlyIfAttached) {
-    return this.rpc.reopen(ON_ATTACHED_TIMEOUT_MS).then((sessionState) => {
+    return this.reopen(ON_ATTACHED_TIMEOUT_MS).then((sessionState) => {
       if (sessionState === 'SESSION_CREATED' && onlyIfAttached) {
         return this.Promise.reject(new Error('Not attached'));
       }
@@ -165,6 +165,45 @@ class SuspendResume {
         });
       })
       .catch(err => this.rpc.close().then(() => this.Promise.reject(err)));
+  }
+
+  /**
+  * Reopens the connection and waits for the OnConnected notification.
+  * @param {Number} timeout - The time to wait for the OnConnected notification.
+  * @returns {Object} A promise containing the session state (SESSION_CREATED or SESSION_ATTACHED).
+  */
+  reopen(timeout) {
+    let timer;
+    let notificationResolve;
+    let notificationReceived = false;
+    const notificationPromise = new this.Promise((resolve) => { notificationResolve = resolve; });
+
+    const waitForNotification = () => {
+      if (!notificationReceived) {
+        timer = setTimeout(() => notificationResolve('SESSION_CREATED'), timeout);
+      }
+      return notificationPromise;
+    };
+
+    const onNotification = (data) => {
+      if (data.method !== 'OnConnected') return;
+      clearTimeout(timer);
+      notificationResolve(data.params.qSessionState);
+      notificationReceived = true;
+    };
+
+    this.rpc.on('notification', onNotification);
+
+    return this.rpc.open(true)
+      .then(waitForNotification)
+      .then((state) => {
+        this.rpc.removeListener('notification', onNotification);
+        return state;
+      })
+      .catch((err) => {
+        this.rpc.removeListener('notification', onNotification);
+        return this.Promise.reject(err);
+      });
   }
 
   /**
