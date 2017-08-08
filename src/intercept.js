@@ -92,7 +92,11 @@ class Intercept {
   */
   processErrorInterceptor(meta, response) {
     if (typeof response.error !== 'undefined') {
-      return this.Promise.reject(response.error);
+      const data = response.error;
+      const error = new Error(data.message);
+      error.code = data.code;
+      error.parameter = data.parameter;
+      return this.Promise.reject(error);
     }
     return response;
   }

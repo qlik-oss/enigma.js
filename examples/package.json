@@ -1,0 +1,9 @@
+{
+  "name": "enigma.js-runnable-examples",
+  "version": "0.0.1",
+  "description": "enigma.js runnable examples dependencies",
+  "dependencies": {
+    "enigma.js": "^2.0.0-0",
+    "ws": "^3.1.0"
+  }
+}
