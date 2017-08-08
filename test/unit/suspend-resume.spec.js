@@ -11,10 +11,11 @@ describe('Suspend/Resume', () => {
 
   beforeEach(() => {
     SocketMock.on('created', socket => socket.open());
-    class Dummy extends RPC { reopen() { return super.reopen(5); } }
-    rpc = new Dummy({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url, false) });
+    rpc = new RPC({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url, false) });
     apis = new ApiCache({ Promise, schema: {} });
     suspendResume = new SuspendResume({ Promise, rpc, apis });
+    const reopen = suspendResume.reopen;
+    suspendResume.reopen = (val, force) => reopen.call(suspendResume, force ? val : 5);
     return rpc.open();
   });
 
@@ -95,6 +96,19 @@ describe('Suspend/Resume', () => {
           apisToChange.forEach(api => expect(api.emit).to.have.been.calledWith('changed'));
           apisToClose.forEach(api => expect(api.emit).to.have.been.calledWith('closed'));
         });
+    });
+
+    it('should return SESSION_CREATED when reopen hits the timeout', () => {
+      const reopen = suspendResume.reopen(25, true);
+      return reopen.then(state => expect(state).to.equal('SESSION_CREATED'));
+    });
+
+    it('should return SESSION_ATTACHED when it receives the session attached notification', () => {
+      const reopen = suspendResume.reopen(1000000, true);
+      setTimeout(() => rpc.emit('notification',
+        { method: 'OnConnected', params: { qSessionState: 'SESSION_ATTACHED' } }), 25);
+
+      return reopen.then(state => expect(state).to.equal('SESSION_ATTACHED'));
     });
   });
 });

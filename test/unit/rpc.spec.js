@@ -50,21 +50,6 @@ describe('RPC', () => {
     expect(createSocket).to.have.been.calledWithExactly(rpc.url);
   });
 
-  it('should return SESSION_CREATED when reopen hits the timeout', () => {
-    SocketMock.on('created', socket => socket.open());
-    const reopen = rpc.reopen(25);
-    return reopen.then(state => expect(state).to.equal('SESSION_CREATED'));
-  });
-
-  it('should return SESSION_ATTACHED when it receives the session attached notification', () => {
-    SocketMock.on('created', socket => socket.open());
-    const reopen = rpc.reopen(1000000);
-    setTimeout(() => rpc.emit('notification',
-      { method: 'OnConnected', params: { qSessionState: 'SESSION_ATTACHED' } }), 25);
-
-    return reopen.then(state => expect(state).to.equal('SESSION_ATTACHED'));
-  });
-
   it("should reject when trying to send a message if the socket isn't open", (done) => {
     rpc.send().then(() => {}, () => {
       done();

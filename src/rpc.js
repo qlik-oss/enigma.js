@@ -46,45 +46,6 @@ class RPC {
   }
 
   /**
-  * Reopens the connection and waits for the OnConnected notification.
-  * @param {Number} timeout - The time to wait for the OnConnected notification.
-  * @returns {Object} A promise containing the session state (SESSION_CREATED or SESSION_ATTACHED).
-  */
-  reopen(timeout) {
-    let timer;
-    let notificationResolve;
-    let notificationReceived = false;
-    const notificationPromise = new this.Promise((resolve) => { notificationResolve = resolve; });
-
-    const waitForNotification = () => {
-      if (!notificationReceived) {
-        timer = setTimeout(() => notificationResolve('SESSION_CREATED'), timeout);
-      }
-      return notificationPromise;
-    };
-
-    const onNotification = (data) => {
-      if (data.method !== 'OnConnected') return;
-      clearTimeout(timer);
-      notificationResolve(data.params.qSessionState);
-      notificationReceived = true;
-    };
-
-    this.on('notification', onNotification);
-
-    return this.open(true)
-      .then(waitForNotification)
-      .then((state) => {
-        this.removeListener('notification', onNotification);
-        return state;
-      })
-      .catch((err) => {
-        this.removeListener('notification', onNotification);
-        return this.Promise.reject(err);
-      });
-  }
-
-  /**
   * Resolves the open promise when a connection is successfully established.
   */
   onOpen() {
