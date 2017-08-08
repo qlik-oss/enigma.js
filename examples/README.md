@@ -14,13 +14,22 @@ All example categories should have a `README.md` file containing:
 
 ---
 
+Before getting started, you should run these commands in a terminal:
+
+```bash
+$ cd examples
+$ npm install
+```
+
+---
+
 Table of contents
 
 - [Authentication](./authentication)
   - [Sense using ticketing](./authentication/sense-using-ticketing)
   - [Sense using certificates](./authentication/sense-using-certs)
 - [Basics](./basics)
-  - [Handling events](./basics/events)
+  - [Handling events](./basics/events#readme)
   - [Interacting with documents](./basics/documents)
   - [Interacting with generic objects](./basics/generic-objects)
   - [Fetching lists of generic objects](./basics/lists)

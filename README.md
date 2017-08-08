@@ -39,7 +39,7 @@ And know of at least some these web technologies:
 First off, install enigma.js and a WebSocket library:
 
 ```sh
-npm -S i enigma.js ws
+npm i -S enigma.js ws
 ```
 
 Next, create a new file called `my-file.js` and put the following code into it:
