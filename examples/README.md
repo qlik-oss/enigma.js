@@ -27,7 +27,7 @@ Table of contents
 
 - [Authentication](./authentication)
   - [Sense using ticketing](./authentication/sense-using-ticketing)
-  - [Sense using certificates](./authentication/sense-using-certs)
+  - [Sense using certificates](./authentication/sense-using-certificates#readme)
 - [Basics](./basics)
   - [Handling events](./basics/events#readme)
   - [Interacting with documents](./basics/documents)
