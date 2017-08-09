@@ -42,7 +42,7 @@ Table of contents
   - [Simple](./mixins/simple)
   - [Complex (including state)](./mixins/complex)
 - [Interceptors](./interceptors)
-  - [Retry aborted requests](./interceptors/retry-aborted)
+  - [Retry aborted requests](./interceptors/retry-aborted#readme)
 - [Complete](./complete)
   - [Car models web app](./complete/car-models)
 

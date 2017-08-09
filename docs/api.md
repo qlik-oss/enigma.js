@@ -86,9 +86,20 @@ enigma.create(config).open().then((global) => {
 
 See the separate [Mixins](./mixins.md#mixins) documentation.
 
+[Back to top](#api-documentation)
+
 ### Interceptors
 
-TODO: Write :)
+Interceptors is a concept similar to mixins, but run on a lower level. An interceptor
+can modify the result of a QIX Engine response before it reaches the mixin callstack.
+
+The interceptor promises runs in _parallel_ to the regular promises used in enigma.js,
+which means that it can be really useful when you want to normalize behaviors in your
+application.
+
+See the [Interceptor examples](/examples/README.md#interceptors) on how to use it.
+
+[Back to top](#api-documentation)
 
 ## `enigma.create(config)`
 
