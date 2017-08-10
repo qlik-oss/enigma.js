@@ -35,7 +35,7 @@ Table of contents
   - [Fetching lists of generic objects](./basics/lists)
 - [Interacting with data](./data)
   - [String expressions](./data/string-expressions)
-  - [List objects](./data/list-object)
+  - [List objects](./data/list-object#readme)
   - [Straight hypercubes](./data/hypercube-straight)
   - [Pivoting hypercubes](./data/hypercube-pivot)
 - [Mixins](./mixins)
