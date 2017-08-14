@@ -18,7 +18,7 @@ export default {
       const isServer = !!(result[0] || result[1].indexOf('-F -D') >= 0);
       const isInstalled = !!result[0];
       const host = result[2];
-      const port = isServer ? 4747 : 4848;
+      const port = isServer ? 4747 : 9076;
       const protocol = isServer ? 'wss' : 'ws';
       const certificates = isServer ? this.getCertificates() : {};
 
