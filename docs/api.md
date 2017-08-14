@@ -88,12 +88,12 @@ The mixin concept allows you to add or override QIX Engine API functionality. A 
 JavaScript object describing which types it modifies, and a list of functions for extending and overriding
 the API for those types.
 
-Generic types like for example `GenericObject`, `Doc`, `GenericBookmark`, are supported but also custom
+QIX Engine types like for example `GenericObject`, `Doc`, `GenericBookmark`, are supported but also custom
 `GenericObject` types such as `barchart`, `story` and `myCustomType`. An API will get both their
 generic type as well as custom type mixins applied.
 
-Mixins that are bound to several different types can find the current object type in the `genericType`
-or `type` members of the object. [`this.type`](#apitype) would for instance return `GenericObject` and
+Mixins that are bound to several different types can find the current API type in the `genericType`
+or `type` members. [`this.type`](#apitype) would for instance return `GenericObject` and
 [`this.genericType`](#apigenerictype) would return `barchart`.
 
 See the [Mixins examples](/examples/README.md#mixins) on how to use it.
@@ -440,10 +440,8 @@ doc.getObject('object-id').then((api) => {
 
 ### `api.genericType`
 
-This property contains the custom type set on this API (if any).
-
-This corresponds to the `qInfo.qType` property on your generic
-object's properties object.
+Despite the name, this property corresponds to the `qInfo.qType`
+property on your generic object's properties object.
 
 Example:
 

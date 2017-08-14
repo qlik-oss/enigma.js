@@ -32,8 +32,8 @@ const docMixin = {
   extend: {
     /**
     * Simple tweeting function.
-    * @returns {Promise<Object|null>} A promise that when resolved means this mixin method
-    *                                 has completed.
+    * @returns {Promise} A promise that when resolved means this mixin method
+    *                    has completed.
     */
     tweet() {
       console.log('This document is tweeting');
@@ -43,6 +43,8 @@ const docMixin = {
     /**
     * This function already exist on the doc API and will therefore cause an exception when creating
     * the API.
+    *
+    * Uncomment to see the error enigma.js will throw if you try to overwrite an existing method.
     */
     /* getObject: () => {
       console.log('trying to override but it will not work');
@@ -56,11 +58,11 @@ const docMixin = {
   override: {
     /**
     * Overriding the createObject function.
-    * @param {Function} base - This is the original function that is being overridden.
-    * @param {*} params - The parameter list. When parameters are passed by name, enigma.js
+    * @param {Function} base This is the original function that is being overridden.
+    * @param {*} params The parameter list. When parameters are passed by name, enigma.js
     *                     will add default values for parameters not supplied by the caller.
-    * @returns {Promise<Object|null>} A promise that when resolved contains the newly created
-    *                                 object, or rejected if object couldn't be created.
+    * @returns {Promise} A promise that when resolved contains the newly created
+    *                    object, or rejected if object couldn't be created.
     */
     createObject(base, ...params) {
       console.log('Creating object with params:', params);
