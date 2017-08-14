@@ -1,13 +1,13 @@
 const createSession = require('../../session');
 
-const qlikScript = `
+const script = `
 TempTable:
 Load
 RecNo() as ID
 AutoGenerate 100
 `;
 
-const stringExpressionProperties = {
+const properties = {
   qInfo: {
     qType: 'StringExpression',
   },
@@ -25,22 +25,13 @@ session
   .then((doc) => {
     // Load in some data into the session document:
     doc
-      .setScript(qlikScript)
+      .setScript(script)
       .then(() => doc.doReload())
       // We create a string expression using
       // a field in the data we loaded:
-      .then(() => doc.createObject(stringExpressionProperties))
-      .then((stringExpression) => {
-        // Just a helper function that helps fetching the layout and prints out
-        // the evaluated string expression.
-        const update = () =>
-          stringExpression.getLayout().then((layout) => {
-            console.log(
-              'Evaluated string expression:',
-              JSON.stringify(layout.expr, null, '  '));
-          });
-
-        update().then(() => session.close());
-      });
+      .then(() => doc.createObject(properties))
+      .then(object => object.getLayout())
+      .then(layout => console.log('Evaluated string expression:', JSON.stringify(layout.expr, null, '  ')))
+      .then(() => session.close());
   })
   .catch(error => console.log('Session: Failed to open socket:', error));
