@@ -29,7 +29,7 @@ Table of contents
 - [Generated API](#generated-api)
   - [`api.id`](#apiid)
   - [`api.type`](#apitype)
-  - [`api.customType`](#apicustomtype)
+  - [`api.genericType`](#apigenerictype)
   - [`api.session`](#apisession)
   - [`api.handle`](#apihandle)
   - [Event: `changed`](#event-changed)
@@ -84,7 +84,19 @@ enigma.create(config).open().then((global) => {
 
 ### Mixins
 
-See the separate [Mixins](./mixins.md#mixins) documentation.
+The mixin concept allows you to add or override QIX Engine API functionality. A mixin is basically a
+JavaScript object describing which types it modifies, and a list of functions for extending and overriding
+the API for those types.
+
+Generic types like for example `GenericObject`, `Doc`, `GenericBookmark`, are supported but also custom
+`GenericObject` types such as `barchart`, `story` and `myCustomType`. An API will get both their
+generic type as well as custom type mixins applied.
+
+Mixins that are bound to several different types can find the current object type in the `genericType`
+or `type` members of the object. [`this.type`](#apitype) would for instance return `GenericObject` and
+[`this.genericType`](#apigenerictype) would return `barchart`.
+
+See the [Mixins examples](/examples/README.md#mixins) on how to use it.
 
 [Back to top](#api-documentation)
 
@@ -426,7 +438,7 @@ doc.getObject('object-id').then((api) => {
 
 [Back to top](#api-documentation)
 
-### `api.customType`
+### `api.genericType`
 
 This property contains the custom type set on this API (if any).
 
@@ -437,7 +449,7 @@ Example:
 
 ```js
 doc.getObject('object-id').then((api) => {
-   // api.customType === 'linechart'
+   // api.genericType === 'linechart'
 });
 ```
 

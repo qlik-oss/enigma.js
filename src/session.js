@@ -114,18 +114,18 @@ class Session {
   * @param {String} args.id ID of the backend object.
   * @param {String} args.type QIX type of the backend object. Can for example
   *                           be "Doc" or "GenericVariable".
-  * @param {String} args.customType Custom type of the backend object, if defined in qInfo.
+  * @param {String} args.genericType Custom type of the backend object, if defined in qInfo.
   * @returns {*} Returns the generated and possibly augmented API.
   */
   getObjectApi(args) {
-    const { handle, id, type, customType } = args;
+    const { handle, id, type, genericType } = args;
     let api = this.apis.getApi(handle);
     if (api) {
       return api;
     }
     api = this.definition
       .generate(type)
-      .create(this, handle, id, this.protocol.delta, customType);
+      .create(this, handle, id, this.protocol.delta, genericType);
     this.apis.add(handle, api);
     return api;
   }
@@ -142,7 +142,7 @@ class Session {
         handle: response.qHandle,
         type: response.qType,
         id: response.qGenericId,
-        customType: response.qGenericType,
+        genericType: response.qGenericType,
       });
     }
     return this.Promise.reject(new Error('Object not found'));
@@ -154,7 +154,7 @@ class Session {
   */
   open() {
     if (!this.globalPromise) {
-      const args = { handle: -1, id: 'Global', type: 'Global', customType: 'Global' };
+      const args = { handle: -1, id: 'Global', type: 'Global', genericType: 'Global' };
       this.globalPromise = this.rpc.open()
         .then(() => this.getObjectApi(args))
         .then((global) => {
