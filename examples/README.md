@@ -34,13 +34,13 @@ $ npm install
   - [Interacting with generic objects](./basics/generic-objects)
   - [Fetching lists of generic objects](./basics/lists)
 - #### Interacting with data
-  - [String expressions](./data/string-expressions)
+  - [String expressions](./data/string-expressions)
   - [List objects](./data/list-object#readme)
   - [Straight hypercubes](./data/hypercube-straight)
   - [Pivoting hypercubes](./data/hypercube-pivot)
 - #### Mixins
   - [Simple](./mixins/simple#readme)
-  - [Complex (including state)](./mixins/complex)
+  - [Complex (including state)](./mixins/complex#readme)
 - #### Interceptors
   - [Retry aborted requests](./interceptors/retry-aborted#readme)
 - #### Complete
