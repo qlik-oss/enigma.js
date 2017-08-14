@@ -34,7 +34,7 @@ $ npm install
   - [Interacting with generic objects](./basics/generic-objects)
   - [Fetching lists of generic objects](./basics/lists)
 - #### Interacting with data
-  - [String expressions](./data/string-expressions)
+  - [String expressions](./data/string-expression#readme)
   - [List objects](./data/list-object#readme)
   - [Straight hypercubes](./data/hypercube-straight)
   - [Pivoting hypercubes](./data/hypercube-pivot)
