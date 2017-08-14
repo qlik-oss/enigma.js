@@ -521,6 +521,7 @@ This section describes the configuration object that is sent into [`SenseUtiliti
 | `secure`     | Boolean  | Yes        | `true`         | Set to `false` to use an unsecure WebSocket connection (`ws://`). |
 | `urlParams`  | Object   | Yes        | `{}`           | Additional parameters to be added to WebSocket URL. |
 | `prefix`     | String   | Yes        |                | Absolute base path to use when connecting, used for proxy prefixes. |
+| `appId`      | String   | Yes        |                | The ID of the app intended to be opened in the session. |
 | `route`      | String   | Yes        |                | Initial route to open the WebSocket against, default is `app/engineData`. |
 | `subpath`    | String   | Yes        |                | Subpath to use, used to connect to dataprepservice in a server environment. |
 | `identity`   | String   | Yes        |                | Identity (session ID) to use. |
@@ -534,7 +535,7 @@ Returns a string (websocket URL).
 
 See [Configuration](#configuration-1) for the configuration options.
 
-Example in browser:
+Example in browser (commonjs syntax):
 
 ```js
 const enigma = require('enigma.js');
