@@ -23,27 +23,27 @@ $ npm install
 
 ---
 
-Table of contents
+## Table of contents
 
-- [Authentication](./authentication)
+- #### Authentication
   - [Sense using ticketing](./authentication/sense-using-ticketing)
   - [Sense using certificates](./authentication/sense-using-certificates#readme)
-- [Basics](./basics)
+- #### Basics
   - [Handling events](./basics/events#readme)
   - [Interacting with documents](./basics/documents)
   - [Interacting with generic objects](./basics/generic-objects)
   - [Fetching lists of generic objects](./basics/lists)
-- [Interacting with data](./data)
+- #### Interacting with data
   - [String expressions](./data/string-expressions)
   - [List objects](./data/list-object#readme)
   - [Straight hypercubes](./data/hypercube-straight)
   - [Pivoting hypercubes](./data/hypercube-pivot)
-- [Mixins](./mixins)
-  - [Simple](./mixins/simple)
+- #### Mixins
+  - [Simple](./mixins/simple#readme)
   - [Complex (including state)](./mixins/complex)
-- [Interceptors](./interceptors)
+- #### Interceptors
   - [Retry aborted requests](./interceptors/retry-aborted#readme)
-- [Complete](./complete)
+- #### Complete
   - [Car models web app](./complete/car-models)
 
 ---
