@@ -310,7 +310,7 @@ describe('Session', () => {
         Foo: 'bar',
       };
       apis.add(-1, cacheEntry);
-      const api = session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', customType: 'Bar' });
+      const api = session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', genericType: 'Bar' });
       expect(api).to.equal(cacheEntry);
     });
 
@@ -318,7 +318,7 @@ describe('Session', () => {
       const create = sinon.stub();
       const generate = sinon.stub().returns({ create });
       session.definition = { generate };
-      session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', customType: 'Bar' });
+      session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', genericType: 'Bar' });
       expect(generate).to.be.calledWith('Foo');
       expect(create).to.be.calledWith(session, -1, 'id_1234', true, 'Bar');
     });

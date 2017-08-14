@@ -9,7 +9,7 @@ function generateId() {
 
 function buildUrl(ttl) {
   ttl = typeof ttl !== 'undefined' ? ttl : 3600;
-  return `ws://localhost:4848/app/engineData/ttl/${ttl}/identity/${generateId()}`;
+  return `ws://localhost:9076/app/engineData/ttl/${ttl}/identity/${generateId()}`;
 }
 
 // N.B. This test will only pass when run towards an engine supporting the session TTL feature.

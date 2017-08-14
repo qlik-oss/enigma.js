@@ -29,7 +29,7 @@ Table of contents
 - [Generated API](#generated-api)
   - [`api.id`](#apiid)
   - [`api.type`](#apitype)
-  - [`api.customType`](#apicustomtype)
+  - [`api.genericType`](#apigenerictype)
   - [`api.session`](#apisession)
   - [`api.handle`](#apihandle)
   - [Event: `changed`](#event-changed)
@@ -84,7 +84,19 @@ enigma.create(config).open().then((global) => {
 
 ### Mixins
 
-See the separate [Mixins](./mixins.md#mixins) documentation.
+The mixin concept allows you to add or override QIX Engine API functionality. A mixin is basically a
+JavaScript object describing which types it modifies, and a list of functions for extending and overriding
+the API for those types.
+
+QIX Engine types like for example `GenericObject`, `Doc`, `GenericBookmark`, are supported but also custom
+`GenericObject` types such as `barchart`, `story` and `myCustomType`. An API will get both their
+generic type as well as custom type mixins applied.
+
+Mixins that are bound to several different types can find the current API type in the `genericType`
+or `type` members. [`this.type`](#apitype) would for instance return `GenericObject` and
+[`this.genericType`](#apigenerictype) would return `barchart`.
+
+See the [Mixins examples](/examples/README.md#mixins) on how to use it.
 
 [Back to top](#api-documentation)
 
@@ -426,18 +438,16 @@ doc.getObject('object-id').then((api) => {
 
 [Back to top](#api-documentation)
 
-### `api.customType`
+### `api.genericType`
 
-This property contains the custom type set on this API (if any).
-
-This corresponds to the `qInfo.qType` property on your generic
-object's properties object.
+Despite the name, this property corresponds to the `qInfo.qType`
+property on your generic object's properties object.
 
 Example:
 
 ```js
 doc.getObject('object-id').then((api) => {
-   // api.customType === 'linechart'
+   // api.genericType === 'linechart'
 });
 ```
 
@@ -521,6 +531,7 @@ This section describes the configuration object that is sent into [`SenseUtiliti
 | `secure`     | Boolean  | Yes        | `true`         | Set to `false` to use an unsecure WebSocket connection (`ws://`). |
 | `urlParams`  | Object   | Yes        | `{}`           | Additional parameters to be added to WebSocket URL. |
 | `prefix`     | String   | Yes        |                | Absolute base path to use when connecting, used for proxy prefixes. |
+| `appId`      | String   | Yes        |                | The ID of the app intended to be opened in the session. |
 | `route`      | String   | Yes        |                | Initial route to open the WebSocket against, default is `app/engineData`. |
 | `subpath`    | String   | Yes        |                | Subpath to use, used to connect to dataprepservice in a server environment. |
 | `identity`   | String   | Yes        |                | Identity (session ID) to use. |
@@ -534,7 +545,7 @@ Returns a string (websocket URL).
 
 See [Configuration](#configuration-1) for the configuration options.
 
-Example in browser:
+Example in browser (commonjs syntax):
 
 ```js
 const enigma = require('enigma.js');
