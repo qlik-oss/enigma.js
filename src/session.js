@@ -182,6 +182,7 @@ class Session {
     });
     const response = this.rpc.send(data);
     request.id = data.id;
+    request.retry = () => this.send(request);
 
     const promise = this.intercept.execute(response, request).then((res) => {
       if (typeof res.qHandle !== 'undefined' && typeof res.qType !== 'undefined') {
