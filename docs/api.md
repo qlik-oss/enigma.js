@@ -6,10 +6,15 @@
 
 Table of contents
 
+- [`enigma.create()`](#enigmacreateconfig)
 - [Configuration](#configuration)
-  - [Mixins](#mixins)
-  - [Interceptors](#interceptors)
-- [`enigma.create(config)`](#enigmacreateconfig)
+- [Mixins](#mixins)
+  - [`mixin.init()`](#mixininitargs)
+  - [`mixin.extend.myNonExistingMethod()`](#mixinextendmynonexistingmethodparam1-param2-)
+  - [`mixin.override.someExistingMethod()`](#mixinoverridesomeexistingmethodbase-param1-param2-)
+- [Interceptors](#interceptors)
+  - [`interceptor.onRejected()`](#interceptoronrejectedrequest-error)
+  - [`interceptor.onFulfilled()`](#interceptoronfulfilledrequest-result)
 - [Session API](#session-api)
   - [`session.open()`](#sessionopen)
   - [`session.close()`](#sessionclose)
@@ -40,6 +45,29 @@ Table of contents
 
 ---
 
+
+## `enigma.create(config)`
+
+Returns a [session](#session-api).
+
+See [Configuration](#configuration) for the configuration options.
+
+Example:
+
+```js
+const enigma = require('enigma.js');
+const schema = require('enigma.js/schemas/12.20.0.json');
+const WebSocket = require('ws');
+const config = {
+  schema,
+  url: 'ws://localhost:9076/app/engineData',
+  createSocket: url => new WebSocket(url),
+};
+const session = enigma.create(config);
+```
+
+[Back to top](#api-documentation)
+
 ## Configuration
 
 This section describes the configuration object that is sent into [`enigma.create(config)`](#enigmacreateconfig).
@@ -51,8 +79,8 @@ This section describes the configuration object that is sent into [`enigma.creat
 | `createSocket`          | Function | In browser |           | A function to use when instantiating the WebSocket, mandatory for Node.js. |
 | `Promise`               | Promise  | Yes        | `Promise` | ES6-compatible Promise library. |
 | `suspendOnClose`        | Boolean  | Yes        | `false`   | Set to `true` if the session should be suspended instead of closed when the websocket is closed. |
-| `mixins`                | Array    | Yes        | `[]`      | Mixins to extend/augment the QIX Engine API. See [Mixins section](#mixins) for more information how each entry in this array should look like. |
-| `interceptors`          | Array    | Yes        | `[]`      | Interceptors for augmenting responses before they are passed into mixins and end-users. See [Interceptors section](#interceptors) for more information how each entry in this array should look like. |
+| `mixins`                | Array    | Yes        | `[]`      | Mixins to extend/augment the QIX Engine API. See [Mixins section](#mixins) for more information how each entry in this array should look like. Mixins are applied in the array order. |
+| `interceptors`          | Array    | Yes        | `[]`      | Interceptors for augmenting responses before they are passed into mixins and end-users. See [Interceptors section](#interceptors) for more information how each entry in this array should look like. Interceptors are applied in the array order. |
 | `protocol`              | Object   | Yes        | `{}`      | An object containing additional JSON-RPC request parameters. |
 | `protocol.delta`        | Boolean  | Yes        | `true`    | Set to `false` to disable the use of the bandwidth-reducing delta protocol. |
 
@@ -82,7 +110,7 @@ enigma.create(config).open().then((global) => {
 
 [Back to top](#api-documentation)
 
-### Mixins
+## Mixins
 
 The mixin concept allows you to add or override QIX Engine API functionality. A mixin is basically a
 JavaScript object describing which types it modifies, and a list of functions for extending and overriding
@@ -96,11 +124,36 @@ Mixins that are bound to several different types can find the current API type i
 or `type` members. [`this.type`](#apitype) would for instance return `GenericObject` and
 [`this.genericType`](#apigenerictype) would return `barchart`.
 
-See the [Mixins examples](/examples/README.md#mixins) on how to use it.
+See the [Mixins examples](/examples/README.md#mixins) on how to use it, below is an outline of what the mixin
+API consists of.
+
+### `mixin.init(args)`
+
+This function will be executed for each generated API.
+
+See below what `args` contains.
+
+| Property                | Type     | Description |
+|-------------------------|----------|-------------|
+| `config`                | Object   | A reference to the enigma.js configuration object, including default values. |
+| `api`                   | Object   | The newly generated API instance. |
+
+### `mixin.extend.myNonExistingMethod(param1, param2, ...)`
+
+`mixin.extend` is an object containing methods to extend the generated API with. These method names **cannot already exist** or
+enigma.js will throw an error.
+
+### `mixin.override.someExistingMethod(base, param1, param2, ...)`
+
+`mixin.override` is an object containing methods that overrides existing API methods. These method names *needs to exist already** or
+engima.js will throw an error. Be careful when overriding, you may break expected behaviors in other mixins or your
+application.
+
+`base` is a reference to the previous mixin method, can be used to invoke the mixin chain _before_ this mixin method.
 
 [Back to top](#api-documentation)
 
-### Interceptors
+## Interceptors
 
 Interceptors is a concept similar to mixins, but run on a lower level. An interceptor
 can modify the result of a QIX Engine response before it reaches the mixin callstack.
@@ -109,29 +162,27 @@ The interceptor promises runs in _parallel_ to the regular promises used in enig
 which means that it can be really useful when you want to normalize behaviors in your
 application.
 
-See the [Interceptor examples](/examples/README.md#interceptors) on how to use it.
+See the [Interceptor examples](/examples/README.md#interceptors) on how to use it, below
+is an outline of what the interceptor API consists of.
 
-[Back to top](#api-documentation)
+### `interceptor.onRejected(request, error)`
 
-## `enigma.create(config)`
+This method is invoked when a previous interceptor has rejected the promise, use this
+to handle for example errors before they are sent into mixins.
 
-Returns a [session](#session-api).
+`request` is the JSON-RPC request resulting in this error. You may use `.retry()`
+to retry sending it to QIX Engine.
 
-See [Configuration](#configuration) for the configuration options.
+`error` is whatever the previous interceptor rejected with.
 
-Example:
+### `interceptor.onFulfilled(request, result)`
 
-```js
-const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/12.20.0.json');
-const WebSocket = require('ws');
-const config = {
-  schema,
-  url: 'ws://localhost:9076/app/engineData',
-  createSocket: url => new WebSocket(url),
-};
-const session = enigma.create(config);
-```
+This method is invoked when a promise has been successfully resolved, use this
+to modify the result or reject the promise chain before it is sent to mixins.
+
+`request` is the JSON-RPC request resulting in this response.
+
+`result` is whatever the previous interceptor resolved with.
 
 [Back to top](#api-documentation)
 
