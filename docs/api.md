@@ -10,8 +10,8 @@ Table of contents
 - [Configuration](#configuration)
 - [Mixins](#mixins)
   - [`mixin.init()`](#mixininitargs)
-  - [`mixin.extend.nonExistingMethod()`](#mixinextendnonexistingmethodparam1-param2-)
-  - [`mixin.override.existingMethod()`](#mixinoverrideexistingmethodbase-param1-param2-)
+  - [`mixin.extend.myNonExistingMethod()`](#mixinextendmynonexistingmethodparam1-param2-)
+  - [`mixin.override.someExistingMethod()`](#mixinoverridesomeexistingmethodbase-param1-param2-)
 - [Interceptors](#interceptors)
   - [`interceptor.onRejected()`](#interceptoronrejectedrequest-error)
   - [`interceptor.onFulfilled()`](#interceptoronfulfilledrequest-result)
@@ -79,8 +79,8 @@ This section describes the configuration object that is sent into [`enigma.creat
 | `createSocket`          | Function | In browser |           | A function to use when instantiating the WebSocket, mandatory for Node.js. |
 | `Promise`               | Promise  | Yes        | `Promise` | ES6-compatible Promise library. |
 | `suspendOnClose`        | Boolean  | Yes        | `false`   | Set to `true` if the session should be suspended instead of closed when the websocket is closed. |
-| `mixins`                | Array    | Yes        | `[]`      | Mixins to extend/augment the QIX Engine API. See [Mixins section](#mixins) for more information how each entry in this array should look like. |
-| `interceptors`          | Array    | Yes        | `[]`      | Interceptors for augmenting responses before they are passed into mixins and end-users. See [Interceptors section](#interceptors) for more information how each entry in this array should look like. |
+| `mixins`                | Array    | Yes        | `[]`      | Mixins to extend/augment the QIX Engine API. See [Mixins section](#mixins) for more information how each entry in this array should look like. Mixins are applied in the array order. |
+| `interceptors`          | Array    | Yes        | `[]`      | Interceptors for augmenting responses before they are passed into mixins and end-users. See [Interceptors section](#interceptors) for more information how each entry in this array should look like. Interceptors are applied in the array order. |
 | `protocol`              | Object   | Yes        | `{}`      | An object containing additional JSON-RPC request parameters. |
 | `protocol.delta`        | Boolean  | Yes        | `true`    | Set to `false` to disable the use of the bandwidth-reducing delta protocol. |
 
@@ -135,17 +135,17 @@ See below what `args` contains.
 
 | Property                | Type     | Description |
 |-------------------------|----------|-------------|
-| `config`                | Object   | A reference to the normalized enigma.js configuration object. |
+| `config`                | Object   | A reference to the enigma.js configuration object, including default values. |
 | `api`                   | Object   | The newly generated API instance. |
 
-### `mixin.extend.nonExistingMethod(param1, param2, ...)`
+### `mixin.extend.myNonExistingMethod(param1, param2, ...)`
 
-An object containing methods to extend the generated API with. These method names **cannot already exist** or
+`mixin.extend` is an object containing methods to extend the generated API with. These method names **cannot already exist** or
 enigma.js will throw an error.
 
-### `mixin.override.existingMethod(base, param1, param2, ...)`
+### `mixin.override.someExistingMethod(base, param1, param2, ...)`
 
-An object containing methods that overrides existing API methods. These method names *needs to exist already** or
+`mixin.override` is an object containing methods that overrides existing API methods. These method names *needs to exist already** or
 engima.js will throw an error. Be careful when overriding, you may break expected behaviors in other mixins or your
 application.
 
@@ -179,6 +179,8 @@ to retry sending it to QIX Engine.
 
 This method is invoked when a promise has been successfully resolved, use this
 to modify the result or reject the promise chain before it is sent to mixins.
+
+`request` is the JSON-RPC request resulting in this response.
 
 `result` is whatever the previous interceptor resolved with.
 
