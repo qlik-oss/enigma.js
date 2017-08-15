@@ -22,18 +22,16 @@ const session = createSession();
 session
   .open()
   .then(global => global.createSessionApp())
-  .then((doc) => {
+  .then(doc =>
     // Load in some data into the session document:
     doc.setScript(script)
       .then(() => doc.doReload())
-      .then(() => {
+      .then(() =>
         // Create a field list using qFieldListDef and list all fields available in the document.
         doc
           .createObject(properties)
           .then(object => object.getLayout())
           .then(layout => console.log('Field list:', JSON.stringify(layout, null, '  ')))
-          .then(() => session.close());
-      });
-  })
+          .then(() => session.close())))
   .catch(error => console.log('Session: Failed to open socket:', error));
 
