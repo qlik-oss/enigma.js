@@ -36,7 +36,7 @@ session
 
     // Create a app object list using qAppObjectListDef and list all objects of type my-object
     // and also lists the title for each object.
-    Promise.all(tasks).then(() => { // eslint-disable-line no-restricted-globals
+    return Promise.all(tasks).then(() => { // eslint-disable-line no-restricted-globals
       doc
         .createObject(properties)
         .then(object => object.getLayout())
