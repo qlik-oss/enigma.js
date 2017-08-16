@@ -26,8 +26,8 @@ $ npm install
 ## Table of contents
 
 - #### Authentication
-  - [Sense using ticketing](./authentication/sense-using-ticketing)
   - [Sense using certificates](./authentication/sense-using-certificates#readme)
+  - [Sense using JSON Web Token](./authentication/sense-using-jwt#readme)
 - #### Basics
   - [Handling events](./basics/events#readme)
   - [Interacting with documents](./basics/documents)

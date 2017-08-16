@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "enigma.js runnable examples dependencies",
   "dependencies": {
-    "enigma.js": "^2.0.0-0",
+    "enigma.js": "^2.0.0-1",
+    "jsonwebtoken": "^7.4.2",
     "ws": "^3.1.0"
   }
 }
