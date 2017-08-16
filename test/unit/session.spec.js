@@ -11,7 +11,7 @@ describe('Session', () => {
   let suspendResume;
   let apis;
 
-  const intercept = { execute: promise => promise };
+  const intercept = { execute: (sess, promise) => promise };
   const createSession = (throwError, rpc, suspendOnClose = false) => {
     const defaultRpc = new RPCMock({
       Promise,

@@ -17,8 +17,8 @@ All example categories should have a `README.md` file containing:
 Before getting started, you should run these commands in a terminal:
 
 ```bash
-$ cd examples
-$ npm install
+$ cd examples
+$ npm install
 ```
 
 ---
@@ -32,7 +32,7 @@ $ npm install
   - [Handling events](./basics/events#readme)
   - [Interacting with documents](./basics/documents)
   - [Interacting with generic objects](./basics/generic-objects)
-  - [Fetching lists of generic objects](./basics/lists)
+  - [Listing objects or fields in a document](./basics/lists#readme)
 - #### Interacting with data
   - [String expressions](./data/string-expression#readme)
   - [List objects](./data/list-object#readme)

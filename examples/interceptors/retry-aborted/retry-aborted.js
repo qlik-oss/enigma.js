@@ -1,4 +1,4 @@
-const enigma = require('enigma.js');
+const enigma = require('../../../enigma.js');
 const WebSocket = require('ws');
 
 const schema = require('enigma.js/schemas/12.20.0.json');
@@ -22,17 +22,17 @@ const session = enigma.create({
   createSocket: url => new WebSocket(url),
   responseInterceptors: [{
     // We only want to handle failed responses from QIX Engine:
-    onRejected: function retryAbortedError(data, error) {
+    onRejected: function retryAbortedError(sessionReference, request, error) {
       console.log('Request: Rejected', error);
       // We only want to handle aborted QIX errors:
       if (error.code === schema.enums.LocalizedErrorCode.LOCERR_GENERIC_ABORTED) {
         // We keep track of how many consecutive times we have tried to do this call:
-        data.tries = (data.tries || 0) + 1;
-        console.log(`Request: Retry #${data.tries}`);
+        request.tries = (request.tries || 0) + 1;
+        console.log(`Request: Retry #${request.tries}`);
         // We do not want to get stuck in an infinite loop here if something has gone
         // awry, so we only retry until we have reached MAX_RETRIES:
-        if (data.tries <= MAX_RETRIES) {
-          return session.send(data);
+        if (request.tries <= MAX_RETRIES) {
+          return request.retry();
         }
       }
       // If it was not an aborted QIX call, or if we reached MAX_RETRIES, we let the error

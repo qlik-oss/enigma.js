@@ -34,6 +34,22 @@ And know of at least some these web technologies:
 * Promises
 * Websockets
 
+### Schemas
+
+enigma.js use schemas as a source when generating the QIX Engine API. The exact
+version of the schema you need is based on the QIX Engine version you want to
+communicate with, as well as what you plan on using in the QIX Engine API.
+
+Keep in mind that before version `12.20.0` the schema version corresponds to the
+Qlik Sense Enterprise version, and from `12.20.0` and forward, the schema version
+is be mapped to the QIX Engine API version.
+
+Read more:
+
+* [High-level concepts: Schemas](./docs/concepts.md#schemas-the-qix-interface) for more information about how they work.
+* [schemas/](/schemas) for the available schemas.
+* [API Insights on Qlik Sense Help](https://api-insights.qlik.com/#/manifest) to identify your QIX Engine API version.
+
 ### Usage
 
 First off, install enigma.js and a WebSocket library:
