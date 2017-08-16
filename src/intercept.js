@@ -86,11 +86,12 @@ class Intercept {
 
   /**
   * Process error interceptor.
-  * @param {Object} meta - The meta info about the request.
-  * @param response - The response.
+  * @param {Object} session - The session the intercept is being executed on.
+  * @param {Object} request - The JSON-RPC request.
+  * @param {Object} response - The response.
   * @returns {Object} - Returns the defined error for an error, else the response.
   */
-  processErrorInterceptor(meta, response) {
+  processErrorInterceptor(session, request, response) {
     if (typeof response.error !== 'undefined') {
       const data = response.error;
       const error = new Error(data.message);
@@ -103,11 +104,12 @@ class Intercept {
 
   /**
   * Process delta interceptor.
-  * @param {Object} meta - The meta info about the request.
-  * @param response - The response.
+  * @param {Object} session - The session the intercept is being executed on.
+  * @param {Object} request - The JSON-RPC request.
+  * @param {Object} response - The response.
   * @returns {Object} - Returns the patched response
   */
-  processDeltaInterceptor(meta, response) {
+  processDeltaInterceptor(session, request, response) {
     const result = response.result;
     if (response.delta) {
       // when delta is on the response data is expected to be an array of patches
@@ -116,9 +118,9 @@ class Intercept {
         const key = keys[i];
         const patches = result[key];
         if (!Array.isArray(patches)) {
-          return this.Promise.reject('Unexpected rpc response, expected array of patches');
+          return this.Promise.reject(new Error('Unexpected rpc response, expected array of patches'));
         }
-        result[key] = this.getPatchee(meta.handle, patches, `${meta.method}-${key}`);
+        result[key] = this.getPatchee(request.handle, patches, `${request.method}-${key}`);
       }
       // return a cloned response object to avoid patched object references:
       return JSON.parse(JSON.stringify(response));
@@ -128,27 +130,29 @@ class Intercept {
 
   /**
   * Process result interceptor.
-  * @param {Object} meta - The meta info about the request.
-  * @param response - The response.
+  * @param {Object} session - The session the intercept is being executed on.
+  * @param {Object} request - The JSON-RPC request.
+  * @param {Object} response - The response.
   * @returns {Object} - Returns the result property on the response
   */
-  processResultInterceptor(meta, response) {
+  processResultInterceptor(session, request, response) {
     return response.result;
   }
 
   /**
   * Processes specific QIX methods that are breaking the protocol specification
   * and normalizes the response.
-  * @param {Object} meta - The meta info about the request.
-  * @param response - The response.
+  * @param {Object} session - The session the intercept is being executed on.
+  * @param {Object} request - The JSON-RPC request.
+  * @param {Object} response - The response.
   * @returns {Object} - Returns the result property on the response
   */
-  processMultipleOutParamInterceptor(meta, response) {
-    if (meta.method === 'CreateSessionApp' || meta.method === 'CreateSessionAppFromApp') {
+  processMultipleOutParamInterceptor(session, request, response) {
+    if (request.method === 'CreateSessionApp' || request.method === 'CreateSessionAppFromApp') {
       // this method returns multiple out params that we need
       // to normalize before processing the response further:
       response[RETURN_KEY].qGenericId = response[RETURN_KEY].qGenericId || response.qSessionAppId;
-    } else if (meta.method === 'GetInteract') {
+    } else if (request.method === 'GetInteract') {
       // this method returns a qReturn value when it should only return
       // meta.outKey:
       delete response[RETURN_KEY];
@@ -158,15 +162,16 @@ class Intercept {
 
   /**
   * Process out interceptor.
-  * @param {Object} meta - The meta info about the request.
-  * @param response - The result.
+  * @param {Object} session - The session the intercept is being executed on.
+  * @param {Object} request - The JSON-RPC request.
+  * @param {Object} response - The result.
   * @returns {Object} - Returns the out property on result
   */
-  processOutInterceptor(meta, response) {
+  processOutInterceptor(session, request, response) {
     if (hasOwnProperty.call(response, RETURN_KEY)) {
       return response[RETURN_KEY];
-    } else if (meta.outKey !== -1) {
-      return response[meta.outKey];
+    } else if (request.outKey !== -1) {
+      return response[request.outKey];
     }
     return response;
   }
@@ -174,15 +179,16 @@ class Intercept {
   /**
   * Execute the interceptor queue, each interceptor will get the result from
   * the previous interceptor.
+  * @param {Object} session The session instance to execute against.
   * @param {Promise} promise The promise to chain on to.
-  * @param {Object} meta The JSONRPC request object for the intercepted response.
+  * @param {Object} request The JSONRPC request object for the intercepted response.
   * @returns {Promise}
   */
-  execute(promise, meta) {
+  execute(session, promise, request) {
     return this.interceptors.reduce((interception, interceptor) =>
       interception.then(
-        interceptor.onFulfilled && interceptor.onFulfilled.bind(this, meta),
-        interceptor.onRejected && interceptor.onRejected.bind(this, meta))
+        interceptor.onFulfilled && interceptor.onFulfilled.bind(this, session, request),
+        interceptor.onRejected && interceptor.onRejected.bind(this, session, request))
       , promise,
     );
   }

@@ -13,8 +13,8 @@ Table of contents
   - [`mixin.extend.myNonExistingMethod()`](#mixinextendmynonexistingmethodparam1-param2-)
   - [`mixin.override.someExistingMethod()`](#mixinoverridesomeexistingmethodbase-param1-param2-)
 - [Interceptors](#interceptors)
-  - [`interceptor.onRejected()`](#interceptoronrejectedrequest-error)
-  - [`interceptor.onFulfilled()`](#interceptoronfulfilledrequest-result)
+  - [`interceptor.onRejected()`](#interceptoronrejectedsession-request-error)
+  - [`interceptor.onFulfilled()`](#interceptoronfulfilledsession-request-result)
 - [Session API](#session-api)
   - [`session.open()`](#sessionopen)
   - [`session.close()`](#sessionclose)
@@ -165,20 +165,24 @@ application.
 See the [Interceptor examples](/examples/README.md#interceptors) on how to use it, below
 is an outline of what the interceptor API consists of.
 
-### `interceptor.onRejected(request, error)`
+### `interceptor.onRejected(session, request, error)`
 
 This method is invoked when a previous interceptor has rejected the promise, use this
 to handle for example errors before they are sent into mixins.
+
+`session` refers to the session executing the interceptor.
 
 `request` is the JSON-RPC request resulting in this error. You may use `.retry()`
 to retry sending it to QIX Engine.
 
 `error` is whatever the previous interceptor rejected with.
 
-### `interceptor.onFulfilled(request, result)`
+### `interceptor.onFulfilled(session, request, result)`
 
 This method is invoked when a promise has been successfully resolved, use this
 to modify the result or reject the promise chain before it is sent to mixins.
+
+`session` refers to the session executing the interceptor.
 
 `request` is the JSON-RPC request resulting in this response.
 
