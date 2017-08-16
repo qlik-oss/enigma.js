@@ -1,4 +1,4 @@
-# Interacting with data: Hypercube
+# Interacting with data: Hypercubes
 
 This example will show you how to create three different types of hypercubes (straight, pivot and stacked), make a selection and retrieve the data in it.
 
@@ -10,9 +10,11 @@ This example will show you how to create three different types of hypercubes (st
 
 ## Documentation
 
-* [Qlik Sense Help: HyperCube concept](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/Platform/Content/Concepts/Hypercubes.htm)
-* [Qlik Sense Help: HyperCube definition](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/Structs/HyperCubeDef.htm)
+* [Qlik Sense Help: Hypercube concept](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/Platform/Content/Concepts/Hypercubes.htm)
+* [Qlik Sense Help: Hypercube definition](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/Structs/HyperCubeDef.htm)
+* [Qlik Sense Help: Creating a hypercube](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/WorkingWithAppsAndVisualizations/CreateVisualizations/create-hypercube.htm)
 * [Qlik Sense Help: Select cells in a hypercube](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/DiscoveringAndAnalysing/MakeSelections/select-set-of-cells-in-hypercube.htm)
+* [Qlik Sense Help: Select ranges in a hypercube](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/DiscoveringAndAnalysing/MakeSelections/select-range-measures-in-hypercube.htm)
 
 ### Pivoting and stacked hypercube
 * [Qlik Sense Help: Get values from a pivot table](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/Classes/GenericObjectClass/GenericObject-class-GetHyperCubePivotData-method.htm)
