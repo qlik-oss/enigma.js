@@ -15,18 +15,12 @@ const properties = {
   qHyperCubeDef: {
     qDimensions: [
       {
-        qDef: {
-          qFieldDefs: [
-            'ID',
-          ],
-        },
+        qDef: { qFieldDefs: ['ID'] },
       },
     ],
     qMeasures: [
       {
-        qDef: {
-          qDef: '=Sum(Value)',
-        },
+        qDef: { qDef: '=Sum(Value)' },
       },
     ],
     qInitialDataFetch: [

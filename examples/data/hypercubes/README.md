@@ -17,6 +17,7 @@ This example will show you how to create three different types of hypercubes (st
 * [Qlik Sense Help: Select ranges in a hypercube](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/DiscoveringAndAnalysing/MakeSelections/select-range-measures-in-hypercube.htm)
 
 ### Pivoting and stacked hypercube
+
 * [Qlik Sense Help: Get values from a pivot table](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/Classes/GenericObjectClass/GenericObject-class-GetHyperCubePivotData-method.htm)
 * [Qlik Sense Help: Get values from a stacked table](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/Classes/GenericObjectClass/GenericObject-class-GetHyperCubeStackData-method.htm)
 * [Qlik Sense Help: Select values in a pivot or stacked table](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/DiscoveringAndAnalysing/MakeSelections/select-values-in-pivot-table.htm)

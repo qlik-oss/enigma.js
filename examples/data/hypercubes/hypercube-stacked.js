@@ -16,27 +16,14 @@ const properties = {
   qHyperCubeDef: {
     qDimensions: [
       {
-        qDef: {
-          qFieldDefs: [
-            'ID',
-          ],
-        },
+        qDef: { qFieldDefs: ['ID'] },
       },
       {
-        qDef: {
-          qFieldDefs: [
-            'ID2',
-          ],
-        },
+        qDef: { qFieldDefs: ['ID2'] },
       },
     ],
     qMeasures: [
-      {
-        qDef: {
-          qLabel: '',
-          qDef: 'Sum(Value)',
-        },
-      },
+      { qDef: { qDef: 'Sum(Value)' } },
     ],
     qMode: 'EQ_DATA_MODE_PIVOT_STACK',
     qAlwaysFullyExpanded: true,
