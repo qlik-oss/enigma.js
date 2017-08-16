@@ -36,8 +36,7 @@ $ npm install
 - #### Interacting with data
   - [String expressions](./data/string-expression#readme)
   - [List objects](./data/list-object#readme)
-  - [Straight hypercubes](./data/hypercube-straight)
-  - [Pivoting hypercubes](./data/hypercube-pivot)
+  - [Hypercubes (straight, pivot and stacked)](./data/hypercube#readme)
 - #### Mixins
   - [Simple](./mixins/simple#readme)
   - [Complex (including state)](./mixins/complex#readme)
