@@ -13,18 +13,11 @@ const properties = {
     qType: 'my-straight-hypercube',
   },
   qHyperCubeDef: {
-    qStateName: '$',
     qDimensions: [
       {
-        qLibraryId: '',
-        qNullSuppression: false,
         qDef: {
-          qGrouping: 'N',
           qFieldDefs: [
             'ID',
-          ],
-          qFieldLabels: [
-            '',
           ],
         },
       },
@@ -32,12 +25,6 @@ const properties = {
     qMeasures: [
       {
         qDef: {
-          qLabel: '',
-          qDescription: '',
-          qTags: [
-            'tags',
-          ],
-          qGrouping: 'N',
           qDef: '=Sum(Value)',
         },
       },

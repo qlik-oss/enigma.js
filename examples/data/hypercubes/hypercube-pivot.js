@@ -16,45 +16,22 @@ const properties = {
   qHyperCubeDef: {
     qDimensions: [
       {
-        qLibraryId: '',
         qDef: {
           qFieldDefs: [
             'ID',
           ],
-          qFieldLabels: [
-            '',
-          ],
-          qSortCriterias: [
-            {
-              qSortByLoadOrder: 0,
-              qSortByAscii: 1,
-            },
-          ],
-          qReverseSort: false,
         },
       },
       {
-        qLibraryId: '',
         qDef: {
           qFieldDefs: [
             'ID2',
           ],
-          qFieldLabels: [
-            '',
-          ],
-          qSortCriterias: [
-            {
-              qSortByLoadOrder: 0,
-              qSortByAscii: 1,
-            },
-          ],
-          qReverseSort: false,
         },
       },
     ],
     qMeasures: [
       {
-        qLibraryId: '',
         qDef: {
           qLabel: '',
           qDef: 'Sum(Value)',
@@ -63,22 +40,6 @@ const properties = {
     ],
     qMode: 'EQ_DATA_MODE_PIVOT',
     qAlwaysFullyExpanded: true,
-    qInitialDataFetch: [
-      {
-        qTop: 0,
-        qLeft: 0,
-        qHeight: 5,
-        qWidth: 5,
-      },
-    ],
-    qSuppressZero: true,
-    qSuppressMissing: true,
-    qNoOfLeftDims: 2,
-    qInterColumnSortOrder: [
-      0,
-      1,
-      2,
-    ],
   },
 };
 
@@ -97,7 +58,7 @@ session.open()
         qTop: 0,
         qLeft: 0,
         qHeight: 5,
-        qWidth: 5,
+        qWidth: 2,
       },
     ])
       .then(data => console.log('Hypercube data pages:', JSON.stringify(data, null, '  ')))
@@ -113,7 +74,7 @@ session.open()
           qTop: 0,
           qLeft: 0,
           qHeight: 5,
-          qWidth: 5,
+          qWidth: 2,
         },
       ]).then(data => console.log('Hypercube data pages after selection:', JSON.stringify(data, null, '  '))))))
   // Close the session
