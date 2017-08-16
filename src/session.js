@@ -184,7 +184,7 @@ class Session {
     request.id = data.id;
     request.retry = () => this.send(request);
 
-    const promise = this.intercept.execute(response, request).then((res) => {
+    const promise = this.intercept.execute(this, response, request).then((res) => {
       if (typeof res.qHandle !== 'undefined' && typeof res.qType !== 'undefined') {
         return this.handleObjectReferenceResponse(res);
       }

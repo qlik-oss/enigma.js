@@ -22,7 +22,7 @@ const session = enigma.create({
   createSocket: url => new WebSocket(url),
   responseInterceptors: [{
     // We only want to handle failed responses from QIX Engine:
-    onRejected: function retryAbortedError(request, error) {
+    onRejected: function retryAbortedError(sessionReference, request, error) {
       console.log('Request: Rejected', error);
       // We only want to handle aborted QIX errors:
       if (error.code === schema.enums.LocalizedErrorCode.LOCERR_GENERIC_ABORTED) {
