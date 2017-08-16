@@ -11,7 +11,7 @@ AutoGenerate 100
 
 const properties = {
   qInfo: {
-    qType: 'my-pivot-hypercube',
+    qType: 'my-stacked-hypercube',
   },
   qHyperCubeDef: {
     qDimensions: [
@@ -92,7 +92,7 @@ session.open()
     // Create a generic object with a hypercube stacked definition containing two dimensions and one measure
     .then(() => doc.createObject(properties))
     // Get hypercube stacked data
-    .then(object => object.GetHyperCubeStackData('/qHyperCubeDef', [
+    .then(object => object.getHyperCubeStackData('/qHyperCubeDef', [
       {
         qTop: 0,
         qLeft: 0,
@@ -108,7 +108,7 @@ session.open()
         qCol: 0,
       }], false))
       // Get stacked data
-      .then(() => object.GetHyperCubeStackData('/qHyperCubeDef', [
+      .then(() => object.getHyperCubeStackData('/qHyperCubeDef', [
         {
           qTop: 0,
           qLeft: 0,

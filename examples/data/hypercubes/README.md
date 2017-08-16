@@ -12,8 +12,6 @@ This example will show you how to create three different types of hypercubes (st
 
 * [Qlik Sense Help: HyperCube concept](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/Platform/Content/Concepts/Hypercubes.htm)
 * [Qlik Sense Help: HyperCube definition](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/Structs/HyperCubeDef.htm)
-
-### Straight hypercube
 * [Qlik Sense Help: Select cells in a hypercube](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/DiscoveringAndAnalysing/MakeSelections/select-set-of-cells-in-hypercube.htm)
 
 ### Pivoting and stacked hypercube
