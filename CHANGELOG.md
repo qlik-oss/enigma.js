@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.0.0
+
+This is a new major version and introduces some breaking changes. Please check the migration guide
+and make sure you understand the impact on your application before upgrading.
+
+See [migration guide](https://github.com/qlik-oss/enigma.js/blob/master/docs/migrate-v1.md).
+
+### New features
+
+- Interceptor concept publicly available. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/api.md#interceptors).
+- Support for named QIX method parameters. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/concepts.md#schemas-the-qix-interface).
+- New optional module sense-utilities. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/api.md#sense-utilities-api).
+
+### Notable changes
+
+- No more product-specific configuration, 23 settings down to 8. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/api.md#configuration).
+- Dropped enigma.js REST service. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/migrate-v1.md#service-concept-dropped).
+- File size is ~15 times smaller (around 7kb gzipped)
+- Full control of session life-cycles. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/api.md#session-api).
+
 ## 1.2.1
 
 - Bugfix related to suspend/resume, notification should be qSessionState (not qConnectedState).
