@@ -191,14 +191,6 @@ session.on('traffic:received', (data) => {
 });
 ```
 
-### `handle-changed` (never documented)
-
-You may instead use the (now public) [`handle:changed`](./api.md#event-handlechanged) event.
-
-### `handle-closed` (never documented)
-
-You may instead use the (now public) [`handle:closed`](./api.md#event-handleclosed) event.
-
 [Back to top](#migrating-from-version-1x)
 
 ## Session cache and websockets

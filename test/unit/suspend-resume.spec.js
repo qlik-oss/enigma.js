@@ -9,6 +9,15 @@ describe('Suspend/Resume', () => {
   let rpc;
   let apis;
 
+  const createApi = (handle, type, id) => ({
+    on: sinon.stub(),
+    emit: sinon.stub(),
+    removeAllListeners: () => {},
+    handle,
+    type,
+    id,
+  });
+
   beforeEach(() => {
     SocketMock.on('created', socket => socket.open());
     rpc = new RPC({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url, false) });
@@ -34,7 +43,7 @@ describe('Suspend/Resume', () => {
     });
 
     it('should restore global', () => {
-      apis.add(-1, { emit: sinon.stub(), handle: -1, type: 'Global' });
+      apis.add(-1, createApi(-1, 'Global'));
       return suspendResume.suspend()
         .then(() => suspendResume.resume())
         .then(() => expect(apis.getApi(-1).emit.notCalled).to.equal(true));
@@ -42,11 +51,11 @@ describe('Suspend/Resume', () => {
 
     it('should close doc', () => {
       const apisToClose = [
-        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 1, type: 'Doc', id: 1 },
-        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 2, type: 'GenericObject', id: 2 },
+        createApi(1, 'Doc', 1),
+        createApi(2, 'GenericObject', 2),
       ];
 
-      apisToClose.concat([{ emit: sinon.stub(), handle: -1, type: 'Global' }]).forEach(api => apis.add(api.handle, api));
+      apisToClose.concat([createApi(-1, 'Global')]).forEach(api => apis.add(api.handle, api));
 
       SocketMock.on('created', (socket) => {
         socket.intercept('GetActiveDoc').return({ error: { message: 'Oh, no!' } });
@@ -63,17 +72,17 @@ describe('Suspend/Resume', () => {
 
     it('should restore doc and objects', () => {
       const apisToChange = [
-        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 1, type: 'Doc', id: 1 },
-        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 2, type: 'GenericObject', id: 2 },
-        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 3, type: 'GenericVariable', id: 3 },
+        createApi(1, 'Doc', 1),
+        createApi(2, 'GenericObject', 2),
+        createApi(3, 'GenericVariable', 3),
       ];
       const apisToClose = [
-        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 4, type: 'Field', id: 4 },
-        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 5, type: 'GenericDummy', id: 5 },
-        { emit: sinon.stub(), removeAllListeners: () => {}, handle: 6, type: 'GenericBookmark', id: 6 },
+        createApi(4, 'Field', 4),
+        createApi(5, 'GenericDummy', 5),
+        createApi(6, 'GenericBookmark', 6),
       ];
 
-      apisToChange.concat(apisToClose).concat([{ emit: sinon.stub(), handle: -1, type: 'Global' }])
+      apisToChange.concat(apisToClose).concat([createApi(-1, 'Global')])
         .forEach(api => apis.add(api.handle, api));
 
       SocketMock.on('created', (socket) => {

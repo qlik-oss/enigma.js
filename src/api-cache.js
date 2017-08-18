@@ -6,43 +6,6 @@ import KeyValueCache from './cache';
 */
 class ApiCache extends KeyValueCache {
   /**
-  * Event handler for triggering API instance events when their handle
-  * is changed.
-  * @emits api#changed
-  */
-  onHandleChanged(handle) {
-    const api = this.getApi(handle);
-    if (api) {
-      api.emit('changed');
-    }
-  }
-
-  /**
-  * Event handler for triggering API instance events when their handle
-  * is closed.
-  * @emits api#closed
-  */
-  onHandleClosed(handle) {
-    const api = this.getApi(handle);
-    if (api) {
-      api.emit('closed');
-      this.remove(handle);
-    }
-  }
-
-  /**
-  * Event handler for cleaning up API instances when a session has been closed.
-  * @emits api#closed
-  */
-  onSessionClosed() {
-    this.getApis().forEach((entry) => {
-      entry.api.emit('closed');
-      entry.api.removeAllListeners();
-    });
-    this.clear();
-  }
-
-  /**
   * Adds an API.
   * @function ApiCache#add
   * @param {Number} handle - The handle for the API.
@@ -55,6 +18,7 @@ class ApiCache extends KeyValueCache {
       deltaCache: new KeyValueCache(),
     };
     super.add(handle.toString(), entry);
+    api.on('closed', () => this.remove(handle));
     return entry;
   }
 

@@ -4,6 +4,15 @@ describe('ApiCache', () => {
   let apiCache;
   let definition;
 
+  const createApi = (template, on, emit) => {
+    const api = {
+      on: on || sinon.stub(),
+      emit: emit || sinon.stub(),
+      removeAllListeners: () => {},
+    };
+    return Object.assign(api, template || {});
+  };
+
   beforeEach(() => {
     definition = {
       generate: sinon.stub().returnsThis(),
@@ -19,41 +28,46 @@ describe('ApiCache', () => {
   });
 
   it('should add an api', () => {
-    const api = {};
+    const api = createApi();
     const entry = apiCache.add(1, api);
     expect(apiCache.entries['1']).to.equal(entry);
   });
 
   it('should get an api', () => {
-    const api = {};
+    const api = createApi();
     apiCache.add(1, api);
     expect(apiCache.getApi(1)).to.equal(api);
   });
 
   it('should return an undefined api if an api is not found', () => {
-    const api = {};
+    const api = createApi();
     apiCache.add(1, api);
     expect(apiCache.getApi(2)).to.equal(undefined);
   });
 
   it('should return an undefined api if given an undefined handle', () => {
-    const api = {};
+    const api = createApi();
     apiCache.add(1, api);
     expect(apiCache.getApi(undefined)).to.equal(undefined);
   });
 
   it('should get all api entries', () => {
-    apiCache.add('1', 'foo');
-    apiCache.add('2', 'bar');
+    const api1 = createApi({ a: 'foo' });
+    const api2 = createApi({ a: 'bar' });
+    apiCache.add('0', api1);
+    apiCache.add('1', api2);
 
     const entries = apiCache.getApis();
     expect(entries).to.be.an('Array');
     expect(entries.length).to.equal(2);
-    expect(entries[1]).to.deep.equal({ handle: '2', api: 'bar' });
+    expect(entries[0].handle).to.equal('0');
+    expect(entries[0].api.a).to.equal('foo');
+    expect(entries[1].handle).to.equal('1');
+    expect(entries[1].api.a).to.equal('bar');
   });
 
   it('should get a patchee', () => {
-    const api = {};
+    const api = createApi();
     const patchee = {};
     apiCache.add(1, api);
     apiCache.addPatchee(1, 'method', patchee);
@@ -61,58 +75,20 @@ describe('ApiCache', () => {
   });
 
   it('should add a patchee', () => {
-    const api = {};
+    const api = createApi();
     const patchee = {};
     const entry = apiCache.add(1, api);
     apiCache.addPatchee(1, 'method', patchee);
     expect(entry.deltaCache.entries.method).to.equal(patchee);
   });
 
-
-  it('should emit changed on handle changed', () => {
-    const api = {
-      emit: sinon.spy(),
-    };
+  it('should remove cache entry when api is closed', () => {
+    let callback;
+    const on = (e, cb) => { callback = cb; };
+    const api = createApi({}, on);
     apiCache.add(10, api);
-    apiCache.onHandleChanged(10);
-    expect(api.emit).to.have.been.calledWith('changed');
-  });
-
-  it('should emit closed on handle closed', () => {
-    const api = {
-      emit: sinon.spy(),
-      removeAllListeners: () => {},
-    };
-    apiCache.add(10, api);
-    apiCache.onHandleClosed(10);
-    expect(api.emit).to.have.been.calledWith('closed');
-  });
-
-  it('should remove api on handle closed', () => {
-    const api = {
-      emit: sinon.spy(),
-      removeAllListeners: () => {},
-    };
-    const remove = sinon.spy(apiCache, 'remove');
-    apiCache.add(10, api);
-    apiCache.onHandleClosed(10);
-    expect(remove).to.have.been.calledWith(10);
-  });
-
-  it('should not try to remove unexisting api on handle closed', () => {
-    const remove = sinon.spy(apiCache, 'remove');
-    apiCache.onHandleClosed(10);
-    expect(remove.callCount).to.equal(0);
-  });
-
-  it('should emit closed on close', () => {
-    const api2 = {
-      emit: sinon.spy(),
-      removeAllListeners: () => {},
-    };
-    apiCache.add(20, api2);
-    apiCache.onSessionClosed();
-    expect(api2.emit).to.have.been.calledWith('closed');
-    expect(apiCache.getAll().length).to.be.equal(0);
+    expect(callback).to.not.equal(undefined);
+    callback();
+    expect(apiCache.getApi(10)).to.equal(undefined);
   });
 });
