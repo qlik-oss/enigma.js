@@ -30,21 +30,20 @@ $ npm install
   - [Sense using JSON Web Token](./authentication/sense-using-jwt#readme)
 - #### Basics
   - [Handling events](./basics/events#readme)
-  - [Interacting with documents](./basics/documents)
-  - [Interacting with generic objects](./basics/generic-objects)
+  - [List apps in Sense QRS and open document](./basics/documents#readme)
+  - [Interacting with generic objects](./basics/generic-objects#readme)
   - [Listing objects or fields in a document](./basics/lists#readme)
 - #### Interacting with data
   - [String expressions](./data/string-expression#readme)
   - [List objects](./data/list-object#readme)
-  - [Straight hypercubes](./data/hypercube-straight)
-  - [Pivoting hypercubes](./data/hypercube-pivot)
+  - [Hypercubes (straight, pivot and stacked)](./data/hypercubes#readme)
 - #### Mixins
   - [Simple](./mixins/simple#readme)
   - [Complex (including state)](./mixins/complex#readme)
 - #### Interceptors
   - [Retry aborted requests](./interceptors/retry-aborted#readme)
 - #### Complete
-  - [Car models web app](./complete/car-models)
+  - [Car models web app](./complete/car-models#readme)
 
 ---
 

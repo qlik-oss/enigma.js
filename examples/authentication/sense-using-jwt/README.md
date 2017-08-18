@@ -2,7 +2,7 @@
 
 This example will show you how to connect to a Qlik Sense Enterprise server using
 JSON Web Tokens (JWT) for authentication. This is useful when creating services
-in a Node.js environement that runs outside of the Qlik Sense Enterprise deployment.
+in a Node.js environment that runs outside of the Qlik Sense Enterprise deployment.
 
 Please note that JWTs are signed using a private key. Failure to keep this key secret
 will lead to a serious security breach as JWTs can be used to impersonate _anyone_ in
