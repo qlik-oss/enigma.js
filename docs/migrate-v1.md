@@ -4,7 +4,7 @@
 
 This document outlines how to update your application from enigma.js version 1.x to version 2.0.
 The breaking changes are mainly limited to configuration, fetching sessions, and package file structure.
-All generated APIs from enigma.js should work just like in enigma.js version 1.
+All generated APIs from enigma.js should work just like in version 1.
 
 ---
 
