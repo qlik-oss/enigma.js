@@ -52,6 +52,7 @@ const schema = require('enigma.js/schemas/3.2.0.json');
 Read more:
 
 * [All available schemas](../schemas)
+* [Concept: Schemas](../docs/concepts.md#schemas-the-qix-interface)
 
 [Back to top](#migrating-from-version-1x)
 
