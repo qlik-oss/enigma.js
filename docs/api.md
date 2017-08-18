@@ -24,8 +24,6 @@ Table of contents
   - [Event: `closed`](#event-closed)
   - [Event: `suspended`](#event-suspended)
   - [Event: `resumed`](#event-resumed)
-  - [Event: `handle:changed`](#event-handlechanged)
-  - [Event: `handle:closed`](#event-handleclosed)
   - [Event: `notification:<name>`](#event-notificationname)
   - [Event: `notification:*`](#event-notification)
   - [Event: `traffic:sent`](#event-trafficsent)
@@ -331,50 +329,6 @@ session.on('resumed', () => console.log('The session was resumed'));
 
 [Back to top](#api-documentation)
 
-### Event: `handle:changed`
-
-This event is triggered when QIX Engine notifies us about a QIX handle being changed.
-This means that we may fetch new information from the object (layout, properties, etc.).
-
-You may use this event to propagate a client-side change on a handle.
-
-Example:
-
-```js
-session.on('handle:changed', (handle) => console.log(`Handle ${handle} was changed`));
-session.emit('handle:changed', 123);
-```
-
-Read more:
-
-* [Event: `changed` on generated APIs](#event-changed)
-* [`api.handle`](#apihandle)
-
-[Back to top](#api-documentation)
-
-### Event: `handle:closed`
-
-This event is triggered when QIX Engine notifies us about a QIX handle being closed.
-This means that we may clean up any caches on our side.
-
-You may use this event to propagate a client-side close on a handle which will also
-allow enigma.js to throw away its caches on the generated API coupled with this
-handle.
-
-Example:
-
-```js
-session.on('handle:closed', (handle) => console.log(`Handle ${handle} was closed`));
-session.emit('handle:closed', 123);
-```
-
-Read more:
-
-* [Event: `closed` on generated APIs](#event-closed-1)
-* [`api.handle`](#apihandle)
-
-[Back to top](#api-documentation)
-
 ### Event: `notification:<name>`
 
 Handle a specific JSON-RPC notification event. These events depend on the product
@@ -384,7 +338,7 @@ Example:
 
 ```js
 session.on('notification:OnConnected', (data) => console.log(data));
-``` 
+```
 
 Read more:
 
@@ -400,7 +354,7 @@ Example:
 
 ```js
 session.on('notification:*', (eventName, data) => console.log(eventName, data));
-``` 
+```
 
 [Back to top](#api-documentation)
 
@@ -414,7 +368,7 @@ Example:
 
 ```js
 session.on('traffic:sent', (req) => console.log(req));
-``` 
+```
 
 [Back to top](#api-documentation)
 
@@ -428,7 +382,7 @@ Example:
 
 ```js
 session.on('traffic:received', (res) => console.log(res));
-``` 
+```
 
 [Back to top](#api-documentation)
 
@@ -556,7 +510,7 @@ api.on('changed', () => {
 ### Event: `closed`
 
 Handle closed API. The `closed` event is triggered whenever QIX Engine considers
-an API closed. It usually means that it no longer exist in the QIX Engine document or 
+an API closed. It usually means that it no longer exist in the QIX Engine document or
 session.
 
 Example:

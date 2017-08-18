@@ -7,6 +7,12 @@ describe('Intercept', () => {
   let intercept;
   let apis;
 
+  const createApi = () => ({
+    on: () => {},
+    emit: () => {},
+    removeAllListeners: () => {},
+  });
+
   beforeEach(() => {
     JSONPatch = { apply() {} };
     apis = new ApiCache();
@@ -16,7 +22,7 @@ describe('Intercept', () => {
   describe('getPatchee', () => {
     it('should get an existing patchee', () => {
       const patchee = {};
-      apis.add(-1, {});
+      apis.add(-1, createApi());
       apis.addPatchee(-1, 'Foo', patchee);
       expect(intercept.getPatchee(-1, [], 'Foo')).to.equal(patchee);
       expect(intercept.getPatchee(-1, [], 'Foo')).to.equal(patchee);
@@ -24,7 +30,7 @@ describe('Intercept', () => {
 
     it('should apply and return a patchee', () => {
       const JSONPatchStub = sinon.stub(JSONPatch, 'apply');
-      apis.add(-1, {});
+      apis.add(-1, createApi());
       apis.addPatchee(-1, 'Foo', {});
       intercept.getPatchee(-1, [{ op: 'add', path: '/', value: {} }], 'Foo');
       expect(JSONPatchStub).to.have.been.calledWith({}, [{ op: 'add', path: '/', value: {} }]);
@@ -47,7 +53,7 @@ describe('Intercept', () => {
       let value;
 
       beforeEach(() => {
-        apis.add(-1, {});
+        apis.add(-1, createApi());
       });
 
       describe('add', () => {
