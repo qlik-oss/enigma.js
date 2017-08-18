@@ -5,20 +5,20 @@ const RPC_CLOSE_MANUAL_SUSPEND = 4000;
 
 class Session {
   /**
-   * Creates a new Session instance.
-   * @param {Object} options The configuration option for this class.
-   * @param {Intercept} options.intercept The intercept instance to use.
-   * @param {ApiCache} options.apis The ApiCache instance to bridge events towards.
-   * @param {Promise} options.Promise The promise constructor to use.
-   * @param {RPC} options.rpc The RPC instance to use when communicating towards Engine.
-   * @param {Schema} options.definition The Schema instance to use when generating APIs.
-   * @param {Object} options.protocol Additional protocol properties.
-   * @param {Boolean} options.protocol.delta Flag indicating if delta should be used or not.
-   * @param {SuspendResume} options.suspendResume The SuspendResume instance to use.
-   * @param {Object} [options.eventListeners] An object containing keys (event names) and
-   *                                          values (event handlers) that will be bound
-   *                                          during instantiation.
-   */
+  * Creates a new Session instance.
+  * @param {Object} options The configuration option for this class.
+  * @param {Intercept} options.intercept The intercept instance to use.
+  * @param {ApiCache} options.apis The ApiCache instance to bridge events towards.
+  * @param {Promise} options.Promise The promise constructor to use.
+  * @param {RPC} options.rpc The RPC instance to use when communicating towards Engine.
+  * @param {Schema} options.definition The Schema instance to use when generating APIs.
+  * @param {Object} options.protocol Additional protocol properties.
+  * @param {Boolean} options.protocol.delta Flag indicating if delta should be used or not.
+  * @param {SuspendResume} options.suspendResume The SuspendResume instance to use.
+  * @param {Object} [options.eventListeners] An object containing keys (event names) and
+  *                                          values (event handlers) that will be bound
+  *                                          during instantiation.
+  */
   constructor(options) {
     const session = this;
     Object.assign(session, options);
@@ -32,10 +32,10 @@ class Session {
   }
 
   /**
-   * Event handler for re-triggering error events from RPC.
-   * @emits socket-error
-   * @param {Error} err Webocket error event.
-   */
+  * Event handler for re-triggering error events from RPC.
+  * @emits socket-error
+  * @param {Error} err Webocket error event.
+  */
   onRpcError(err) {
     if (this.suspendResume.isSuspended) {
       return;
@@ -44,11 +44,11 @@ class Session {
   }
 
   /**
-   * Event handler for the RPC close event.
-   * @emits suspended
-   * @emits closed
-   * @param {Event} evt WebSocket close event.
-   */
+  * Event handler for the RPC close event.
+  * @emits suspended
+  * @emits closed
+  * @param {Event} evt WebSocket close event.
+  */
   onRpcClosed(evt) {
     if (this.suspendResume.isSuspended) {
       return;
@@ -64,9 +64,9 @@ class Session {
   }
 
   /**
-   * Event handler for the RPC message event.
-   * @param {Object} response JSONRPC response.
-   */
+  * Event handler for the RPC message event.
+  * @param {Object} response JSONRPC response.
+  */
   onRpcMessage(response) {
     if (this.suspendResume.isSuspended) {
       return;
@@ -80,33 +80,33 @@ class Session {
   }
 
   /**
-   * Event handler for the RPC notification event.
-   * @emits notification:*
-   * @emits notification:[JSONRPC notification name]
-   * @param {Object} response The JSONRPC notification.
-   */
+  * Event handler for the RPC notification event.
+  * @emits notification:*
+  * @emits notification:[JSONRPC notification name]
+  * @param {Object} response The JSONRPC notification.
+  */
   onRpcNotification(response) {
     this.emit('notification:*', response.method, response.params);
     this.emit(`notification:${response.method}`, response.params);
   }
 
   /**
-   * Event handler for the RPC traffic event.
-   * @emits traffic:*
-   * @emits traffic:sent
-   * @emits traffic:received
-   * @param {String} dir The traffic direction, sent or received.
-   * @param {Object} data JSONRPC request/response/WebSocket message.
-   */
+  * Event handler for the RPC traffic event.
+  * @emits traffic:*
+  * @emits traffic:sent
+  * @emits traffic:received
+  * @param {String} dir The traffic direction, sent or received.
+  * @param {Object} data JSONRPC request/response/WebSocket message.
+  */
   onRpcTraffic(dir, data) {
     this.emit('traffic:*', dir, data);
     this.emit(`traffic:${dir}`, data);
   }
 
   /**
-   * Event handler for cleaning up API instances when a session has been closed.
-   * @emits api#closed
-   */
+  * Event handler for cleaning up API instances when a session has been closed.
+  * @emits api#closed
+  */
   onSessionClosed() {
     this.apis.getApis().forEach((entry) => {
       entry.api.emit('closed');
@@ -139,11 +139,11 @@ class Session {
   }
 
   /**
-   * Response handler for generating APIs. Handles the quirks of engine not returning an error
-   * when an object is missing.
-   * @param {Object} response The response message.
-   * @returns {Promise} A promise that resolves with the created object.
-   */
+  * Response handler for generating APIs. Handles the quirks of engine not returning an error
+  * when an object is missing.
+  * @param {Object} response The response message.
+  * @returns {Promise} A promise that resolves with the created object.
+  */
   handleObjectReferenceResponse(response) {
     if (response.qHandle && response.qType) {
       return this.getObjectApi({
@@ -157,9 +157,9 @@ class Session {
   }
 
   /**
-   * Establishes the RPC socket connection and returns the Global instance.
-   * @returns {Promise} Eventually resolved if the connection was successful.
-   */
+  * Establishes the RPC socket connection and returns the Global instance.
+  * @returns {Promise} Eventually resolved if the connection was successful.
+  */
   open() {
     if (!this.globalPromise) {
       const args = { handle: -1, id: 'Global', type: 'Global', genericType: 'Global' };
@@ -174,10 +174,10 @@ class Session {
   }
 
   /**
-   * Function used to send data on the RPC socket.
-   * @param {Object} request The request to be sent. (data and some meta info)
-   * @returns {Object} Returns a promise instance.
-   */
+  * Function used to send data on the RPC socket.
+  * @param {Object} request The request to be sent. (data and some meta info)
+  * @returns {Object} Returns a promise instance.
+  */
   send(request) {
     if (this.suspendResume.isSuspended) {
       return this.Promise.reject(new Error('Session suspended'));
@@ -203,21 +203,21 @@ class Session {
   }
 
   /**
-   * Suspends the session ("sleeping state"), and closes the RPC connection.
-   * @emits suspended
-   * @returns {Promise} Eventually resolved when the RPC connection is closed.
-   */
+  * Suspends the session ("sleeping state"), and closes the RPC connection.
+  * @emits suspended
+  * @returns {Promise} Eventually resolved when the RPC connection is closed.
+  */
   suspend() {
     return this.suspendResume.suspend()
       .then(() => this.emit('suspended', { initiator: 'manual' }));
   }
 
   /**
-   * Resumes a previously suspended session.
-   * @param {Boolean} onlyIfAttached If true, resume only if the session was re-attached.
-   * @returns {Promise} Eventually resolved if the session was successfully resumed,
-   *                    otherwise rejected.
-   */
+  * Resumes a previously suspended session.
+  * @param {Boolean} onlyIfAttached If true, resume only if the session was re-attached.
+  * @returns {Promise} Eventually resolved if the session was successfully resumed,
+  *                    otherwise rejected.
+  */
   resume(onlyIfAttached) {
     return this.suspendResume.resume(onlyIfAttached).then((value) => {
       this.emit('resumed');
@@ -226,20 +226,20 @@ class Session {
   }
 
   /**
-   * Function used to close the session.
-   * @returns {Promise} Eventually resolved when the RPC connection is closed.
-   */
+  * Function used to close the session.
+  * @returns {Promise} Eventually resolved when the RPC connection is closed.
+  */
   close() {
     this.globalPromise = undefined;
     return this.rpc.close().then(evt => this.emit('closed', evt));
   }
 
   /**
-   * Given a handle, this function will emit the 'changed' event on the
-   * corresponding API instance.
-   * @param {Number} handle The handle of the API instance.
-   * @emits api#changed
-   */
+  * Given a handle, this function will emit the 'changed' event on the
+  * corresponding API instance.
+  * @param {Number} handle The handle of the API instance.
+  * @emits api#changed
+  */
   emitHandleChanged(handle) {
     const api = this.apis.getApi(handle);
     if (api) {
@@ -248,11 +248,11 @@ class Session {
   }
 
   /**
-   * Given a handle, this function will emit the 'closed' event on the
-   * corresponding API instance.
-   * @param {Number} handle The handle of the API instance.
-   * @emits api#closed
-   */
+  * Given a handle, this function will emit the 'closed' event on the
+  * corresponding API instance.
+  * @param {Number} handle The handle of the API instance.
+  * @emits api#closed
+  */
   emitHandleClosed(handle) {
     const api = this.apis.getApi(handle);
     if (api) {
@@ -262,12 +262,12 @@ class Session {
   }
 
   /**
-   * Function used to add info on the promise chain.
-   * @private
-   * @param {Promise} promise The promise to add info on.
-   * @param {String} name The property to add info on.
-   * @param {Any} value The info to add.
-   */
+  * Function used to add info on the promise chain.
+  * @private
+  * @param {Promise} promise The promise to add info on.
+  * @param {String} name The property to add info on.
+  * @param {Any} value The info to add.
+  */
   static addToPromiseChain(promise, name, value) {
     promise[name] = value;
     const then = promise.then;
