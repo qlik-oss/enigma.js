@@ -4,7 +4,7 @@ import Qix from '../../src/qix';
 import schema from '../../schemas/12.20.0.json';
 import utils from './utils';
 
-const HIGH_TIMEOUT = 20000;
+const HIGH_TIMEOUT = 1200000;
 
 describe.skip('Sugar mixins', () => {
   let qixGlobal;
