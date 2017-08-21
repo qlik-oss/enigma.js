@@ -36,7 +36,7 @@ Table of contents
   - [`api.session`](#apisession)
   - [`api.handle`](#apihandle)
   - [Event: `changed`](#event-changed)
-  - [Event: `closed`](#event-closed)
+  - [Event: `closed`](#event-closed-1)
 - [Sense utilities API](#sense-utilities-api)
   - [Configuration](#configuration-1)
   - [`SenseUtilities.buildUrl()`](#senseutilitiesbuildurlconfig)
