@@ -49,6 +49,7 @@ find on the link below.
 Read more:
 
 * [Authentication examples](../examples/authentication)
+* [Qlik Sense Help: Authentication methods](http://help.qlik.com/en-US/sense/June2017/Subsystems/ManagementConsole/Content/authentication-methods.htm)
   
 [Back to top](#high-level-concepts)
 
