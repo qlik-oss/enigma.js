@@ -25,7 +25,7 @@ export default {
       return {
         isServer,
         isInstalled,
-        url: `${protocol}://${host}:${port}/app/engineData`,
+        url: `${protocol}://${host}:${port}/app/engineData/identity/${+new Date()}`,
         socket: {
           ca: certificates.ca,
           cert: certificates.cert,
