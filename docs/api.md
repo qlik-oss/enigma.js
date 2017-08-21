@@ -213,8 +213,8 @@ session.open().then((global) => {
 
 Returns a promise.
 
-Closes the websocket and cleans up internal caches, also closes all the opened
-models. Eventually resolved when the websocket has been closed.
+Closes the websocket and cleans up internal caches, also triggers the [`closed`](#event-closed-1) event on all generated APIs.
+Eventually resolved when the websocket has been closed.
 
 Note: you need to manually invoke this when you want to close a session and
 [`config.suspendOnClose`](#configuration) is `true`.
