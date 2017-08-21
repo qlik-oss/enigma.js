@@ -15,8 +15,6 @@ session.on('closed', () => console.log('Session: Closed'));
 // in QIX Engine version 12.20.0 and later):
 session.on('notification:*', name => console.log(`Session: Notification event: ${name}`));
 session.on('traffic:*', (direction, data) => console.log(`Session: Traffic (${direction}): ${JSON.stringify(data)}`));
-session.on('handle:changed', handle => console.log(`Session: Handle changed: ${handle}`));
-session.on('handle:closed', handle => console.log(`Session: Handle closed: ${handle}`));
 session.on('suspended', event => console.log(`Session: Suspended, initiator: ${event.initiator}`));
 session.on('resumed', () => console.log('Session: Resumed'));
 

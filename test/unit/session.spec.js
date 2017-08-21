@@ -191,18 +191,23 @@ describe('Session', () => {
     const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
     createSession(false, rpc);
     session.removeAllListeners();
-
-    const changeSpy = sinon.spy();
-    session.on('handle:changed', changeSpy);
+    const on = sinon.spy();
+    const emit = sinon.spy();
+    const removeAllListeners = sinon.spy();
+    session.apis.add(1, { on, emit, removeAllListeners });
+    session.apis.add(2, { on, emit, removeAllListeners });
+    session.apis.add(3, { on, emit, removeAllListeners });
 
     rpc.emit('message', { change: [1, 2, 3] });
-    expect(changeSpy.calledThrice).to.equal(true);
+    expect(emit.calledThrice).to.equal(true);
+    emit.getCalls().forEach(call => expect(call.args[0]).to.equal('changed'));
 
-    const closeSpy = sinon.spy();
-    session.on('handle:closed', closeSpy);
+    emit.reset();
 
     rpc.emit('message', { close: [1, 2, 3] });
-    expect(closeSpy.calledThrice).to.equal(true);
+    expect(emit.calledThrice).to.equal(true);
+    emit.getCalls().forEach(call => expect(call.args[0]).to.equal('closed'));
+    expect(removeAllListeners.calledThrice).to.equal(true);
   });
 
   it('should emit socket error', () => {
@@ -261,11 +266,9 @@ describe('Session', () => {
       session.on('socket-error', spy);
       session.on('suspended', spy);
       session.on('closed', spy);
-      session.on('handle:changed', spy);
-      session.on('handle:closed', spy);
-      session.onError();
-      session.onClosed();
-      session.onMessage();
+      session.onRpcError();
+      session.onRpcClosed();
+      session.onRpcMessage();
       expect(spy.callCount).to.equal(0);
     });
 
@@ -282,7 +285,7 @@ describe('Session', () => {
 
     it('should set session as suspended when suspendOnClose is true', () => {
       createSession(false, null, true);
-      apis.add(-1, {});
+      apis.add(-1, { on: sinon.stub() });
       const spy = sinon.spy();
       session.on('suspended', spy);
       return session.open()
@@ -308,6 +311,7 @@ describe('Session', () => {
     it('should return an existing api', () => {
       const cacheEntry = {
         Foo: 'bar',
+        on: sinon.stub(),
       };
       apis.add(-1, cacheEntry);
       const api = session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', genericType: 'Bar' });
@@ -315,7 +319,7 @@ describe('Session', () => {
     });
 
     it('should create and return an api', () => {
-      const create = sinon.stub();
+      const create = sinon.stub().returns({ on: sinon.spy() });
       const generate = sinon.stub().returns({ create });
       session.definition = { generate };
       session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', genericType: 'Bar' });
