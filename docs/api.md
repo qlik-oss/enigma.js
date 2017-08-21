@@ -560,7 +560,7 @@ Example in browser (commonjs syntax):
 const enigma = require('enigma.js');
 const schema = require('enigma.js/schemas/12.20.0.json');
 const SenseUtilities = require('enigma.js/sense-utilities');
-const url = SenseUtilities.buildUrl(config);
+const url = SenseUtilities.buildUrl({ host: 'my-sense-host, appId: 'some-app' });
 const session = enigma.create({ schema, url });
 ```
 
