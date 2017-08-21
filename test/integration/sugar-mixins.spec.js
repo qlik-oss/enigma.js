@@ -6,7 +6,7 @@ import utils from './utils';
 
 const HIGH_TIMEOUT = 20000;
 
-describe('Sugar mixins', () => {
+describe.skip('Sugar mixins', () => {
   let qixGlobal;
   let config;
 
