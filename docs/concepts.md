@@ -36,6 +36,7 @@ All generated API methods returns a promise.
 Read more:
 
 * [Promises on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+* [`async`/`await` on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
 
 [Back to top](#high-level-concepts)
 
