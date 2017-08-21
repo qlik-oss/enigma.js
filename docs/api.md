@@ -36,7 +36,7 @@ Table of contents
   - [`api.session`](#apisession)
   - [`api.handle`](#apihandle)
   - [Event: `changed`](#event-changed)
-  - [Event: `closed`](#event-closed)
+  - [Event: `closed`](#event-closed-1)
 - [Sense utilities API](#sense-utilities-api)
   - [Configuration](#configuration-1)
   - [`SenseUtilities.buildUrl()`](#senseutilitiesbuildurlconfig)
@@ -213,8 +213,8 @@ session.open().then((global) => {
 
 Returns a promise.
 
-Closes the websocket and cleans up internal caches, also closes all the opened
-models. Eventually resolved when the websocket has been closed.
+Closes the websocket and cleans up internal caches, also triggers the [`closed`](#event-closed-1) event on all generated APIs.
+Eventually resolved when the websocket has been closed.
 
 Note: you need to manually invoke this when you want to close a session and
 [`config.suspendOnClose`](#configuration) is `true`.
@@ -560,7 +560,7 @@ Example in browser (commonjs syntax):
 const enigma = require('enigma.js');
 const schema = require('enigma.js/schemas/12.20.0.json');
 const SenseUtilities = require('enigma.js/sense-utilities');
-const url = SenseUtilities.buildUrl(config);
+const url = SenseUtilities.buildUrl({ host: 'my-sense-host', appId: 'some-app' });
 const session = enigma.create({ schema, url });
 ```
 

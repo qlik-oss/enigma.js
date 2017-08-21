@@ -4,6 +4,8 @@ import Qix from '../../src/qix';
 import schema from '../../schemas/12.20.0.json';
 import utils from './utils';
 
+const HIGH_TIMEOUT = 15000;
+
 describe('Sugar mixins', () => {
   let qixGlobal;
   let config;
@@ -117,7 +119,7 @@ describe('Sugar mixins', () => {
         }),
       ),
     );
-  });
+  }).timeout(HIGH_TIMEOUT);
 
   it('should load script and make selections', () => {
     const listDef = {
@@ -145,7 +147,7 @@ describe('Sugar mixins', () => {
         }),
       );
     });
-  });
+  }).timeout(HIGH_TIMEOUT);
 
   it('should create and list measures', () => {
     const listDef = {
@@ -193,7 +195,7 @@ describe('Sugar mixins', () => {
         }),
       );
     });
-  });
+  }).timeout(HIGH_TIMEOUT);
 
   it('should load script and list fields', () => {
     const listDef = {
@@ -225,7 +227,7 @@ describe('Sugar mixins', () => {
         }),
       );
     });
-  });
+  }).timeout(HIGH_TIMEOUT);
 
   it('should create and list dimensions', () => {
     const listDef = {
@@ -281,7 +283,7 @@ describe('Sugar mixins', () => {
         }),
       );
     });
-  });
+  }).timeout(HIGH_TIMEOUT);
 
   it('should list created Variable', () => {
     const listDef = {
@@ -326,5 +328,5 @@ describe('Sugar mixins', () => {
         }),
       );
     });
-  });
+  }).timeout(HIGH_TIMEOUT);
 });

@@ -36,6 +36,7 @@ All generated API methods returns a promise.
 Read more:
 
 * [Promises on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+* [`async`/`await` on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
 
 [Back to top](#high-level-concepts)
 
@@ -48,6 +49,7 @@ find on the link below.
 Read more:
 
 * [Authentication examples](../examples/authentication)
+* [Qlik Sense Help: Authentication methods](http://help.qlik.com/en-US/sense/June2017/Subsystems/ManagementConsole/Content/authentication-methods.htm)
   
 [Back to top](#high-level-concepts)
 
@@ -104,7 +106,7 @@ make your error handling code easier to read.
 
 Read more:
 
-* [enums in 12.20.0](https://github.com/qlik-oss/enigma.js/blob/refactor-docs/schemas/12.20.0.json#L1221)
+* [Example of enums in 12.20.0](https://github.com/qlik-oss/enigma.js/blob/refactor-docs/schemas/12.20.0.json#L1221)
 
 [Back to top](#high-level-concepts)
 
@@ -115,7 +117,7 @@ the links at the end of this section for more in-depth information.
 
 The QIX Engine uses what we call the generic object model within a document (also called app).
 
-These generic objects all have unique identifiers, and can be be interacted with using the QIX
+These generic objects all have unique identifiers, and can be interacted with using the QIX
 interface schema methods.
 
 Consider this:
