@@ -117,7 +117,7 @@ the links at the end of this section for more in-depth information.
 
 The QIX Engine uses what we call the generic object model within a document (also called app).
 
-These generic objects all have unique identifiers, and can be be interacted with using the QIX
+These generic objects all have unique identifiers, and can be interacted with using the QIX
 interface schema methods.
 
 Consider this:
