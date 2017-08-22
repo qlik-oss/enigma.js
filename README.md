@@ -42,7 +42,7 @@ communicate with, as well as what you plan on using in the QIX Engine API.
 
 Keep in mind that before version `12.20.0` the schema version corresponds to the
 Qlik Sense Enterprise version, and from `12.20.0` and forward, the schema version
-is be mapped to the QIX Engine API version.
+is mapped to the QIX Engine API version.
 
 Read more:
 
