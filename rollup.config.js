@@ -4,17 +4,19 @@ import resolve from 'rollup-plugin-node-resolve';
 import nodeBuiltins from 'rollup-plugin-node-builtins';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
-import multidest from 'rollup-plugin-multi-dest';
 import uglify from 'rollup-plugin-uglify';
 import filesize from 'rollup-plugin-filesize';
 import license from 'rollup-plugin-license';
+import extend from 'extend';
 
 const pkg = require('./package.json');
 
 const createConfig = (overrides) => {
   const config = {
-    format: 'umd',
-    sourceMap: true,
+    output: {
+      format: 'umd',
+      sourcemap: true,
+    },
     plugins: [
       resolve({ jsnext: true, preferBuiltins: false }),
       // nodeGlobals() is disabled right now due to a bug: https://github.com/calvinmetcalf/rollup-plugin-node-globals/issues/9
@@ -32,30 +34,31 @@ const createConfig = (overrides) => {
         This library is licensed under MIT - See the LICENSE file for full details
       `,
       }),
-      multidest([{
-        dest: overrides.dest.replace('.js', '.min.js'),
-        format: 'umd',
-        plugins: [
-          uglify(),
-        ],
-      }]),
       filesize(),
     ],
   };
-  Object.assign(config, overrides);
+  extend(true, config, overrides);
+  if (process.env.NODE_ENV === 'production') {
+    config.output.file = config.output.file.replace('.js', '.min.js');
+    config.plugins.push(uglify());
+  }
   return config;
 };
 
 const enigma = createConfig({
-  entry: 'src/qix.js',
-  dest: 'enigma.js',
-  moduleName: 'enigma',
+  input: 'src/qix.js',
+  output: {
+    file: 'enigma.js',
+  },
+  name: 'enigma',
 });
 
 const senseUtilities = createConfig({
-  entry: 'src/sense-utilities.js',
-  dest: 'sense-utilities.js',
-  moduleName: 'senseUtilities',
+  input: 'src/sense-utilities.js',
+  output: {
+    file: 'sense-utilities.js',
+  },
+  name: 'senseUtilities',
 });
 
 export default [enigma, senseUtilities];
