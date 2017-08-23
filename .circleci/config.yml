@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: greenkeeper-lockfile - Update
+          name: greenkeeper - Update
           command: |
             sudo npm install -g greenkeeper-lockfile@1
             greenkeeper-lockfile-update
@@ -19,7 +19,7 @@ jobs:
           name: Install dependencies
           command: npm install
       - run:
-          name: greenkeeper-lockfile - Upload
+          name: greenkeeper - Upload
           command: greenkeeper-lockfile-upload
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
