@@ -11,7 +11,7 @@ jobs:
       - run:
           name: Update npm
           command: |
-            npm install -g npm@5 greenkeeper-lockfile@1
+            sudo npm install -g npm@5 greenkeeper-lockfile@1
             greenkeeper-lockfile-update
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
