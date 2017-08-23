@@ -49,16 +49,16 @@ const enigma = createConfig({
   input: 'src/qix.js',
   output: {
     file: 'enigma.js',
+    name: 'enigma',
   },
-  name: 'enigma',
 });
 
 const senseUtilities = createConfig({
   input: 'src/sense-utilities.js',
   output: {
     file: 'sense-utilities.js',
+    name: 'senseUtilities',
   },
-  name: 'senseUtilities',
 });
 
 export default [enigma, senseUtilities];
