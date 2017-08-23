@@ -1,35 +1,24 @@
 import Promise from 'bluebird';
-import WebSocket from 'ws';
 import Qix from '../../src/qix';
-import schema from '../../schemas/12.20.0.json';
 import utils from './utils';
 
 describe('QIX Global', () => {
   let qixGlobal;
-  // let isServer = true;
-  let config;
 
-  before(() =>
-    utils.getDefaultConfig().then((cfg) => {
-      config = cfg;
-      config.Promise = Promise;
-      config.schema = schema;
-      config.mixins = [{
-        types: 'Global',
-        extend: {
-          tweet() {
-            return Promise.resolve('Mr tweeter!');
-          },
+  before(() => {
+    const config = utils.getDefaultConfig();
+    config.mixins = [{
+      types: 'Global',
+      extend: {
+        tweet() {
+          return Promise.resolve('Mr tweeter!');
         },
-      }];
-      config.createSocket = url =>
-        new WebSocket(url, config.socket);
-
-      return Qix.create(config).open().then((global) => {
-        qixGlobal = global;
-      });
-    }),
-  );
+      },
+    }];
+    return Qix.create(config).open().then((global) => {
+      qixGlobal = global;
+    });
+  });
 
   after(() => {
     qixGlobal.session.on('error', () => {}); // Swallow the error

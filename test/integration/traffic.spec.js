@@ -1,44 +1,33 @@
 import chai from 'chai';
 import chaiSubset from 'chai-subset';
 import Promise from 'bluebird';
-import WebSocket from 'ws';
 import Qix from '../../src/qix';
-import schema from '../../schemas/12.20.0.json';
 import utils from './utils';
 
 chai.use(chaiSubset);
 
 describe('qix-logging', () => {
   let qixGlobal;
-  // let isServer = true;
-  let config;
   let sandbox;
   let sentSpy;
   let receivedSpy;
   let starSpy;
 
-  before(() =>
-    utils.getDefaultConfig().then((cfg) => {
-      config = cfg;
-      sandbox = sinon.sandbox.create();
-      config.Promise = Promise;
-      config.schema = schema;
-      config.createSocket = url =>
-        new WebSocket(url, config.socket);
+  before(() => {
+    const config = utils.getDefaultConfig();
+    sandbox = sinon.sandbox.create();
+    const session = Qix.create(config);
+    sentSpy = sinon.spy();
+    receivedSpy = sinon.spy();
+    starSpy = sinon.spy();
+    session.on('traffic:sent', sentSpy);
+    session.on('traffic:received', receivedSpy);
+    session.on('traffic:*', starSpy);
 
-      const session = Qix.create(config);
-      sentSpy = sinon.spy();
-      receivedSpy = sinon.spy();
-      starSpy = sinon.spy();
-      session.on('traffic:sent', sentSpy);
-      session.on('traffic:received', receivedSpy);
-      session.on('traffic:*', starSpy);
-
-      return session.open().then((global) => {
-        qixGlobal = global;
-      });
-    }),
-  );
+    return session.open().then((global) => {
+      qixGlobal = global;
+    });
+  });
 
   after(() => {
     sandbox.restore();
