@@ -1,79 +1,70 @@
-import Promise from 'bluebird';
-import WebSocket from 'ws';
 import Qix from '../../src/qix';
-import schema from '../../schemas/12.20.0.json';
 import utils from './utils';
 
 const HIGH_TIMEOUT = 15000;
 
 describe('Sugar mixins', () => {
   let qixGlobal;
-  let config;
 
-  before(() =>
-    utils.getDefaultConfig().then((cfg) => {
-      config = cfg;
-      config.createSocket = url =>
-        new WebSocket(url, config.socket);
-      config.Promise = Promise;
-      config.schema = schema;
-      config.mixins = [{
-        types: 'Global',
-        extend: {
-          createAppAndLoad(appName, scriptName) {
-            return qixGlobal.createApp(appName).then(appInfo =>
-              qixGlobal.openDoc(appInfo.qAppId).then(app =>
-                utils.getScript(scriptName).then(loadScript =>
-                  app.setScript(loadScript).then(() =>
-                    app.doReload(0, false, false).then(() => ({ app, appInfo })),
-                  ),
+  before(() => {
+    const config = utils.getDefaultConfig();
+    config.mixins = [{
+      types: 'Global',
+      extend: {
+        createAppAndLoad(appName, scriptName) {
+          return qixGlobal.createApp(appName).then(appInfo =>
+            qixGlobal.openDoc(appInfo.qAppId).then(app =>
+              utils.getScript(scriptName).then(loadScript =>
+                app.setScript(loadScript).then(() =>
+                  app.doReload(0, false, false).then(() => ({ app, appInfo })),
                 ),
-              ).catch(err =>
-                qixGlobal.deleteApp(appInfo.qAppId).then(() => {
-                  throw err;
-                }),
               ),
+            ).catch(err =>
+              qixGlobal.deleteApp(appInfo.qAppId).then(() => {
+                throw err;
+              }),
+            ),
+          );
+        },
+      },
+    }, {
+      types: 'Doc',
+      extend: {
+        getList(listDef) {
+          return this.getObject(listDef.qInfo.qId)
+            .catch(() => this.createSessionObject(listDef))
+            .then(obj =>
+              obj.getLayout(),
             );
-          },
         },
-      }, {
-        types: 'Doc',
-        extend: {
-          getList(listDef) {
-            return this.getObject(listDef.qInfo.qId)
-              .catch(() => this.createSessionObject(listDef))
-              .then(obj =>
-                obj.getLayout(),
-              );
-          },
-          createSheet(title, description, thumbnail) {
-            return this.createObject({
-              qInfo: {
-                qType: 'sheet',
+        createSheet(title, description, thumbnail) {
+          return this.createObject({
+            qInfo: {
+              qType: 'sheet',
+            },
+            qMetaDef: {
+              title: title || '',
+              description: description || '',
+            },
+            rank: -1,
+            thumbnail: { qStaticContentUrlDef: thumbnail || null },
+            columns: 24,
+            rows: 12,
+            cells: [],
+            qChildListDef: {
+              qData: {
+                title: '/title',
               },
-              qMetaDef: {
-                title: title || '',
-                description: description || '',
-              },
-              rank: -1,
-              thumbnail: { qStaticContentUrlDef: thumbnail || null },
-              columns: 24,
-              rows: 12,
-              cells: [],
-              qChildListDef: {
-                qData: {
-                  title: '/title',
-                },
-              },
-            });
-          },
+            },
+          });
         },
-      }];
+      },
+    }];
 
-      return Qix.create(config).open().then((global) => {
-        qixGlobal = global;
-      });
-    }));
+    return Qix.create(config).open().then((global) => {
+      qixGlobal = global;
+    });
+  });
 
   after(() => {
     qixGlobal.session.on('error', () => {}); // Swallow the error
