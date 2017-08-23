@@ -28,7 +28,7 @@ Before continuing, make sure that you have these tools installed:
 * Node.js >= 4.0
 * Git bash if on Windows
 
-And know of at least some these web technologies:
+And know of at least some of these web technologies:
 
 * JavaScript
 * Promises
