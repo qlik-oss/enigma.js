@@ -57,10 +57,13 @@ session.open()
   .then((object) => {
     object.getLayout();
     object.getLayout();
-    object.getLayout()
+    return object.getLayout()
       // After resolving, run it one more time to see that the cache works correctly:
       .then(() => object.getLayout())
       // Once completed, we end the example:
       .then(() => session.close());
   })
-  .catch(err => console.log('Something went wrong:', err));
+  .catch((error) => {
+    console.log('Something went wrong:', error);
+    process.exit(1);
+  });

@@ -33,5 +33,7 @@ session
           .then(object => object.getLayout())
           .then(layout => console.log('Field list:', JSON.stringify(layout, null, '  ')))
           .then(() => session.close())))
-  .catch(error => console.log('Session: Failed to open socket:', error));
-
+  .catch((error) => {
+    console.log('Session: Failed to open socket:', error);
+    process.exit(1);
+  });

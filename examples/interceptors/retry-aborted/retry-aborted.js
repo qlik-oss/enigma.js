@@ -51,15 +51,19 @@ session.open().then((global) => {
     console.log('Document: Opened');
     // We prep the document with some data to make sure QIX Engine is calculating
     // when we do another call that will cause aborted requests:
-    doc.setScript(qlikScript).then(() => doc.doReload()).then(() => {
+    return doc.setScript(qlikScript).then(() => doc.doReload()).then(() => {
       console.log('Document: Data loaded');
       // Evaluate something from the data model:
       doc.evaluate('COUNT(Value)')
         .then(result => console.log(`Expression evaluated: ${result}`))
-        .then(() => session.close());
+        .then(() => session.close())
+        .catch(() => session.close());
       // While the expression is being calculated, fire away a call that would
       // potentially invalidate the data model calculation:
       doc.clearAll().then(() => doc.clearAll()).then(() => doc.clearAll());
     });
   });
-}).catch(error => console.log('Session: Failed to open socket:', error));
+}).catch((error) => {
+  console.log('Session: Failed to open socket:', error);
+  process.exit(1);
+});
