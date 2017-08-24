@@ -59,4 +59,7 @@ session.open().then(global => global.createSessionApp()).then((doc) => {
         // Exit the example after we have printed the second layout:
         .then(() => session.close());
     });
-}).catch(error => console.log('Session: Failed to open socket:', error));
+}).catch((error) => {
+  console.log('Session: Failed to open socket:', error);
+  process.exit(1);
+});

@@ -18,17 +18,18 @@ session.on('traffic:*', (direction, data) => console.log(`Session: Traffic (${di
 session.on('suspended', event => console.log(`Session: Suspended, initiator: ${event.initiator}`));
 session.on('resumed', () => console.log('Session: Resumed'));
 
-session.open().then((global) => {
-  global.createSessionApp().then((doc) => {
-    console.log(`Session: Document id: ${doc.id}`);
-    session.suspend().then(() => {
-      console.log('Session: suspend() completed');
-      session.resume().then(() => {
-        console.log('Session: resume() completed');
-        session.close().then(() => {
-          console.log('Session: close() completed');
-        });
+session.open().then(global => global.createSessionApp().then((doc) => {
+  console.log(`Session: Document id: ${doc.id}`);
+  return session.suspend().then(() => {
+    console.log('Session: suspend() completed');
+    return session.resume().then(() => {
+      console.log('Session: resume() completed');
+      return session.close().then(() => {
+        console.log('Session: close() completed');
       });
     });
   });
-}).catch(error => console.log('Session: Failed to open socket:', error));
+})).catch((error) => {
+  console.log('Session: Failed to open socket:', error);
+  process.exit(1);
+});
