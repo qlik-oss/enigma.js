@@ -49,4 +49,7 @@ session.open().then((global) => {
     console.log(`Apps on this Engine that the configured user can open: ${apps}`);
     session.close();
   });
-}).catch(error => console.log('Failed to open session and/or retrieve the app list:', error));
+}).catch((error) => {
+  console.log('Failed to open session and/or retrieve the app list:', error);
+  process.exit(1);
+});

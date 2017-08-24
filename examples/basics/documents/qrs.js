@@ -55,11 +55,12 @@ const getAppsFromQRS = () => new Promise((resolve, reject) => {
 const openFirstApp = (apps) => {
   if (!apps.length) {
     console.log('No apps available, make sure your userDirectory and userId configuration is correct both in the script and in QMC attribute mapping.');
-    return;
+    // eslint-disable-next-line no-restricted-globals
+    return Promise.reject(new Error('No available apps'));
   }
   console.log('Available apps for this user:', apps.map(app => `${app.id} (${app.name})`).join(', '));
   const firstAppId = apps[0].id;
-  enigma.create({
+  return enigma.create({
     schema,
     // We use the configured proxyPrefix here to make sure Sense uses the correct
     // authentication:
@@ -72,4 +73,7 @@ const openFirstApp = (apps) => {
   });
 };
 
-getAppsFromQRS().then(openFirstApp).catch(e => console.log('Something went wrong :(', e));
+getAppsFromQRS().then(openFirstApp).catch((error) => {
+  console.log('Something went wrong :(', error);
+  process.exit(1);
+});
