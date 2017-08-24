@@ -1,5 +1,6 @@
 import Qix from '../../src/qix';
 import utils from './utils';
+import ctrl00 from './load-scripts/ctrl00';
 
 const HIGH_TIMEOUT = 15000;
 
@@ -11,13 +12,11 @@ describe('Sugar mixins', () => {
     config.mixins = [{
       types: 'Global',
       extend: {
-        createAppAndLoad(appName, scriptName) {
+        createAppAndLoad(appName, loadScript) {
           return qixGlobal.createApp(appName).then(appInfo =>
             qixGlobal.openDoc(appInfo.qAppId).then(app =>
-              utils.getScript(scriptName).then(loadScript =>
-                app.setScript(loadScript).then(() =>
-                  app.doReload(0, false, false).then(() => ({ app, appInfo })),
-                ),
+              app.setScript(loadScript).then(() =>
+                app.doReload(0, false, false).then(() => ({ app, appInfo })),
               ),
             ).catch(err =>
               qixGlobal.deleteApp(appInfo.qAppId).then(() => {
@@ -120,9 +119,8 @@ describe('Sugar mixins', () => {
       qSelectionObjectDef: {},
     };
     const appName = 'myAppName2';
-    const scriptName = 'ctrl00.txt';
 
-    return qixGlobal.createAppAndLoad(appName, scriptName).then((obj) => {
+    return qixGlobal.createAppAndLoad(appName, ctrl00).then((obj) => {
       const app = obj.app;
       const appInfo = obj.appInfo;
       return app.getField('Alpha').then(field =>
@@ -168,9 +166,8 @@ describe('Sugar mixins', () => {
       },
     };
     const appName = 'myAppName3';
-    const scriptName = 'ctrl00.txt';
 
-    return qixGlobal.createAppAndLoad(appName, scriptName).then((obj) => {
+    return qixGlobal.createAppAndLoad(appName, ctrl00).then((obj) => {
       const app = obj.app;
       const appInfo = obj.appInfo;
       return app.createMeasure(measureDef).then(measure =>
@@ -201,9 +198,8 @@ describe('Sugar mixins', () => {
       },
     };
     const appName = 'myAppName4';
-    const scriptName = 'ctrl00.txt';
 
-    return qixGlobal.createAppAndLoad(appName, scriptName).then((obj) => {
+    return qixGlobal.createAppAndLoad(appName, ctrl00).then((obj) => {
       const app = obj.app;
       const appInfo = obj.appInfo;
       return app.getList(listDef).then((list) => {
@@ -256,9 +252,8 @@ describe('Sugar mixins', () => {
       },
     };
     const appName = 'myAppName5';
-    const scriptName = 'ctrl00.txt';
 
-    return qixGlobal.createAppAndLoad(appName, scriptName).then((obj) => {
+    return qixGlobal.createAppAndLoad(appName, ctrl00).then((obj) => {
       const app = obj.app;
       const appInfo = obj.appInfo;
       return app.createDimension(dimensionDef).then(dimension =>
@@ -299,9 +294,8 @@ describe('Sugar mixins', () => {
       qDefinition: 'Month',
     };
     const appName = 'myAppName6';
-    const scriptName = 'ctrl00.txt';
 
-    return qixGlobal.createAppAndLoad(appName, scriptName).then((obj) => {
+    return qixGlobal.createAppAndLoad(appName, ctrl00).then((obj) => {
       const app = obj.app;
       const appInfo = obj.appInfo;
       return app.createVariableEx(variableDef).then(variable =>

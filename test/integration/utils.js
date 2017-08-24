@@ -1,7 +1,5 @@
 import Promise from 'bluebird';
 import WebSocket from 'ws';
-import fs from 'fs';
-import path from 'path';
 import schema from '../../schemas/12.20.0.json';
 
 function getDefaultConfig() {
@@ -17,26 +15,4 @@ function getDefaultConfig() {
   };
 }
 
-function fileExists(filePath) {
-  return new Promise((resolve) => {
-    fs.lstat(filePath, (err) => {
-      resolve(!err);
-    });
-  });
-}
-
-function getScript(fileName) {
-  return new Promise((resolve, reject) => {
-    const filePath = path.resolve(__dirname, 'load-scripts', fileName);
-
-    return this.fileExists(filePath).then((exists) => {
-      if (exists) {
-        resolve(fs.readFileSync(filePath).toString());
-      } else {
-        reject();
-      }
-    });
-  });
-}
-
-export default { getDefaultConfig, fileExists, getScript };
+export default { getDefaultConfig };
