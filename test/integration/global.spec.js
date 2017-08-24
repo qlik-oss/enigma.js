@@ -20,10 +20,7 @@ describe('QIX Global', () => {
     });
   });
 
-  after(() => {
-    qixGlobal.session.on('error', () => {}); // Swallow the error
-    return qixGlobal.session.close();
-  });
+  after(() => qixGlobal.session.close());
 
   it('should call custom tweet', () =>
     expect(qixGlobal.tweet()).to.eventually.equal('Mr tweeter!'),
@@ -57,35 +54,9 @@ describe('QIX Global', () => {
     expect(qixGlobal.createSessionApp()).to.eventually.be.an('object'),
   );
 
-  /* it( "should GetAuthenticatedUser", () => {
-  if( isServer ) {
-  return expect( qixGlobal.getAuthenticatedUser() ).to.eventually
-  .contain( "UserDirectory=").and
-  .contain( "UserId=");
-  } else {
-  return expect( qixGlobal.getAuthenticatedUser() ).to.eventually.contain( "Personal" );
-  }
-  } ); */
-
   it('should GetBNF', () =>
     expect(qixGlobal.getBNF(0)).to.eventually.be.an('array'),
   );
-
-  /* it( "should GetConfiguration", () => {
-  return qixGlobal.getConfiguration().then( result => {
-  if ( isServer ) {
-  expect( result ).to.have.a.property( "qFeatures" ).that.deep.equals( {
-  qAutoSave: true,
-  qPublishing: true,
-  qSSOEnabled: true
-  } );
-  } else {
-  expect( result ).to.have.a.property( "qFeatures" ).that.deep.equals( {
-  qIsDesktop: true
-  } );
-  }
-  } );
-  } ); */
 
   it('should GetCustomConnectors', () =>
     expect(qixGlobal.getCustomConnectors()).to.eventually.be.an('array'),
@@ -98,14 +69,6 @@ describe('QIX Global', () => {
   it('should GetDocList', () =>
     expect(qixGlobal.getDocList()).to.eventually.be.an('array'),
   );
-
-  /* it( "should GetOdbcDsns", () => {
-  return expect( qixGlobal.getOdbcDsns() ).to.eventually.be.an( "array");
-  } );
-
-  it( "should GetOleDbProviders", () => {
-  return expect(qixGlobal.getOleDbProviders() ).to.eventually.be.an( "array" );
-  } ); */
 
   it('should GetSupportedCodePages', () =>
     expect(qixGlobal.getSupportedCodePages()).to.eventually.be.an('array'),
