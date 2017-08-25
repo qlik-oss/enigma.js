@@ -92,3 +92,6 @@ node my-file.js
 ```
 
 You may need to adjust the code so the URL points towards your running QIX Engine.
+
+
+![/getting-started.gif](/getting-started.gif)
