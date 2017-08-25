@@ -18,6 +18,7 @@ Table of contents
 - [Session cache and websockets](#session-cache-and-websockets)
 - [Mixin `init(args)` changed](#mixin-initargs-changed)
 - [Trying to fetch non-existing objects](#trying-to-fetch-non-existing-objects)
+- [Traffic logging](#traffic-logging)
 
 ---
 
@@ -275,6 +276,42 @@ In version 2, it will be rejected:
 doc.getObject('non-existing-id').then((api) => {
   // run your code using 'api' safely
 }).catch(err => console.log('Object did not exist'));
+```
+
+[Back to top](#migrating-from-version-1x)
+
+## Traffic logging
+
+In enigma.js version 1, you could log websocket traffic by sending in a `config.handleLog`
+callback function. In version 2, this callback is replaced with
+[`traffic:*`-events](https://github.com/qlik-oss/enigma.js/blob/master/docs/api.md#event-trafficsent).
+
+If you did this in version 1:
+
+```js
+const enigma = require('enigma.js');
+const schema = require('enigma.js/schemas/qix/3.2.0/schema.json');
+const config = {
+  schema,
+  host: 'localhost',
+  handleLog: message => console.log(message),
+};
+enigma.getService('qix', config).then((qix) => {
+  // qix.global === QIX global interface
+});
+```
+
+...you would do this in version 2:
+
+```js
+const enigma = require('enigma.js');
+const schema = require('enigma.js/schemas/3.2.0.json');
+const config = { schema, url: 'ws://localhost/app/engineData' };
+const session = enigma.create(config);
+session.on('traffic:*', (direction, message) => console.log(direction, message));
+session.open().then((global) => {
+  // global === QIX global interface
+});
 ```
 
 [Back to top](#migrating-from-version-1x)
