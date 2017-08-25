@@ -23,18 +23,6 @@ describe('QIX Doc', () => {
     config.url = 'ws://mocked:1337/app/engineData';
     config.createSocket = url => new SocketMock(url);
 
-    config.mixins = [{
-      type: 'Global',
-      mixin() {
-        return {
-          tweet() {
-            return Promise.resolve('Mr tweeter!');
-          },
-        };
-      },
-      config: {},
-    }];
-
     return Qix.create(config).open().then(global => global.openDoc('my-app')).then((doc) => {
       qixDoc = doc;
     });
