@@ -6,8 +6,11 @@ const jwt = require('jsonwebtoken');
 
 const schema = require('enigma.js/schemas/12.20.0.json');
 
-// The WebSocket URL to your Sense Enterprise installation:
-const engineUrl = 'wss://example.domain/proxy-jwt/app/engineData';
+// Your Sense Enterprise installation hostname:
+const senseHost = 'localhost';
+
+// Your configured virtual proxy prefix for JWT authentication:
+const proxyPrefix = 'jwt';
 
 // The Sense Enterprise-configured user directory for the user you want to identify
 // as:
@@ -32,7 +35,7 @@ const signedToken = jwt.sign(token, key, { algorithm: 'RS256' });
 
 const config = {
   schema,
-  url: engineUrl,
+  url: `wss://${senseHost}/${proxyPrefix}/app/engineData`,
   // Notice how the signed JWT is passed in the 'Authorization' header using the
   // 'Bearer' schema:
   createSocket: url => new WebSocket(url, {

@@ -20,7 +20,7 @@ const userDirectory = 'your-sense-user-directory';
 // The user to use when creating the session:
 const userId = 'your-sense-user';
 
-// Read certificate from disk, and create the signed JWT:
+// Read private key from disk, and create the signed JWT:
 const key = fs.readFileSync(path.resolve(__dirname, './private.key'));
 const token = jwt.sign({ directory: userDirectory, user: userId }, key, { algorithm: 'RS256' });
 
