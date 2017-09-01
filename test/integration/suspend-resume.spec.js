@@ -80,4 +80,19 @@ describe('QIX Suspend/Resume', () => {
       .then(() => global.session.close())
       .then(() => expect(closed.calledOnce).to.equal(true));
   });
+
+  it('should suspend session when socket was disconnected', () => {
+    config.suspendOnClose = true;
+    const suspended = sinon.spy();
+    const closed = sinon.spy();
+    const session = Qix.create(config);
+    session.on('suspended', suspended);
+    session.on('closed', closed);
+    return session.open().then(() => session.rpc.close(4029)).then(() => new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    }).then(() => {
+      expect(suspended.calledOnce).to.equal(true);
+      expect(closed.calledOnce).to.equal(false);
+    }));
+  });
 });
