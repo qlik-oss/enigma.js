@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.2
+
+- Bugfix for suspended state when network caused a socket disconnect.
+
 ## 2.0.1
 
 - Bugfix for `suspendOnClose` configuration option when session is closed by network.
