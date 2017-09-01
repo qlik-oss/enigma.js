@@ -23,6 +23,7 @@ class Qix {
       Promise,
       protocol,
       responseInterceptors,
+      suspendOnClose,
       url,
     } = config;
     const apis = new ApiCache();
@@ -41,6 +42,7 @@ class Qix {
       Promise,
       protocol,
       rpc,
+      suspendOnClose,
       suspendResume,
     });
     return session;

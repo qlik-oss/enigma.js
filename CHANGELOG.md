@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1
+
+- Bugfix for `suspendOnClose` configuration option when session is closed by network.
+
 ## 2.0.0
 
 This is a new major version and introduces some breaking changes. Please check the migration guide
