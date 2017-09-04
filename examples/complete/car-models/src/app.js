@@ -75,7 +75,9 @@ angular.module('app', []).component('app', {
                     },
                   }],
                   qInterColumnSortOrder: [1, 0],
-                  qInitialDataFetch: [{ qTop: 0, qHeight: 500, qLeft: 0, qWidth: 17 }],
+                  qInitialDataFetch: [{
+                    qTop: 0, qHeight: 500, qLeft: 0, qWidth: 17,
+                  }],
                   qSuppressZero: false,
                   qSuppressMissing: true,
                 },

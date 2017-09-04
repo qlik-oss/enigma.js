@@ -12,7 +12,7 @@ const IGNORE_DELTA_METHODS = [
 
 const SUCCESS_KEY = 'qSuccess';
 
-const hasOwnProperty = Object.prototype.hasOwnProperty;
+const { hasOwnProperty } = Object.prototype;
 
 /**
 * Returns the camelCase counterpart of a symbol.
@@ -70,7 +70,9 @@ class Schema {
   * @param {Function} [mixin.init] Init function that, if defined, will run when an API is
   *                                instantiated. It runs with Promise and API object as parameters.
   */
-  registerMixin({ types, type, extend, override, init }) {
+  registerMixin({
+    types, type, extend, override, init,
+  }) {
     if (!Array.isArray(types)) {
       types = [types];
     }

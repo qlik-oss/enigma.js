@@ -45,8 +45,7 @@ describe('QIX Global', () => {
   });
 
   it('should call custom tweet', () =>
-    expect(qixGlobal.tweet()).to.eventually.equal('Mr tweeter!'),
-  );
+    expect(qixGlobal.tweet()).to.eventually.equal('Mr tweeter!'));
 
   it('should AbortAll', () => {
     socket.intercept('AbortAll').return({ result: {} });
@@ -164,9 +163,7 @@ describe('QIX Global', () => {
 
   it('should GetUniqueID', () => {
     socket.intercept('GetUniqueID').return({ result: { qReturn: '12345678-1234-1234-1234-123456789abc' } });
-    return expect(qixGlobal.getUniqueID()).to.eventually.match(
-      /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
-    );
+    return expect(qixGlobal.getUniqueID()).to.eventually.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/);
   });
 
   it('should validate IsDesktopMode', () => {
