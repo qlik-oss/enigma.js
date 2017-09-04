@@ -2,7 +2,7 @@ import originalExtend from 'extend';
 
 const extend = originalExtend.bind(null, true);
 const JSONPatch = {};
-const isArray = Array.isArray;
+const { isArray } = Array;
 function isObject(v) { return v != null && !Array.isArray(v) && typeof v === 'object'; }
 function isUndef(v) { return typeof v === 'undefined'; }
 function isFunction(v) { return typeof v === 'function'; }
@@ -16,7 +16,7 @@ function isFunction(v) { return typeof v === 'function'; }
 */
 function generateValue(val) {
   if (val) {
-    val = extend({}, { val }).val;
+    return extend({}, { val }).val;
   }
   return val;
 }

@@ -6,7 +6,7 @@ const mixin = {
   types: ['custom-type'],
 
   init(args) {
-    const api = args.api;
+    const { api } = args;
     // Create a namespace on each generated API that we can store our
     // own data on:
     api.myMixin = { pending: null, numberOfCallsToEngine: 0 };

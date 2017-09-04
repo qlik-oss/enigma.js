@@ -119,8 +119,12 @@ describe('Session', () => {
 
       const send = sinon.spy(rpc, 'send');
 
-      session.send({ method: 'a', handle: 1, params: [], delta: true, xyz: 'xyz' });
-      expect(send).to.have.been.calledWithExactly({ method: 'a', handle: 1, params: [], delta: true });
+      session.send({
+        method: 'a', handle: 1, params: [], delta: true, xyz: 'xyz',
+      });
+      expect(send).to.have.been.calledWithExactly({
+        method: 'a', handle: 1, params: [], delta: true,
+      });
       expect(send).to.have.been.calledWithExactly(sinon.match(isValid));
     });
 
@@ -145,7 +149,9 @@ describe('Session', () => {
 
       const send = sinon.spy(rpc, 'send');
 
-      return session.send({ method: 'a', handle: 1, params: [], delta: true, xyz: 'xyz' })
+      return session.send({
+        method: 'a', handle: 1, params: [], delta: true, xyz: 'xyz',
+      })
         .then(() => expect(send.lastCall.args[0].foo).to.equal('bar'));
     });
 
@@ -156,7 +162,9 @@ describe('Session', () => {
 
       const send = sinon.spy(rpc, 'send');
 
-      return session.send({ method: 'a', handle: 1, params: [], delta: false, xyz: 'xyz' })
+      return session.send({
+        method: 'a', handle: 1, params: [], delta: false, xyz: 'xyz',
+      })
         .then(() => expect(send.lastCall.args[0].delta).to.equal(false));
     });
   });
@@ -314,7 +322,9 @@ describe('Session', () => {
         on: sinon.stub(),
       };
       apis.add(-1, cacheEntry);
-      const api = session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', genericType: 'Bar' });
+      const api = session.getObjectApi({
+        handle: -1, id: 'id_1234', type: 'Foo', genericType: 'Bar',
+      });
       expect(api).to.equal(cacheEntry);
     });
 
@@ -322,7 +332,9 @@ describe('Session', () => {
       const create = sinon.stub().returns({ on: sinon.spy() });
       const generate = sinon.stub().returns({ create });
       session.definition = { generate };
-      session.getObjectApi({ handle: -1, id: 'id_1234', type: 'Foo', genericType: 'Bar' });
+      session.getObjectApi({
+        handle: -1, id: 'id_1234', type: 'Foo', genericType: 'Bar',
+      });
       expect(generate).to.be.calledWith('Foo');
       expect(create).to.be.calledWith(session, -1, 'id_1234', true, 'Bar');
     });

@@ -23,15 +23,14 @@ session
 
     // Create 10 objects of type my-object with unique titles
     for (let i = 0; i < 10; i += 1) {
-      tasks.push(
-        doc.createObject({
-          qInfo: {
-            qType: 'my-object',
-          },
-          meta: {
-            title: `my-object${i}`,
-          },
-        }));
+      tasks.push(doc.createObject({
+        qInfo: {
+          qType: 'my-object',
+        },
+        meta: {
+          title: `my-object${i}`,
+        },
+      }));
     }
 
     // Create a app object list using qAppObjectListDef and list all objects of type my-object

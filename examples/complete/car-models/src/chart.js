@@ -91,7 +91,7 @@ export default function paintBarchart(element, layout) {
   }
 
   bar.on('mouseover', (dataPoint) => {
-    const event = d3.event;
+    const { event } = d3;
     const text = `${dataPoint.name}: ${dataPoint.value}`;
     const point = {
       y: event.pageY - 38,

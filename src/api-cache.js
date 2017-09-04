@@ -43,8 +43,7 @@ class ApiCache extends KeyValueCache {
       ({
         handle: entry.key,
         api: entry.value.api,
-      }),
-    );
+      }));
   }
 
   /**
