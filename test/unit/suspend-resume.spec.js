@@ -23,7 +23,7 @@ describe('Suspend/Resume', () => {
     rpc = new RPC({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url, false) });
     apis = new ApiCache({ Promise, schema: {} });
     suspendResume = new SuspendResume({ Promise, rpc, apis });
-    const reopen = suspendResume.reopen;
+    const { reopen } = suspendResume;
     suspendResume.reopen = (val, force) => reopen.call(suspendResume, force ? val : 5);
     return rpc.open();
   });
@@ -114,8 +114,10 @@ describe('Suspend/Resume', () => {
 
     it('should return SESSION_ATTACHED when it receives the session attached notification', () => {
       const reopen = suspendResume.reopen(1000000, true);
-      setTimeout(() => rpc.emit('notification',
-        { method: 'OnConnected', params: { qSessionState: 'SESSION_ATTACHED' } }), 25);
+      setTimeout(() => rpc.emit(
+        'notification',
+        { method: 'OnConnected', params: { qSessionState: 'SESSION_ATTACHED' } },
+      ), 25);
 
       return reopen.then(state => expect(state).to.equal('SESSION_ATTACHED'));
     });

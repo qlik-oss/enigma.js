@@ -126,7 +126,9 @@ class Session {
    * @returns {*} Returns the generated and possibly augmented API.
    */
   getObjectApi(args) {
-    const { handle, id, type, genericType } = args;
+    const {
+      handle, id, type, genericType,
+    } = args;
     let api = this.apis.getApi(handle);
     if (api) {
       return api;
@@ -162,7 +164,9 @@ class Session {
   */
   open() {
     if (!this.globalPromise) {
-      const args = { handle: -1, id: 'Global', type: 'Global', genericType: 'Global' };
+      const args = {
+        handle: -1, id: 'Global', type: 'Global', genericType: 'Global',
+      };
       this.globalPromise = this.rpc.open()
         .then(() => this.getObjectApi(args))
         .then((global) => {
@@ -270,7 +274,7 @@ class Session {
   */
   static addToPromiseChain(promise, name, value) {
     promise[name] = value;
-    const then = promise.then;
+    const { then } = promise;
     promise.then = function patchedThen(...params) {
       const chain = then.apply(this, params);
       Session.addToPromiseChain(chain, name, value);

@@ -126,11 +126,13 @@ describe('RPC', () => {
     const emit = sinon.spy(rpc, 'emit');
 
     const opened = () => {
-      rpc.socket.message({ data: JSON.stringify({
-        params: {
-          user: 'cam',
-        },
-      }) });
+      rpc.socket.message({
+        data: JSON.stringify({
+          params: {
+            user: 'cam',
+          },
+        }),
+      });
       expect(emit).to.have.been.calledWith('notification', { params: { user: 'cam' } });
       done();
     };
@@ -142,9 +144,11 @@ describe('RPC', () => {
     const emit = sinon.spy(rpc, 'emit');
 
     const opened = () => {
-      rpc.socket.message({ data: JSON.stringify({
-        foo: 'bar',
-      }) });
+      rpc.socket.message({
+        data: JSON.stringify({
+          foo: 'bar',
+        }),
+      });
       rpc.socket.close();
       expect(emit).to.have.been.calledWith('message', { foo: 'bar' });
       expect(emit).to.have.been.calledWith('closed');

@@ -16,7 +16,9 @@ describe('Intercept', () => {
   beforeEach(() => {
     JSONPatch = { apply() {} };
     apis = new ApiCache();
-    intercept = new Intercept({ Promise, JSONPatch, apis, delta: true });
+    intercept = new Intercept({
+      Promise, JSONPatch, apis, delta: true,
+    });
   });
 
   describe('getPatchee', () => {
@@ -116,16 +118,19 @@ describe('Intercept', () => {
 
     it('should reject and stop the interceptor chain', () => {
       const spyFulFilled = sinon.spy();
-      intercept.interceptors = [{ onFulfilled() { return Promise.reject('foo'); } }, { onFulfilled: spyFulFilled }];
+      intercept.interceptors = [{ onFulfilled() { return Promise.reject(new Error('foo')); } }, { onFulfilled: spyFulFilled }];
       return expect(intercept.execute({}, Promise.resolve()).then(() => {}, (err) => {
         expect(spyFulFilled.callCount).to.equal(0);
         return Promise.reject(err);
-      })).to.eventually.be.rejectedWith('foo');
+      })).to.eventually.be.rejectedWith('foo').and.be.an.instanceOf(Error);
     });
 
     it('should call interceptors onRejected', () => {
       const onRejected = sinon.stub().returns('foo');
-      intercept.interceptors = [{ onFulfilled() { return Promise.reject('foo'); } }, { onFulfilled() {}, onRejected }];
+      intercept.interceptors = [
+        { onFulfilled() { return Promise.reject(new Error('should never happen!')); } },
+        { onFulfilled() {}, onRejected },
+      ];
       return expect(intercept.execute({}, Promise.resolve(), {})).to.eventually.equal('foo');
     });
   });

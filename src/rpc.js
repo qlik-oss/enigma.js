@@ -49,9 +49,7 @@ class RPC {
   * Resolves the open promise when a connection is successfully established.
   */
   onOpen() {
-    this.resolvers.opened.resolveWith(
-      () => this.closedPromise,
-    );
+    this.resolvers.opened.resolveWith(() => this.closedPromise);
   }
 
   /**

@@ -289,21 +289,21 @@ describe('Schema', () => {
     });
 
     it('should call send with the correct parameter set', () => {
-      let params;
-      const send = (request) => { params = request.params; };
+      let args;
+      const send = (request) => { args = request.params; };
       const api = definition.generate('Foo').create({ send }, 1, 'dummy', false, 'dummy');
       api.bar({ param1: 'abc', param2: 'def', param3: 'ghi' });
-      expect(params).to.deep.equal(['abc', 'def', 'ghi']);
+      expect(args).to.deep.equal(['abc', 'def', 'ghi']);
       api.bar('abc', 'def');
-      expect(params).to.deep.equal(['abc', 'def']);
+      expect(args).to.deep.equal(['abc', 'def']);
     });
 
     it('should fill in default values when parameters are named', () => {
-      let params;
-      const send = (request) => { params = request.params; };
+      let args;
+      const send = (request) => { args = request.params; };
       const api = definition.generate('Foo').create({ send }, 1, 'dummy', false, 'dummy');
       api.bar({ param1: 'abc', param2: 'def' });
-      expect(params).to.deep.equal(['abc', 'def', 'xyz']);
+      expect(args).to.deep.equal(['abc', 'def', 'xyz']);
     });
 
     it('parameters should be passed as an array to mixins', () => {

@@ -58,7 +58,7 @@ class Intercept {
   getPatchee(handle, patches, cacheId) {
     // handle primitive types, e.g. string, int, bool
     if (this.isPrimitivePatch(patches)) {
-      const value = patches[0].value;
+      const { value } = patches[0];
       this.apis.setPatchee(handle, cacheId, value);
       return value;
     }
@@ -110,7 +110,7 @@ class Intercept {
   * @returns {Object} - Returns the patched response
   */
   processDeltaInterceptor(session, request, response) {
-    const result = response.result;
+    const { result } = response;
     if (response.delta) {
       // when delta is on the response data is expected to be an array of patches
       const keys = Object.keys(result);
@@ -185,10 +185,12 @@ class Intercept {
   * @returns {Promise}
   */
   execute(session, promise, request) {
-    return this.interceptors.reduce((interception, interceptor) =>
-      interception.then(
-        interceptor.onFulfilled && interceptor.onFulfilled.bind(this, session, request),
-        interceptor.onRejected && interceptor.onRejected.bind(this, session, request))
+    return this.interceptors.reduce(
+      (interception, interceptor) =>
+        interception.then(
+          interceptor.onFulfilled && interceptor.onFulfilled.bind(this, session, request),
+          interceptor.onRejected && interceptor.onRejected.bind(this, session, request),
+        )
       , promise,
     );
   }
