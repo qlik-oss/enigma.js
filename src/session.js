@@ -165,7 +165,10 @@ class Session {
   open() {
     if (!this.globalPromise) {
       const args = {
-        handle: -1, id: 'Global', type: 'Global', genericType: 'Global',
+        handle: -1,
+        id: 'Global',
+        type: 'Global',
+        genericType: 'Global',
       };
       this.globalPromise = this.rpc.open()
         .then(() => this.getObjectApi(args))
