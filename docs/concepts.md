@@ -106,7 +106,7 @@ make your error handling code easier to read.
 
 Read more:
 
-* [Example of enums in 12.20.0](https://github.com/qlik-oss/enigma.js/blob/refactor-docs/schemas/12.20.0.json#L1221)
+* [Example of enums in 12.20.0](https://github.com/qlik-oss/enigma.js/blob/f45eb27de2f5d9af1ea99d6e1487cd62dda8fd73/schemas/12.20.0.json#L1188)
 
 [Back to top](#high-level-concepts)
 
