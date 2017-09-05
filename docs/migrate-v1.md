@@ -26,10 +26,10 @@ Table of contents
 
 In enigma.js version 1, there was a concept called "enigma.js services" which was
 planned to be expanded with different modules supporting communication with a wide range
-of Qlik back-end services. In enigma.js version 2 we are dropping this concept in an effort
+of Qlik back-end services. In enigma.js version 2 this concept has been dropped in an effort
 to _streamline enigma.js for communicating against QIX engine(s)_.
 
-The enigma.js REST service is no more, and we recommend using [swagger-js](https://github.com/swagger-api/swagger-js)
+The enigma.js REST service is no longer available, and we recommend that you use [swagger-js](https://github.com/swagger-api/swagger-js)
 to accomplish the same by using a library that is streamlined for generating and providing
 APIs based on OpenAPI/swagger definitions.
 
