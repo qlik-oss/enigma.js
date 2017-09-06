@@ -78,7 +78,7 @@ This section describes the configuration object that is sent into [`enigma.creat
 | `Promise`               | Promise  | Yes        | `Promise` | ES6-compatible Promise library. |
 | `suspendOnClose`        | Boolean  | Yes        | `false`   | Set to `true` if the session should be suspended instead of closed when the websocket is closed. |
 | `mixins`                | Array    | Yes        | `[]`      | Mixins to extend/augment the QIX Engine API. See [Mixins section](#mixins) for more information how each entry in this array should look like. Mixins are applied in the array order. |
-| `interceptors`          | Array    | Yes        | `[]`      | Interceptors for augmenting responses before they are passed into mixins and end-users. See [Interceptors section](#interceptors) for more information how each entry in this array should look like. Interceptors are applied in the array order. |
+| `responseInterceptors`  | Array    | Yes        | `[]`      | Interceptors for augmenting responses before they are passed into mixins and end-users. See [Interceptors section](#interceptors) for more information how each entry in this array should look like. Interceptors are applied in the array order. |
 | `protocol`              | Object   | Yes        | `{}`      | An object containing additional JSON-RPC request parameters. |
 | `protocol.delta`        | Boolean  | Yes        | `true`    | Set to `false` to disable the use of the bandwidth-reducing delta protocol. |
 
