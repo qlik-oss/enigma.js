@@ -336,7 +336,7 @@ describe('Session', () => {
         handle: -1, id: 'id_1234', type: 'Foo', genericType: 'Bar',
       });
       expect(generate).to.be.calledWith('Foo');
-      expect(create).to.be.calledWith(session, -1, 'id_1234', true, 'Bar');
+      expect(create).to.be.calledWith(session, -1, 'id_1234', 'Bar');
     });
   });
 });

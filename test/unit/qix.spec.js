@@ -1,5 +1,4 @@
 import Promise from 'bluebird';
-import Patch from '../../src/json-patch';
 import Qix from '../../src/qix';
 import Schema from '../../src/schema';
 
@@ -38,11 +37,6 @@ describe('Qix', () => {
       config.definition = new Schema(Promise, {});
       Qix.create(config);
       expect(Qix.getSession).to.be.calledWithMatch({ schema: config.schema });
-    });
-
-    it('should default JSONPatch', () => {
-      Qix.create(config);
-      expect(Qix.getSession).to.be.calledWithMatch({ JSONPatch: Patch });
     });
 
     it('should throw on missing Promise implementation', () => {
