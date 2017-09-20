@@ -135,7 +135,7 @@ class Session {
     }
     api = this.definition
       .generate(type)
-      .create(this, handle, id, this.protocol.delta, genericType);
+      .create(this, handle, id, genericType);
     this.apis.add(handle, api);
     return api;
   }

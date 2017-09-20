@@ -115,7 +115,7 @@ class Schema {
   * @param {String} type The type to generate.
   * @param {Object} schema The schema describing the type.
   * @returns {{create: (function(session:Object, handle:Number, id:String,
-  *          delta:Boolean, customKey:String)), def: Object}} Returns the API definition.
+  *          customKey:String)), def: Object}} Returns the API definition.
   */
   generateApi(type, schema) {
     const api = Object.create({});
@@ -124,7 +124,7 @@ class Schema {
     this.mixinType(type, api); // Mixin default type
     this.mixinNamedParamFacade(api, schema); // Mixin named parameter support
 
-    const create = function create(session, handle, id, delta, customKey) {
+    const create = function create(session, handle, id, customKey) {
       const instance = Object.create(api);
 
       Events.mixin(instance); // Always mixin event-emitter per instance
@@ -142,10 +142,6 @@ class Schema {
         id: {
           enumerable: true,
           value: id,
-        },
-        delta: {
-          enumerable: true,
-          value: delta,
         },
         type: {
           enumerable: true,
@@ -187,8 +183,8 @@ class Schema {
     Object.keys(schema).forEach((key) => {
       const fnName = toCamelCase(key);
       const outKey = schema[key].Out && schema[key].Out.length === 1 ? schema[key].Out[0].Name : -1;
-
-      const allowDelta = IGNORE_DELTA_METHODS.indexOf(key) === -1 &&
+      const allowDelta = this.config.protocol.delta &&
+        IGNORE_DELTA_METHODS.indexOf(key) === -1 &&
         outKey !== -1 &&
         outKey !== SUCCESS_KEY;
 
@@ -197,7 +193,7 @@ class Schema {
           method: key,
           handle: this.handle,
           params,
-          delta: this.delta && allowDelta,
+          delta: allowDelta,
           outKey,
         });
       }

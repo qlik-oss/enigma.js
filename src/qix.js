@@ -1,4 +1,3 @@
-import Patch from './json-patch';
 import Session from './session';
 import Schema from './schema';
 import RPC from './rpc';
@@ -19,7 +18,6 @@ class Qix {
     const {
       createSocket,
       definition,
-      JSONPatch,
       Promise,
       protocol,
       responseInterceptors,
@@ -30,7 +28,6 @@ class Qix {
     const intercept = new Intercept({
       apis,
       interceptors: responseInterceptors,
-      JSONPatch,
       Promise,
     });
     const rpc = new RPC({ createSocket, Promise, url });
@@ -84,10 +81,9 @@ class Qix {
     }
 
     config.protocol = config.protocol || {};
-    config.protocol.delta = config.protocol.delta || true;
+    config.protocol.delta = typeof config.protocol.delta !== 'undefined' ? config.protocol.delta : true;
     config.Promise = config.Promise || Promise; // eslint-disable-line no-restricted-globals
     config.mixins = config.mixins || [];
-    config.JSONPatch = config.JSONPatch || Patch;
     config.definition = config.definition || new Schema(config);
   }
 }
