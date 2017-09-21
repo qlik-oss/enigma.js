@@ -1,3 +1,4 @@
+import api from './interceptors/response/api';
 import delta from './interceptors/response/delta';
 import error from './interceptors/response/error';
 import outParam from './interceptors/response/out-param';
@@ -19,6 +20,7 @@ class Intercept {
       { onFulfilled: delta },
       { onFulfilled: result },
       { onFulfilled: outParam },
+      { onFulfilled: api },
       ...this.interceptors || [],
     ];
   }
