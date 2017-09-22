@@ -11,7 +11,10 @@ describe('Session', () => {
   let suspendResume;
   let apis;
 
-  const intercept = { execute: (sess, promise) => promise };
+  const intercept = {
+    executeRequests: (sess, promise) => promise,
+    executeResponses: (sess, promise) => promise,
+  };
   const createSession = (throwError, rpc, suspendOnClose = false) => {
     const defaultRpc = new RPCMock({
       Promise,
@@ -106,26 +109,6 @@ describe('Session', () => {
         expect(request).to.have.property('id', 1);
         expect(fn).to.have.been.calledWithExactly(sinon.match.object, 'requestId', 1);
       });
-    });
-
-    it('should only pass on known properties to rpc.send', () => {
-      const validPorperties = ['method', 'handle', 'params', 'delta', 'cont', 'id', 'jsonrpc', 'return_empty'];
-      function isValid(data) {
-        return Object.keys(data).every(key => validPorperties.indexOf(key) !== -1);
-      }
-
-      const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
-      createSession(false, rpc);
-
-      const send = sinon.spy(rpc, 'send');
-
-      session.send({
-        method: 'a', handle: 1, params: [], delta: true, xyz: 'xyz',
-      });
-      expect(send).to.have.been.calledWithExactly({
-        method: 'a', handle: 1, params: [], delta: true,
-      });
-      expect(send).to.have.been.calledWithExactly(sinon.match(isValid));
     });
 
     it('should return response argument if qHandle/qType are undefined', () => {

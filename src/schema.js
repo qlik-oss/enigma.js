@@ -180,29 +180,24 @@ class Schema {
   * @param {Object} schema The API definition.
   */
   generateDefaultApi(api, schema) {
-    Object.keys(schema).forEach((key) => {
-      const fnName = toCamelCase(key);
-      const outKey = schema[key].Out && schema[key].Out.length === 1 ? schema[key].Out[0].Name : -1;
-      const allowDelta = this.config.protocol.delta &&
-        IGNORE_DELTA_METHODS.indexOf(key) === -1 &&
+    Object.keys(schema).forEach((method) => {
+      const out = schema[method].Out && schema[method].Out;
+      const outKey = out.length === 1 ? out[0].Name : -1;
+      const fnName = toCamelCase(method);
+      const delta = this.config.protocol.delta &&
+        IGNORE_DELTA_METHODS.indexOf(method) === -1 &&
         outKey !== -1 &&
         outKey !== SUCCESS_KEY;
 
-      function fn(...params) {
+      api[fnName] = function generatedMethod(...params) {
         return this.session.send({
-          method: key,
           handle: this.handle,
+          method,
           params,
-          delta: allowDelta,
+          delta,
           outKey,
         });
-      }
-
-      Object.defineProperty(api, fnName, {
-        enumerable: true,
-        writable: true,
-        value: fn,
-      });
+      };
     });
   }
 

@@ -8,22 +8,20 @@ describe('Intercept', () => {
 
   beforeEach(() => {
     apis = new ApiCache();
-    intercept = new Intercept({
-      Promise, apis, delta: true,
-    });
+    intercept = new Intercept({ Promise, apis });
   });
 
   describe('intercept', () => {
     it('should call interceptors onFulfilled', () => {
-      intercept.interceptors = [{ onFulfilled: sinon.stub().returns({ bar: {} }) }];
-      return expect(intercept.execute({}, Promise.resolve({ foo: {} })))
+      intercept.response = [{ onFulfilled: sinon.stub().returns({ bar: {} }) }];
+      return expect(intercept.executeResponses({}, Promise.resolve({ foo: {} })))
         .to.eventually.deep.equal({ bar: {} });
     });
 
     it('should reject and stop the interceptor chain', () => {
       const spyFulFilled = sinon.spy();
-      intercept.interceptors = [{ onFulfilled() { return Promise.reject(new Error('foo')); } }, { onFulfilled: spyFulFilled }];
-      return expect(intercept.execute({}, Promise.resolve()).then(() => {}, (err) => {
+      intercept.response = [{ onFulfilled() { return Promise.reject(new Error('foo')); } }, { onFulfilled: spyFulFilled }];
+      return expect(intercept.executeResponses({}, Promise.resolve()).then(() => {}, (err) => {
         expect(spyFulFilled.callCount).to.equal(0);
         return Promise.reject(err);
       })).to.eventually.be.rejectedWith('foo').and.be.an.instanceOf(Error);
@@ -31,11 +29,11 @@ describe('Intercept', () => {
 
     it('should call interceptors onRejected', () => {
       const onRejected = sinon.stub().returns('foo');
-      intercept.interceptors = [
+      intercept.response = [
         { onFulfilled() { return Promise.reject(new Error('should never happen!')); } },
         { onFulfilled() {}, onRejected },
       ];
-      return expect(intercept.execute({}, Promise.resolve(), {})).to.eventually.equal('foo');
+      return expect(intercept.executeResponses({}, Promise.resolve(), {})).to.eventually.equal('foo');
     });
   });
 });
