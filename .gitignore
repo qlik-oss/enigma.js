@@ -4,6 +4,7 @@
 *.log
 .DS_Store
 node_modules/
+.nyc_output
 coverage/
 .idea/
 .vscode/

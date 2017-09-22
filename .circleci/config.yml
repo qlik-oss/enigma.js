@@ -32,6 +32,9 @@ jobs:
           name: Unit & component testing
           command: npm run -s test
       - run:
+          name: Publish test coverage to coveralls.io
+          command: npm run -s coverage
+      - run:
           name: Generate JSDoc
           command: npm run -s jsdoc
       - run:
