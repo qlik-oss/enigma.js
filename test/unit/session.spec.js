@@ -95,7 +95,7 @@ describe('Session', () => {
     it('should call `addToPromiseChain` for `requestId`', () => {
       const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
       createSession(false, rpc);
-      sinon.stub(rpc, 'send', (data) => {
+      sinon.stub(rpc, 'send').callsFake((data) => {
         data.id = 1;
         return Promise.resolve(data);
       });
@@ -131,7 +131,7 @@ describe('Session', () => {
     it('should return response argument if qHandle/qType are undefined', () => {
       const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
       createSession(false, rpc);
-      sinon.stub(rpc, 'send', (data) => {
+      sinon.stub(rpc, 'send').callsFake((data) => {
         data.id = 1;
         return Promise.resolve({ message: 'hello!' });
       });
