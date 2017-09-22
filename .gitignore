@@ -1,18 +1,20 @@
+# common files generated from tools:
 *.rej
 *.tmp
 *.tgz
 *.log
+*.heapsnapshot
+*.orig
 .DS_Store
-node_modules/
-coverage/
+jsconfig.json
+
+# generated folders & files:
 .idea/
 .vscode/
+node_modules/
+coverage/
 typings/
 jsdoc/
-jsconfig.json
-*.heapsnapshot
-
-# distribution files:
 /enigma.js*
 /enigma.min*
 /sense-utilities.*

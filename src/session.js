@@ -141,24 +141,6 @@ class Session {
   }
 
   /**
-  * Response handler for generating APIs. Handles the quirks of engine not returning an error
-  * when an object is missing.
-  * @param {Object} response The response message.
-  * @returns {Promise} A promise that resolves with the created object.
-  */
-  handleObjectReferenceResponse(response) {
-    if (response.qHandle && response.qType) {
-      return this.getObjectApi({
-        handle: response.qHandle,
-        type: response.qType,
-        id: response.qGenericId,
-        genericType: response.qGenericType,
-      });
-    }
-    return this.Promise.reject(new Error('Object not found'));
-  }
-
-  /**
   * Establishes the RPC socket connection and returns the Global instance.
   * @returns {Promise} Eventually resolved if the connection was successful.
   */
