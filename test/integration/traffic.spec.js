@@ -1,10 +1,6 @@
-import chai from 'chai';
-import chaiSubset from 'chai-subset';
 import Promise from 'bluebird';
 import Qix from '../../src/qix';
 import utils from './utils';
-
-chai.use(chaiSubset);
 
 describe('qix-logging', () => {
   let qixGlobal;

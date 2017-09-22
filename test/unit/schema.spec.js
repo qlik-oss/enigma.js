@@ -145,7 +145,7 @@ describe('Schema', () => {
       const target = {};
       const source = { Foo: { In: [], Out: [] } };
       definition.generateDefaultApi(target, source);
-      sinon.stub(target, 'foo', done);
+      sinon.stub(target, 'foo').callsFake(done);
       target.foo();
     });
 
