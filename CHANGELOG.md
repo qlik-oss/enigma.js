@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0
+
+### New features
+
+- Possibility to add request interceptors. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/api.md#requests).
+
 ## 2.0.2
 
 - Bugfix for suspended state when network caused a socket disconnect.

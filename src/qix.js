@@ -20,6 +20,7 @@ class Qix {
       definition,
       Promise,
       protocol,
+      requestInterceptors,
       responseInterceptors,
       suspendOnClose,
       url,
@@ -27,7 +28,8 @@ class Qix {
     const apis = new ApiCache();
     const intercept = new Intercept({
       apis,
-      interceptors: responseInterceptors,
+      request: requestInterceptors,
+      response: responseInterceptors,
       Promise,
     });
     const rpc = new RPC({ createSocket, Promise, url });
@@ -68,12 +70,14 @@ class Qix {
       throw new Error('You need to supply a configuration.');
     }
 
-    if (!config.Promise && typeof Promise === 'undefined') { // eslint-disable-line no-restricted-globals
+    // eslint-disable-next-line no-restricted-globals
+    if (!config.Promise && typeof Promise === 'undefined') {
       throw new Error('Your environment has no Promise implementation. You must provide a Promise implementation in the config.');
     }
 
     if (typeof config.createSocket !== 'function' && typeof WebSocket === 'function') {
-      config.createSocket = url => new WebSocket(url); // eslint-disable-line no-undef
+      // eslint-disable-next-line no-undef
+      config.createSocket = url => new WebSocket(url);
     }
 
     if (typeof config.suspendOnClose === 'undefined') {
@@ -82,7 +86,8 @@ class Qix {
 
     config.protocol = config.protocol || {};
     config.protocol.delta = typeof config.protocol.delta !== 'undefined' ? config.protocol.delta : true;
-    config.Promise = config.Promise || Promise; // eslint-disable-line no-restricted-globals
+    // eslint-disable-next-line no-restricted-globals
+    config.Promise = config.Promise || Promise;
     config.mixins = config.mixins || [];
     config.definition = config.definition || new Schema(config);
   }

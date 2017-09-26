@@ -171,17 +171,18 @@ class Session {
     if (this.suspendResume.isSuspended) {
       return this.Promise.reject(new Error('Session suspended'));
     }
-    const data = Object.assign({}, this.protocol, {
-      method: request.method,
-      handle: request.handle,
-      params: request.params,
-      delta: request.delta,
-    });
-    const response = this.rpc.send(data);
-    request.id = data.id;
-    request.retry = () => this.send(request);
-
-    const promise = this.intercept.execute(this, response, request);
+    request.id = this.rpc.createRequestId();
+    const promise = this.intercept.executeRequests(this, this.Promise.resolve(request))
+      .then((augmentedRequest) => {
+        const data = Object.assign({}, this.protocol, augmentedRequest);
+        // the outKey value is used by multiple-out interceptor, at some point
+        // we need to refactor that implementation and figure out how to transport
+        // this value without hijacking the JSONRPC request object:
+        delete data.outKey;
+        const response = this.rpc.send(data);
+        augmentedRequest.retry = () => this.send(request);
+        return this.intercept.executeResponses(this, response, augmentedRequest);
+      });
     Session.addToPromiseChain(promise, 'requestId', request.id);
     return promise;
   }

@@ -152,14 +152,20 @@ class RPC {
     if (!this.socket || this.socket.readyState !== this.socket.OPEN) {
       return this.Promise.reject(new Error('Not connected'));
     }
-    this.requestId += 1;
+    if (!data.id) {
+      data.id = this.createRequestId();
+    }
     data.jsonrpc = '2.0';
-    data.id = this.requestId;
     return new this.Promise((resolve, reject) => {
       this.socket.send(JSON.stringify(data));
       this.emit('traffic', 'sent', data);
       return this.registerResolver(data.id, resolve, reject);
     });
+  }
+
+  createRequestId() {
+    this.requestId += 1;
+    return this.requestId;
   }
 }
 

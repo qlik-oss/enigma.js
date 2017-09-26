@@ -41,7 +41,8 @@ $ npm install
   - [Simple](./mixins/simple#readme)
   - [Complex (including state)](./mixins/complex#readme)
 - #### Interceptors
-  - [Retry aborted requests](./interceptors/retry-aborted#readme)
+  - [Response: Retry aborted requests](./interceptors/retry-aborted#readme)
+  - [Request: Toggle delta protocol flag](./interceptors/toggle-delta#readme)
 - #### Complete
   - [Car models web app](./complete/car-models#readme)
 
