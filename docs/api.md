@@ -13,8 +13,11 @@ Table of contents
   - [`mixin.extend.myNonExistingMethod()`](#mixinextendmynonexistingmethodparam1-param2-)
   - [`mixin.override.someExistingMethod()`](#mixinoverridesomeexistingmethodbase-param1-param2-)
 - [Interceptors](#interceptors)
-  - [`interceptor.onRejected()`](#interceptoronrejectedsession-request-error)
-  - [`interceptor.onFulfilled()`](#interceptoronfulfilledsession-request-result)
+  - [Requests](#requests)
+    - [`interceptor.onFulfilled()`](#interceptoronfulfilledsession-request)
+  - [Responses](#responses)
+    - [`interceptor.onRejected()`](#interceptoronrejectedsession-request-error)
+    - [`interceptor.onFulfilled()`](#interceptoronfulfilledsession-request-result)
 - [Session API](#session-api)
   - [`session.open()`](#sessionopen)
   - [`session.close()`](#sessionclose)
@@ -153,8 +156,9 @@ application.
 
 ## Interceptors
 
-Interceptors is a concept similar to mixins, but run on a lower level. An interceptor
-can modify the result of a QIX Engine response before it reaches the mixin callstack.
+Interceptors is a concept similar to mixins, but run on a lower level. The interceptor
+concept can augment either the _requests_ (i.e. _before sent to QIX Engine_), or the _responses_
+(i.e. _after QIX Engine has sent a response_).
 
 The interceptor promises runs in _parallel_ to the regular promises used in enigma.js,
 which means that it can be really useful when you want to normalize behaviors in your
@@ -163,7 +167,21 @@ application.
 See the [Interceptor examples](/examples/README.md#interceptors) on how to use it, below
 is an outline of what the interceptor API consists of.
 
-### `interceptor.onRejected(session, request, error)`
+### Requests
+
+#### `interceptor.onFulfilled(session, request)`
+
+This method is invoked when a request is about to be sent to QIX Engine.
+
+`session` refers to the session executing the interceptor.
+
+`request` is the JSON-RPC request that will be sent.
+
+[Back to top](#api-documentation)
+
+### Responses
+
+#### `interceptor.onRejected(session, request, error)`
 
 This method is invoked when a previous interceptor has rejected the promise, use this
 to handle for example errors before they are sent into mixins.
@@ -175,7 +193,7 @@ to retry sending it to QIX Engine.
 
 `error` is whatever the previous interceptor rejected with.
 
-### `interceptor.onFulfilled(session, request, result)`
+#### `interceptor.onFulfilled(session, request, result)`
 
 This method is invoked when a promise has been successfully resolved, use this
 to modify the result or reject the promise chain before it is sent to mixins.
