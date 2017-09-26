@@ -12,6 +12,7 @@ jsconfig.json
 .idea/
 .vscode/
 node_modules/
+.nyc_output/
 coverage/
 typings/
 jsdoc/
