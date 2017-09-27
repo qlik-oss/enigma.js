@@ -72,17 +72,18 @@ export default function deltaInterceptor(session, request, response) {
   const { delta, result } = response;
   if (delta) {
     // when delta is on the response data is expected to be an array of patches:
-    const keys = Object.keys(result);
-    for (let i = 0, cnt = keys.length; i < cnt; i += 1) {
-      const key = keys[i];
-      const patches = result[key];
-      if (!Array.isArray(patches)) {
-        throw new Error('Unexpected rpc response, expected array of patches');
+    Object.keys(result).forEach((key) => {
+      if (!Array.isArray(result[key])) {
+        throw new Error('Unexpected RPC response, expected array of patches');
       }
-      result[key] = patchValue(session, request.handle, `${request.method}-${key}`, patches);
-    }
+      result[key] = patchValue(session, request.handle, `${request.method}-${key}`, result[key]);
+    });
     // return a cloned response object to avoid patched object references:
     return JSON.parse(JSON.stringify(response));
   }
   return response;
 }
+
+// export object references for testing purposes:
+deltaInterceptor.handles = handles;
+deltaInterceptor.sessions = sessions;
