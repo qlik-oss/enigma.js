@@ -3,6 +3,8 @@ import EventEmitter from './event-emitter';
 const RPC_CLOSE_NORMAL = 1000;
 const RPC_CLOSE_MANUAL_SUSPEND = 4000;
 
+let cacheId = 0;
+
 class Session {
   /**
   * Creates a new Session instance.
@@ -23,6 +25,8 @@ class Session {
     const session = this;
     Object.assign(session, options);
     EventEmitter.mixin(session);
+    cacheId += 1;
+    session.id = cacheId;
     session.rpc.on('socket-error', session.onRpcError.bind(session));
     session.rpc.on('closed', session.onRpcClosed.bind(session));
     session.rpc.on('message', session.onRpcMessage.bind(session));

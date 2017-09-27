@@ -10,13 +10,10 @@ class ApiCache extends KeyValueCache {
   * @function ApiCache#add
   * @param {Number} handle - The handle for the API.
   * @param {*} api - The API.
-  * @returns {{api: *, deltaCache}} The entry.
+  * @returns {{api: *}} The entry.
   */
   add(handle, api) {
-    const entry = {
-      api,
-      deltaCache: new KeyValueCache(),
-    };
+    const entry = { api };
     super.add(handle.toString(), entry);
     api.on('closed', () => this.remove(handle));
     return entry;
@@ -54,40 +51,6 @@ class ApiCache extends KeyValueCache {
   */
   getApisByType(type) {
     return this.getApis().filter(entry => entry.api.type === type);
-  }
-
-  /**
-  * Gets a patchee.
-  * @function ApiCache#getPatchee
-  * @param {Number} handle - The handle for the API to patch.
-  * @param {String} method - The method to patch.
-  * @returns {*} The patchee.
-  */
-  getPatchee(handle, method) {
-    const entry = this.get(handle.toString());
-    return entry && entry.deltaCache.get(method);
-  }
-
-  /**
-  * Adds a patchee.
-  * @function ApiCache#addPatchee
-  * @param {Number} handle - The handle for the API to patch.
-  * @param {String} method - The method to patch.
-  * @param {Object} patchee - The patchee to add.
-  */
-  addPatchee(handle, method, patchee) {
-    this.get(handle.toString()).deltaCache.add(method, patchee);
-  }
-
-  /**
-  * Sets a patchee.
-  * @function ApiCache#setPatchee
-  * @param {Number} handle - The handle for the API.
-  * @param {String} method - The method.
-  * @param {Object} patchee - The patchee to add.
-  */
-  setPatchee(handle, method, patchee) {
-    this.get(handle.toString()).deltaCache.set(method, patchee);
   }
 }
 
