@@ -163,7 +163,6 @@ describe('Schema', () => {
         method: 'Foo',
         params: ['123', {}],
         handle: 1,
-        delta: false,
         outKey: -1,
       });
     });
@@ -172,10 +171,7 @@ describe('Schema', () => {
       const send = sinon.spy();
       const target = {
         handle: 1,
-        delta: false,
-        session: {
-          send,
-        },
+        session: { send },
       };
       const source = {
         Foo: { In: [{ Name: 'qId' }], Out: [] },
@@ -186,31 +182,7 @@ describe('Schema', () => {
         method: 'Foo',
         params: ['123', {}],
         handle: 1,
-        delta: false,
         outKey: -1,
-      });
-    });
-
-    it('should allow delta', () => {
-      const send = sinon.spy();
-      const target = {
-        handle: 1,
-        delta: true,
-        session: {
-          send,
-        },
-      };
-      const source = {
-        GetLayout: { In: [{ Name: 'qId' }], Out: [{ Name: 'qLayout' }] },
-      };
-      definition.generateDefaultApi(target, source);
-      target.getLayout('123', {});
-      expect(send).to.have.been.calledWith({
-        method: 'GetLayout',
-        params: ['123', {}],
-        handle: 1,
-        delta: true,
-        outKey: 'qLayout',
       });
     });
   });
