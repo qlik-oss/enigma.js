@@ -2,7 +2,6 @@ import JSONPatch from '../../json-patch';
 import KeyValueCache from '../../cache';
 
 const sessions = {};
-const handles = {};
 
 /**
 * Function to make sure we release handle caches when they are closed.
@@ -11,12 +10,10 @@ const handles = {};
 */
 const bindSession = (session) => {
   if (!sessions[session.id]) {
-    sessions[session.id] = true;
-    session.on('traffic:received', (data) => {
-      if (data.close) {
-        data.close.forEach(handle => delete handles[`${session.id}-${handle}`]);
-      }
-    });
+    const cache = {};
+    sessions[session.id] = cache;
+    session.on('traffic:received', data => data.close && data.close.forEach(handle => delete cache[handle]));
+    session.on('closed', () => delete sessions[session.id]);
   }
 };
 
@@ -30,11 +27,11 @@ const bindSession = (session) => {
 */
 const getHandleCache = (session, handle) => {
   bindSession(session);
-  const id = `${session.id}-${handle}`;
-  if (!handles[id]) {
-    handles[id] = new KeyValueCache();
+  const cache = sessions[session.id];
+  if (!cache[handle]) {
+    cache[handle] = new KeyValueCache();
   }
-  return handles[id];
+  return cache[handle];
 };
 
 /**
@@ -84,6 +81,5 @@ export default function deltaInterceptor(session, request, response) {
   return response;
 }
 
-// export object references for testing purposes:
-deltaInterceptor.handles = handles;
+// export object reference for testing purposes:
 deltaInterceptor.sessions = sessions;

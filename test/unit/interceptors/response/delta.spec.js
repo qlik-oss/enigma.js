@@ -18,7 +18,6 @@ describe('Response interceptor: Delta', () => {
     response = {
       result: { qReturn: { foo: {} } }, delta: true,
     };
-    Object.keys(deltaInterceptor.handles).forEach(key => delete deltaInterceptor.handles[key]);
     Object.keys(deltaInterceptor.sessions).forEach(key => delete deltaInterceptor.sessions[key]);
   });
 
@@ -41,12 +40,22 @@ describe('Response interceptor: Delta', () => {
     expect(value).to.containSubset({ result: { qReturn: 'hello world!' } });
   });
 
-
   it('should remove cache if a handle is closed', () => {
     response = { result: { qReturn: [{ op: 'add', path: '/', value: 'hello world!' }] }, delta: true };
     deltaInterceptor(session, request, response);
-    expect(Object.keys(deltaInterceptor.handles).length).to.equal(1);
+    const cache = deltaInterceptor.sessions[session.id];
+    expect(Object.keys(cache).length).to.equal(1);
+    // invoke event handler for 'traffic:received' event:
     session.on.firstCall.args[1]({ close: [1] });
-    expect(Object.keys(deltaInterceptor.handles).length).to.equal(0);
+    expect(Object.keys(cache).length).to.equal(0);
+  });
+
+  it('should remove caches if a session is closed', () => {
+    response = { result: { qReturn: [{ op: 'add', path: '/', value: 'hello world!' }] }, delta: true };
+    deltaInterceptor(session, request, response);
+    expect(Object.keys(deltaInterceptor.sessions).length).to.equal(1);
+    // invoke event handler for 'closed' event:
+    session.on.secondCall.args[1]();
+    expect(Object.keys(deltaInterceptor.sessions).length).to.equal(0);
   });
 });
