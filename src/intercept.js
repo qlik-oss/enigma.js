@@ -1,8 +1,9 @@
-import api from './interceptors/response/api';
-import delta from './interceptors/response/delta';
-import error from './interceptors/response/error';
-import outParam from './interceptors/response/out-param';
-import result from './interceptors/response/result';
+import deltaRequest from './interceptors/request/delta';
+import apiResponse from './interceptors/response/api';
+import deltaResponse from './interceptors/response/delta';
+import errorResponse from './interceptors/response/error';
+import outParamResponse from './interceptors/response/out-param';
+import resultResponse from './interceptors/response/result';
 
 class Intercept {
   /**
@@ -15,13 +16,13 @@ class Intercept {
   */
   constructor(options) {
     Object.assign(this, options);
-    this.request = [...this.request || []];
+    this.request = [{ onFulfilled: deltaRequest }, ...this.request || []];
     this.response = [
-      { onFulfilled: error },
-      { onFulfilled: delta },
-      { onFulfilled: result },
-      { onFulfilled: outParam },
-      { onFulfilled: api },
+      { onFulfilled: errorResponse },
+      { onFulfilled: deltaResponse },
+      { onFulfilled: resultResponse },
+      { onFulfilled: outParamResponse },
+      { onFulfilled: apiResponse },
       ...this.response || [],
     ];
   }

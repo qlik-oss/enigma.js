@@ -36,7 +36,6 @@ describe('qix-logging', () => {
       method: 'AllowCreateApp',
       handle: -1,
       params: [],
-      delta: false,
       id: 1,
     };
     const response = {

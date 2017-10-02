@@ -65,30 +65,4 @@ describe('ApiCache', () => {
     expect(entries[1].handle).to.equal('1');
     expect(entries[1].api.a).to.equal('bar');
   });
-
-  it('should get a patchee', () => {
-    const api = createApi();
-    const patchee = {};
-    apiCache.add(1, api);
-    apiCache.addPatchee(1, 'method', patchee);
-    expect(apiCache.getPatchee(1, 'method')).to.equal(patchee);
-  });
-
-  it('should add a patchee', () => {
-    const api = createApi();
-    const patchee = {};
-    const entry = apiCache.add(1, api);
-    apiCache.addPatchee(1, 'method', patchee);
-    expect(entry.deltaCache.entries.method).to.equal(patchee);
-  });
-
-  it('should remove cache entry when api is closed', () => {
-    let callback;
-    const on = (e, cb) => { callback = cb; };
-    const api = createApi({}, on);
-    apiCache.add(10, api);
-    expect(callback).to.not.equal(undefined);
-    callback();
-    expect(apiCache.getApi(10)).to.equal(undefined);
-  });
 });

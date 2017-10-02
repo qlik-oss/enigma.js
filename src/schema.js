@@ -1,17 +1,6 @@
 import KeyValueCache from './cache';
 import Events from './event-emitter';
 
-const IGNORE_DELTA_METHODS = [
-  'GetProperties',
-  'SetProperties',
-  'GetFullPropertyTree',
-  'SetFullPropertyTree',
-  'GetAppProperties',
-  'SetAppProperties',
-];
-
-const SUCCESS_KEY = 'qSuccess';
-
 const { hasOwnProperty } = Object.prototype;
 
 /**
@@ -184,17 +173,12 @@ class Schema {
       const out = schema[method].Out && schema[method].Out;
       const outKey = out.length === 1 ? out[0].Name : -1;
       const fnName = toCamelCase(method);
-      const delta = this.config.protocol.delta &&
-        IGNORE_DELTA_METHODS.indexOf(method) === -1 &&
-        outKey !== -1 &&
-        outKey !== SUCCESS_KEY;
 
       api[fnName] = function generatedMethod(...params) {
         return this.session.send({
           handle: this.handle,
           method,
           params,
-          delta,
           outKey,
         });
       };

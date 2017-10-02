@@ -1,83 +1,85 @@
 import JSONPatch from '../../json-patch';
+import KeyValueCache from '../../cache';
+
+const sessions = {};
 
 /**
-* Function used to determine if it is a primitive value.
-* @param  {Any} value.
-* @return {Boolean} Returns true if it is a primitive value.
+* Function to make sure we release handle caches when they are closed.
+*
+* @param {Session} session The session instance to listen on.
 */
-const isPrimitiveValue = value =>
-  typeof value !== 'undefined' &&
-  value !== null &&
-  typeof value !== 'object' &&
-  !Array.isArray(value);
-
-/**
-* Function used to determine if it is a primitive patch.
-* @param  {Array}  patches Patches from engine.
-* @return {Boolean} Returns true if it is a primitive patch.
-*/
-const isPrimitivePatch = patches =>
-  // It's only `add` and `replace` that has a
-  // value property according to the jsonpatch spec
-  patches.length === 1 &&
-  ['add', 'replace'].indexOf(patches[0].op) !== -1 &&
-  isPrimitiveValue(patches[0].value) &&
-  patches[0].path === '/';
-
-/**
-* Function used to get a patchee.
-* @param {Number} handle - The handle.
-* @param {Array} patches - The patches.
-* @param {String} cacheId - The cacheId.
-* @returns {Object} Returns the patchee.
-*/
-const getPatchee = (apis, handle, patches, cacheId) => {
-  // handle primitive types, e.g. string, int, bool
-  if (isPrimitivePatch(patches)) {
-    const { value } = patches[0];
-    apis.setPatchee(handle, cacheId, value);
-    return value;
+const bindSession = (session) => {
+  if (!sessions[session.id]) {
+    const cache = {};
+    sessions[session.id] = cache;
+    session.on('traffic:received', data => data.close && data.close.forEach(handle => delete cache[handle]));
+    session.on('closed', () => delete sessions[session.id]);
   }
+};
 
-  let patchee = apis.getPatchee(handle, cacheId);
-
-  if (!isPrimitiveValue(patchee)) {
-    patchee = patchee || (patches.length && Array.isArray(patches[0].value) ? [] : {});
-    JSONPatch.apply(patchee, patches);
+/**
+* Simple function that ensures the session events has been bound, and returns
+* either an existing key-value cache or creates one for the specified handle.
+*
+* @param {Session} session The session that owns the handle.
+* @param {Number} handle The object handle to retrieve the cache for.
+* @returns {KeyValueCache} The cache instance.
+*/
+const getHandleCache = (session, handle) => {
+  bindSession(session);
+  const cache = sessions[session.id];
+  if (!cache[handle]) {
+    cache[handle] = new KeyValueCache();
   }
+  return cache[handle];
+};
 
-  apis.setPatchee(handle, cacheId, patchee);
-
-  return patchee;
+/**
+* Function used to apply a list of patches and return the patched value.
+* @param {Session} session The session.
+* @param {Number} handle The object handle.
+* @param {String} cacheId The cacheId.
+* @param {Array} patches The patches.
+* @returns {Object} Returns the patched value.
+*/
+const patchValue = (session, handle, cacheId, patches) => {
+  const cache = getHandleCache(session, handle);
+  let entry = cache.get(cacheId) || (Array.isArray(patches[0].value) ? [] : {});
+  if (patches.length) {
+    if (patches[0].path === '/' && typeof patches[0].value !== 'object') {
+      // 'plain' values on root path is not supported (no object reference),
+      // so we simply store the value directly:
+      entry = patches[0].value;
+    } else {
+      JSONPatch.apply(entry, patches);
+    }
+    cache.set(cacheId, entry);
+  }
+  return entry;
 };
 
 /**
 * Process delta interceptor.
-* @param {Object} session - The session the intercept is being executed on.
-* @param {Object} request - The JSON-RPC request.
-* @param {Object} response - The response.
-* @returns {Object} - Returns the patched response
+* @param {Session} session The session the intercept is being executed on.
+* @param {Object} request The JSON-RPC request.
+* @param {Object} response The response.
+* @returns {Object} Returns the patched response
 */
 export default function deltaInterceptor(session, request, response) {
-  const { result } = response;
-  if (response.delta) {
-    // when delta is on the response data is expected to be an array of patches
-    const keys = Object.keys(result);
-    for (let i = 0, cnt = keys.length; i < cnt; i += 1) {
-      const key = keys[i];
-      const patches = result[key];
-      if (!Array.isArray(patches)) {
-        throw new Error('Unexpected rpc response, expected array of patches');
+  const { delta, result } = response;
+  if (delta) {
+    // when delta is on the response data is expected to be an array of patches:
+    Object.keys(result).forEach((key) => {
+      if (!Array.isArray(result[key])) {
+        throw new Error('Unexpected RPC response, expected array of patches');
       }
-      result[key] = getPatchee(
-        session.apis,
-        request.handle,
-        patches,
-        `${request.method}-${key}`,
-      );
-    }
+      result[key] = patchValue(session, request.handle, `${request.method}-${key}`, result[key]);
+    });
     // return a cloned response object to avoid patched object references:
     return JSON.parse(JSON.stringify(response));
   }
   return response;
 }
+
+// export object reference for testing purposes:
+deltaInterceptor.sessions = sessions;

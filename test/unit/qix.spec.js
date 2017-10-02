@@ -90,6 +90,10 @@ describe('Qix', () => {
       config = {};
     });
 
+    it('should throw if no object reference is passed in', () => {
+      expect(() => Qix.configureDefaults(null)).to.throw();
+    });
+
     it('should set protocol.delta to true by default', () => {
       Qix.configureDefaults(config);
       expect(config.protocol.delta).to.equal(true);
