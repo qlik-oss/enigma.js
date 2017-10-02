@@ -6,7 +6,7 @@
 
 Table of contents
 
-- [Node.js versus browser](#nodejs-vs-browser)
+- [Node.js versus browser](#nodejs-versus-browser)
 - [Promises](#promises)
 - [Authentication](#authentication)
 - [Schemas, the QIX interface](#schemas-the-qix-interface)
