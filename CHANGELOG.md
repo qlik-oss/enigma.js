@@ -6,6 +6,8 @@
 
 - Possibility to add request interceptors. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/api.md#requests).
 
+- Bugfix for delta flag (was unable to turn it off, regression from 2.0 rewrite)
+
 ## 2.0.2
 
 - Bugfix for suspended state when network caused a socket disconnect.
