@@ -5,11 +5,13 @@ delta protocol flag on the JSON-RPC request object for specific QIX methods.
 
 ## Runnable code
 
-* [toggle-delta](./toggle-delta.js)
+* [Toggle delta](./toggle-delta.js)
 
 ## Documentation
 
 * [Interceptors](/docs/api.md#interceptors)
+* [High-level concepts: JSON-RPC protocol](/docs/concepts.md#json-rpc-protocol)
+
 
 ---
 
