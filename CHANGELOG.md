@@ -8,6 +8,8 @@
 
 - Bugfix for delta flag (was unable to turn it off, regression from 2.0 rewrite)
 
+- New schema: 12.34.11
+
 ## 2.0.2
 
 - Bugfix for suspended state when network caused a socket disconnect.
