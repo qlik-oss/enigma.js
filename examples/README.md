@@ -31,7 +31,6 @@ $ npm install
 - #### Basics
   - [Handling events](./basics/events#readme)
   - [List apps in Sense QRS and open document](./basics/documents#readme)
-  - [Interacting with generic objects](./basics/generic-objects#readme)
   - [Listing objects or fields in a document](./basics/lists#readme)
 - #### Interacting with data
   - [String expressions](./data/string-expression#readme)
