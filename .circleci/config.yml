@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/enigma.js
     docker:
-      - image: circleci/node:8.4.0
+      - image: circleci/node:8.6.0
     environment:
       - NPM_CONFIG_LOGLEVEL=warn
     steps:
