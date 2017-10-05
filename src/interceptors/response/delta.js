@@ -44,7 +44,10 @@ const getHandleCache = (session, handle) => {
 */
 const patchValue = (session, handle, cacheId, patches) => {
   const cache = getHandleCache(session, handle);
-  let entry = cache.get(cacheId) || (Array.isArray(patches[0].value) ? [] : {});
+  let entry = cache.get(cacheId);
+  if (typeof entry === 'undefined') {
+    entry = Array.isArray(patches[0].value) ? [] : {};
+  }
   if (patches.length) {
     if (patches[0].path === '/' && typeof patches[0].value !== 'object') {
       // 'plain' values on root path is not supported (no object reference),
