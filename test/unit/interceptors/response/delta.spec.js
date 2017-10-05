@@ -35,9 +35,14 @@ describe('Response interceptor: Delta', () => {
   });
 
   it('should patch if response contains a simple property', () => {
-    response = { result: { qReturn: [{ op: 'add', path: '/', value: 'hello world!' }] }, delta: true };
-    const value = deltaInterceptor(session, request, response);
-    expect(value).to.containSubset({ result: { qReturn: 'hello world!' } });
+    const result = { result: { qReturn: false } };
+    response = { result: { qReturn: [{ op: 'add', path: '/', value: false }] }, delta: true };
+    const value1 = deltaInterceptor(session, request, response);
+    expect(value1).to.containSubset(result);
+
+    response = { result: { qReturn: [] }, delta: true };
+    const value2 = deltaInterceptor(session, request, response);
+    expect(value2).to.containSubset(result);
   });
 
   it('should remove cache if a handle is closed', () => {
