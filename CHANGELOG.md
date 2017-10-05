@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.1
+
+- Bugfix for response interceptor execution order
+- Bugfix for failed delta patching when falsy values are unchanged
+
 ## 2.1.0
 
 ### New features
