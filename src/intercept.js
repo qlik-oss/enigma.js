@@ -22,8 +22,8 @@ class Intercept {
       { onFulfilled: deltaResponse },
       { onFulfilled: resultResponse },
       { onFulfilled: outParamResponse },
-      { onFulfilled: apiResponse },
       ...this.response || [],
+      { onFulfilled: apiResponse },
     ];
   }
 
