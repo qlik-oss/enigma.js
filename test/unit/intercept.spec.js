@@ -35,5 +35,23 @@ describe('Intercept', () => {
       ];
       return expect(intercept.executeResponses({}, Promise.resolve(), {})).to.eventually.equal('foo');
     });
+
+    it('should call api interceptor at last', () => {
+      const response = {
+        jsonrpc: '2.0',
+        id: 3,
+        result: {
+          qReturn: {
+            qType: null,
+            qHandle: null,
+          },
+        },
+      };
+      const dummyInterceptor = { onFulfilled: (a, b, c) => c, onRejected: sinon.stub() };
+      intercept = new Intercept({ Promise, apis, response: [dummyInterceptor] });
+      const interceptedResponse = intercept.executeResponses({}, Promise.resolve(response), {});
+      return expect(interceptedResponse).to.eventually.be.rejectedWith('Object not found')
+        .then(() => expect(dummyInterceptor.onRejected.callCount).to.equal(0));
+    });
   });
 });
