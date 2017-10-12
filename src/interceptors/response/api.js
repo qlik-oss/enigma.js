@@ -15,7 +15,7 @@ export default function apiInterceptor(session, request, response) {
       genericType: response.qGenericType,
     });
   } else if (response.qHandle === null && response.qType === null) {
-    throw new Error('Object not found');
+    return session.Promise.reject(new Error('Object not found'));
   }
   return response;
 }

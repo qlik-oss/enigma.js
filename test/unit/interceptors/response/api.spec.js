@@ -1,3 +1,4 @@
+import Promise from 'bluebird';
 import apiInterceptor from '../../../../src/interceptors/response/api';
 
 describe('Response interceptor: API', () => {
@@ -10,9 +11,13 @@ describe('Response interceptor: API', () => {
   });
 
   it('should throw error when handle/type is null', () => {
-    const session = { getObjectApi: sinon.stub().returns('dummy') };
+    const session = {
+      getObjectApi: sinon.stub().returns('dummy'),
+      Promise,
+    };
     const response = { qHandle: null, qType: null };
-    expect(() => apiInterceptor(session, {}, response)).to.throw();
+    const out = apiInterceptor(session, {}, response);
+    return expect(out).to.eventually.be.rejected;
   });
 
   it('should leave response untouched if handle/type is missing', () => {
