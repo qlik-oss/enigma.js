@@ -13,7 +13,7 @@
     "test:component": "cross-env NODE_ENV=test aw-test-runner cover ./test/component",
     "test:component:watch": "cross-env NODE_ENV=test aw-test-runner ./test/component -w",
     "test:integration": "cross-env NODE_ENV=test aw-test-runner ./test/integration --timeout 5000",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage": "nyc report --reporter=text-lcov --temp-directory=./coverage/.nyc_output | coveralls",
     "lint": "eslint .",
     "jsdoc": "rimraf ./jsdoc && jsdoc ./src -c ./jsdoc-config.json -r -d ./jsdoc",
     "preversion": "npm run test && npm run test:integration",
@@ -37,7 +37,7 @@
   ],
   "main": "enigma.js",
   "devDependencies": {
-    "after-work.js": "3.1.0",
+    "after-work.js": "3.1.2",
     "babel-core": "6.26.0",
     "babel-plugin-external-helpers": "6.22.0",
     "babel-plugin-transform-object-assign": "6.22.0",
