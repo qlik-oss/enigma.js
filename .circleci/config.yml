@@ -30,10 +30,12 @@ jobs:
           command: npm run -s lint
       - run:
           name: Unit & component testing
-          command: npm run -s test
-      - run:
-          name: Publish test coverage to coveralls.io
-          command: npm run -s coverage
+          command: |
+            npm run -s test
+            if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then
+              echo "Uploading coverage results to coveralls.io..."
+              npm run -s coverage
+            fi
       - run:
           name: Generate JSDoc
           command: npm run -s jsdoc
