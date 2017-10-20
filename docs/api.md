@@ -19,6 +19,7 @@ Table of contents
     - [`interceptor.onRejected()`](#interceptoronrejectedsession-request-error)
     - [`interceptor.onFulfilled()`](#interceptoronfulfilledsession-request-result)
 - [Session API](#session-api)
+  - [`session.config`](#sessionconfig)
   - [`session.open()`](#sessionopen)
   - [`session.close()`](#sessionclose)
   - [`session.suspend()`](#sessionsuspend)
@@ -210,6 +211,10 @@ to modify the result or reject the promise chain before it is sent to mixins.
 ## Session API
 
 You retrieve a session by calling [`enigma.create(config)`](#enigmacreateconfig).
+
+### `session.config`
+
+A reference to this session's configuration object (including default values for optional parameters).
 
 ### `session.open()`
 
