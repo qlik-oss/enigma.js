@@ -77,7 +77,7 @@ describe('QIX Suspend/Resume', () => {
       // this property it shouldn't exist in a new one:
       .then(props => expect(props.test).to.equal(undefined))
       .then(() => global.deleteApp(app.id))
-      .finally(() => session.close())
+      .then(() => session.close(), () => session.close())
       .then(() => expect(closed.calledOnce).to.equal(true));
   });
 

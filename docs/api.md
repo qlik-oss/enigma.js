@@ -214,7 +214,7 @@ You retrieve a session by calling [`enigma.create(config)`](#enigmacreateconfig)
 
 ### `session.config`
 
-A reference to this session's configuration object (including default values for optional parameters).
+The `session.config` property contains a reference to the [configuration](#configuration) object used by the session. Default values for optional parameters will be filled in.
 
 ### `session.open()`
 
