@@ -69,7 +69,7 @@ describe('QIX Suspend/Resume', () => {
       .then((a) => { app = a; })
       // set a dummy property that we don't save:
       .then(() => app.setAppProperties({ test: true }))
-      .then(() => global.session.suspend())
+      .then(() => session.suspend())
       .then(() => expect(suspended.calledOnce).to.equal(true))
       .then(() => global.session.resume())
       .then(() => app.getAppProperties())
@@ -77,7 +77,7 @@ describe('QIX Suspend/Resume', () => {
       // this property it shouldn't exist in a new one:
       .then(props => expect(props.test).to.equal(undefined))
       .then(() => global.deleteApp(app.id))
-      .then(() => global.session.close())
+      .then(() => session.close(), () => session.close())
       .then(() => expect(closed.calledOnce).to.equal(true));
   });
 
