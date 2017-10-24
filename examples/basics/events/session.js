@@ -1,7 +1,6 @@
 const createSession = require('../../session');
 
 const session = createSession();
-console.log('Broke this example on purpose.') || process.exit(1);
 
 /*
 * It is good practice to bind any session events _before_ opening the session.
