@@ -11,8 +11,7 @@ export default function errorInterceptor(session, request, response) {
     const error = new Error(data.message);
     error.code = data.code;
     error.parameter = data.parameter;
-    // reject the promise chain:
-    throw error;
+    return session.config.Promise.reject(error);
   }
   return response;
 }

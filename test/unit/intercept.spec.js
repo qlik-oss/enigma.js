@@ -51,8 +51,11 @@ describe('Intercept', () => {
       };
       const dummyInterceptor = { onFulfilled: (a, b, c) => c, onRejected: sinon.stub() };
       intercept = new Intercept({ Promise, apis, response: [dummyInterceptor] });
-      const interceptedResponse =
-        intercept.executeResponses(session, Promise.resolve(response), {});
+      const interceptedResponse = intercept.executeResponses(
+        { config: { Promise } },
+        Promise.resolve(response),
+        {},
+      );
       return expect(interceptedResponse).to.eventually.be.rejectedWith('Object not found')
         .then(() => expect(dummyInterceptor.onRejected.callCount).to.equal(0));
     });

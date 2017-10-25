@@ -7,6 +7,7 @@
 * @returns {Object} - Returns the generated API
 */
 export default function apiInterceptor(session, request, response) {
+  const { Promise } = session.config;
   if (response.qHandle && response.qType) {
     return session.getObjectApi({
       handle: response.qHandle,
@@ -15,7 +16,7 @@ export default function apiInterceptor(session, request, response) {
       genericType: response.qGenericType,
     });
   } else if (response.qHandle === null && response.qType === null) {
-    return session.Promise.reject(new Error('Object not found'));
+    return Promise.reject(new Error('Object not found'));
   }
   return response;
 }
