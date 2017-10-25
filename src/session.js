@@ -9,21 +9,17 @@ class Session {
   /**
   * Creates a new Session instance.
   * @param {Object} options The configuration option for this class.
-  * @param {Intercept} options.intercept The intercept instance to use.
   * @param {ApiCache} options.apis The ApiCache instance to bridge events towards.
-  * @param {Promise} options.Promise The promise constructor to use.
+  * @param {Object} options.config The configuration object for this session.
+  * @param {Intercept} options.intercept The intercept instance to use.
   * @param {RPC} options.rpc The RPC instance to use when communicating towards Engine.
-  * @param {Schema} options.definition The Schema instance to use when generating APIs.
-  * @param {Object} options.protocol Additional protocol properties.
-  * @param {Boolean} options.protocol.delta Flag indicating if delta should be used or not.
   * @param {SuspendResume} options.suspendResume The SuspendResume instance to use.
-  * @param {Object} [options.eventListeners] An object containing keys (event names) and
-  *                                          values (event handlers) that will be bound
-  *                                          during instantiation.
   */
   constructor(options) {
     const session = this;
     Object.assign(session, options);
+    this.Promise = this.config.Promise;
+    this.definition = this.config.definition;
     EventEmitter.mixin(session);
     cacheId += 1;
     session.id = cacheId;
@@ -60,7 +56,7 @@ class Session {
     if (evt.code === RPC_CLOSE_NORMAL || evt.code === RPC_CLOSE_MANUAL_SUSPEND) {
       return;
     }
-    if (this.suspendOnClose) {
+    if (this.config.suspendOnClose) {
       this.suspendResume.suspend().then(() => this.emit('suspended', { initiator: 'network' }));
     } else {
       this.emit('closed', evt);
@@ -178,7 +174,7 @@ class Session {
     request.id = this.rpc.createRequestId();
     const promise = this.intercept.executeRequests(this, this.Promise.resolve(request))
       .then((augmentedRequest) => {
-        const data = Object.assign({}, this.protocol, augmentedRequest);
+        const data = Object.assign({}, this.config.protocol, augmentedRequest);
         // the outKey value is used by multiple-out interceptor, at some point
         // we need to refactor that implementation and figure out how to transport
         // this value without hijacking the JSONRPC request object:

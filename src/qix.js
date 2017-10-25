@@ -17,31 +17,25 @@ class Qix {
   static getSession(config) {
     const {
       createSocket,
-      definition,
       Promise,
-      protocol,
       requestInterceptors,
       responseInterceptors,
-      suspendOnClose,
       url,
     } = config;
     const apis = new ApiCache();
     const intercept = new Intercept({
       apis,
+      Promise,
       request: requestInterceptors,
       response: responseInterceptors,
-      Promise,
     });
     const rpc = new RPC({ createSocket, Promise, url });
     const suspendResume = new SuspendResume({ apis, Promise, rpc });
     const session = new Session({
       apis,
-      definition,
+      config,
       intercept,
-      Promise,
-      protocol,
       rpc,
-      suspendOnClose,
       suspendResume,
     });
     return session;

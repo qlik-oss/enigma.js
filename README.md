@@ -4,9 +4,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/qlik-oss/enigma.js.svg)](https://greenkeeper.io/)
 [![Coverage Status](https://img.shields.io/coveralls/qlik-oss/enigma.js/master.svg)](https://coveralls.io/github/qlik-oss/enigma.js)
 
-enigma.js is a library that communicates with Qlik QIX Engine.
-You can use it to build your own analytics tools or Node.js services that for example
-performs CRUD (create, read, update and delete) operations on Qlik documents.
+enigma.js is a library that helps you communicate with Qlik QIX Engine. Examples of use may be building your own browser-based analytics tools, back-end services, or command-line scripts.
 
 ---
 

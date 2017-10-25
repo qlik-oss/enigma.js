@@ -15,6 +15,7 @@ describe('Session', () => {
     executeRequests: (sess, promise) => promise,
     executeResponses: (sess, promise) => promise,
   };
+
   const createSession = (throwError, rpc, suspendOnClose = false) => {
     const defaultRpc = new RPCMock({
       Promise,
@@ -23,14 +24,19 @@ describe('Session', () => {
     });
     apis = new ApiCache();
     suspendResume = new SuspendResume({ Promise, rpc: rpc || defaultRpc, apis });
-    session = new Session({
+
+    const config = {
       Promise,
-      apis,
-      suspendResume,
       suspendOnClose,
+      protocol: { delta: true },
+    };
+
+    session = new Session({
+      apis,
+      config,
       intercept,
       rpc: rpc || defaultRpc,
-      protocol: { delta: true },
+      suspendResume,
     });
   };
 
@@ -48,6 +54,10 @@ describe('Session', () => {
   it('should be a constructor', () => {
     expect(Session).to.be.a('function');
     expect(Session).to.throw();
+  });
+
+  it('should expose the config object', () => {
+    expect(session.config).to.be.an('object');
   });
 
   it('should return a promise when open is called', () => {
@@ -128,7 +138,7 @@ describe('Session', () => {
     it('should add additional protocol parameters to request object', () => {
       const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
       createSession(false, rpc);
-      session.protocol.foo = 'bar';
+      session.config.protocol.foo = 'bar';
 
       const send = sinon.spy(rpc, 'send');
 
@@ -141,7 +151,7 @@ describe('Session', () => {
     it('should honor delta blacklist', () => {
       const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
       createSession(false, rpc);
-      session.protocol.delta = true;
+      session.config.protocol.delta = true;
 
       const send = sinon.spy(rpc, 'send');
 
