@@ -9,7 +9,7 @@ describe('Intercept', () => {
 
   beforeEach(() => {
     apis = new ApiCache();
-    session = { Promise };
+    session = { config: { Promise } };
     intercept = new Intercept({ Promise, apis });
   });
 
