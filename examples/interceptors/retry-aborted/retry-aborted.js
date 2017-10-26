@@ -54,13 +54,14 @@ session.open().then((global) => {
     return doc.setScript(qlikScript).then(() => doc.doReload()).then(() => {
       console.log('Document: Data loaded');
       // Evaluate something from the data model:
-      doc.evaluate('COUNT(Value)')
-        .then(result => console.log(`Expression evaluated: ${result}`))
+      const evaluate = doc.evaluate('COUNT(Value)')
+        .then(result => console.log(`Expression evaluated: ${result}`));
+        // While the expression is being calculated, fire away a call that would
+        // potentially invalidate the data model calculation:
+      const invalidate = doc.clearAll().then(() => doc.clearAll()).then(() => doc.clearAll());
+      return Promise.all([evaluate, invalidate])
         .then(() => session.close())
         .catch(() => session.close());
-      // While the expression is being calculated, fire away a call that would
-      // potentially invalidate the data model calculation:
-      doc.clearAll().then(() => doc.clearAll()).then(() => doc.clearAll());
     });
   });
 }).catch((error) => {
