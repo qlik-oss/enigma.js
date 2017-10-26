@@ -1,6 +1,7 @@
 {
   "extends": "../.eslintrc",
   "rules": {
+    "no-restricted-globals": ["off", "Promise"],
     "import/no-dynamic-require": 0,
     "import/no-unresolved": 0,
     "no-console": 0,
