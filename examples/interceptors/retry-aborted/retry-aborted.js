@@ -56,8 +56,8 @@ session.open().then((global) => {
       // Evaluate something from the data model:
       const evaluate = doc.evaluate('COUNT(Value)')
         .then(result => console.log(`Expression evaluated: ${result}`));
-        // While the expression is being calculated, fire away a call that would
-        // potentially invalidate the data model calculation:
+      // While the expression is being calculated, fire away a call that would
+      // potentially invalidate the data model calculation:
       const invalidate = doc.clearAll().then(() => doc.clearAll()).then(() => doc.clearAll());
       return Promise.all([evaluate, invalidate])
         .then(() => session.close())
