@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import SuspendResume from '../../src/suspend-resume';
 import RPC from '../../src/rpc';
 import SocketMock from '../mocks/socket-mock';

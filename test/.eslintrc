@@ -9,5 +9,7 @@
     "sinon": false
   },
   "extends": "./../.eslintrc",
-  "rules": {}
+  "rules": {
+    "no-restricted-globals": ["off", "Promise"]
+  }
 }

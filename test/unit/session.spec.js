@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import Session from '../../src/session';
 import SuspendResume from '../../src/suspend-resume';
 import ApiCache from '../../src/api-cache';
@@ -105,24 +104,19 @@ describe('Session', () => {
       expect(session.send).to.throw();
     });
 
-    it('should call `addToPromiseChain` for `requestId`', () => {
-      const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
-      createSession(false, rpc);
-      sinon.stub(rpc, 'send').callsFake((data) => {
-        data.id = 1;
-        return Promise.resolve(data);
-      });
-
-      const fn = sandbox.stub(Session, 'addToPromiseChain');
+    it('should add `requestId` to promise chain', () => {
       const request = {};
-      return session.send(request).then(() => {
-        expect(request).to.have.property('id', 1);
-        expect(fn).to.have.been.calledWithExactly(sinon.match.object, 'requestId', 1);
-      });
+      const promise = session.send(request);
+      expect(request).to.have.property('id', 1);
+      expect(promise).to.have.property('requestId', 1);
     });
 
     it('should return response argument if qHandle/qType are undefined', () => {
-      const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+      const rpc = new RPCMock({
+        Promise,
+        url: 'http://localhost:4848',
+        createSocket: url => new SocketMock(url),
+      });
       createSession(false, rpc);
       sinon.stub(rpc, 'send').callsFake((data) => {
         data.id = 1;
@@ -136,7 +130,11 @@ describe('Session', () => {
     });
 
     it('should add additional protocol parameters to request object', () => {
-      const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+      const rpc = new RPCMock({
+        Promise,
+        url: 'http://localhost:4848',
+        createSocket: url => new SocketMock(url),
+      });
       createSession(false, rpc);
       session.config.protocol.foo = 'bar';
 
@@ -149,7 +147,11 @@ describe('Session', () => {
     });
 
     it('should honor delta blacklist', () => {
-      const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+      const rpc = new RPCMock({
+        Promise,
+        url: 'http://localhost:4848',
+        createSocket: url => new SocketMock(url),
+      });
       createSession(false, rpc);
       session.config.protocol.delta = true;
 
@@ -163,7 +165,11 @@ describe('Session', () => {
   });
 
   it('should listen to notification and message', () => {
-    const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+    const rpc = new RPCMock({
+      Promise,
+      url: 'http://localhost:4848',
+      createSocket: url => new SocketMock(url),
+    });
     const rpcSpy = sinon.spy(rpc, 'on');
     createSession(false, rpc);
     expect(rpcSpy).to.have.been.calledWith('notification', sinon.match.func);
@@ -171,7 +177,11 @@ describe('Session', () => {
   });
 
   it('should emit notification:method from rpc', () => {
-    const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+    const rpc = new RPCMock({
+      Promise,
+      url: 'http://localhost:4848',
+      createSocket: url => new SocketMock(url),
+    });
     createSession(false, rpc);
     const spy = sinon.spy(session, 'emit');
     rpc.emit('notification', { method: 'FooBar', params: { prop: 'bar' } });
@@ -179,7 +189,11 @@ describe('Session', () => {
   });
 
   it('should emit notifications:* from rpc', () => {
-    const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+    const rpc = new RPCMock({
+      Promise,
+      url: 'http://localhost:4848',
+      createSocket: url => new SocketMock(url),
+    });
     createSession(false, rpc);
     const spy = sinon.spy(session, 'emit');
     rpc.emit('notification', { method: 'Foo', params: { prop: 'foo' } });
@@ -189,7 +203,11 @@ describe('Session', () => {
   });
 
   it('should process message from rpc', () => {
-    const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+    const rpc = new RPCMock({
+      Promise,
+      url: 'http://localhost:4848',
+      createSocket: url => new SocketMock(url),
+    });
     createSession(false, rpc);
     session.removeAllListeners();
     const on = sinon.spy();
@@ -212,7 +230,11 @@ describe('Session', () => {
   });
 
   it('should emit socket error', () => {
-    const rpc = new RPCMock(Promise, SocketMock, 'http://localhost:4848', {});
+    const rpc = new RPCMock({
+      Promise,
+      url: 'http://localhost:4848',
+      createSocket: url => new SocketMock(url),
+    });
     createSession(false, rpc);
     const emit = sinon.spy(session, 'emit');
     rpc.emit('socket-error', 'fubar');
@@ -221,7 +243,11 @@ describe('Session', () => {
 
 
   it('should close', () => {
-    const rpc = new RPCMock({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url) });
+    const rpc = new RPCMock({
+      Promise,
+      url: 'http://localhost:4848',
+      createSocket: url => new SocketMock(url),
+    });
     createSession(false, rpc);
     session.getObjectApi = () => {};
     session.open();

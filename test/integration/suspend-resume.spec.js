@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import WebSocket from 'ws';
 import Qix from '../../src/qix';
 import Schema from '../../schemas/12.20.0.json';
@@ -18,7 +17,6 @@ describe('QIX Suspend/Resume', () => {
 
   beforeEach(() => {
     config = {
-      Promise,
       schema: Schema,
       url: buildUrl(),
       createSocket: url => new WebSocket(url),

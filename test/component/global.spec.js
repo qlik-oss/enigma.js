@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import schema from '../../schemas/12.20.0.json';
 import Qix from '../../src/qix';
 import SocketMock from '../mocks/socket-mock';
@@ -17,7 +16,6 @@ describe('QIX Global', () => {
     config = {};
     sandbox = sinon.sandbox.create();
 
-    config.Promise = Promise;
     config.schema = schema;
     config.url = 'ws://mocked:1337/app/engineData';
     config.createSocket = url => new SocketMock(url);

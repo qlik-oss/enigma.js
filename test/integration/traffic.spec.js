@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import Qix from '../../src/qix';
 import utils from './utils';
 
@@ -27,11 +26,10 @@ describe('qix-logging', () => {
 
   after(() => {
     sandbox.restore();
-    qixGlobal.session.on('error', () => {}); // Swallow the error
     return qixGlobal.session.close();
   });
 
-  it('should log qix traffic', () => Promise.delay(100).then(() => qixGlobal.allowCreateApp().then(() => {
+  it('should log qix traffic', () => {
     const request = {
       method: 'AllowCreateApp',
       handle: -1,
@@ -45,13 +43,15 @@ describe('qix-logging', () => {
         qReturn: true,
       },
     };
-    // we have traffic:received for OnConnected notification before (so second received
-    // msg should be ours):
-    expect(sentSpy.firstCall.args[0]).to.containSubset(request);
-    expect(receivedSpy.secondCall.args[0]).to.containSubset(response);
-    expect(starSpy.secondCall.args[0]).to.equal('sent');
-    expect(starSpy.secondCall.args[1]).to.containSubset(request);
-    expect(starSpy.thirdCall.args[0]).to.equal('received');
-    expect(starSpy.thirdCall.args[1]).to.containSubset(response);
-  })));
+    return qixGlobal.allowCreateApp().then(() => {
+      // we have traffic:received for OnConnected notification before (so second received
+      // msg should be ours):
+      expect(sentSpy.firstCall.args[0]).to.containSubset(request);
+      expect(receivedSpy.secondCall.args[0]).to.containSubset(response);
+      expect(starSpy.secondCall.args[0]).to.equal('sent');
+      expect(starSpy.secondCall.args[1]).to.containSubset(request);
+      expect(starSpy.thirdCall.args[0]).to.equal('received');
+      expect(starSpy.thirdCall.args[1]).to.containSubset(response);
+    });
+  });
 });

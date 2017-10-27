@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import Schema from '../../src/schema';
 import KeyValueCache from '../../src/cache';
 
