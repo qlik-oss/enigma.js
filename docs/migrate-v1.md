@@ -41,13 +41,13 @@ The `enigma.js/schemas` directory has been flattened. If you did this in enigma.
 version 1:
 
 ```js
-const schema = require('enigma.js/schemas/qix/3.2.0/schema.json');
+const schema = require('enigma.js/schemas/qix/3.2/schema.json');
 ```
 
 ...you would do this in enigma.js version 2:
 
 ```js
-const schema = require('enigma.js/schemas/3.2.0.json');
+const schema = require('enigma.js/schemas/3.2.json');
 ```
 
 Read more:
@@ -79,7 +79,7 @@ If you used enigma.js like this in version 1:
 
 ```js
 const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/3.2.0/schema.json');
+const schema = require('enigma.js/schemas/3.2/schema.json');
 const config = {
   host: 'localhost',
   port: 9076,
@@ -96,7 +96,7 @@ It would look like this in enigma.js version 2:
 ```js
 const enigma = require('enigma.js');
 // schemas is flattened:
-const schema = require('enigma.js/schemas/3.2.0.json');
+const schema = require('enigma.js/schemas/3.2.json');
 // you are now in full control of the websocket URL:
 const config = { schema, url: 'ws://localhost:9076/app/123' };
 enigma.create(config).open().then((global) => {
@@ -114,7 +114,7 @@ const enigma = require('enigma.js');
 // sense-utilities is a new separate module for generating Sense-compatible URLs:
 const SenseUtilities = require('enigma.js/sense-utilities');
 // schemas is flattened:
-const schema = require('enigma.js/schemas/3.2.0.json');
+const schema = require('enigma.js/schemas/3.2.json');
 // configuration for sense-utilities module:
 const urlConfig = { host: 'localhost', port: 9076, appId: '123', secure: false };
 // you are now in full control of the websocket URL:
@@ -147,7 +147,7 @@ If you did this in version 1:
 
 ```js
 const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/qix/3.2.0/schema.json');
+const schema = require('enigma.js/schemas/qix/3.2/schema.json');
 const config = {
   schema,
   host: 'localhost',
@@ -164,7 +164,7 @@ enigma.getService('qix', config).then((qix) => {
 
 ```js
 const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/3.2.0.json');
+const schema = require('enigma.js/schemas/3.2.json');
 const config = { schema, url: 'ws://localhost/app/engineData' };
 const session = enigma.create(config);
 session.on('notification:OnAuthenticationInfo', () => {});
@@ -290,7 +290,7 @@ If you did this in version 1:
 
 ```js
 const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/qix/3.2.0/schema.json');
+const schema = require('enigma.js/schemas/qix/3.2/schema.json');
 const config = {
   schema,
   host: 'localhost',
@@ -305,7 +305,7 @@ enigma.getService('qix', config).then((qix) => {
 
 ```js
 const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/3.2.0.json');
+const schema = require('enigma.js/schemas/3.2.json');
 const config = { schema, url: 'ws://localhost/app/engineData' };
 const session = enigma.create(config);
 session.on('traffic:*', (direction, message) => console.log(direction, message));
