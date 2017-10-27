@@ -1,5 +1,6 @@
 /* eslint-env node */
 
+const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
@@ -10,17 +11,24 @@ module.exports = {
     filename: 'app.js',
     publicPath: 'http://localhost:8080/',
   },
-  debug: true,
-  devtool: 'source-map',
+  plugins: [
+    new webpack.LoaderOptionsPlugin({
+      debug: true
+    })
+  ],
   module: {
-    loaders: [{
-      test: /\.js$/,
-      loader: 'babel',
-      exclude: [path.resolve(__dirname, 'node_modules')],
-      query: {
-        presets: ['es2015'],
-        plugins: ['transform-exponentiation-operator'],
-      },
-    }],
-  },
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env']
+          }
+        }
+      }
+    ]
+  }
+
 };
