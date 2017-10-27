@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.0
+- Expose `session.config`. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/api.md#sessionconfig).
+- Use `Promise.reject` instead of `throw` in the api and error response interceptors.
+- Removed `bluebird` dependency in tests.
+- Made `retry aborted` example more robust.
+
 ## 2.1.1
 
 - Bugfix for response interceptor execution order
