@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import WebSocket from 'ws';
 import schema from '../../schemas/12.20.0.json';
 
@@ -8,7 +7,6 @@ function getDefaultConfig() {
   const protocol = 'ws';
 
   return {
-    Promise,
     schema,
     url: `${protocol}://${host}:${port}/app/engineData/identity/${+new Date()}`,
     createSocket: url => new WebSocket(url),

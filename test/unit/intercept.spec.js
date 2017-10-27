@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import Intercept from '../../src/intercept';
 import ApiCache from '../../src/api-cache';
 

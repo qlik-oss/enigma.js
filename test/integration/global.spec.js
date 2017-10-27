@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import Qix from '../../src/qix';
 import utils from './utils';
 
