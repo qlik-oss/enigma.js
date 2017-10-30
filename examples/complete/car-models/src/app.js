@@ -16,8 +16,8 @@ const SCRIPT =
 ];
 `;
 
-const reloadURI = 'http://qliklinux/content/Default/redirect_linux.html';
-const url = 'ws://qliklinux/app/engineData?reloadURI=${reloadURI}';
+const reloadURI = encodeURIComponent(`${location.origin}/content/Default/redirect.html`);
+const url = `${location.origin.replace(/^http/, 'ws')}/app/engineData?reloadURI=${reloadURI}`;
 
 angular.module('app', []).component('app', {
   bindings: {},
