@@ -6,7 +6,7 @@ const fs = require('fs');
 const schema = require('enigma.js/schemas/12.20.0.json');
 
 // Your Sense Enterprise installation hostname:
-const engineHost = 'frpar-veg';
+const engineHost = 'localhost';
 
 // Make sure the port below is accessible from the machine where this example
 // is executed. If you changed the QIX Engine port in your installation, change this:
@@ -19,13 +19,13 @@ const appId = 'engineData';
 
 // The Sense Enterprise-configured user directory for the user you want to identify
 // as:
-const userDirectory = 'frpar-veg';
+const userDirectory = 'your-sense-user-directory';
 
 // The user to use when creating the session:
-const userId = 'QTSEL\veg';
+const userId = 'your-sense-user';
 
 // Path to a local folder containing the Sense Enterprise exported certificates:
-const certificatesPath = '../../../../certificat-debian-vm/';
+const certificatesPath = './';
 
 // Helper function to read the contents of the certificate files:
 const readCert = filename => fs.readFileSync(path.resolve(__dirname, certificatesPath, filename));
@@ -45,7 +45,6 @@ const session = enigma.create({
     },
   }),
 });
-
 
 session.open().then((global) => {
   console.log('Session was opened successfully');
