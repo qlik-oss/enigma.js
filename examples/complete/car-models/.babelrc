@@ -1,7 +1,8 @@
 {
+  "presets": [["es2015", { "modules": false }]],
   "env": {
     "test": {
-       "plugins": ["transform-es2015-modules-commonjs"]
+       "plugins": ["transform-es2015-modules-commonjs", "transform-object-assign"]
      }
    }
 }

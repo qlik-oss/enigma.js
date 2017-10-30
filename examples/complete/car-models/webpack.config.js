@@ -13,7 +13,7 @@ module.exports = {
   },
   plugins: [
     new webpack.LoaderOptionsPlugin({
-      debug: true
+      debug: true,
     })
   ],
   module: {
@@ -24,11 +24,10 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['env']
-          }
+            presets: ['env', 'es2015'],
+          },
         }
-      }
+      },
     ]
-  }
-
+  },
 };

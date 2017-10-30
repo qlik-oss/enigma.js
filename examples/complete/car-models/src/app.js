@@ -8,6 +8,7 @@ import schema from 'json-loader!../node_modules/enigma.js/schemas/12.20.0.json';
 import template from 'raw-loader!./app.html';
 import csv from 'raw-loader!../data.csv';
 import paintBarchart from './chart';
+// import session from '../certificates';
 
 const SCRIPT =
 `LOAD * Inline [
@@ -15,8 +16,8 @@ const SCRIPT =
 ];
 `;
 
-const reloadURI = encodeURIComponent(`${location.origin}/content/Default/redirect.html`);
-const url = `${location.origin.replace(/^http/, 'ws')}/app/engineData?reloadURI=${reloadURI}`;
+const reloadURI = 'http://qliklinux/content/Default/redirect_linux.html';
+const url = 'ws://qliklinux/app/engineData?reloadURI=${reloadURI}';
 
 angular.module('app', []).component('app', {
   bindings: {},
