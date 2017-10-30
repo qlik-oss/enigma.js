@@ -14,7 +14,7 @@ module.exports = {
   plugins: [
     new webpack.LoaderOptionsPlugin({
       debug: true,
-    })
+    }),
   ],
   module: {
     rules: [
@@ -26,8 +26,8 @@ module.exports = {
           options: {
             presets: ['env', 'es2015'],
           },
-        }
+        },
       },
-    ]
+    ],
   },
 };
