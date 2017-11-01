@@ -8,7 +8,7 @@ This example shows, how to use the different ways to pass parameters. You can pa
 
 ## Documentation
 
-* [Qlik Sense Help: GetTableData method](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/Classes/AppClass/App-class-GetTableData-method.htm
+* [Qlik Sense Help: GetTableData method](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/Classes/AppClass/App-class-GetTableData-method.htm)
 
 ---
 
