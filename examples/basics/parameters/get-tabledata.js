@@ -20,7 +20,7 @@ const session = createSession();
  */
 function print(tableContent) {
   for (let i = 0; i < tableContent.length; i += 1) {
-    console.log('dim: ${tableContent[i].qValue[0].qText} val: ${tableContent[i].qValue[1].qText}');
+    console.log(`dim: ${tableContent[i].qValue[0].qText} val: ${tableContent[i].qValue[1].qText}`);
   }
 }
 
@@ -42,7 +42,7 @@ session.open()
     return sessionApp.doReload();
   })
   .then(() => {
-    return Promise.all([
+    let returnProm = Promise.all([
       sessionApp.getTableData(0, 4, false, 'exampletable')
         .then((tableContent) => {
           console.log('Position based');
@@ -52,16 +52,18 @@ session.open()
         qOffset: 0,
         qRows: 4,
         qSyntheticMode: false,
-        qTableName: 'exampletable'
+        qTableName: 'exampletable',
       })
-        .then((tableContent)=>{ 
+        .then((tableContent) => { 
           console.log('Name based');
-          print(tableContent)
-        })
+          print(tableContent);
+        }),
     ]);
+
+    return returnProm;
   })
   .then(() => {
-      console.log('Session will be closed after every call is done');
+    console.log('Session will be closed after every call is done');
     session.close();
   })
   .catch((error) => {
