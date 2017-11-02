@@ -1,4 +1,4 @@
-# Basics: Parameters
+# Basics: Parameter passing
 
 This example shows, how to use the different ways to pass parameters. You can pass them by name or by position
 
