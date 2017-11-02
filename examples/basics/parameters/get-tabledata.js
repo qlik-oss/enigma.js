@@ -42,7 +42,7 @@ session.open()
     return sessionApp.doReload();
   })
   .then(() => {
-    let returnProm = Promise.all([
+    const returnProm = Promise.all([
       sessionApp.getTableData(0, 4, false, 'exampletable')
         .then((tableContent) => {
           console.log('Position based');
@@ -54,7 +54,7 @@ session.open()
         qSyntheticMode: false,
         qTableName: 'exampletable',
       })
-        .then((tableContent) => { 
+        .then((tableContent) => {
           console.log('Name based');
           print(tableContent);
         }),
