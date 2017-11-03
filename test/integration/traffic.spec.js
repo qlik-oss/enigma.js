@@ -44,8 +44,8 @@ describe('qix-logging', () => {
       },
     };
 
-    const delay = new Promise((resolve) => { setTimeout(() => resolve(), 100); });
-    return delay.then(() => qixGlobal.allowCreateApp()).then(() => {
+    const delay = timeout => new Promise((resolve) => { setTimeout(() => resolve(), timeout); });
+    return delay(100).then(() => qixGlobal.allowCreateApp()).then(() => {
       // we have traffic:received for OnConnected notification before (so second received
       // msg should be ours):
       expect(sentSpy.firstCall.args[0]).to.containSubset(request);
