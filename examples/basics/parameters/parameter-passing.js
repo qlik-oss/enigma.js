@@ -36,15 +36,14 @@ session.open()
   .then(() => sessionApp.doReload())
   .then(() =>
     /**
-     * the getTableData functions receives the data from a specified Table.
-     * Since enigma.js v2.0.0 you can make the function call either by name or by position.
+     * The getTableData function returns the data from a specified table.
      *
-     * The first example shows how to pass the parameter by position. By this way you insert
-     * the parameter in the order defined on the qlik help site for this function. Hereby the
-     * order of the parameters is important
+     * The first example shows how to pass the parameter by position. By this way you pass
+     * parameters by position in the order defined by the QIX method. Hereby the order
+     * of the parameters is important
      *
-     * The second example shows how to pass the parameter by position. By this way you can
-     * pass the parameters wrapped  in an object, and define the parameters with the specific
+     * The second example shows how to pass the parameter by name. By this way you can
+     * pass the parameters wrapped in an object, and define the parameters with the specific
      * name. The order is not important.
      */
     Promise.all([

@@ -1,14 +1,14 @@
 # Basics: Parameter passing
 
-This example shows, how to use the different ways to pass parameters. You can pass them by name or by position
+This examples shows how parameters can be passed either by name or by position.
 
 ## Runnable code
 
-* [use of Parameters](./get-tabledata.js)
+* [Parameter passing](./get-tabledata.js)
 
 ## Documentation
 
-* [Qlik Sense Help: GetTableData method](https://help.qlik.com/en-US/sense-developer/June2017/Subsystems/EngineAPI/Content/Classes/AppClass/App-class-GetTableData-method.htm)
+* [Qlik Sense Help: GetTableData method](http://help.qlik.com/en-US/sense-developer/3.2/Subsystems/EngineAPI/Content/introducing-engine-API.htm)
 
 ---
 
