@@ -75,7 +75,7 @@ doc.getObject({ qId: 'object-id' });
 Read more:
 
 * [Request object on Qlik Sense Help](http://help.qlik.com/en-US/sense-developer/3.2/Subsystems/EngineAPI/Content/introducing-engine-API.htm)
-* [Parameter passing](../examples/basics/parameters#readme)
+* [Parameter passing example](../examples/basics/parameters#readme)
 
 [Back to top](#high-level-concepts)
 
