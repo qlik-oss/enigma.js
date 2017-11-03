@@ -44,7 +44,7 @@ describe('qix-logging', () => {
       },
     };
 
-    const delay = timeout => new Promise((resolve) => { setTimeout(() => resolve(), timeout); });
+    const delay = timeout => new Promise(resolve => setTimeout(resolve, timeout));
     return delay(100).then(() => qixGlobal.allowCreateApp()).then(() => {
       // we have traffic:received for OnConnected notification before (so second received
       // msg should be ours):
