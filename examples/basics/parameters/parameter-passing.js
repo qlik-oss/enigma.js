@@ -66,6 +66,6 @@ session.open()
     ]))
   .then(() => session.close())
   .catch((error) => {
-    console.error('Error', error);
+    console.log('Error during communication with engine', error);
     process.exit(1);
   });
