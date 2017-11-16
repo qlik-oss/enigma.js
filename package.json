@@ -37,7 +37,7 @@
   ],
   "main": "enigma.js",
   "devDependencies": {
-    "after-work.js": "github:qlik-oss/after-work.js#37dd652",
+    "after-work.js": "github:qlik-oss/after-work.js#f57b91f",
     "babel-core": "6.26.0",
     "babel-plugin-external-helpers": "6.22.0",
     "babel-plugin-istanbul": "^4.1.5",
