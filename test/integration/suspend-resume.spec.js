@@ -1,3 +1,5 @@
+/* eslint no-console:0 */
+
 import WebSocket from 'ws';
 import Qix from '../../src/qix';
 import Schema from '../../schemas/12.20.0.json';
@@ -50,6 +52,9 @@ describe('QIX Suspend/Resume', () => {
     const suspended = sinon.spy();
     const closed = sinon.spy();
     const session = Qix.create(config);
+    session.on('traffic:*', console.log);
+    session.on('opened', () => console.log('session opened'));
+    session.on('closed', () => console.log('session closed'));
     session.on('suspended', suspended);
     session.on('closed', closed);
     const id = generateId();
@@ -76,6 +81,7 @@ describe('QIX Suspend/Resume', () => {
       .then(props => expect(props.test).to.equal(undefined))
       .then(() => global.deleteApp(app.id))
       .then(() => session.close(), () => session.close())
+      .then(() => console.log('promise session closed'))
       .then(() => expect(closed.calledOnce).to.equal(true));
   });
 
@@ -86,11 +92,11 @@ describe('QIX Suspend/Resume', () => {
     const session = Qix.create(config);
     session.on('suspended', suspended);
     session.on('closed', closed);
-    return session.open().then(() => session.rpc.close(4029)).then(() => new Promise((resolve) => {
-      setTimeout(resolve, 1000);
-    }).then(() => {
-      expect(suspended.calledOnce).to.equal(true);
-      expect(closed.calledOnce).to.equal(false);
-    }));
+    return session.open()
+      .then(() => session.rpc.close(4029))
+      .then(() => {
+        expect(suspended.calledOnce).to.equal(true);
+        expect(closed.calledOnce).to.equal(false);
+      });
   });
 });
