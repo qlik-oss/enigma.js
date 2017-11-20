@@ -34,7 +34,9 @@ jobs:
             npm run -s test
             if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then
               echo "Uploading coverage results to coveralls.io..."
-              npm run -s coverage
+              npm install -s nyc@11.3.0
+              npm install -s coveralls@3.0.0
+              ./node_modules/.bin/nyc report --reporter=text-lcov --temp-directory=./coverage/.nyc_output | ./node_modules/.bin/coveralls
             fi
       - run:
           name: Generate JSDoc
