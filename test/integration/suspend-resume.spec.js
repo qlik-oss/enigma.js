@@ -1,13 +1,14 @@
+import crypto from 'crypto';
 import WebSocket from 'ws';
 import Qix from '../../src/qix';
 import Schema from '../../schemas/12.20.0.json';
 
 function generateId() {
-  return Math.floor(Math.random() * 10000).toString();
+  return crypto.randomBytes(20).toString('hex');
 }
 
 function buildUrl(ttl) {
-  ttl = typeof ttl !== 'undefined' ? ttl : 3600;
+  ttl = typeof ttl !== 'undefined' ? ttl : 300;
   return `ws://localhost:9076/app/engineData/ttl/${ttl}/identity/${generateId()}`;
 }
 
@@ -75,8 +76,9 @@ describe('QIX Suspend/Resume', () => {
       // this property it shouldn't exist in a new one:
       .then(props => expect(props.test).to.equal(undefined))
       .then(() => global.deleteApp(app.id))
-      .then(() => session.close(), () => session.close())
-      .then(() => expect(closed.calledOnce).to.equal(true));
+      .then(() => session.close())
+      .catch(error => session.close().then(() => Promise.reject(error)))
+      .then(() => expect(closed.callCount).to.equal(1));
   });
 
   it('should suspend session when socket was disconnected', () => {
