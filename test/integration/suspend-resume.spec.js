@@ -1,11 +1,15 @@
-import uuid from 'uuid/v4';
+import crypto from 'crypto';
 import WebSocket from 'ws';
 import Qix from '../../src/qix';
 import Schema from '../../schemas/12.20.0.json';
 
+function generateId() {
+  return crypto.randomBytes(20).toString('hex');
+}
+
 function buildUrl(ttl) {
-  ttl = typeof ttl !== 'undefined' ? ttl : 3600;
-  return `ws://localhost:9076/app/engineData/ttl/${ttl}/identity/${uuid()}`;
+  ttl = typeof ttl !== 'undefined' ? ttl : 300;
+  return `ws://localhost:9076/app/engineData/ttl/${ttl}/identity/${generateId()}`;
 }
 
 // N.B. This test will only pass when run towards an engine supporting the session TTL feature.
@@ -49,7 +53,7 @@ describe('QIX Suspend/Resume', () => {
     const session = Qix.create(config);
     session.on('suspended', suspended);
     session.on('closed', closed);
-    const id = uuid();
+    const id = generateId();
     let global;
     let app;
 
