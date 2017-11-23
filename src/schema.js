@@ -170,7 +170,7 @@ class Schema {
   */
   generateDefaultApi(api, schema) {
     Object.keys(schema).forEach((method) => {
-      const out = schema[method].Out && schema[method].Out;
+      const out = schema[method].Out;
       const outKey = out.length === 1 ? out[0].Name : -1;
       const fnName = toCamelCase(method);
 
