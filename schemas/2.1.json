@@ -1523,5 +1523,6 @@
 			"MATCHINGFIELDMODE_MATCH_ALL": 0,
 			"MATCHINGFIELDMODE_MATCH_ONE": 1
 		}
-	}
+	},
+	"version": "2.1"
 }
