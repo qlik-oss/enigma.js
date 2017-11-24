@@ -1592,5 +1592,6 @@
 			"NX_EXT_MSGTYPE_RETURN_MULTIPLE": 4,
 			"NX_EXT_MSGTYPE_RETURN_ERROR": 5
 		}
-	}
+	},
+	"version": "12.67.2"
 }
