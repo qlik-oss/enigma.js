@@ -349,7 +349,7 @@ describe('Session', () => {
 
     it('should create and return an api', () => {
       const create = sinon.stub().returns({ on: sinon.spy() });
-      const generate = sinon.stub().returns({ create });
+      const generate = sinon.stub().returns(create);
       session.definition = { generate };
       session.getObjectApi({
         handle: -1, id: 'id_1234', type: 'Foo', genericType: 'Bar',
