@@ -133,9 +133,8 @@ class Session {
     if (api) {
       return api;
     }
-    api = this.definition
-      .generate(type)
-      .create(this, handle, id, genericType);
+    const factory = this.definition.generate(type);
+    api = factory(this, handle, id, genericType);
     this.apis.add(handle, api);
     return api;
   }

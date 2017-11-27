@@ -113,7 +113,7 @@ class Schema {
     this.mixinType(type, api); // Mixin default type
     this.mixinNamedParamFacade(api, schema); // Mixin named parameter support
 
-    const create = function create(session, handle, id, customKey) {
+    return function create(session, handle, id, customKey) {
       const instance = Object.create(api);
 
       Events.mixin(instance); // Always mixin event-emitter per instance
@@ -155,11 +155,6 @@ class Schema {
 
       return instance;
     }.bind(this);
-
-    return {
-      create,
-      def: api,
-    };
   }
 
   /**

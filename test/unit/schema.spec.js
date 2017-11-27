@@ -25,9 +25,8 @@ describe('Schema', () => {
   });
 
   it('should generate a type', () => {
-    const type = definition.generate('Foo');
-    expect(type.create).to.be.a('function');
-    expect(type.def).to.be.an('object');
+    const factory = definition.generate('Foo');
+    expect(factory).to.be.a('function');
   });
 
   it('should throw if type is not defined', () => {
@@ -35,9 +34,9 @@ describe('Schema', () => {
   });
 
   it('should return cached type', () => {
-    const type = definition.generate('Foo');
-    // what kind of test is this??
-    expect(definition.generate('Foo')).to.equal(type);
+    const factory = definition.generate('Foo');
+    // what kind of test is this?
+    expect(definition.generate('Foo')).to.equal(factory);
   });
 
   describe('register mixin', () => {
@@ -84,8 +83,8 @@ describe('Schema', () => {
         },
       };
       definition.registerMixin(mixin);
-      const type = definition.generate('Foo');
-      const api = type.create({}, 0, 'id', 'custom');
+      const factory = definition.generate('Foo');
+      const api = factory({}, 0, 'id', 'custom');
       api.bar('xyz');
       expect(baseArg).to.be.a('function');
       expect(fnArgs).to.equal('xyz');
@@ -100,8 +99,8 @@ describe('Schema', () => {
 
     it('should mixin apis', () => {
       definition.registerMixin(mixin);
-      const type = definition.generate('Foo');
-      const obj = type.create({}, 0, 'id', 'custom');
+      const factory = definition.generate('Foo');
+      const obj = factory({}, 0, 'id', 'custom');
       expect(obj.tweet).to.be.a('function');
     });
 
@@ -109,8 +108,8 @@ describe('Schema', () => {
       const spy = sinon.spy(definition, 'mixinType');
 
       definition.registerMixin('Foo', mixin);
-      const type = definition.generate('Foo');
-      type.create({}, 0, 'id', 'Foo');
+      const factory = definition.generate('Foo');
+      factory({}, 0, 'id', 'Foo');
 
       expect(spy.callCount).to.equals(1);
     });
@@ -124,8 +123,8 @@ describe('Schema', () => {
         mixinArgs = initArgs;
       };
       definition.registerMixin(mixin);
-      const type = definition.generate('Foo');
-      type.create({}, 0, 'id', 'custom');
+      const factory = definition.generate('Foo');
+      factory({}, 0, 'id', 'custom');
       expect(mixinArgs.config.Promise).to.be.equal(Promise);
       expect(mixinArgs.config.customProp).to.be.equal(true);
       expect(mixinArgs.api.bar).to.be.a('function');
@@ -187,19 +186,15 @@ describe('Schema', () => {
   });
 
   describe('generate', () => {
-    it('should return a definition', () => {
-      const entry = definition.generate('Foo');
-
-      expect(entry.def).to.be.an('object');
-      expect(entry.def.bar).to.be.a('function');
-      // expect( entry.def.proxy ).to.be.a( "function" );
-      expect(entry.create).to.be.a('function');
+    it('should return a factory', () => {
+      const factory = definition.generate('Foo');
+      expect(factory).to.be.a('function');
     });
 
     it('should create an api', () => {
-      const entry = definition.generate('Foo');
+      const factory = definition.generate('Foo');
       const session = {};
-      const foo = entry.create(session, 1, 'id', true);
+      const foo = factory(session, 1, 'id', true);
       expect(foo).to.be.an('object');
       expect(foo.session).to.equal(session);
       expect(foo.handle).to.equal(1);
@@ -215,9 +210,9 @@ describe('Schema', () => {
         },
       };
       definition = new Schema(config);
-      const entry = definition.generate('Foo');
+      const factory = definition.generate('Foo');
       const session = {};
-      const foo = entry.create(session, 1, true);
+      const foo = factory(session, 1, true);
       expect(foo.bar2).to.be.a('function');
     });
   });
@@ -242,7 +237,8 @@ describe('Schema', () => {
     it('should call send with the correct parameter set', () => {
       let args;
       const send = (request) => { args = request.params; };
-      const api = definition.generate('Foo').create({ send }, 1, 'dummy', false, 'dummy');
+      const factory = definition.generate('Foo');
+      const api = factory({ send }, 1, 'dummy', false, 'dummy');
       api.bar({ param1: 'abc', param2: 'def', param3: 'ghi' });
       expect(args).to.deep.equal(['abc', 'def', 'ghi']);
       api.bar('abc', 'def');
@@ -252,7 +248,8 @@ describe('Schema', () => {
     it('should fill in default values when parameters are named', () => {
       let args;
       const send = (request) => { args = request.params; };
-      const api = definition.generate('Foo').create({ send }, 1, 'dummy', false, 'dummy');
+      const factory = definition.generate('Foo');
+      const api = factory({ send }, 1, 'dummy', false, 'dummy');
       api.bar({ param1: 'abc', param2: 'def' });
       expect(args).to.deep.equal(['abc', 'def', 'xyz']);
     });
@@ -261,8 +258,8 @@ describe('Schema', () => {
       let mixinArgs;
       const mixin = { types: 'Foo', override: { bar: (_bar, ...args) => { mixinArgs = args; } } };
       definition.registerMixin(mixin);
-      const type = definition.generate('Foo');
-      const api = type.create({}, 0, 'id', 'custom');
+      const factory = definition.generate('Foo');
+      const api = factory({}, 0, 'id', 'custom');
       api.bar({ param1: 'abc', param2: 'def', param3: 'ghi' });
       expect(mixinArgs).to.deep.equal(['abc', 'def', 'ghi']);
     });
