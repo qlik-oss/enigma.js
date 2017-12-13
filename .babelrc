@@ -3,7 +3,15 @@
   "plugins": ["transform-object-assign"],
   "env": {
     "test": {
-       "plugins": ["transform-es2015-modules-commonjs", "istanbul"]
-     }
-   }
+      "plugins": [
+        "transform-es2015-modules-commonjs",
+        [
+          "istanbul",
+          {
+            "include": ["src/**/*js"]
+          }
+        ]
+      ]
+    }
+  }
 }
