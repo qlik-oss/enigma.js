@@ -36,7 +36,7 @@
   ],
   "main": "enigma.js",
   "devDependencies": {
-    "after-work.js": "4.0.0",
+    "after-work.js": "4.0.1",
     "babel-core": "6.26.0",
     "babel-plugin-external-helpers": "6.22.0",
     "babel-plugin-istanbul": "4.1.5",
@@ -52,7 +52,7 @@
     "jsdoc": "3.5.5",
     "node-event-emitter": "0.0.1",
     "rimraf": "2.6.2",
-    "rollup": "0.53.3",
+    "rollup": "0.53.4",
     "rollup-plugin-babel": "3.0.3",
     "rollup-plugin-commonjs": "8.2.6",
     "rollup-plugin-filesize": "1.5.0",
