@@ -9,10 +9,9 @@ function isFunction(v) { return typeof v === 'function'; }
 
 /**
 * Generate an exact duplicate (with no references) of a specific value.
-*
 * @private
-* @param {Object} The value to duplicate
-* @returns {Object} a unique, duplicated value
+* @param {object} The value to duplicate
+* @returns {object} a unique, duplicated value
 */
 function generateValue(val) {
   if (val) {
@@ -24,11 +23,10 @@ function generateValue(val) {
 /**
 * An additional type checker used to determine if the property is of internal
 * use or not a type that can be translated into JSON (like functions).
-*
 * @private
-* @param {Object} obj The object which has the property to check
-* @param {String} The property name to check
-* @returns {Boolean} Whether the property is deemed special or not
+* @param {object} obj The object which has the property to check
+* @param {string} The property name to check
+* @returns {boolean} Whether the property is deemed special or not
 */
 function isSpecialProperty(obj, key) {
   return isFunction(obj[key]) ||
@@ -39,11 +37,10 @@ function isSpecialProperty(obj, key) {
 /**
 * Finds the parent object from a JSON-Pointer ("/foo/bar/baz" = "bar" is "baz" parent),
 * also creates the object structure needed.
-*
 * @private
-* @param {Object} data The root object to traverse through
-* @param {String} The JSON-Pointer string to use when traversing
-* @returns {Object} The parent object
+* @param {object} data The root object to traverse through
+* @param {string} The JSON-Pointer string to use when traversing
+* @returns {object} The parent object
 */
 function getParent(data, str) {
   const seperator = '/';
@@ -68,9 +65,8 @@ function getParent(data, str) {
 /**
 * Cleans an object of all its properties, unless they're deemed special or
 * cannot be removed by configuration.
-*
 * @private
-* @param {Object} obj The object to clean
+* @param {object} obj The object to clean
 */
 function emptyObject(obj) {
   Object.keys(obj).forEach((key) => {
@@ -84,10 +80,9 @@ function emptyObject(obj) {
 
 /**
 * Compare an object with another, could be object, array, number, string, bool.
-*
-* @param {Object} a The first object to compare
-* @param {Object} a The second object to compare
-* @returns {Boolean} Whether the objects are identical
+* @param {object} a The first object to compare
+* @param {object} a The second object to compare
+* @returns {boolean} Whether the objects are identical
 */
 function compare(a, b) {
   let isIdentical = true;
@@ -118,7 +113,6 @@ function compare(a, b) {
 
 /**
 * Generates patches by comparing two arrays.
-*
 * @private
 * @param {Array} oldA The old (original) array, which will be patched
 * @param {Array} newA The new array, which will be used to compare against
@@ -195,14 +189,12 @@ function patchArray(original, newA, basePath) {
 
 /**
 * Generate an array of JSON-Patch:es following the JSON-Patch Specification Draft.
-*
 * See [specification draft](http://tools.ietf.org/html/draft-ietf-appsawg-json-patch-10)
-*
 * Does NOT currently generate patches for arrays (will replace them)
-*
-* @param {Object} original The object to patch to
-* @param {Object} newData The object to patch from
-* @param {String} [basePath] The base path to use when generating the paths for
+* @private
+* @param {object} original The object to patch to
+* @param {object} newData The object to patch from
+* @param {string} [basePath] The base path to use when generating the paths for
 *                            the patches (normally not used)
 * @returns {Array} An array of patches
 */
@@ -255,8 +247,8 @@ JSONPatch.generate = function generate(original, newData, basePath) {
 
 /**
 * Apply a list of patches to an object.
-*
-* @param {Object} original The object to patch
+* @private
+* @param {object} original The object to patch
 * @param {Array} patches The list of patches to apply
 */
 JSONPatch.apply = function apply(original, patches) {
@@ -313,9 +305,9 @@ JSONPatch.apply = function apply(original, patches) {
 
 /**
 * Deep clone an object.
-*
-* @param {Object} obj The object to clone
-* @returns {Object} A new object identical to the `obj`
+* @private
+* @param {object} obj The object to clone
+* @returns {object} A new object identical to the `obj`
 */
 JSONPatch.clone = function clone(obj) {
   return extend({}, obj);
@@ -323,12 +315,12 @@ JSONPatch.clone = function clone(obj) {
 
 /**
 * Creates a JSON-patch.
-*
-* @param {String} op The operation of the patch. Available values: "add", "remove", "move"
-* @param {Object} [val] The value to set the `path` to. If `op` is `move`, `val`
+* @private
+* @param {string} op The operation of the patch. Available values: "add", "remove", "move"
+* @param {object} [val] The value to set the `path` to. If `op` is `move`, `val`
 *                       is the "from JSON-path" path
-* @param {String} path The JSON-path for the property to change (e.g. "/qHyperCubeDef/columnOrder")
-* @returns {Object} A patch following the JSON-patch specification
+* @param {string} path The JSON-path for the property to change (e.g. "/qHyperCubeDef/columnOrder")
+* @returns {object} A patch following the JSON-patch specification
 */
 JSONPatch.createPatch = function createPatch(op, val, path) {
   const patch = {
@@ -346,10 +338,9 @@ JSONPatch.createPatch = function createPatch(op, val, path) {
 /**
 * Apply the differences of two objects (keeping references if possible).
 * Identical to running `JSONPatch.apply(original, JSONPatch.generate(original, newData));`
-*
-* @param {Object} original The object to update/patch
-* @param {Object} newData the object to diff against
-*
+* @private
+* @param {object} original The object to update/patch
+* @param {object} newData the object to diff against
 * @example
 * var obj1 = { foo: [1,2,3], bar: { baz: true, qux: 1 } };
 * var obj2 = { foo: [4,5,6], bar: { baz: false } };

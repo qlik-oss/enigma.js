@@ -1,0 +1,509 @@
+{
+  "spec": {
+    "version": "0.x"
+  },
+  "info": {
+    "name": "enigma.js",
+    "description": "JavaScript library for consuming Qlik backend services",
+    "version": "2.2.0",
+    "license": "MIT"
+  },
+  "entries": {
+    "CreateWebSocket": {
+      "kind": "function",
+      "params": [
+        {
+          "name": "url",
+          "description": "The URL that should be used when instantiating the websocket.",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "description": "Returns an ES6-compatible WebSocket instance.",
+        "type": "object"
+      }
+    },
+    "Configuration": {
+      "kind": "object",
+      "entries": {}
+    },
+    "enigma": {
+      "description": "The enigma.js entry API.",
+      "kind": "object",
+      "entries": {
+        "create": {
+          "description": "Function used to create a QIX session.",
+          "availability": {
+            "since": "2.0.0"
+          },
+          "kind": "function",
+          "params": [
+            {
+              "name": "config",
+              "description": "The configuration object for the QIX session.",
+              "type": "object"
+            }
+          ],
+          "returns": {
+            "description": "Returns a new QIX session.",
+            "type": "#/entries/Session"
+          }
+        }
+      }
+    },
+    "ResponseInterceptor:API": {
+      "kind": "module",
+      "entries": {
+        "@default": {
+          "description": "Response interceptor for generating APIs. Handles the quirks of engine not\nreturning an error when an object is missing.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "session",
+              "description": "The session the intercept is being executed on.",
+              "type": "object"
+            },
+            {
+              "name": "request",
+              "description": "The JSON-RPC request.",
+              "type": "object"
+            },
+            {
+              "name": "response",
+              "description": "The response.",
+              "type": "object"
+            }
+          ],
+          "returns": {
+            "description": "- Returns the generated API",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ResponseInterceptor:Delta": {
+      "kind": "module",
+      "entries": {
+        "@default": {
+          "description": "Process delta interceptor.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "session",
+              "description": "The session the intercept is being executed on.",
+              "type": "#/entries/Session"
+            },
+            {
+              "name": "request",
+              "description": "The JSON-RPC request.",
+              "type": "object"
+            },
+            {
+              "name": "response",
+              "description": "The response.",
+              "type": "object"
+            }
+          ],
+          "returns": {
+            "description": "Returns the patched response",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ResponseInterceptor:Error": {
+      "kind": "module",
+      "entries": {
+        "@default": {
+          "description": "Process error interceptor.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "session",
+              "description": "The session the intercept is being executed on.",
+              "type": "object"
+            },
+            {
+              "name": "request",
+              "description": "The JSON-RPC request.",
+              "type": "object"
+            },
+            {
+              "name": "response",
+              "description": "The response.",
+              "type": "object"
+            }
+          ],
+          "returns": {
+            "description": "- Returns the defined error for an error, else the response.",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ResponseInterceptor:OutParam": {
+      "kind": "module",
+      "entries": {
+        "@default": {
+          "description": "Picks out the result \"out\" parameter based on the QIX method+schema, with\nsome specific handling for some methods that breaks the predictable protocol.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "session",
+              "description": "The session the intercept is being executed on.",
+              "type": "object"
+            },
+            {
+              "name": "request",
+              "description": "The JSON-RPC request.",
+              "type": "object"
+            },
+            {
+              "name": "response",
+              "description": "The response.",
+              "type": "object"
+            }
+          ],
+          "returns": {
+            "description": "- Returns the result property on the response",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "ResponseInterceptor:Result": {
+      "kind": "module",
+      "entries": {
+        "@default": {
+          "description": "Process result interceptor.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "session",
+              "description": "The session the intercept is being executed on.",
+              "type": "object"
+            },
+            {
+              "name": "request",
+              "description": "The JSON-RPC request.",
+              "type": "object"
+            },
+            {
+              "name": "response",
+              "description": "The response.",
+              "type": "object"
+            }
+          ],
+          "returns": {
+            "description": "- Returns the result property on the response",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "compare": {
+      "description": "Compare an object with another, could be object, array, number, string, bool.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "a",
+          "description": "The first object to compare",
+          "type": "object"
+        },
+        {
+          "name": "a",
+          "description": "The second object to compare",
+          "type": "object"
+        }
+      ],
+      "returns": {
+        "description": "Whether the objects are identical",
+        "type": "boolean"
+      }
+    },
+    "SenseConfiguration": {
+      "description": "The Qlik Sense configuration object.",
+      "kind": "object",
+      "entries": {
+        "appId": {
+          "description": "The app id. If omitted, only the global object is returned.\n                           Otherwise both global and app object are returned.",
+          "optional": true,
+          "type": "string"
+        },
+        "noData": {
+          "description": "Whether to open the app without data.",
+          "optional": true,
+          "defaultValue": false,
+          "type": "boolean"
+        },
+        "secure": {
+          "description": "Set to false if an unsecure WebSocket should be used.",
+          "optional": true,
+          "defaultValue": true,
+          "type": "boolean"
+        },
+        "host": {
+          "description": "Host address.",
+          "optional": true,
+          "type": "string"
+        },
+        "port": {
+          "description": "Port to connect to.",
+          "optional": true,
+          "type": "number"
+        },
+        "prefix": {
+          "description": "The absolute base path to use when connecting.\n                            Used for proxy prefixes.",
+          "optional": true,
+          "defaultValue": "\"/\"",
+          "type": "string"
+        },
+        "subpath": {
+          "description": "The subpath.",
+          "optional": true,
+          "defaultValue": "\"\"",
+          "type": "string"
+        },
+        "route": {
+          "description": "Used to instruct Proxy to route to the correct receiver.",
+          "optional": true,
+          "defaultValue": "\"\"",
+          "type": "string"
+        },
+        "identity": {
+          "description": "Identity to use.",
+          "optional": true,
+          "defaultValue": "\"\"",
+          "type": "string"
+        },
+        "urlParams": {
+          "description": "Used to add parameters to the WebSocket URL.",
+          "optional": true,
+          "defaultValue": "{}",
+          "type": "object"
+        },
+        "ttl": {
+          "description": "A value in seconds that QIX Engine should keep the session\n                            alive after socket disconnect (only works if QIX Engine supports it).",
+          "optional": true,
+          "type": "number"
+        }
+      }
+    },
+    "SenseUtilities.buildUrl": {
+      "description": "Function used to build an URL.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "urlConfig",
+          "description": "The URL configuration object.",
+          "type": "#/entries/SenseConfiguration"
+        }
+      ],
+      "returns": {
+        "description": "Returns the URL.",
+        "type": "string"
+      }
+    },
+    "SuspendedEventData": {
+      "kind": "object",
+      "entries": {}
+    },
+    "Session": {
+      "description": "Represents an enigma.js session, not to be confused with a QIX Engine\nsession. The difference being that one QIX Engine session may have multiple\nenigma.js sessions across multiple Node.js and browser processes.",
+      "kind": "class",
+      "constructor": {
+        "params": []
+      },
+      "entries": {
+        "open": {
+          "description": "Establishes the RPC socket connection and returns the Global instance.",
+          "kind": "function",
+          "params": [],
+          "returns": {
+            "description": "Eventually resolved if the connection was successful.",
+            "type": "Promise"
+          },
+          "emits": [
+            {
+              "type": "undefined/events/opened"
+            }
+          ]
+        },
+        "send": {
+          "description": "Function used to send data on the RPC socket.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "request",
+              "description": "The request to be sent. (data and some meta info)",
+              "type": "object"
+            }
+          ],
+          "returns": {
+            "description": "Eventually resolved or rejected when a response was received.",
+            "type": "Promise"
+          }
+        },
+        "suspend": {
+          "description": "Suspends the session (\"sleeping state\"), and closes the RPC connection.",
+          "kind": "function",
+          "params": [],
+          "returns": {
+            "description": "Eventually resolved when the RPC connection is closed.",
+            "type": "Promise"
+          },
+          "emits": [
+            {
+              "type": "undefined/events/suspended"
+            }
+          ]
+        },
+        "resume": {
+          "description": "Resumes a previously suspended session.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "onlyIfAttached",
+              "description": "If true, resume only if the session was re-attached.",
+              "type": "boolean"
+            }
+          ],
+          "returns": {
+            "description": "Eventually resolved if the session was successfully resumed,\n                   otherwise rejected.",
+            "type": "Promise"
+          },
+          "emits": [
+            {
+              "type": "undefined/events/resumed"
+            }
+          ]
+        },
+        "close": {
+          "description": "Function used to close the session.",
+          "kind": "function",
+          "params": [],
+          "returns": {
+            "description": "Eventually resolved when the RPC connection is closed.",
+            "type": "Promise"
+          },
+          "emits": [
+            {
+              "type": "undefined/events/closed"
+            }
+          ]
+        }
+      },
+      "events": {
+        "opened": {
+          "description": "Emitted when the session was opened.",
+          "kind": "event",
+          "params": []
+        },
+        "socket-error": {
+          "description": "Emitted when the underlying websocket got an error.",
+          "kind": "event",
+          "params": [
+            {
+              "name": "evt",
+              "description": "WebSocket error event.",
+              "type": "Event"
+            }
+          ]
+        },
+        "suspended": {
+          "description": "Emitted when the session was suspended.",
+          "kind": "event",
+          "params": [
+            {
+              "name": "data",
+              "description": "The suspended event meta data.",
+              "type": "#/entries/SuspendedEventData"
+            }
+          ]
+        },
+        "resumed": {
+          "description": "Emitted when the session was resumed.",
+          "kind": "event",
+          "params": []
+        },
+        "closed": {
+          "description": "Emitted when the session was closed.",
+          "kind": "event",
+          "params": [
+            {
+              "name": "evt",
+              "description": "WebSocket closed event.",
+              "type": "Event"
+            }
+          ]
+        },
+        "notification:*": {
+          "description": "Emitted when a JSON-RPC notification was received.",
+          "kind": "event",
+          "params": [
+            {
+              "name": "name",
+              "description": "The notification name.",
+              "type": "string"
+            },
+            {
+              "name": "notification",
+              "description": "The notification data.",
+              "type": "object"
+            }
+          ]
+        },
+        "notification:<name>": {
+          "description": "Emitted when a specific JSON-RPC notification was received.\nThis event is templated, you need to supply the notification\nname. Example: notification:OnConnected.",
+          "kind": "event",
+          "params": [
+            {
+              "name": "notification",
+              "description": "The notification data.",
+              "type": "object"
+            }
+          ]
+        },
+        "traffic:*": {
+          "description": "Emitted when the session had traffic sent or received.",
+          "kind": "event",
+          "params": [
+            {
+              "name": "direction",
+              "description": "The traffic direction, either 'sent' or 'received'.",
+              "type": "string"
+            },
+            {
+              "name": "payload",
+              "description": "The traffic payload.",
+              "type": "object"
+            }
+          ]
+        },
+        "traffic:sent": {
+          "description": "Emitted when the session sent traffic.",
+          "kind": "event",
+          "params": [
+            {
+              "name": "payload",
+              "description": "The traffic payload.",
+              "type": "object"
+            }
+          ]
+        },
+        "traffic:received": {
+          "description": "Emitted when the session received traffic.",
+          "kind": "event",
+          "params": [
+            {
+              "name": "payload",
+              "description": "The traffic payload.",
+              "type": "object"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "definitions": {}
+}

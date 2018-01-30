@@ -1,4 +1,4 @@
-import Qix from '../../src/qix';
+import enigma from '../../src/index';
 import utils from './utils';
 
 describe('QIX Global', () => {
@@ -14,7 +14,7 @@ describe('QIX Global', () => {
         },
       },
     }];
-    return Qix.create(config).open().then((global) => {
+    return enigma.create(config).open().then((global) => {
       qixGlobal = global;
     });
   });

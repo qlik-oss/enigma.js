@@ -1,17 +1,7 @@
 import Events from './event-emitter';
 import RPCResolver from './rpc-resolver';
 
-/**
-* This class handles remote procedure calls on a web socket.
-*/
 class RPC {
-  /**
-  * Create a new RPC instance.
-  * @param {Object} options The configuration options for this class.
-  * @param {Function} options.Promise The promise constructor to use.
-  * @param {String} options.url The complete websocket URL used to connect.
-  * @param {Function} options.createSocket The function callback to create a WebSocket.
-  */
   constructor(options) {
     Object.assign(this, options);
     Events.mixin(this);
@@ -20,11 +10,6 @@ class RPC {
     this.openedPromise = undefined;
   }
 
-  /**
-  * Opens a connection to the configured endpoint.
-  * @param {Boolean} force - ignores all previous and outstanding open calls if set to true.
-  * @returns {Object} A promise instance.
-  */
   open(force = false) {
     if (!force && this.openedPromise) {
       return this.openedPromise;
@@ -45,29 +30,16 @@ class RPC {
     return this.openedPromise;
   }
 
-  /**
-  * Resolves the open promise when a connection is successfully established.
-  */
   onOpen() {
     this.resolvers.opened.resolveWith(() => this.closedPromise);
   }
 
-  /**
-  * Resolves the close promise when a connection is closed.
-  * @param {Object} event - The event describing close.
-  */
   onClose(event) {
     this.emit('closed', event);
     this.resolvers.closed.resolveWith(event);
     this.rejectAllOutstandingResolvers({ code: -1, message: 'Socket closed' });
   }
 
-  /**
-  * Closes a connection.
-  * @param {Number} [code=1000] - The reason code for closing the connection.
-  * @param {String} [reason=""] - The human readable string describing why the connection is closed.
-  * @returns {Object} Returns a promise instance.
-  */
   close(code = 1000, reason = '') {
     if (this.socket) {
       this.socket.close(code, reason);
@@ -76,10 +48,6 @@ class RPC {
     return this.closedPromise;
   }
 
-  /**
-  * Emits an error event and rejects the open promise if an error is raised on the connection.
-  * @param {Object} event - The event describing the error.
-  */
   onError(event) {
     if (this.resolvers.opened) {
       this.resolvers.opened.rejectWith(event);
@@ -92,10 +60,6 @@ class RPC {
     this.rejectAllOutstandingResolvers({ code: -1, message: 'Socket error' });
   }
 
-  /**
-  * Parses the onMessage event on the connection and resolve the promise for the request.
-  * @param {Object} event - The event describing the message.
-  */
   onMessage(event) {
     const data = JSON.parse(event.data);
     this.emit('traffic', 'received', data);
@@ -107,10 +71,6 @@ class RPC {
     }
   }
 
-  /**
-  * Rejects all outstanding resolvers.
-  * @param {Object} reason - The reject reason.
-  */
   rejectAllOutstandingResolvers(reason) {
     Object.keys(this.resolvers).forEach((id) => {
       if (id === 'opened' || id === 'closed') {
@@ -121,21 +81,12 @@ class RPC {
     });
   }
 
-  /**
-  * Unregisters a resolver.
-  * @param {Number|String} id - The ID to unregister the resolver with.
-  */
   unregisterResolver(id) {
     const resolver = this.resolvers[id];
     resolver.removeAllListeners();
     delete this.resolvers[id];
   }
 
-  /**
-  * Registers a resolver.
-  * @param {Number|String} id - The ID to register the resolver with.
-  * @returns {Function} The promise executor function.
-  */
   registerResolver(id, resolve, reject) {
     const resolver = new RPCResolver(id, resolve, reject);
     this.resolvers[id] = resolver;
@@ -143,11 +94,6 @@ class RPC {
     resolver.on('rejected', rejectedId => this.unregisterResolver(rejectedId));
   }
 
-  /**
-  * Sends data on the socket.
-  * @param {Object} data - The data to send.
-  * @returns {Object} A promise instance.
-  */
   send(data) {
     if (!this.socket || this.socket.readyState !== this.socket.OPEN) {
       return this.Promise.reject(new Error('Not connected'));

@@ -1,10 +1,14 @@
 /**
+ * @module ResponseInterceptor:API
+ */
+
+/**
 * Response interceptor for generating APIs. Handles the quirks of engine not
 * returning an error when an object is missing.
-* @param {Object} session - The session the intercept is being executed on.
-* @param {Object} request - The JSON-RPC request.
-* @param {Object} response - The response.
-* @returns {Object} - Returns the generated API
+* @param {object} session - The session the intercept is being executed on.
+* @param {object} request - The JSON-RPC request.
+* @param {object} response - The response.
+* @returns {object} - Returns the generated API
 */
 export default function apiInterceptor(session, request, response) {
   if (response.qHandle && response.qType) {

@@ -2,19 +2,19 @@ import QueryString from 'querystring';
 
 /**
 * The Qlik Sense configuration object.
-* @typedef {Object} SenseConfiguration
-* @property {String} [appId] The app id. If omitted, only the global object is returned.
+* @typedef {object} SenseConfiguration
+* @property {string} [appId] The app id. If omitted, only the global object is returned.
 *                            Otherwise both global and app object are returned.
-* @property {Boolean} [noData=false] Whether to open the app without data.
-* @property {Boolean} [secure=true] Set to false if an unsecure WebSocket should be used.
-* @property {String} [host] Host address.
+* @property {boolean} [noData=false] Whether to open the app without data.
+* @property {boolean} [secure=true] Set to false if an unsecure WebSocket should be used.
+* @property {string} [host] Host address.
 * @property {Number} [port] Port to connect to.
-* @property {String} [prefix="/"] The absolute base path to use when connecting.
+* @property {string} [prefix="/"] The absolute base path to use when connecting.
 *                             Used for proxy prefixes.
-* @property {String} [subpath=""] The subpath.
-* @property {String} [route=""] Used to instruct Proxy to route to the correct receiver.
-* @property {String} [identity=""] Identity to use.
-* @property {Object} [urlParams={}] Used to add parameters to the WebSocket URL.
+* @property {string} [subpath=""] The subpath.
+* @property {string} [route=""] Used to instruct Proxy to route to the correct receiver.
+* @property {string} [identity=""] Identity to use.
+* @property {object} [urlParams={}] Used to add parameters to the WebSocket URL.
 * @property {Number} [ttl] A value in seconds that QIX Engine should keep the session
 *                             alive after socket disconnect (only works if QIX Engine supports it).
 */
@@ -24,14 +24,8 @@ function replaceLeadingAndTrailingSlashes(str) {
 }
 
 
-class SenseUtilities {
-  /**
-  * Ensures that the configuration has defaults set.
-  *
-  * @private
-  * @param {SenseConfiguration} senseConfig The configuration to ensure defaults on.
-  */
-  static configureDefaults(senseConfig) {
+const SenseUtilities = {
+  configureDefaults(senseConfig) {
     if (!senseConfig.host) {
       senseConfig.host = 'localhost';
     }
@@ -47,14 +41,14 @@ class SenseUtilities {
     if (typeof senseConfig.noData === 'undefined') {
       senseConfig.noData = false;
     }
-  }
+  },
 
   /**
   * Function used to build an URL.
-  * @param {SenseUrlConfiguration} urlConfig - The URL configuration object.
-  * @returns {String} Returns the URL.
+  * @param {SenseConfiguration} urlConfig The URL configuration object.
+  * @returns {string} Returns the URL.
   */
-  static buildUrl(urlConfig) {
+  buildUrl(urlConfig) {
     SenseUtilities.configureDefaults(urlConfig);
 
     const {
@@ -106,7 +100,7 @@ class SenseUtilities {
     }
 
     return url;
-  }
-}
+  },
+};
 
 export default SenseUtilities;

@@ -6,15 +6,33 @@ import Intercept from './intercept';
 import ApiCache from './api-cache';
 
 /**
-* Qix service.
+ * @typedef {Function} CreateWebSocket
+ * @param {string} url The URL that should be used when instantiating the websocket.
+ * @returns {Object} Returns an ES6-compatible WebSocket instance.
+ */
+
+/**
+ * @typedef {object} Configuration
+ * @param {object} schema Object containing the specification for the API to generate.
+ *                        Corresponds to a specific version of the QIX Engine API.
+ * @param {string} url String containing the QIX Engine websocket URL.
+ * @param {CreateWebSocket} [createSocket] Optional in browsers. Function to invoke when
+ *                                         instantiating websockets.
+ * @param {Promise} [Promise] Optional when globally available. Should be an ES6-compatible
+ *                            implementation of promise.
+ * @param {boolean} [suspendOnClose=false] Whether to suspend the enigma.js session instead
+ *                                         of closing it.
+ * @param {Array} [mixins] An array of mixins to apply.
+ * @param {Array} [requestInterceptors] An array of request interceptors to use.
+ * @param {Array} [responseInterceptors] An array of response interceptors to use.
+ * @param {object} [protocol] An object containing additional JSON-RPC request parameters.
+ */
+
+/**
+* The enigma.js entry API.
 */
-class Qix {
-  /**
-  * Function used to get a session.
-  * @param {Configuration} config The configuration object for this session.
-  * @returns {Object} Returns a session instance.
-  */
-  static getSession(config) {
+const enigma = {
+  getSession(config) {
     const {
       createSocket,
       Promise,
@@ -39,27 +57,9 @@ class Qix {
       suspendResume,
     });
     return session;
-  }
+  },
 
-  /**
-  * Function used to create a QIX session.
-  * @param {Object} config The configuration object for the QIX session.
-  * @returns {Session} Returns a new QIX session.
-  */
-  static create(config) {
-    Qix.configureDefaults(config);
-    config.mixins.forEach((mixin) => {
-      config.definition.registerMixin(mixin);
-    });
-    return Qix.getSession(config);
-  }
-
-  /**
-  * Function used to configure defaults.
-  * @param {Configuration} config The configuration object for how to connect
-  *                               and retrieve end QIX APIs.
-  */
-  static configureDefaults(config) {
+  configureDefaults(config) {
     if (!config) {
       throw new Error('You need to supply a configuration.');
     }
@@ -84,7 +84,21 @@ class Qix {
     config.Promise = config.Promise || Promise;
     config.mixins = config.mixins || [];
     config.definition = config.definition || new Schema(config);
-  }
-}
+  },
 
-export default Qix;
+  /**
+  * Function used to create a QIX session.
+  * @since 2.0.0
+  * @param {Configuration} config The configuration object for the QIX session.
+  * @returns {Session} Returns a new QIX session.
+  */
+  create(config) {
+    enigma.configureDefaults(config);
+    config.mixins.forEach((mixin) => {
+      config.definition.registerMixin(mixin);
+    });
+    return enigma.getSession(config);
+  },
+};
+
+export default enigma;

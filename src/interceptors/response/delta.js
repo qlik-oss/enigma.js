@@ -1,13 +1,12 @@
+/**
+ * @module ResponseInterceptor:Delta
+ */
+
 import JSONPatch from '../../json-patch';
 import KeyValueCache from '../../cache';
 
 const sessions = {};
 
-/**
-* Function to make sure we release handle caches when they are closed.
-*
-* @param {Session} session The session instance to listen on.
-*/
 const bindSession = (session) => {
   if (!sessions[session.id]) {
     const cache = {};
@@ -17,14 +16,6 @@ const bindSession = (session) => {
   }
 };
 
-/**
-* Simple function that ensures the session events has been bound, and returns
-* either an existing key-value cache or creates one for the specified handle.
-*
-* @param {Session} session The session that owns the handle.
-* @param {Number} handle The object handle to retrieve the cache for.
-* @returns {KeyValueCache} The cache instance.
-*/
 const getHandleCache = (session, handle) => {
   bindSession(session);
   const cache = sessions[session.id];
@@ -34,14 +25,6 @@ const getHandleCache = (session, handle) => {
   return cache[handle];
 };
 
-/**
-* Function used to apply a list of patches and return the patched value.
-* @param {Session} session The session.
-* @param {Number} handle The object handle.
-* @param {String} cacheId The cacheId.
-* @param {Array} patches The patches.
-* @returns {Object} Returns the patched value.
-*/
 const patchValue = (session, handle, cacheId, patches) => {
   const cache = getHandleCache(session, handle);
   let entry = cache.get(cacheId);
@@ -64,9 +47,9 @@ const patchValue = (session, handle, cacheId, patches) => {
 /**
 * Process delta interceptor.
 * @param {Session} session The session the intercept is being executed on.
-* @param {Object} request The JSON-RPC request.
-* @param {Object} response The response.
-* @returns {Object} Returns the patched response
+* @param {object} request The JSON-RPC request.
+* @param {object} response The response.
+* @returns {object} Returns the patched response
 */
 export default function deltaInterceptor(session, request, response) {
   const { delta, result } = response;
