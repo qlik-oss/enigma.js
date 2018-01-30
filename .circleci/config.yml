@@ -39,9 +39,6 @@ jobs:
               ./node_modules/.bin/nyc report --reporter=text-lcov --temp-directory=./coverage/.nyc_output | ./node_modules/.bin/coveralls
             fi
       - run:
-          name: Generate JSDoc
-          command: npm run -s jsdoc
-      - run:
           name: Build library
           command: npm run -s build
       - run:
@@ -51,7 +48,5 @@ jobs:
             mv enigma*.tgz enigma.tgz
       - store_artifacts:
           path: enigma.tgz
-      - store_artifacts:
-          path: jsdoc
       - store_artifacts:
           path: coverage

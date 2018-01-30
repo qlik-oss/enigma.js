@@ -2,13 +2,6 @@ const ON_ATTACHED_TIMEOUT_MS = 5000;
 const RPC_CLOSE_MANUAL_SUSPEND = 4000;
 
 class SuspendResume {
-  /**
-  * Creates a new SuspendResume instance.
-  * @param {Object} options The configuration option for this class.
-  * @param {Promise} options.Promise The promise constructor to use.
-  * @param {RPC} options.rpc The RPC instance to use when communicating towards Engine.
-  * @param {ApiCache} options.apis The ApiCache instance to use.
-  */
   constructor(options) {
     Object.assign(this, options);
     this.isSuspended = false;
@@ -19,12 +12,6 @@ class SuspendResume {
     });
   }
 
-  /**
-  * Function used to restore the rpc connection.
-  * @param {Boolean} onlyIfAttached - if true, the returned promise will resolve
-  *                                   only if the session can be re-attached.
-  * @returns {Object} Returns a promise instance.
-  */
   restoreRpcConnection(onlyIfAttached) {
     return this.reopen(ON_ATTACHED_TIMEOUT_MS).then((sessionState) => {
       if (sessionState === 'SESSION_CREATED' && onlyIfAttached) {
@@ -34,24 +21,12 @@ class SuspendResume {
     });
   }
 
-  /**
-  * Function used to restore the global API.
-  * @param {Object} changed - A list where the restored APIs will be added.
-  * @returns {Object} Returns a promise instance.
-  */
   restoreGlobal(changed) {
     const global = this.apis.getApisByType('Global').pop();
     changed.push(global.api);
     return this.Promise.resolve();
   }
 
-  /**
-  * Function used to restore the doc API.
-  * @param {String} sessionState - The state of the session, attached or created.
-  * @param {Array} closed - A list where the closed of APIs APIs will be added.
-  * @param {Object} changed - A list where the restored APIs will be added.
-  * @returns {Object} Returns a promise instance.
-  */
   restoreDoc(closed, changed) {
     const doc = this.apis.getApisByType('Doc').pop();
 
@@ -84,13 +59,6 @@ class SuspendResume {
     });
   }
 
-  /**
-  * Function used to restore the APIs on the doc.
-  * @param {Object} doc - The doc API on which the APIs we want to restore exist.
-  * @param {Array} closed - A list where the closed of APIs APIs will be added.
-  * @param {Object} changed - A list where the restored APIs will be added.
-  * @returns {Object} Returns a promise instance.
-  */
   restoreDocObjects(doc, closed, changed) {
     const tasks = [];
     const apis = this.apis.getApis()
@@ -126,22 +94,11 @@ class SuspendResume {
     return this.Promise.all(tasks);
   }
 
-  /**
-  * Set the instance as suspended.
-  */
   suspend() {
     this.isSuspended = true;
     return this.rpc.close(RPC_CLOSE_MANUAL_SUSPEND);
   }
 
-  /**
-  * Resumes a previously suspended RPC connection, and refreshes the API cache.
-  *                                APIs unabled to be restored has their 'closed'
-  *                                event triggered, otherwise 'changed'.
-  * @param {Boolean} onlyIfAttached if true, resume only if the session was re-attached.
-  * @returns {Promise} Eventually resolved if the RPC connection was successfully resumed,
-  *                    otherwise rejected.
-  */
   resume(onlyIfAttached) {
     const changed = [];
     const closed = [];
@@ -167,11 +124,6 @@ class SuspendResume {
       .catch(err => this.rpc.close().then(() => this.Promise.reject(err)));
   }
 
-  /**
-  * Reopens the connection and waits for the OnConnected notification.
-  * @param {Number} timeout - The time to wait for the OnConnected notification.
-  * @returns {Object} A promise containing the session state (SESSION_CREATED or SESSION_ATTACHED).
-  */
   reopen(timeout) {
     let timer;
     let notificationResolve;
@@ -206,11 +158,6 @@ class SuspendResume {
       });
   }
 
-  /**
-  * Function used to build the get method names for Doc APIs.
-  * @param {String} type - The API type.
-  * @returns {String} Returns the get method name, or undefined if the type cannot be restored.
-  */
   static buildGetMethodName(type) {
     if (type === 'Field' || type === 'Variable') {
       return null;

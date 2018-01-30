@@ -1,8 +1,5 @@
 import Events from './event-emitter';
 
-/**
- * Helper class for handling RPC calls
- */
 class RPCResolver {
   constructor(id, resolve, reject) {
     Events.mixin(this);

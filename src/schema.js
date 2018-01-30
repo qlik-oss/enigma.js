@@ -3,23 +3,10 @@ import Events from './event-emitter';
 
 const { hasOwnProperty } = Object.prototype;
 
-/**
-* Returns the camelCase counterpart of a symbol.
-* @param {String} symbol The symbol.
-* @return the camelCase counterpart.
-*/
 function toCamelCase(symbol) {
   return symbol.substring(0, 1).toLowerCase() + symbol.substring(1);
 }
 
-/**
- * A facade function that allows parameters to be passed either by name
- * (through an object), or by position (through an array).
- * @param {Function} base The function that is being overriden. Will be
- *                        called with parameters in array-form.
- * @param {Object} defaults Parameter list and it's default values.
- * @param {*} params The parameters.
- */
 function namedParamFacade(base, defaults, ...params) {
   if (params.length === 1 && typeof params[0] === 'object') {
     const valid = Object.keys(params[0]).every(key => hasOwnProperty.call(defaults, key));
@@ -30,14 +17,7 @@ function namedParamFacade(base, defaults, ...params) {
   return base.apply(this, params);
 }
 
-/**
-* Qix schema definition.
-*/
 class Schema {
-  /**
-  * Create a new schema instance.
-  * @param {Configuration} config The configuration for QIX.
-  */
   constructor(config) {
     this.config = config;
     this.Promise = config.Promise;
@@ -46,19 +26,6 @@ class Schema {
     this.types = new KeyValueCache();
   }
 
-  /**
-  * Function used to add a mixin object to the mixin cache. Will be mixed into the API
-  * of the specified key when generated.
-  * @param {Object} mixin Mixin object.
-  * @param {String|Array<String>} mixin.types String or array of strings containing the
-  *                                           API-types that will be mixed in.
-  * @param {Object} [mixin.extend] Object literal containing the methods that
-  *                                will be extended on the specified API.
-  * @param {Object} [mixin.override] Object literal containing the methods to
-  *                                  override existing methods.
-  * @param {Function} [mixin.init] Init function that, if defined, will run when an API is
-  *                                instantiated. It runs with Promise and API object as parameters.
-  */
   registerMixin({
     types, type, extend, override, init,
   }) {
@@ -80,12 +47,6 @@ class Schema {
     });
   }
 
-  /**
-  * Function used to generate a type definition.
-  * @param {String} type The type.
-  * @returns {{create: Function, def: Object}} Returns an object with a definition
-  *          of the type and a create factory.
-  */
   generate(type) {
     const entry = this.types.get(type);
     if (entry) {
@@ -99,13 +60,6 @@ class Schema {
     return factory;
   }
 
-  /**
-  * Function used to generate an API definition for a given type.
-  * @param {String} type The type to generate.
-  * @param {Object} schema The schema describing the type.
-  * @returns {{create: (function(session:Object, handle:Number, id:String,
-  *          customKey:String)), def: Object}} Returns the API definition.
-  */
   generateApi(type, schema) {
     const api = Object.create({});
 
@@ -157,12 +111,6 @@ class Schema {
     }.bind(this);
   }
 
-  /**
-  * Function used to generate the methods with the right handlers to the object
-  * API that is being generated.
-  * @param {Object} api The object API that is currently being generated.
-  * @param {Object} schema The API definition.
-  */
   generateDefaultApi(api, schema) {
     Object.keys(schema).forEach((method) => {
       const out = schema[method].Out;
@@ -180,11 +128,6 @@ class Schema {
     });
   }
 
-  /**
-  * Function used to add mixin methods to a specified API.
-  * @param {String} type Used to specify which mixin should be woven in.
-  * @param {Object} api The object that will be woven.
-  */
   mixinType(type, api) {
     const mixinList = this.mixins.get(type);
     if (mixinList) {
@@ -211,11 +154,6 @@ class Schema {
     }
   }
 
-  /**
-  * Function used to mixin the named parameter facade.
-  * @param {Object} api The object API that is currently being generated.
-  * @param {Object} schema The API definition.
-  */
   mixinNamedParamFacade(api, schema) {
     Object.keys(schema).forEach((key) => {
       const fnName = toCamelCase(key);

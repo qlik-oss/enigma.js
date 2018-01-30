@@ -1,5 +1,5 @@
 import schema from '../../schemas/12.20.0.json';
-import Qix from '../../src/qix';
+import enigma from '../../src/index';
 import SocketMock from '../mocks/socket-mock';
 
 describe('QIX Global', () => {
@@ -29,7 +29,7 @@ describe('QIX Global', () => {
       },
     }];
 
-    return Qix.create(config).open().then((global) => {
+    return enigma.create(config).open().then((global) => {
       qixGlobal = global;
     });
   });

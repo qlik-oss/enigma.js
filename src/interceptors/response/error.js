@@ -1,9 +1,13 @@
 /**
+ * @module ResponseInterceptor:Error
+ */
+
+/**
 * Process error interceptor.
-* @param {Object} session - The session the intercept is being executed on.
-* @param {Object} request - The JSON-RPC request.
-* @param {Object} response - The response.
-* @returns {Object} - Returns the defined error for an error, else the response.
+* @param {object} session - The session the intercept is being executed on.
+* @param {object} request - The JSON-RPC request.
+* @param {object} response - The response.
+* @returns {object} - Returns the defined error for an error, else the response.
 */
 export default function errorInterceptor(session, request, response) {
   if (typeof response.error !== 'undefined') {

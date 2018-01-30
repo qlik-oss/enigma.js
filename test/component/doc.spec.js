@@ -1,5 +1,5 @@
 import schema from '../../schemas/12.20.0.json';
-import Qix from '../../src/qix';
+import enigma from '../../src/index';
 import SocketMock from '../mocks/socket-mock';
 
 describe('QIX Doc', () => {
@@ -21,7 +21,7 @@ describe('QIX Doc', () => {
     config.url = 'ws://mocked:1337/app/engineData';
     config.createSocket = url => new SocketMock(url);
 
-    return Qix.create(config).open().then(global => global.openDoc('my-app')).then((doc) => {
+    return enigma.create(config).open().then(global => global.openDoc('my-app')).then((doc) => {
       qixDoc = doc;
     });
   });

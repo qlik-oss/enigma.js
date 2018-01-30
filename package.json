@@ -14,7 +14,7 @@
     "test:component:watch": "aw -c test/aw.config.json --glob test/component/**/*.spec.js -w",
     "test:integration": "aw -c test/aw.config.json --glob test/integration/**/*.spec.js --mocha.timeout 5000",
     "lint": "eslint .",
-    "jsdoc": "rimraf ./jsdoc && jsdoc ./src -c ./jsdoc-config.json -r -d ./jsdoc",
+    "generate-spec": "jsdoc src/ -r -X -p package.json | jsdoc2spec",
     "preversion": "npm run test && npm run test:integration",
     "version": "npm run build",
     "postversion": "git push && git push --tags"
@@ -50,8 +50,8 @@
     "eslint-plugin-import": "2.8.0",
     "extend": "3.0.1",
     "jsdoc": "3.5.5",
+    "jsdoc2spec": "0.4.0",
     "node-event-emitter": "0.0.1",
-    "rimraf": "2.6.2",
     "rollup": "0.55.1",
     "rollup-plugin-babel": "3.0.3",
     "rollup-plugin-commonjs": "8.3.0",
