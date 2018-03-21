@@ -106,14 +106,16 @@ Create a html file `index.html` and insert the following contents
     .then(schema => {
       const session = enigma.create({
         schema,
-          // Change the url to point to your QIX instance
-          url: 'ws://localhost:4848/app/engineData',
-          createSocket: url => new WebSocket(url)
-        })
+        // Change the url to point to your QIX instance
+        url: 'ws://localhost:4848/app/engineData',
+        createSocket: url => new WebSocket(url)
+      })
 
       session.open()
         .then(global => global.productVersion())
         .then(version => document.body.insnerHTML = version)
+        .then(() => session.close())
+  
     })
 </script>
 ```
