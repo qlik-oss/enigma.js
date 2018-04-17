@@ -94,9 +94,9 @@ You may need to adjust the code so the URL points towards your running QIX Engin
 
 ![/getting-started.gif](/getting-started.gif)
   
-You can also use a service like [unpkg](https://unpkg.com/#/) to test enigma.js directly in your browser without using node for development purposes.  
+You may also use a service like [unpkg](https://unpkg.com/#/) to test enigma.js directly in your browser without using Node.js for development purposes.  
 
-Create a html file `index.html` and insert the following contents
+Create a HTML file `index.html` and insert the following example content:
 
 ```html
 <script src="https://unpkg.com/enigma.js/enigma.min.js"></script>
