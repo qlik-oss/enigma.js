@@ -93,3 +93,29 @@ node my-file.js
 You may need to adjust the code so the URL points towards your running QIX Engine.
 
 ![/getting-started.gif](/getting-started.gif)
+  
+You may also use a service like [unpkg](https://unpkg.com/#/) to test enigma.js directly in your browser without using Node.js for development purposes.  
+
+Create a HTML file `index.html` and insert the following example content:
+
+```html
+<script src="https://unpkg.com/enigma.js/enigma.min.js"></script>
+<script>
+  fetch('https://unpkg.com/enigma.js/schemas/12.34.11.json')
+    .then(response => response.json())
+    .then(schema => {
+      const session = enigma.create({
+        schema,
+        // Change the url to point to your QIX instance
+        url: 'ws://localhost:4848/app/engineData',
+        createSocket: url => new WebSocket(url)
+      })
+
+      session.open()
+        .then(global => global.productVersion())
+        .then(version => document.body.insnerHTML = version)
+        .then(() => session.close())
+  
+    })
+</script>
+```
