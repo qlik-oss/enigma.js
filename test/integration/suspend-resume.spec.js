@@ -51,6 +51,8 @@ describe('QIX Suspend/Resume', () => {
     const suspended = sinon.spy();
     const closed = sinon.spy();
     const session = Qix.create(config);
+    /* eslint no-console:0 */
+    session.on('traffic:*', console.log);
     session.on('suspended', suspended);
     session.on('closed', closed);
     const id = generateId();

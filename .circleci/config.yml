@@ -3,55 +3,61 @@ jobs:
   build:
     working_directory: ~/enigma.js
     docker:
-      - image: circleci/node:8.6.0
+      - image: circleci/node:8.11.1
     environment:
       - NPM_CONFIG_LOGLEVEL=warn
     steps:
       - checkout
       - run:
-          name: greenkeeper - Update
-          command: |
-            sudo npm install -g greenkeeper-lockfile@1
-            greenkeeper-lockfile-update
+          name: Update global packages
+          command: sudo npm install -g npm@5 greenkeeper-lockfile@1
+      - run:
+          name: Maybe update dependencies lockfile
+          command: greenkeeper-lockfile-update
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install dependencies
-          command: npm install --no-save
+          command: npm install
       - run:
-          name: greenkeeper - Upload
+          name: Maybe upload dependencies lockfile
           command: greenkeeper-lockfile-upload
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
       - run:
-          name: Linting
+          name: Lint source code
           command: npm run -s lint
       - run:
-          name: Unit & component testing
-          command: |
-            npm run -s test
-            if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then
-              echo "Uploading coverage results to coveralls.io..."
-              npm install -s nyc@11.3.0
-              npm install -s coveralls@3.0.0
-              ./node_modules/.bin/nyc report --reporter=text-lcov --temp-directory=./coverage/.nyc_output | ./node_modules/.bin/coveralls
-            fi
-      - run:
-          name: Generate JSDoc
-          command: npm run -s jsdoc
-      - run:
-          name: Build library
+          name: Build modules
           command: npm run -s build
       - run:
           name: Create npm package
           command: |
             npm pack
             mv enigma*.tgz enigma.tgz
-      - store_artifacts:
-          path: enigma.tgz
-      - store_artifacts:
-          path: jsdoc
+      - run:
+          name: Execute unit & component tests
+          command: |
+            npm run -s test
+            if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then
+              echo "Uploading coverage results to coveralls.io..."
+              npm install -s nyc@11.3.0 coveralls@3.0.0
+              npx nyc report --reporter=text-lcov --temp-directory=./coverage/.nyc_output | npx coveralls
+            fi
+      - setup_remote_docker
+      - run:
+          name: Execute integration tests
+          command: |
+            echo "Will start Qlik Associative Engine version '$ENGINE_VERSION'"
+            ENGINE_CONTAINER_ID=$(docker run -d qlikcore/engine:$ENGINE_VERSION -S AcceptEULA=yes)
+            ENGINE_IP=$(docker inspect -f '{{ .NetworkSettings.IPAddress }}' $ENGINE_CONTAINER_ID)
+            TEST_CONTAINER_ID=$(docker run -d node:8.11.1-alpine tail -f /dev/null)
+            docker cp . $TEST_CONTAINER_ID:/
+            docker exec $TEST_CONTAINER_ID /bin/sh -c 'apk update && apk add --no-cache socat bash'
+            docker exec -d $TEST_CONTAINER_ID /bin/bash -c "socat TCP-LISTEN:9076,fork TCP:$ENGINE_IP:9076"
+            docker exec $TEST_CONTAINER_ID /bin/bash -c 'npm run -s test:integration'
+            docker exec $TEST_CONTAINER_ID /bin/bash -c 'test/examples/run.sh'
       - store_artifacts:
           path: coverage
