@@ -30,11 +30,9 @@ jobs:
           name: Lint source code
           command: npm run -s lint
       - run:
-          name: Build modules
-          command: npm run -s build
-      - run:
           name: Create npm package
           command: |
+            npm run -s build
             npm pack
             mv enigma*.tgz enigma.tgz
       - run:
@@ -50,6 +48,7 @@ jobs:
       - run:
           name: Execute integration tests
           command: |
+            ENGINE_VERSION=$(curl -s "https://registry.hub.docker.com/v2/repositories/qlikcore/engine/tags/" | docker run -i stedolan/jq -r '."results"[0]["name"]' 2>/dev/null)
             echo "Will start Qlik Associative Engine version '$ENGINE_VERSION'"
             ENGINE_CONTAINER_ID=$(docker run -d qlikcore/engine:$ENGINE_VERSION -S AcceptEULA=yes)
             ENGINE_IP=$(docker inspect -f '{{ .NetworkSettings.IPAddress }}' $ENGINE_CONTAINER_ID)
