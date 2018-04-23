@@ -21,7 +21,7 @@ function toCamelCase(symbol) {
  * @param {*} params The parameters.
  */
 function namedParamFacade(base, defaults, ...params) {
-  if (params.length === 1 && typeof params[0] === 'object') {
+  if (params.length === 1 && typeof params[0] === 'object' && !Array.isArray(params[0])) {
     const valid = Object.keys(params[0]).every(key => hasOwnProperty.call(defaults, key));
     if (valid) {
       params = Object.keys(defaults).map(key => params[0][key] || defaults[key]);

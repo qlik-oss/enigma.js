@@ -228,6 +228,10 @@ describe('Schema', () => {
                 { Name: 'param3', DefaultValue: 'xyz' }],
               Out: [],
             },
+            Baz: {
+              In: [{ Name: 'myBreakpoints', DefaultValue: [{ a: '', b: 0, c: false }] }],
+              Out: [],
+            },
           },
         },
       };
@@ -252,6 +256,15 @@ describe('Schema', () => {
       const api = factory({ send }, 1, 'dummy', false, 'dummy');
       api.bar({ param1: 'abc', param2: 'def' });
       expect(args).to.deep.equal(['abc', 'def', 'xyz']);
+    });
+
+    it('should NOT fill in default values when parameter is an array', () => {
+      let args;
+      const send = (request) => { args = request.params; };
+      const factory = definition.generate('Foo');
+      const api = factory({ send }, 1, 'dummy', false, 'dummy');
+      api.baz([]);
+      expect(args).to.deep.equal([[]]);
     });
 
     it('parameters should be passed as an array to mixins', () => {
