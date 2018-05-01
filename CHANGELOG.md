@@ -1,6 +1,11 @@
 # Changelog
 
+## 2.2.1
+
+- Bugfix for single-parameter method calls when using arrays which would cause the named parameters logic to take over.
+
 ## 2.2.0
+
 - Expose `session.config`. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/api.md#sessionconfig).
 - Use `Promise.reject` instead of `throw` in the api and error response interceptors.
 - Removed `bluebird` dependency in tests.
