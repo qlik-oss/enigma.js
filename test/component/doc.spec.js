@@ -15,7 +15,7 @@ describe('QIX Doc', () => {
       socket.open();
     });
     config = {};
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
 
     config.schema = schema;
     config.url = 'ws://mocked:1337/app/engineData';

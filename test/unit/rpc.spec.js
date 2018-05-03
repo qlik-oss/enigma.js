@@ -6,7 +6,7 @@ describe('RPC', () => {
   let sandbox;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     rpc = new RPC({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url, false) });
   });
 

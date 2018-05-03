@@ -41,7 +41,7 @@ describe('Session', () => {
 
   beforeEach(() => {
     createSession();
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     SocketMock.on('created', socket => socket.open());
   });
 
