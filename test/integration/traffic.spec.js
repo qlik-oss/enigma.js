@@ -10,7 +10,7 @@ describe('qix-logging', () => {
 
   before(() => {
     const config = utils.getDefaultConfig();
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     const session = Qix.create(config);
     sentSpy = sinon.spy();
     receivedSpy = sinon.spy();
