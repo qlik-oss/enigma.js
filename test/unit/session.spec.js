@@ -221,7 +221,7 @@ describe('Session', () => {
     expect(emit.calledThrice).to.equal(true);
     emit.getCalls().forEach(call => expect(call.args[0]).to.equal('changed'));
 
-    emit.reset();
+    emit.resetHistory();
 
     rpc.emit('message', { close: [1, 2, 3] });
     expect(emit.calledThrice).to.equal(true);
