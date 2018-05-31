@@ -24,6 +24,7 @@ const userId = 'your-sense-user';
 const token = {
   directory: userDirectory,
   user: userId,
+  sub: `${userDirectory}\\${userId}`,
 };
 
 // Path to the private key used for JWT signing:
