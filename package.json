@@ -44,7 +44,7 @@
     "babel-preset-env": "1.6.1",
     "babel-register": "6.26.0",
     "chai-subset": "1.6.0",
-    "cross-env": "5.1.5",
+    "cross-env": "5.1.6",
     "eslint": "4.19.1",
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.12.0",
