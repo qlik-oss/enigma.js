@@ -51,8 +51,6 @@ describe('QIX Suspend/Resume', () => {
     const suspended = sinon.spy();
     const closed = sinon.spy();
     const session = Qix.create(config);
-    /* eslint no-console:0 */
-    session.on('traffic:*', console.log);
     session.on('suspended', suspended);
     session.on('closed', closed);
     const id = generateId();
@@ -80,7 +78,7 @@ describe('QIX Suspend/Resume', () => {
       .then(() => global.deleteApp(app.id))
       .then(() => session.close())
       .catch(error => session.close().then(() => Promise.reject(error)))
-      .then(() => expect(closed.callCount).to.equal(1));
+      .then(() => expect(closed.callCount >= 1).to.equal(true));
   });
 
   it('should suspend session when socket was disconnected', () => {
