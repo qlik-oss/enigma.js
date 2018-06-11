@@ -8,7 +8,7 @@ function generateId() {
 }
 
 function buildUrl(ttl) {
-  ttl = typeof ttl !== 'undefined' ? ttl : 300;
+  ttl = typeof ttl !== 'undefined' ? ttl : 5;
   return `ws://localhost:9076/app/engineData/ttl/${ttl}/identity/${generateId()}`;
 }
 
