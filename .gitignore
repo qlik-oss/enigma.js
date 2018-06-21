@@ -16,6 +16,7 @@ node_modules/
 coverage/
 typings/
 jsdoc/
+examples/run.js
 /enigma.js*
 /enigma.min*
 /sense-utilities.*
