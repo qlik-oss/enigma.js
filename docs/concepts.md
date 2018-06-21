@@ -50,7 +50,7 @@ Read more:
 
 * [Authentication examples](../examples/authentication)
 * [Qlik Sense Help: Authentication methods](http://help.qlik.com/en-US/sense/June2017/Subsystems/ManagementConsole/Content/authentication-methods.htm)
-  
+
 [Back to top](#high-level-concepts)
 
 ## Schemas, the QIX interface
@@ -81,7 +81,7 @@ Read more:
 
 ### QIX classes, or structs
 
-The classes is the [generic object](#generic-object-model) interfaces
+QIX classes are [generic object](#generic-object-model) interfaces
 describing the available QIX methods you may interact with for that type. Depending
 on the schema version used, there may be a number of different classes available
 (if you are curious, check the specific schema file you are using for the available
