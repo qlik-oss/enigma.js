@@ -56,11 +56,10 @@ class KeyValueCache {
   * @returns {Array} The list of entries including its `key` and `value` properties.
   */
   getAll() {
-    return Object.keys(this.entries).map(key =>
-      ({
-        key,
-        value: this.entries[key],
-      }));
+    return Object.keys(this.entries).map(key => ({
+      key,
+      value: this.entries[key],
+    }));
   }
 
   /**
@@ -70,8 +69,7 @@ class KeyValueCache {
   * @returns {String} The key representing an entry.
   */
   getKey(entry) {
-    return Object.keys(this.entries).filter(key =>
-      this.entries[key] === entry)[0];
+    return Object.keys(this.entries).filter(key => this.entries[key] === entry)[0];
   }
 
   /**

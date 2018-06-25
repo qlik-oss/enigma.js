@@ -21,7 +21,8 @@ export default function outParamInterceptor(session, request, response) {
 
   if (hasOwnProperty.call(response, RETURN_KEY)) {
     return response[RETURN_KEY];
-  } else if (request.outKey !== -1) {
+  }
+  if (request.outKey !== -1) {
     return response[request.outKey];
   }
 

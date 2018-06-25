@@ -36,12 +36,11 @@ session
     // Create a app object list using qAppObjectListDef and list all objects of type my-object
     // and also lists the title for each object.
     // eslint-disable-next-line no-restricted-globals
-    return Promise.all(tasks).then(() =>
-      doc
-        .createObject(properties)
-        .then(object => object.getLayout())
-        .then(layout => console.log('App object list:', JSON.stringify(layout, null, '  ')))
-        .then(() => session.close()));
+    return Promise.all(tasks).then(() => doc
+      .createObject(properties)
+      .then(object => object.getLayout())
+      .then(layout => console.log('App object list:', JSON.stringify(layout, null, '  ')))
+      .then(() => session.close()));
   })
   .catch((error) => {
     console.log('Session: Failed to open socket:', error);

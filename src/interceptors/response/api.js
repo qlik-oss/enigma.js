@@ -14,7 +14,8 @@ export default function apiInterceptor(session, request, response) {
       id: response.qGenericId,
       genericType: response.qGenericType,
     });
-  } else if (response.qHandle === null && response.qType === null) {
+  }
+  if (response.qHandle === null && response.qType === null) {
     return session.config.Promise.reject(new Error('Object not found'));
   }
   return response;
