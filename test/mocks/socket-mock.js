@@ -16,10 +16,12 @@ export default class SocketMock {
 
     setTimeout(() => SocketMock.emit('created', this));
   }
+
   open() {
     this.readyState = this.OPEN;
     this.onopen();
   }
+
   close(code, reason) {
     if (this.readyState === this.CLOSE) {
       return;
@@ -30,26 +32,36 @@ export default class SocketMock {
       reason,
     });
   }
+
   message(msg) {
     this.onmessage(msg);
   }
+
   error(error) {
     this.onerror(error);
   }
+
   on() {
   }
+
   emit() {
   }
+
   removeAllListeners() {
   }
+
   onopen() {
   }
+
   onclose() {
   }
+
   onerror() {
   }
+
   onmessage(/* msg */) {
   }
+
   send(msg) {
     const request = JSON.parse(msg);
     const response = this.interceptors.get(request.method);
@@ -59,6 +71,7 @@ export default class SocketMock {
       setTimeout(() => this.message({ data }));
     }
   }
+
   intercept(requestMethod) {
     return {
       return: (response) => {

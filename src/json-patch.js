@@ -31,9 +31,9 @@ function generateValue(val) {
 * @returns {Boolean} Whether the property is deemed special or not
 */
 function isSpecialProperty(obj, key) {
-  return isFunction(obj[key]) ||
-    key.substring(0, 2) === '$$' ||
-    key.substring(0, 1) === '_';
+  return isFunction(obj[key])
+    || key.substring(0, 2) === '$$'
+    || key.substring(0, 1) === '_';
 }
 
 /**
@@ -56,9 +56,9 @@ function getParent(data, str) {
     }
     numPart = +part;
     const newPart = !isNaN(numPart) ? [] : {};
-    data[numPart || part] = isUndef(data[numPart || part]) ?
-      newPart :
-      data[part];
+    data[numPart || part] = isUndef(data[numPart || part])
+      ? newPart
+      : data[part];
     data = data[numPart || part];
   });
 
@@ -102,7 +102,7 @@ function compare(a, b) {
       }
     });
     return isIdentical;
-  } else if (isArray(a) && isArray(b)) {
+  } if (isArray(a) && isArray(b)) {
     if (a.length !== b.length) {
       return false;
     }
@@ -132,7 +132,7 @@ function patchArray(original, newA, basePath) {
   function findIndex(a, id, idx) {
     if (a[idx] && isUndef(a[idx].qInfo)) {
       return null;
-    } else if (a[idx] && a[idx].qInfo.qId === id) {
+    } if (a[idx] && a[idx].qInfo.qId === id) {
       // shortcut if identical
       return idx;
     }

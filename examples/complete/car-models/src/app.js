@@ -9,8 +9,7 @@ import template from 'raw-loader!./app.html';
 import csv from 'raw-loader!../data.csv';
 import paintBarchart from './chart';
 
-const SCRIPT =
-`LOAD * Inline [
+const SCRIPT = `LOAD * Inline [
   ${csv}
 ];
 `;

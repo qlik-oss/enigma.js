@@ -36,8 +36,8 @@ class Intercept {
   */
   executeRequests(session, promise) {
     return this.request.reduce((interception, interceptor) => {
-      const intercept = interceptor.onFulfilled &&
-        interceptor.onFulfilled.bind(this, session);
+      const intercept = interceptor.onFulfilled
+      && interceptor.onFulfilled.bind(this, session);
       return interception.then(intercept);
     }, promise);
   }
@@ -51,14 +51,11 @@ class Intercept {
   * @returns {Promise}
   */
   executeResponses(session, promise, request) {
-    return this.response.reduce(
-      (interception, interceptor) =>
-        interception.then(
-          interceptor.onFulfilled && interceptor.onFulfilled.bind(this, session, request),
-          interceptor.onRejected && interceptor.onRejected.bind(this, session, request),
-        )
-      , promise,
-    );
+    return this.response.reduce((interception, interceptor) => interception.then(
+      interceptor.onFulfilled && interceptor.onFulfilled.bind(this, session, request),
+      interceptor.onRejected && interceptor.onRejected.bind(this, session, request),
+    ),
+    promise);
   }
 }
 

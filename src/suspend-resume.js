@@ -214,7 +214,8 @@ class SuspendResume {
   static buildGetMethodName(type) {
     if (type === 'Field' || type === 'Variable') {
       return null;
-    } else if (type === 'GenericVariable') {
+    }
+    if (type === 'GenericVariable') {
       return 'GetVariableById';
     }
     return type.replace('Generic', 'Get');

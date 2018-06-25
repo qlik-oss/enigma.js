@@ -28,22 +28,20 @@ describe('QIX Suspend/Resume', () => {
     let handleBeforeResume;
     let propertiesBeforeResume;
 
-    return Qix.create(config).open().then(global =>
-      global.createSessionApp().then(app =>
-        app.createObject({ qInfo: { qId: 'OBJ01', qType: 'abc' } })
-          .then(() => app.destroyObject('OBJ01'))
-          .then(() => app.createObject({ qInfo: { qId: 'OBJ02', qType: 'abc' } }))
-          .then((obj) => {
-            handleBeforeResume = obj.handle;
-            return obj.getProperties()
-              .then((props) => { propertiesBeforeResume = props; })
-              .then(() => global.session.suspend())
-              .then(() => global.session.resume(false))
-              .then(() => expect(handleBeforeResume).to.not.equal(obj.handle))
-              .then(() => obj.getProperties())
-              .then(props => expect(propertiesBeforeResume).to.deep.equal(props))
-              .then(() => global.session.close());
-          })));
+    return Qix.create(config).open().then(global => global.createSessionApp().then(app => app.createObject({ qInfo: { qId: 'OBJ01', qType: 'abc' } })
+      .then(() => app.destroyObject('OBJ01'))
+      .then(() => app.createObject({ qInfo: { qId: 'OBJ02', qType: 'abc' } }))
+      .then((obj) => {
+        handleBeforeResume = obj.handle;
+        return obj.getProperties()
+          .then((props) => { propertiesBeforeResume = props; })
+          .then(() => global.session.suspend())
+          .then(() => global.session.resume(false))
+          .then(() => expect(handleBeforeResume).to.not.equal(obj.handle))
+          .then(() => obj.getProperties())
+          .then(props => expect(propertiesBeforeResume).to.deep.equal(props))
+          .then(() => global.session.close());
+      })));
   });
 
   it('should suspend and resume by reopening the previous document', () => {

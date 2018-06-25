@@ -27,8 +27,7 @@ describe('Sugar mixins', () => {
       getList(listDef) {
         return this.getObject(listDef.qInfo.qId)
           .catch(() => this.createSessionObject(listDef))
-          .then(obj =>
-            obj.getLayout());
+          .then(obj => obj.getLayout());
       },
       createSheet(title, description, thumbnail) {
         return this.createObject({

@@ -1,6 +1,8 @@
 coverage/
 jsdoc/
 node_modules/
+# generated files:
+examples/run.js
 # distribution files:
 /enigma.*
 /sense-utilities.*

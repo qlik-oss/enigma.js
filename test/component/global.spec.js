@@ -42,8 +42,7 @@ describe('QIX Global', () => {
     });
   });
 
-  it('should call custom tweet', () =>
-    expect(qixGlobal.tweet()).to.eventually.equal('Mr tweeter!'));
+  it('should call custom tweet', () => expect(qixGlobal.tweet()).to.eventually.equal('Mr tweeter!'));
 
   it('should AbortAll', () => {
     socket.intercept('AbortAll').return({ result: {} });
