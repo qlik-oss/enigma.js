@@ -61,7 +61,7 @@
     "rollup-plugin-node-globals": "1.2.1",
     "rollup-plugin-node-resolve": "3.3.0",
     "rollup-plugin-uglify": "4.0.0",
-    "ws": "5.2.1"
+    "ws": "5.2.2"
   },
   "dependencies": {}
 }
