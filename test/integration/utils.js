@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import schema from '../../schemas/12.20.0.json';
+import schema from '../../schemas/12.170.2.json';
 
 function getDefaultConfig() {
   const host = 'localhost';
