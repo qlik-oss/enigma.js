@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.0
+
+- New schema: 12.170.2
+
 ## 2.2.1
 
 - Bugfix for single-parameter method calls when using arrays which would cause the named parameters logic to take over.
