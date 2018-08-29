@@ -32,8 +32,7 @@ jobs:
             npm run -s test
             if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then
               echo "Uploading coverage results to coveralls.io..."
-              npm install -s nyc@11.3.0 coveralls@3.0.0
-              npx nyc report --reporter=text-lcov --temp-directory=./coverage/.nyc_output | npx coveralls
+              cat ./coverage/lcov.info | npx coveralls
             fi
       - setup_remote_docker
       - run:
