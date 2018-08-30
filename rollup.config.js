@@ -25,7 +25,7 @@ const createConfig = (overrides) => {
       commonjs(),
       babel({
         exclude: 'node_modules/**',
-        plugins: ['external-helpers'],
+        externalHelpers: true,
       }),
       license({
         banner: `

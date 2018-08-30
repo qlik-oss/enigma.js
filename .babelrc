@@ -1,9 +1,15 @@
 {
-  "presets": [["env", { "modules": false }]],
-  "plugins": ["transform-object-assign"],
+  "presets": [[
+    "@babel/preset-env", {
+      "modules": false
+    }
+  ]],
   "env": {
     "test": {
-       "plugins": ["transform-es2015-modules-commonjs", "istanbul"]
-     }
-   }
+      "plugins": [
+        "@babel/plugin-transform-modules-commonjs",
+        "istanbul"
+      ]
+    }
+  }
 }
