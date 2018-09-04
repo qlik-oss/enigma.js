@@ -34,6 +34,11 @@ jobs:
               echo "Uploading coverage results to coveralls.io..."
               cat ./coverage/lcov.info | npx coveralls
             fi
+      - run:
+          name: Check if API specification should be updated
+          command: |
+            npm run scriptappy
+            git diff --exit-code --name-only docs/api-spec.json
       - setup_remote_docker
       - run:
           name: Execute integration tests
