@@ -1,0 +1,1411 @@
+{
+  "scriptappy": "1.0.0",
+  "info": {
+    "name": "enigma.js",
+    "description": "JavaScript library for consuming Qlik backend services",
+    "version": "2.3.0",
+    "license": "MIT",
+    "stability": "stable",
+    "x-qlik-visibility": "public",
+    "x-qlik-stability": "stable"
+  },
+  "entries": {
+    "EventEmitter": {
+      "kind": "module",
+      "entries": {
+        "mixin": {
+          "description": "Function used to add event handling to objects passed in.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "obj",
+              "description": "Object instance that will get event handling.",
+              "type": "Object"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ApiCache": {
+      "description": "API cache for instances of QIX types, e.g. GenericObject.",
+      "extends": [
+        {
+          "type": "#/definitions/KeyValueCache"
+        }
+      ],
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "params": []
+      },
+      "entries": {
+        "add": {
+          "description": "Adds an API.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "handle",
+              "description": "The handle for the API.",
+              "type": "number"
+            },
+            {
+              "name": "api",
+              "description": "The API.",
+              "type": "*"
+            }
+          ],
+          "returns": {
+            "description": "The entry.",
+            "type": "Object"
+          }
+        },
+        "getApi": {
+          "description": "Gets an API.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "handle",
+              "description": "The handle for the API.",
+              "type": "number"
+            }
+          ],
+          "returns": {
+            "description": "The API for the handle.",
+            "type": "*"
+          }
+        },
+        "getApis": {
+          "description": "Gets a list of APIs.",
+          "kind": "function",
+          "params": [],
+          "returns": {
+            "description": "The list of entries including `handle` and `api` properties for each entry.",
+            "type": "Array"
+          }
+        },
+        "getApisByType": {
+          "description": "Gets a list of APIs with a given type.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "type",
+              "description": "The type of APIs to get.",
+              "type": "string"
+            }
+          ],
+          "returns": {
+            "description": "The list of entries including `handle` and `api` properties for each entry.",
+            "type": "Array"
+          }
+        },
+        "set": {
+          "description": "Sets an entry.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "key",
+              "description": "The key representing an entry.",
+              "type": "string"
+            },
+            {
+              "name": "entry",
+              "description": "The entry.",
+              "type": "*"
+            }
+          ]
+        },
+        "remove": {
+          "description": "Removes an entry.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "key",
+              "description": "The key representing an entry.",
+              "type": "string"
+            }
+          ]
+        },
+        "get": {
+          "description": "Gets an entry.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "key",
+              "description": "The key representing an entry.",
+              "type": "string"
+            }
+          ],
+          "returns": {
+            "description": "The entry for the key.",
+            "type": "*"
+          }
+        },
+        "getAll": {
+          "description": "Gets a list of all entries.",
+          "kind": "function",
+          "params": [],
+          "returns": {
+            "description": "The list of entries including its `key` and `value` properties.",
+            "type": "Array"
+          }
+        },
+        "getKey": {
+          "description": "Gets a key for an entry.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "entry",
+              "description": "The entry to locate the key for.",
+              "type": "*"
+            }
+          ],
+          "returns": {
+            "description": "The key representing an entry.",
+            "type": "string"
+          }
+        },
+        "clear": {
+          "description": "Clears the cache of all entries.",
+          "kind": "function",
+          "params": []
+        }
+      }
+    },
+    "KeyValueCache": {
+      "description": "Key-value cache",
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "params": []
+      },
+      "entries": {
+        "add": {
+          "description": "Adds an entry.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "key",
+              "description": "The key representing an entry.",
+              "type": "string"
+            },
+            {
+              "name": "entry",
+              "description": "The entry to be added.",
+              "type": "*"
+            }
+          ]
+        },
+        "set": {
+          "description": "Sets an entry.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "key",
+              "description": "The key representing an entry.",
+              "type": "string"
+            },
+            {
+              "name": "entry",
+              "description": "The entry.",
+              "type": "*"
+            }
+          ]
+        },
+        "remove": {
+          "description": "Removes an entry.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "key",
+              "description": "The key representing an entry.",
+              "type": "string"
+            }
+          ]
+        },
+        "get": {
+          "description": "Gets an entry.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "key",
+              "description": "The key representing an entry.",
+              "type": "string"
+            }
+          ],
+          "returns": {
+            "description": "The entry for the key.",
+            "type": "*"
+          }
+        },
+        "getAll": {
+          "description": "Gets a list of all entries.",
+          "kind": "function",
+          "params": [],
+          "returns": {
+            "description": "The list of entries including its `key` and `value` properties.",
+            "type": "Array"
+          }
+        },
+        "getKey": {
+          "description": "Gets a key for an entry.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "entry",
+              "description": "The entry to locate the key for.",
+              "type": "*"
+            }
+          ],
+          "returns": {
+            "description": "The key representing an entry.",
+            "type": "string"
+          }
+        },
+        "clear": {
+          "description": "Clears the cache of all entries.",
+          "kind": "function",
+          "params": []
+        }
+      }
+    },
+    "Intercept": {
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "description": "Create a new Intercept instance.",
+        "params": [
+          {
+            "name": "options",
+            "description": "The configuration options for this class.",
+            "kind": "object",
+            "entries": {
+              "Promise": {
+                "description": "The promise constructor to use.",
+                "type": "Promise"
+              },
+              "apis": {
+                "description": "The ApiCache instance to use.",
+                "type": "#/definitions/ApiCache"
+              },
+              "request": {
+                "description": "The additional request interceptors to use.",
+                "optional": true,
+                "kind": "array",
+                "items": {
+                  "type": "Object"
+                }
+              },
+              "response": {
+                "description": "The additional response interceptors to use.",
+                "optional": true,
+                "kind": "array",
+                "items": {
+                  "type": "Object"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "executeRequests": {
+          "description": "Execute the request interceptor queue, each interceptor will get the result from\nthe previous interceptor.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "session",
+              "description": "The session instance to execute against.",
+              "type": "Object"
+            },
+            {
+              "name": "promise",
+              "description": "The promise to chain on to.",
+              "type": "Promise"
+            }
+          ],
+          "returns": {
+            "type": "Promise"
+          }
+        },
+        "executeResponses": {
+          "description": "Execute the response interceptor queue, each interceptor will get the result from\nthe previous interceptor.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "session",
+              "description": "The session instance to execute against.",
+              "type": "Object"
+            },
+            {
+              "name": "promise",
+              "description": "The promise to chain on to.",
+              "type": "Promise"
+            },
+            {
+              "name": "request",
+              "description": "The JSONRPC request object for the intercepted response.",
+              "type": "Object"
+            }
+          ],
+          "returns": {
+            "type": "Promise"
+          }
+        }
+      }
+    },
+    "bindSession": {
+      "description": "Function to make sure we release handle caches when they are closed.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "session",
+          "description": "The session instance to listen on.",
+          "type": "#/definitions/Session"
+        }
+      ]
+    },
+    "getHandleCache": {
+      "description": "Simple function that ensures the session events has been bound, and returns\neither an existing key-value cache or creates one for the specified handle.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "session",
+          "description": "The session that owns the handle.",
+          "type": "#/definitions/Session"
+        },
+        {
+          "name": "handle",
+          "description": "The object handle to retrieve the cache for.",
+          "type": "number"
+        }
+      ],
+      "returns": {
+        "description": "The cache instance.",
+        "type": "#/definitions/KeyValueCache"
+      }
+    },
+    "patchValue": {
+      "description": "Function used to apply a list of patches and return the patched value.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "session",
+          "description": "The session.",
+          "type": "#/definitions/Session"
+        },
+        {
+          "name": "handle",
+          "description": "The object handle.",
+          "type": "number"
+        },
+        {
+          "name": "cacheId",
+          "description": "The cacheId.",
+          "type": "string"
+        },
+        {
+          "name": "patches",
+          "description": "The patches.",
+          "type": "Array"
+        }
+      ],
+      "returns": {
+        "description": "Returns the patched value.",
+        "type": "Object"
+      }
+    },
+    "compare": {
+      "description": "Compare an object with another, could be object, array, number, string, bool.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "a",
+          "description": "The first object to compare",
+          "type": "Object"
+        },
+        {
+          "name": "a",
+          "description": "The second object to compare",
+          "type": "Object"
+        }
+      ],
+      "returns": {
+        "description": "Whether the objects are identical",
+        "type": "boolean"
+      }
+    },
+    "JSONPatch.generate": {
+      "description": "Generate an array of JSON-Patch:es following the JSON-Patch Specification Draft.\n\nSee [specification draft](http://tools.ietf.org/html/draft-ietf-appsawg-json-patch-10)\n\nDoes NOT currently generate patches for arrays (will replace them)",
+      "kind": "function",
+      "params": [
+        {
+          "name": "original",
+          "description": "The object to patch to",
+          "type": "Object"
+        },
+        {
+          "name": "newData",
+          "description": "The object to patch from",
+          "type": "Object"
+        },
+        {
+          "name": "basePath",
+          "description": "The base path to use when generating the paths for\n                           the patches (normally not used)",
+          "optional": true,
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "description": "An array of patches",
+        "type": "Array"
+      }
+    },
+    "JSONPatch.apply": {
+      "description": "Apply a list of patches to an object.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "original",
+          "description": "The object to patch",
+          "type": "Object"
+        },
+        {
+          "name": "patches",
+          "description": "The list of patches to apply",
+          "type": "Array"
+        }
+      ]
+    },
+    "JSONPatch.clone": {
+      "description": "Deep clone an object.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "obj",
+          "description": "The object to clone",
+          "type": "Object"
+        }
+      ],
+      "returns": {
+        "description": "A new object identical to the `obj`",
+        "type": "Object"
+      }
+    },
+    "JSONPatch.createPatch": {
+      "description": "Creates a JSON-patch.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "op",
+          "description": "The operation of the patch. Available values: \"add\", \"remove\", \"move\"",
+          "type": "string"
+        },
+        {
+          "name": "val",
+          "description": "The value to set the `path` to. If `op` is `move`, `val`\n                      is the \"from JSON-path\" path",
+          "optional": true,
+          "type": "Object"
+        },
+        {
+          "name": "path",
+          "description": "The JSON-path for the property to change (e.g. \"/qHyperCubeDef/columnOrder\")",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "description": "A patch following the JSON-patch specification",
+        "type": "Object"
+      }
+    },
+    "JSONPatch.updateObject": {
+      "description": "Apply the differences of two objects (keeping references if possible).\nIdentical to running `JSONPatch.apply(original, JSONPatch.generate(original, newData));`",
+      "kind": "function",
+      "params": [
+        {
+          "name": "original",
+          "description": "The object to update/patch",
+          "type": "Object"
+        },
+        {
+          "name": "newData",
+          "description": "the object to diff against",
+          "type": "Object"
+        }
+      ],
+      "examples": [
+        "var obj1 = { foo: [1,2,3], bar: { baz: true, qux: 1 } };\nvar obj2 = { foo: [4,5,6], bar: { baz: false } };\nJSONPatch.updateObject(obj1, obj2);\n// => { foo: [4,5,6], bar: { baz: false } };"
+      ]
+    },
+    "Qix": {
+      "description": "Qix service.",
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "params": []
+      },
+      "entries": {},
+      "staticEntries": {
+        "getSession": {
+          "description": "Function used to get a session.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "config",
+              "description": "The configuration object for this session.",
+              "type": "Configuration"
+            }
+          ],
+          "returns": {
+            "description": "Returns a session instance.",
+            "type": "Object"
+          }
+        },
+        "create": {
+          "description": "Function used to create a QIX session.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "config",
+              "description": "The configuration object for the QIX session.",
+              "type": "Object"
+            }
+          ],
+          "returns": {
+            "description": "Returns a new QIX session.",
+            "type": "#/definitions/Session"
+          }
+        },
+        "configureDefaults": {
+          "description": "Function used to configure defaults.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "config",
+              "description": "The configuration object for how to connect\n                              and retrieve end QIX APIs.",
+              "type": "Configuration"
+            }
+          ]
+        }
+      }
+    },
+    "RPCResolver": {
+      "description": "Helper class for handling RPC calls",
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "params": []
+      },
+      "entries": {}
+    },
+    "RPC": {
+      "description": "This class handles remote procedure calls on a web socket.",
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "description": "Create a new RPC instance.",
+        "params": [
+          {
+            "name": "options",
+            "description": "The configuration options for this class.",
+            "kind": "object",
+            "entries": {
+              "Promise": {
+                "description": "The promise constructor to use.",
+                "type": "function"
+              },
+              "url": {
+                "description": "The complete websocket URL used to connect.",
+                "type": "string"
+              },
+              "createSocket": {
+                "description": "The function callback to create a WebSocket.",
+                "type": "function"
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "open": {
+          "description": "Opens a connection to the configured endpoint.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "force",
+              "description": "ignores all previous and outstanding open calls if set to true.",
+              "defaultValue": false,
+              "type": "boolean"
+            }
+          ],
+          "returns": {
+            "description": "A promise instance.",
+            "type": "Object"
+          }
+        },
+        "onOpen": {
+          "description": "Resolves the open promise when a connection is successfully established.",
+          "kind": "function",
+          "params": []
+        },
+        "onClose": {
+          "description": "Resolves the close promise when a connection is closed.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "event",
+              "description": "The event describing close.",
+              "type": "Object"
+            }
+          ]
+        },
+        "close": {
+          "description": "Closes a connection.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "code",
+              "description": "The reason code for closing the connection.",
+              "optional": true,
+              "defaultValue": 1000,
+              "type": "number"
+            },
+            {
+              "name": "reason",
+              "description": "The human readable string describing why the connection is closed.",
+              "optional": true,
+              "defaultValue": "\"\"",
+              "type": "string"
+            }
+          ],
+          "returns": {
+            "description": "Returns a promise instance.",
+            "type": "Object"
+          }
+        },
+        "onError": {
+          "description": "Emits an error event and rejects the open promise if an error is raised on the connection.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "event",
+              "description": "The event describing the error.",
+              "type": "Object"
+            }
+          ]
+        },
+        "onMessage": {
+          "description": "Parses the onMessage event on the connection and resolve the promise for the request.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "event",
+              "description": "The event describing the message.",
+              "type": "Object"
+            }
+          ]
+        },
+        "rejectAllOutstandingResolvers": {
+          "description": "Rejects all outstanding resolvers.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "reason",
+              "description": "The reject reason.",
+              "type": "Object"
+            }
+          ]
+        },
+        "unregisterResolver": {
+          "description": "Unregisters a resolver.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "id",
+              "description": "The ID to unregister the resolver with.",
+              "kind": "union",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "type": "any"
+            }
+          ]
+        },
+        "registerResolver": {
+          "description": "Registers a resolver.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "id",
+              "description": "The ID to register the resolver with.",
+              "kind": "union",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "type": "any"
+            }
+          ],
+          "returns": {
+            "description": "The promise executor function.",
+            "type": "function"
+          }
+        },
+        "send": {
+          "description": "Sends data on the socket.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "data",
+              "description": "The data to send.",
+              "type": "Object"
+            }
+          ],
+          "returns": {
+            "description": "A promise instance.",
+            "type": "Object"
+          }
+        }
+      }
+    },
+    "toCamelCase": {
+      "description": "Returns the camelCase counterpart of a symbol.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "symbol",
+          "description": "The symbol.",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "description": "the camelCase counterpart.",
+        "type": "any"
+      }
+    },
+    "namedParamFacade": {
+      "description": "A facade function that allows parameters to be passed either by name\n(through an object), or by position (through an array).",
+      "kind": "function",
+      "params": [
+        {
+          "name": "base",
+          "description": "The function that is being overriden. Will be\n                       called with parameters in array-form.",
+          "type": "function"
+        },
+        {
+          "name": "defaults",
+          "description": "Parameter list and it's default values.",
+          "type": "Object"
+        },
+        {
+          "name": "params",
+          "description": "The parameters.",
+          "variable": true,
+          "type": "*"
+        }
+      ]
+    },
+    "Schema": {
+      "description": "Qix schema definition.",
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "description": "Create a new schema instance.",
+        "params": [
+          {
+            "name": "config",
+            "description": "The configuration for QIX.",
+            "type": "Configuration"
+          }
+        ]
+      },
+      "entries": {
+        "registerMixin": {
+          "description": "Function used to add a mixin object to the mixin cache. Will be mixed into the API\nof the specified key when generated.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "mixin",
+              "description": "Mixin object.",
+              "kind": "object",
+              "entries": {
+                "types": {
+                  "description": "String or array of strings containing the\n                                          API-types that will be mixed in.",
+                  "kind": "union",
+                  "items": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "kind": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "type": "any"
+                },
+                "extend": {
+                  "description": "Object literal containing the methods that\n                               will be extended on the specified API.",
+                  "optional": true,
+                  "type": "Object"
+                },
+                "override": {
+                  "description": "Object literal containing the methods to\n                                 override existing methods.",
+                  "optional": true,
+                  "type": "Object"
+                },
+                "init": {
+                  "description": "Init function that, if defined, will run when an API is\n                               instantiated. It runs with Promise and API object as parameters.",
+                  "optional": true,
+                  "type": "function"
+                }
+              }
+            }
+          ]
+        },
+        "generate": {
+          "description": "Function used to generate a type definition.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "type",
+              "description": "The type.",
+              "type": "string"
+            }
+          ],
+          "returns": {
+            "description": "Returns an object with a definition\n         of the type and a create factory.",
+            "type": "Object"
+          }
+        },
+        "generateApi": {
+          "description": "Function used to generate an API definition for a given type.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "type",
+              "description": "The type to generate.",
+              "type": "string"
+            },
+            {
+              "name": "schema",
+              "description": "The schema describing the type.",
+              "type": "Object"
+            }
+          ],
+          "returns": {
+            "description": "Returns the API definition.",
+            "type": "Object"
+          }
+        },
+        "generateDefaultApi": {
+          "description": "Function used to generate the methods with the right handlers to the object\nAPI that is being generated.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "api",
+              "description": "The object API that is currently being generated.",
+              "type": "Object"
+            },
+            {
+              "name": "schema",
+              "description": "The API definition.",
+              "type": "Object"
+            }
+          ]
+        },
+        "mixinType": {
+          "description": "Function used to add mixin methods to a specified API.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "type",
+              "description": "Used to specify which mixin should be woven in.",
+              "type": "string"
+            },
+            {
+              "name": "api",
+              "description": "The object that will be woven.",
+              "type": "Object"
+            }
+          ]
+        },
+        "mixinNamedParamFacade": {
+          "description": "Function used to mixin the named parameter facade.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "api",
+              "description": "The object API that is currently being generated.",
+              "type": "Object"
+            },
+            {
+              "name": "schema",
+              "description": "The API definition.",
+              "type": "Object"
+            }
+          ]
+        }
+      }
+    },
+    "SenseConfiguration": {
+      "description": "The Qlik Sense configuration object.",
+      "type": "Object"
+    },
+    "SenseUtilities.buildUrl": {
+      "description": "Function used to build an URL.",
+      "kind": "function",
+      "params": [
+        {
+          "name": "urlConfig",
+          "description": "The URL configuration object.",
+          "type": "SenseUrlConfiguration"
+        }
+      ],
+      "returns": {
+        "description": "Returns the URL.",
+        "type": "string"
+      }
+    },
+    "Session": {
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "description": "Creates a new Session instance.",
+        "params": [
+          {
+            "name": "options",
+            "description": "The configuration option for this class.",
+            "kind": "object",
+            "entries": {
+              "apis": {
+                "description": "The ApiCache instance to bridge events towards.",
+                "type": "#/definitions/ApiCache"
+              },
+              "config": {
+                "description": "The configuration object for this session.",
+                "type": "Object"
+              },
+              "intercept": {
+                "description": "The intercept instance to use.",
+                "type": "#/definitions/Intercept"
+              },
+              "rpc": {
+                "description": "The RPC instance to use when communicating towards Engine.",
+                "type": "#/definitions/RPC"
+              },
+              "suspendResume": {
+                "description": "The SuspendResume instance to use.",
+                "type": "#/definitions/SuspendResume"
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "onRpcError": {
+          "description": "Event handler for re-triggering error events from RPC.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "err",
+              "description": "Webocket error event.",
+              "type": "Error"
+            }
+          ],
+          "emits": [
+            {
+              "type": "event:socket-error"
+            }
+          ]
+        },
+        "onRpcClosed": {
+          "description": "Event handler for the RPC close event.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "evt",
+              "description": "WebSocket close event.",
+              "type": "Event"
+            }
+          ],
+          "emits": [
+            {
+              "type": "event:suspended"
+            },
+            {
+              "type": "event:closed"
+            }
+          ]
+        },
+        "onRpcMessage": {
+          "description": "Event handler for the RPC message event.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "response",
+              "description": "JSONRPC response.",
+              "type": "Object"
+            }
+          ]
+        },
+        "onRpcNotification": {
+          "description": "Event handler for the RPC notification event.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "response",
+              "description": "The JSONRPC notification.",
+              "type": "Object"
+            }
+          ],
+          "emits": [
+            {
+              "type": "notification:*"
+            },
+            {
+              "type": "notification:[JSONRPC notification name]"
+            }
+          ]
+        },
+        "onRpcTraffic": {
+          "description": "Event handler for the RPC traffic event.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "dir",
+              "description": "The traffic direction, sent or received.",
+              "type": "string"
+            },
+            {
+              "name": "data",
+              "description": "JSONRPC request/response/WebSocket message.",
+              "type": "Object"
+            }
+          ],
+          "emits": [
+            {
+              "type": "traffic:*"
+            },
+            {
+              "type": "traffic:sent"
+            },
+            {
+              "type": "traffic:received"
+            }
+          ]
+        },
+        "onSessionClosed": {
+          "description": "Event handler for cleaning up API instances when a session has been closed.",
+          "kind": "function",
+          "params": [],
+          "emits": [
+            {
+              "type": "api#event:closed"
+            }
+          ]
+        },
+        "getObjectApi": {
+          "description": "Function used to get an API for a backend object.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "args",
+              "description": "Arguments used to create object API.",
+              "kind": "object",
+              "entries": {
+                "handle": {
+                  "description": "Handle of the backend object.",
+                  "type": "number"
+                },
+                "id": {
+                  "description": "ID of the backend object.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "QIX type of the backend object. Can for example\n                          be \"Doc\" or \"GenericVariable\".",
+                  "type": "string"
+                },
+                "genericType": {
+                  "description": "Custom type of the backend object, if defined in qInfo.",
+                  "type": "string"
+                }
+              }
+            }
+          ],
+          "returns": {
+            "description": "Returns the generated and possibly augmented API.",
+            "type": "*"
+          }
+        },
+        "open": {
+          "description": "Establishes the RPC socket connection and returns the Global instance.",
+          "kind": "function",
+          "params": [],
+          "returns": {
+            "description": "Eventually resolved if the connection was successful.",
+            "type": "Promise"
+          }
+        },
+        "send": {
+          "description": "Function used to send data on the RPC socket.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "request",
+              "description": "The request to be sent. (data and some meta info)",
+              "type": "Object"
+            }
+          ],
+          "returns": {
+            "description": "Returns a promise instance.",
+            "type": "Object"
+          }
+        },
+        "suspend": {
+          "description": "Suspends the session (\"sleeping state\"), and closes the RPC connection.",
+          "kind": "function",
+          "params": [],
+          "returns": {
+            "description": "Eventually resolved when the RPC connection is closed.",
+            "type": "Promise"
+          },
+          "emits": [
+            {
+              "type": "event:suspended"
+            }
+          ]
+        },
+        "resume": {
+          "description": "Resumes a previously suspended session.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "onlyIfAttached",
+              "description": "If true, resume only if the session was re-attached.",
+              "type": "boolean"
+            }
+          ],
+          "returns": {
+            "description": "Eventually resolved if the session was successfully resumed,\n                   otherwise rejected.",
+            "type": "Promise"
+          }
+        },
+        "close": {
+          "description": "Function used to close the session.",
+          "kind": "function",
+          "params": [],
+          "returns": {
+            "description": "Eventually resolved when the RPC connection is closed.",
+            "type": "Promise"
+          }
+        },
+        "emitHandleChanged": {
+          "description": "Given a handle, this function will emit the 'changed' event on the\ncorresponding API instance.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "handle",
+              "description": "The handle of the API instance.",
+              "type": "number"
+            }
+          ],
+          "emits": [
+            {
+              "type": "api#event:changed"
+            }
+          ]
+        },
+        "emitHandleClosed": {
+          "description": "Given a handle, this function will emit the 'closed' event on the\ncorresponding API instance.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "handle",
+              "description": "The handle of the API instance.",
+              "type": "number"
+            }
+          ],
+          "emits": [
+            {
+              "type": "api#event:closed"
+            }
+          ]
+        }
+      }
+    },
+    "SuspendResume": {
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "description": "Creates a new SuspendResume instance.",
+        "params": [
+          {
+            "name": "options",
+            "description": "The configuration option for this class.",
+            "kind": "object",
+            "entries": {
+              "Promise": {
+                "description": "The promise constructor to use.",
+                "type": "Promise"
+              },
+              "rpc": {
+                "description": "The RPC instance to use when communicating towards Engine.",
+                "type": "#/definitions/RPC"
+              },
+              "apis": {
+                "description": "The ApiCache instance to use.",
+                "type": "#/definitions/ApiCache"
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "restoreRpcConnection": {
+          "description": "Function used to restore the rpc connection.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "onlyIfAttached",
+              "description": "if true, the returned promise will resolve\n                                  only if the session can be re-attached.",
+              "type": "boolean"
+            }
+          ],
+          "returns": {
+            "description": "Returns a promise instance.",
+            "type": "Object"
+          }
+        },
+        "restoreGlobal": {
+          "description": "Function used to restore the global API.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "changed",
+              "description": "A list where the restored APIs will be added.",
+              "type": "Object"
+            }
+          ],
+          "returns": {
+            "description": "Returns a promise instance.",
+            "type": "Object"
+          }
+        },
+        "restoreDoc": {
+          "description": "Function used to restore the doc API.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "sessionState",
+              "description": "The state of the session, attached or created.",
+              "type": "string"
+            },
+            {
+              "name": "closed",
+              "description": "A list where the closed of APIs APIs will be added.",
+              "type": "Array"
+            },
+            {
+              "name": "changed",
+              "description": "A list where the restored APIs will be added.",
+              "type": "Object"
+            }
+          ],
+          "returns": {
+            "description": "Returns a promise instance.",
+            "type": "Object"
+          }
+        },
+        "restoreDocObjects": {
+          "description": "Function used to restore the APIs on the doc.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "doc",
+              "description": "The doc API on which the APIs we want to restore exist.",
+              "type": "Object"
+            },
+            {
+              "name": "closed",
+              "description": "A list where the closed of APIs APIs will be added.",
+              "type": "Array"
+            },
+            {
+              "name": "changed",
+              "description": "A list where the restored APIs will be added.",
+              "type": "Object"
+            }
+          ],
+          "returns": {
+            "description": "Returns a promise instance.",
+            "type": "Object"
+          }
+        },
+        "suspend": {
+          "description": "Set the instance as suspended.",
+          "kind": "function",
+          "params": []
+        },
+        "resume": {
+          "description": "Resumes a previously suspended RPC connection, and refreshes the API cache.\n                               APIs unabled to be restored has their 'closed'\n                               event triggered, otherwise 'changed'.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "onlyIfAttached",
+              "description": "if true, resume only if the session was re-attached.",
+              "type": "boolean"
+            }
+          ],
+          "returns": {
+            "description": "Eventually resolved if the RPC connection was successfully resumed,\n                   otherwise rejected.",
+            "type": "Promise"
+          }
+        },
+        "reopen": {
+          "description": "Reopens the connection and waits for the OnConnected notification.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "timeout",
+              "description": "The time to wait for the OnConnected notification.",
+              "type": "number"
+            }
+          ],
+          "returns": {
+            "description": "A promise containing the session state (SESSION_CREATED or SESSION_ATTACHED).",
+            "type": "Object"
+          }
+        }
+      },
+      "staticEntries": {
+        "buildGetMethodName": {
+          "description": "Function used to build the get method names for Doc APIs.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "type",
+              "description": "The API type.",
+              "type": "string"
+            }
+          ],
+          "returns": {
+            "description": "Returns the get method name, or undefined if the type cannot be restored.",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
