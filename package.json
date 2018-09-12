@@ -37,7 +37,7 @@
   "main": "enigma.js",
   "devDependencies": {
     "@after-work.js/aw": "5.0.0-beta.6",
-    "@after-work.js/transform": "5.0.0-beta.6",
+    "@after-work.js/transform": "5.0.1",
     "@babel/core": "7.0.0",
     "@babel/plugin-transform-modules-commonjs": "7.0.0",
     "@babel/preset-env": "7.0.0",
