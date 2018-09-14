@@ -4,8 +4,9 @@ const RPC_CLOSE_MANUAL_SUSPEND = 4000;
 class SuspendResume {
   /**
   * Creates a new SuspendResume instance.
+  * @private
   * @param {Object} options The configuration option for this class.
-  * @param {Promise} options.Promise The promise constructor to use.
+  * @param {Promise<Object>} options.Promise The promise constructor to use.
   * @param {RPC} options.rpc The RPC instance to use when communicating towards Engine.
   * @param {ApiCache} options.apis The ApiCache instance to use.
   */
@@ -21,6 +22,7 @@ class SuspendResume {
 
   /**
   * Function used to restore the rpc connection.
+  * @private
   * @param {Boolean} onlyIfAttached - if true, the returned promise will resolve
   *                                   only if the session can be re-attached.
   * @returns {Object} Returns a promise instance.
@@ -36,6 +38,7 @@ class SuspendResume {
 
   /**
   * Function used to restore the global API.
+  * @private
   * @param {Object} changed - A list where the restored APIs will be added.
   * @returns {Object} Returns a promise instance.
   */
@@ -47,6 +50,7 @@ class SuspendResume {
 
   /**
   * Function used to restore the doc API.
+  * @private
   * @param {String} sessionState - The state of the session, attached or created.
   * @param {Array} closed - A list where the closed of APIs APIs will be added.
   * @param {Object} changed - A list where the restored APIs will be added.
@@ -86,6 +90,7 @@ class SuspendResume {
 
   /**
   * Function used to restore the APIs on the doc.
+  * @private
   * @param {Object} doc - The doc API on which the APIs we want to restore exist.
   * @param {Array} closed - A list where the closed of APIs APIs will be added.
   * @param {Object} changed - A list where the restored APIs will be added.
@@ -128,6 +133,7 @@ class SuspendResume {
 
   /**
   * Set the instance as suspended.
+  * @private
   */
   suspend() {
     this.isSuspended = true;
@@ -138,8 +144,11 @@ class SuspendResume {
   * Resumes a previously suspended RPC connection, and refreshes the API cache.
   *                                APIs unabled to be restored has their 'closed'
   *                                event triggered, otherwise 'changed'.
+  * @private
+  * @emits API#changed
+  * @emits APIfunction@#closed
   * @param {Boolean} onlyIfAttached if true, resume only if the session was re-attached.
-  * @returns {Promise} Eventually resolved if the RPC connection was successfully resumed,
+  * @returns {Promise<Object>} Eventually resolved if the RPC connection was successfully resumed,
   *                    otherwise rejected.
   */
   resume(onlyIfAttached) {
@@ -169,6 +178,7 @@ class SuspendResume {
 
   /**
   * Reopens the connection and waits for the OnConnected notification.
+  * @private
   * @param {Number} timeout - The time to wait for the OnConnected notification.
   * @returns {Object} A promise containing the session state (SESSION_CREATED or SESSION_ATTACHED).
   */
@@ -208,6 +218,7 @@ class SuspendResume {
 
   /**
   * Function used to build the get method names for Doc APIs.
+  * @private
   * @param {String} type - The API type.
   * @returns {String} Returns the get method name, or undefined if the type cannot be restored.
   */

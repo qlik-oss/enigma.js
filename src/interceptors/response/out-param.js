@@ -3,7 +3,8 @@ const RETURN_KEY = 'qReturn';
 /**
 * Picks out the result "out" parameter based on the QIX method+schema, with
 * some specific handling for some methods that breaks the predictable protocol.
-* @param {Object} session - The session the intercept is being executed on.
+* @private
+* @param {Session} session - The session the intercept is being executed on.
 * @param {Object} request - The JSON-RPC request.
 * @param {Object} response - The response.
 * @returns {Object} - Returns the result property on the response

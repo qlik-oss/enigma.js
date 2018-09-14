@@ -3,10 +3,12 @@ import RPCResolver from './rpc-resolver';
 
 /**
 * This class handles remote procedure calls on a web socket.
+* @private
 */
 class RPC {
   /**
   * Create a new RPC instance.
+  * @private
   * @param {Object} options The configuration options for this class.
   * @param {Function} options.Promise The promise constructor to use.
   * @param {String} options.url The complete websocket URL used to connect.
@@ -22,6 +24,7 @@ class RPC {
 
   /**
   * Opens a connection to the configured endpoint.
+  * @private
   * @param {Boolean} force - ignores all previous and outstanding open calls if set to true.
   * @returns {Object} A promise instance.
   */
@@ -47,6 +50,7 @@ class RPC {
 
   /**
   * Resolves the open promise when a connection is successfully established.
+  * @private
   */
   onOpen() {
     this.resolvers.opened.resolveWith(() => this.closedPromise);
@@ -54,6 +58,7 @@ class RPC {
 
   /**
   * Resolves the close promise when a connection is closed.
+  * @private
   * @param {Object} event - The event describing close.
   */
   onClose(event) {
@@ -64,6 +69,7 @@ class RPC {
 
   /**
   * Closes a connection.
+  * @private
   * @param {Number} [code=1000] - The reason code for closing the connection.
   * @param {String} [reason=""] - The human readable string describing why the connection is closed.
   * @returns {Object} Returns a promise instance.
@@ -78,6 +84,7 @@ class RPC {
 
   /**
   * Emits an error event and rejects the open promise if an error is raised on the connection.
+  * @private
   * @param {Object} event - The event describing the error.
   */
   onError(event) {
@@ -94,6 +101,7 @@ class RPC {
 
   /**
   * Parses the onMessage event on the connection and resolve the promise for the request.
+  * @private
   * @param {Object} event - The event describing the message.
   */
   onMessage(event) {
@@ -109,6 +117,7 @@ class RPC {
 
   /**
   * Rejects all outstanding resolvers.
+  * @private
   * @param {Object} reason - The reject reason.
   */
   rejectAllOutstandingResolvers(reason) {
@@ -123,6 +132,7 @@ class RPC {
 
   /**
   * Unregisters a resolver.
+  * @private
   * @param {Number|String} id - The ID to unregister the resolver with.
   */
   unregisterResolver(id) {
@@ -133,6 +143,7 @@ class RPC {
 
   /**
   * Registers a resolver.
+  * @private
   * @param {Number|String} id - The ID to register the resolver with.
   * @returns {Function} The promise executor function.
   */
@@ -145,6 +156,7 @@ class RPC {
 
   /**
   * Sends data on the socket.
+  * @private
   * @param {Object} data - The data to send.
   * @returns {Object} A promise instance.
   */

@@ -5,7 +5,7 @@ const sessions = {};
 
 /**
 * Function to make sure we release handle caches when they are closed.
-*
+* @private
 * @param {Session} session The session instance to listen on.
 */
 const bindSession = (session) => {
@@ -20,7 +20,7 @@ const bindSession = (session) => {
 /**
 * Simple function that ensures the session events has been bound, and returns
 * either an existing key-value cache or creates one for the specified handle.
-*
+* @private
 * @param {Session} session The session that owns the handle.
 * @param {Number} handle The object handle to retrieve the cache for.
 * @returns {KeyValueCache} The cache instance.
@@ -36,6 +36,7 @@ const getHandleCache = (session, handle) => {
 
 /**
 * Function used to apply a list of patches and return the patched value.
+* @private
 * @param {Session} session The session.
 * @param {Number} handle The object handle.
 * @param {String} cacheId The cacheId.
@@ -63,6 +64,7 @@ const patchValue = (session, handle, cacheId, patches) => {
 
 /**
 * Process delta interceptor.
+* @private
 * @param {Session} session The session the intercept is being executed on.
 * @param {Object} request The JSON-RPC request.
 * @param {Object} response The response.
