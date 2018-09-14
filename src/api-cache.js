@@ -2,11 +2,13 @@ import KeyValueCache from './cache';
 
 /**
 * API cache for instances of QIX types, e.g. GenericObject.
+* @private
 * @extends KeyValueCache
 */
 class ApiCache extends KeyValueCache {
   /**
   * Adds an API.
+  * @private
   * @function ApiCache#add
   * @param {Number} handle - The handle for the API.
   * @param {*} api - The API.
@@ -21,6 +23,7 @@ class ApiCache extends KeyValueCache {
 
   /**
   * Gets an API.
+  * @private
   * @function ApiCache#getApi
   * @param {Number} handle - The handle for the API.
   * @returns {*} The API for the handle.
@@ -32,6 +35,7 @@ class ApiCache extends KeyValueCache {
 
   /**
   * Gets a list of APIs.
+  * @private
   * @function ApiCache#getApis
   * @returns {Array} The list of entries including `handle` and `api` properties for each entry.
   */
@@ -44,6 +48,7 @@ class ApiCache extends KeyValueCache {
 
   /**
   * Gets a list of APIs with a given type.
+  * @private
   * @function ApiCache#getApisByType
   * @param {String} type - The type of APIs to get.
   * @returns {Array} The list of entries including `handle` and `api` properties for each entry.

@@ -5,6 +5,7 @@ const { hasOwnProperty } = Object.prototype;
 
 /**
 * Returns the camelCase counterpart of a symbol.
+* @private
 * @param {String} symbol The symbol.
 * @return the camelCase counterpart.
 */
@@ -15,6 +16,7 @@ function toCamelCase(symbol) {
 /**
  * A facade function that allows parameters to be passed either by name
  * (through an object), or by position (through an array).
+ * @private
  * @param {Function} base The function that is being overriden. Will be
  *                        called with parameters in array-form.
  * @param {Object} defaults Parameter list and it's default values.
@@ -32,10 +34,12 @@ function namedParamFacade(base, defaults, ...params) {
 
 /**
 * Qix schema definition.
+* @private
 */
 class Schema {
   /**
   * Create a new schema instance.
+  * @private
   * @param {Configuration} config The configuration for QIX.
   */
   constructor(config) {
@@ -46,19 +50,6 @@ class Schema {
     this.types = new KeyValueCache();
   }
 
-  /**
-  * Function used to add a mixin object to the mixin cache. Will be mixed into the API
-  * of the specified key when generated.
-  * @param {Object} mixin Mixin object.
-  * @param {String|Array<String>} mixin.types String or array of strings containing the
-  *                                           API-types that will be mixed in.
-  * @param {Object} [mixin.extend] Object literal containing the methods that
-  *                                will be extended on the specified API.
-  * @param {Object} [mixin.override] Object literal containing the methods to
-  *                                  override existing methods.
-  * @param {Function} [mixin.init] Init function that, if defined, will run when an API is
-  *                                instantiated. It runs with Promise and API object as parameters.
-  */
   registerMixin({
     types, type, extend, override, init,
   }) {
@@ -82,6 +73,7 @@ class Schema {
 
   /**
   * Function used to generate a type definition.
+  * @private
   * @param {String} type The type.
   * @returns {{create: Function, def: Object}} Returns an object with a definition
   *          of the type and a create factory.
@@ -101,6 +93,7 @@ class Schema {
 
   /**
   * Function used to generate an API definition for a given type.
+  * @private
   * @param {String} type The type to generate.
   * @param {Object} schema The schema describing the type.
   * @returns {{create: (function(session:Object, handle:Number, id:String,
@@ -160,6 +153,7 @@ class Schema {
   /**
   * Function used to generate the methods with the right handlers to the object
   * API that is being generated.
+  * @private
   * @param {Object} api The object API that is currently being generated.
   * @param {Object} schema The API definition.
   */
@@ -182,6 +176,7 @@ class Schema {
 
   /**
   * Function used to add mixin methods to a specified API.
+  * @private
   * @param {String} type Used to specify which mixin should be woven in.
   * @param {Object} api The object that will be woven.
   */
@@ -213,6 +208,7 @@ class Schema {
 
   /**
   * Function used to mixin the named parameter facade.
+  * @private
   * @param {Object} api The object API that is currently being generated.
   * @param {Object} schema The API definition.
   */

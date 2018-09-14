@@ -1,6 +1,7 @@
 /**
 * Response interceptor for generating APIs. Handles the quirks of engine not
 * returning an error when an object is missing.
+* @private
 * @param {Object} session - The session the intercept is being executed on.
 * @param {Object} request - The JSON-RPC request.
 * @param {Object} response - The response.

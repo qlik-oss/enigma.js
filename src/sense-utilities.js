@@ -51,8 +51,8 @@ class SenseUtilities {
 
   /**
   * Function used to build an URL.
-  * @param {SenseUrlConfiguration} urlConfig - The URL configuration object.
-  * @returns {String} Returns the URL.
+  * @param {SenseConfiguration} urlConfig - The URL configuration object.
+  * @returns {String} Returns the websocket URL.
   */
   static buildUrl(urlConfig) {
     SenseUtilities.configureDefaults(urlConfig);

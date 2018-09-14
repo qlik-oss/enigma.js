@@ -2,6 +2,7 @@ import EventEmitter from 'node-event-emitter';
 
 /**
 * @module EventEmitter
+* @private
 */
 export default {
 

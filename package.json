@@ -15,7 +15,7 @@
     "test:integration": "aw -c test/aw.config.json --glob test/integration/**/*.spec.js --mocha.timeout 5000",
     "lint": "eslint .",
     "jsdoc": "rimraf ./jsdoc && jsdoc ./src -c ./jsdoc-config.json -r -d ./jsdoc",
-    "scriptappy": "jsdoc ./src -c ./jsdoc-config.json -r -p ./package.json -X | scriptappy-from-jsdoc -c spec.config.js",
+    "scriptappy": "jsdoc ./src -c ./jsdoc-config.json -r ./package.json -X | scriptappy-from-jsdoc -c spec.config.js",
     "preversion": "npm run test && npm run test:integration",
     "version": "npm run build",
     "postversion": "git push && git push --tags"

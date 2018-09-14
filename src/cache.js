@@ -1,5 +1,6 @@
 /**
 * Key-value cache
+* @private
 */
 class KeyValueCache {
   constructor() {
@@ -8,6 +9,7 @@ class KeyValueCache {
 
   /**
   * Adds an entry.
+  * @private
   * @function KeyValueCache#add
   * @param {String} key The key representing an entry.
   * @param {*} entry The entry to be added.
@@ -22,6 +24,7 @@ class KeyValueCache {
 
   /**
   * Sets an entry.
+  * @private
   * @function KeyValueCache#set
   * @param {String} key The key representing an entry.
   * @param {*} entry The entry.
@@ -33,6 +36,7 @@ class KeyValueCache {
 
   /**
   * Removes an entry.
+  * @private
   * @function KeyValueCache#remove
   * @param {String} key The key representing an entry.
   */
@@ -42,6 +46,7 @@ class KeyValueCache {
 
   /**
   * Gets an entry.
+  * @private
   * @function KeyValueCache#get
   * @param {String} key The key representing an entry.
   * @returns {*} The entry for the key.
@@ -52,6 +57,7 @@ class KeyValueCache {
 
   /**
   * Gets a list of all entries.
+  * @private
   * @function KeyValueCache#getAll
   * @returns {Array} The list of entries including its `key` and `value` properties.
   */
@@ -64,6 +70,7 @@ class KeyValueCache {
 
   /**
   * Gets a key for an entry.
+  * @private
   * @function KeyValueCache#getKey
   * @param {*} entry The entry to locate the key for.
   * @returns {String} The key representing an entry.
@@ -74,6 +81,7 @@ class KeyValueCache {
 
   /**
   * Clears the cache of all entries.
+  * @private
   * @function KeyValueCache#clear
   */
   clear() {
