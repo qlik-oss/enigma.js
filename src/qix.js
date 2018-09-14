@@ -32,10 +32,10 @@ import ApiCache from './api-cache';
  * @interface Mixin
  * @property {String|Array<String>} types String or array of strings containing the API-types that
  * will be mixed in.
- * @param {Object} [extend] Object literal containing the methods that will be extended on the
+ * @property {Object} [extend] Object literal containing the methods that will be extended on the
  * specified API.
- * @param {Object} [override] Object literal containing the methods to override existing methods.
- * @param {Function} [init] Init function that, if defined, will run when an API is instantiated.
+ * @property {Object} [override] Object literal containing the methods to override existing methods.
+ * @property {Function} [init] Init function that, if defined, will run when an API is instantiated.
  * It runs with Promise and API object as parameters
  */
 
@@ -47,8 +47,8 @@ import ApiCache from './api-cache';
  * @property {String} type Contains the schema class name for this API.
  * @property {String} genericType Corresponds to the qInfo.qType property on the generic object's
  * properties object.
- * @property {Object} session Contains a reference to the session that this API belongs to.
- * @property {String} handle Contains the handle QIX Engine assigned to the API. Used interally in
+ * @property {Session} session Contains a reference to the session that this API belongs to.
+ * @property {Number} handle Contains the handle QIX Engine assigned to the API. Used interally in
  * enigma.js for caches and JSON-RPC requests.
  */
 

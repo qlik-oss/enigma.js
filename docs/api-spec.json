@@ -35,7 +35,7 @@
             {
               "name": "session",
               "description": "The session executing the interceptor.",
-              "type": "Object"
+              "type": "#/definitions/Session"
             },
             {
               "name": "request",
@@ -65,7 +65,7 @@
             {
               "name": "session",
               "description": "The session executing the interceptor. You may use .retry() to retry\nsending it to QIX Engine.",
-              "type": "Object"
+              "type": "#/definitions/Session"
             },
             {
               "name": "request",
@@ -86,7 +86,7 @@
             {
               "name": "session",
               "description": "The session executing the interceptor.",
-              "type": "Object"
+              "type": "#/definitions/Session"
             },
             {
               "name": "request",
@@ -170,26 +170,6 @@
     "Mixin": {
       "description": "Mixin object to extend/augment the QIX Engine API",
       "kind": "interface",
-      "params": [
-        {
-          "name": "extend",
-          "description": "Object literal containing the methods that will be extended on the\nspecified API.",
-          "optional": true,
-          "type": "Object"
-        },
-        {
-          "name": "override",
-          "description": "Object literal containing the methods to override existing methods.",
-          "optional": true,
-          "type": "Object"
-        },
-        {
-          "name": "init",
-          "description": "Init function that, if defined, will run when an API is instantiated.\nIt runs with Promise and API object as parameters",
-          "optional": true,
-          "type": "function"
-        }
-      ],
       "entries": {
         "types": {
           "description": "String or array of strings containing the API-types that\nwill be mixed in.",
@@ -206,6 +186,21 @@
             }
           ],
           "type": "any"
+        },
+        "extend": {
+          "description": "Object literal containing the methods that will be extended on the\nspecified API.",
+          "optional": true,
+          "type": "Object"
+        },
+        "override": {
+          "description": "Object literal containing the methods to override existing methods.",
+          "optional": true,
+          "type": "Object"
+        },
+        "init": {
+          "description": "Init function that, if defined, will run when an API is instantiated.\nIt runs with Promise and API object as parameters",
+          "optional": true,
+          "type": "function"
         }
       }
     },
@@ -227,11 +222,11 @@
         },
         "session": {
           "description": "Contains a reference to the session that this API belongs to.",
-          "type": "Object"
+          "type": "#/definitions/Session"
         },
         "handle": {
           "description": "Contains the handle QIX Engine assigned to the API. Used interally in\nenigma.js for caches and JSON-RPC requests.",
-          "type": "string"
+          "type": "number"
         }
       },
       "events": {

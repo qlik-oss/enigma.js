@@ -1,7 +1,7 @@
 /**
 * Process result interceptor.
 * @private
-* @param {Object} session - The session the intercept is being executed on.
+* @param {Session} session - The session the intercept is being executed on.
 * @param {Object} request - The JSON-RPC request.
 * @param {Object} response - The response.
 * @returns {Object} - Returns the result property on the response

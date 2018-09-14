@@ -27,7 +27,7 @@ import resultResponse from './interceptors/response/result';
 /**
  * This method is invoked when a request is about to be sent to QIX Engine.
  * @function InterceptorRequest#onFulfilled
- * @param {Object} session The session executing the interceptor.
+ * @param {Session} session The session executing the interceptor.
  * @param {Object} request The JSON-RPC request that will be sent.
  */
 
@@ -35,7 +35,7 @@ import resultResponse from './interceptors/response/result';
  * This method is invoked when a previous interceptor has rejected the
  * promise, use this to handle for example errors before they are sent into mixins.
  * @function InterceptorResponse#onRejected
- * @param {Object} session The session executing the interceptor. You may use .retry() to retry
+ * @param {Session} session The session executing the interceptor. You may use .retry() to retry
  * sending it to QIX Engine.
  * @param {Object} request The JSON-RPC request resulting in this error.
  * @param {Object} error Whatever the previous interceptor is rejected with.
@@ -46,7 +46,7 @@ import resultResponse from './interceptors/response/result';
  * use this to modify the result or reject the promise chain before it is sent
  * to mixins.
  * @function InterceptorResponse#onFulfilled
- * @param {Object} session The session executing the interceptor.
+ * @param {Session} session The session executing the interceptor.
  * @param {Object} request The JSON-RPC request resulting in this response.
  * @param {Object} result Whatever the previous interceptor is resolved with.
  */
@@ -77,7 +77,7 @@ class Intercept {
   * Execute the request interceptor queue, each interceptor will get the result from
   * the previous interceptor.
   * @private
-  * @param {Object} session The session instance to execute against.
+  * @param {Session} session The session instance to execute against.
   * @param {Promise<Object>} promise The promise to chain on to.
   * @returns {Promise<Object>}
   */
@@ -93,7 +93,7 @@ class Intercept {
   * Execute the response interceptor queue, each interceptor will get the result from
   * the previous interceptor.
   * @private
-  * @param {Object} session The session instance to execute against.
+  * @param {Session} session The session instance to execute against.
   * @param {Promise<Object>} promise The promise to chain on to.
   * @param {Object} request The JSONRPC request object for the intercepted response.
   * @returns {Promise<Object>}
