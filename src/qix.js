@@ -75,7 +75,7 @@ class Qix {
   * Function used to get a session.
   * @private
   * @param {Configuration} config The configuration object for this session.
-  * @returns {Object} Returns a session instance.
+  * @returns {Session} Returns a session instance.
   */
   static getSession(config) {
     const {
@@ -107,7 +107,7 @@ class Qix {
   /**
   * Function used to create a QIX session.
   * @param {Configuration} config The configuration object for the QIX session.
-  * @returns {Object} Returns a new QIX session.
+  * @returns {Session} Returns a new QIX session.
   */
   static create(config) {
     Qix.configureDefaults(config);

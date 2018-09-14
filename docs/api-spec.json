@@ -263,7 +263,7 @@
           ],
           "returns": {
             "description": "Returns a new QIX session.",
-            "type": "Object"
+            "type": "#/definitions/Session"
           }
         }
       }
