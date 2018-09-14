@@ -364,7 +364,7 @@
             }
           ],
           "returns": {
-            "description": "Eventually resolved when the websocket (and potentially the previously\nopened document, and generated APIs) has been restored, rejected when it fails any of those\nsteps, or when onlyIfAttached is true and a new session was created.",
+            "description": "Eventually resolved when the websocket (and potentially the\npreviously opened document, and generated APIs) has been restored, rejected when it fails any\nof those steps, or when onlyIfAttached is true and a new session was created.",
             "type": "Promise",
             "generics": [
               {
