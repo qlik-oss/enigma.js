@@ -17,8 +17,7 @@
     "jsdoc": "rimraf ./jsdoc && jsdoc ./src -c ./jsdoc-config.json -r -d ./jsdoc",
     "scriptappy": "jsdoc ./src -c ./jsdoc-config.json -r ./package.json -X | scriptappy-from-jsdoc -c spec.config.js",
     "preversion": "npm run test && npm run test:integration",
-    "version": "npm run build",
-    "postversion": "git push && git push --tags"
+    "version": "npm run build && npm run scriptappy"
   },
   "repository": {
     "type": "git",
