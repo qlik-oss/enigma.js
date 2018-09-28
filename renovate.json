@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "qlik-oss",
+    "qlik-oss:groupMinorPatch"
+  ],
+  "rebaseStalePrs": true
+}
