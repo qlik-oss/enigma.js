@@ -51,7 +51,7 @@
     "jsdoc": "3.5.5",
     "node-event-emitter": "0.0.1",
     "rimraf": "2.6.2",
-    "rollup": "0.66.2",
+    "rollup": "0.66.4",
     "rollup-plugin-babel": "4.0.3",
     "rollup-plugin-commonjs": "9.1.8",
     "rollup-plugin-filesize": "4.0.1",
@@ -61,6 +61,6 @@
     "rollup-plugin-node-resolve": "3.4.0",
     "rollup-plugin-uglify": "6.0.0",
     "scriptappy-from-jsdoc": "0.6.0",
-    "ws": "6.0.0"
+    "ws": "6.1.0"
   }
 }
