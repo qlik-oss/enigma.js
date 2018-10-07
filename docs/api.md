@@ -34,6 +34,7 @@ Table of contents
   - [Event: `traffic:received`](#event-trafficreceived)
   - [Event: `traffic:*`](#event-traffic)
 - [Generated API](#generated-api)
+  - [`promise.requestId`](#promiserequestid)
   - [`api.id`](#apiid)
   - [`api.type`](#apitype)
   - [`api.genericType`](#apigenerictype)
@@ -429,6 +430,9 @@ session.on('traffic:*', (direction, msg) => console.log(direction, msg));
 The API for generated APIs depends on the QIX Engine schema you pass into your
 [Configuration](#configuration), and on what QIX struct the API has.
 
+All API calls made using the generated APIs will return promises which are either
+resolved or rejected depending on how the QIX Engine responds.
+
 Read more: [Generic object model](./concepts.md#generic-object-model)
 
 Example:
@@ -438,6 +442,25 @@ global.openDoc('my-document.qvf').then((doc) => {
   doc.createObject({ qInfo: { qType: 'my-object' } }).then(api => { /* do something with api */ });
   doc.getObject('object-id').then(api => { /* do something with api */ });
   doc.getBookmark('bookmark-id').then(api => { /* do something with api */ });
+});
+```
+
+[Back to top](#api-documentation)
+
+### `promise.requestId`
+
+The `requestId` property is injected onto promises that enigma.js returns to give you better
+control in scenarios like cancelling heavy calculation requests and the like.
+
+Read more: [JSON-RPC protocol](./concepts.md#json-rpc-protocol)
+
+Example of cancelling a request:
+
+```js
+const request = doc.evaluate('SUM([myfield]');
+global.cancelRequest(request.requestId);
+request.catch(() => {
+  console.log('Evaluation was cancelled.');
 });
 ```
 
