@@ -50,7 +50,9 @@ describe('RPC', () => {
   });
 
   it("should reject when trying to send a message if the socket isn't open", (done) => {
-    rpc.send().then(() => {}, () => {
+    rpc.send().catch((err) => {
+      expect(err.code).to.equal(-1);
+      expect(err.message).to.equal('Not connected');
       done();
     });
   });

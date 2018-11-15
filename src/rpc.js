@@ -162,7 +162,9 @@ class RPC {
   */
   send(data) {
     if (!this.socket || this.socket.readyState !== this.socket.OPEN) {
-      return this.Promise.reject(new Error('Not connected'));
+      const error = new Error('Not connected');
+      error.code = -1;
+      return this.Promise.reject(error);
     }
     if (!data.id) {
       data.id = this.createRequestId();
