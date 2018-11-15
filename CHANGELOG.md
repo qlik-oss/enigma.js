@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.2
+
+- Added `error.code` with value `-1` when requests are rejected due to closed socket.
+
+## 2.3.1
+
+- API specification published.
+
 ## 2.3.0
 
 - New schema: 12.170.2
