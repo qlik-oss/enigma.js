@@ -10,12 +10,12 @@ describe('Session', () => {
   let suspendResume;
   let apis;
 
-  const intercept = {
+  const defaultIntercept = {
     executeRequests: (sess, promise) => promise,
     executeResponses: (sess, promise) => promise,
   };
 
-  const createSession = (throwError, rpc, suspendOnClose = false) => {
+  const createSession = (throwError, rpc, suspendOnClose = false, intercept) => {
     const defaultRpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
@@ -33,7 +33,7 @@ describe('Session', () => {
     session = new Session({
       apis,
       config,
-      intercept,
+      intercept: intercept || defaultIntercept,
       rpc: rpc || defaultRpc,
       suspendResume,
     });
@@ -161,6 +161,22 @@ describe('Session', () => {
         method: 'a', handle: 1, params: [], delta: false, xyz: 'xyz',
       })
         .then(() => expect(send.lastCall.args[0].delta).to.equal(false));
+    });
+
+    it('should inject a retry method on request in intercept chain', () => {
+      const rpc = new RPCMock({
+        Promise,
+        url: 'http://localhost:4848',
+        createSocket: url => new SocketMock(url),
+      });
+      const spy = sinon.spy();
+      createSession(false, rpc, false, { executeRequests: (s, p) => p, executeResponses: spy });
+
+      return session.send({
+        method: 'a', handle: 1, params: [], delta: false, xyz: 'xyz',
+      })
+        .then(() => expect(spy.firstCall.lastArg.retry).to.be.a('function'))
+        .then(() => expect(spy.firstCall.lastArg.retry()).to.be.a('promise'));
     });
   });
 
