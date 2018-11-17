@@ -27,21 +27,13 @@ jobs:
             npm pack
             mv enigma*.tgz enigma.tgz
       - run:
-          name: Execute unit & component tests
-          command: |
-            npm run -s test
-            if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then
-              echo "Uploading coverage results to coveralls.io..."
-              cat ./coverage/lcov.info | npx coveralls
-            fi
-      - run:
           name: Check if API specification should be updated
           command: |
             npm run scriptappy
             git diff --exit-code --name-only docs/api-spec.json
       - setup_remote_docker
       - run:
-          name: Execute integration tests
+          name: Execute all tests
           command: |
             ENGINE_VERSION=$(curl -s "https://registry.hub.docker.com/v2/repositories/qlikcore/engine/tags/" | docker run -i stedolan/jq -r '."results"[0]["name"]' 2>/dev/null)
             echo "Will start Qlik Associative Engine version '$ENGINE_VERSION'"
@@ -51,7 +43,12 @@ jobs:
             docker cp . $TEST_CONTAINER_ID:/
             docker exec $TEST_CONTAINER_ID /bin/sh -c 'apk update && apk add --no-cache socat bash'
             docker exec -d $TEST_CONTAINER_ID /bin/bash -c "socat TCP-LISTEN:9076,fork TCP:$ENGINE_IP:9076"
-            docker exec $TEST_CONTAINER_ID /bin/bash -c 'npm run -s test:integration'
+            docker exec $TEST_CONTAINER_ID /bin/bash -c 'npm run -s test'
             docker exec $TEST_CONTAINER_ID /bin/bash -c 'test/examples/run.sh'
+            if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then
+              docker cp $TEST_CONTAINER_ID:/coverage .
+              echo "Uploading coverage results to coveralls.io..."
+              cat ./coverage/lcov.info | npx coveralls
+            fi
       - store_artifacts:
           path: coverage
