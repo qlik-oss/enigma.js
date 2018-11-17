@@ -43,8 +43,8 @@ class RPC {
     this.socket.onclose = this.onClose.bind(this);
     this.socket.onerror = this.onError.bind(this);
     this.socket.onmessage = this.onMessage.bind(this);
-    this.openedPromise = new this.Promise((resolve, reject) => this.registerResolver('opened', resolve, reject));
-    this.closedPromise = new this.Promise((resolve, reject) => this.registerResolver('closed', resolve, reject));
+    this.openedPromise = new this.Promise((resolve, reject) => this.registerResolver('opened', null, resolve, reject));
+    this.closedPromise = new this.Promise((resolve, reject) => this.registerResolver('closed', null, resolve, reject));
     return this.openedPromise;
   }
 
@@ -106,7 +106,8 @@ class RPC {
   */
   onMessage(event) {
     const data = JSON.parse(event.data);
-    this.emit('traffic', 'received', data);
+    const resolver = this.resolvers[data.id] || {};
+    this.emit('traffic', 'received', data, resolver.handle);
     if (typeof data.id !== 'undefined') {
       this.emit('message', data);
       this.resolvers[data.id].resolveWith(data);
@@ -145,10 +146,11 @@ class RPC {
   * Registers a resolver.
   * @private
   * @param {Number|String} id - The ID to register the resolver with.
+  * @param {Number} handle - The associated handle.
   * @returns {Function} The promise executor function.
   */
-  registerResolver(id, resolve, reject) {
-    const resolver = new RPCResolver(id, resolve, reject);
+  registerResolver(id, handle, resolve, reject) {
+    const resolver = new RPCResolver(id, handle, resolve, reject);
     this.resolvers[id] = resolver;
     resolver.on('resolved', resolvedId => this.unregisterResolver(resolvedId));
     resolver.on('rejected', rejectedId => this.unregisterResolver(rejectedId));
@@ -172,8 +174,8 @@ class RPC {
     data.jsonrpc = '2.0';
     return new this.Promise((resolve, reject) => {
       this.socket.send(JSON.stringify(data));
-      this.emit('traffic', 'sent', data);
-      return this.registerResolver(data.id, resolve, reject);
+      this.emit('traffic', 'sent', data, data.handle);
+      return this.registerResolver(data.id, data.handle, resolve, reject);
     });
   }
 

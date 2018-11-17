@@ -7,6 +7,9 @@ describe('qix-logging', () => {
   let sentSpy;
   let receivedSpy;
   let starSpy;
+  let apiSentSpy;
+  let apiReceivedSpy;
+  let apiStarSpy;
 
   before(() => {
     const config = utils.getDefaultConfig();
@@ -20,7 +23,13 @@ describe('qix-logging', () => {
     session.on('traffic:*', starSpy);
 
     return session.open().then((global) => {
+      apiSentSpy = sinon.spy();
+      apiReceivedSpy = sinon.spy();
+      apiStarSpy = sinon.spy();
       qixGlobal = global;
+      qixGlobal.on('traffic:sent', apiSentSpy);
+      qixGlobal.on('traffic:received', apiReceivedSpy);
+      qixGlobal.on('traffic:*', apiStarSpy);
     });
   });
 
@@ -44,8 +53,11 @@ describe('qix-logging', () => {
       },
     };
 
-    const delay = timeout => new Promise(resolve => setTimeout(resolve, timeout));
-    return delay(100).then(() => qixGlobal.allowCreateApp()).then(() => {
+    // the delay is to guarantee we don't get a race condition
+    // between or first request and the 'OnConnected' notification:
+    const delay = t => new Promise(r => setTimeout(r, t));
+    return delay(100).then(() => qixGlobal.allowCreateApp().then(() => {
+      // all session traffic:
       // we have traffic:received for OnConnected notification before (so second received
       // msg should be ours):
       expect(sentSpy.firstCall.args[0]).to.containSubset(request);
@@ -54,6 +66,14 @@ describe('qix-logging', () => {
       expect(starSpy.secondCall.args[1]).to.containSubset(request);
       expect(starSpy.thirdCall.args[0]).to.equal('received');
       expect(starSpy.thirdCall.args[1]).to.containSubset(response);
-    });
+
+      // handle-specific traffic:
+      expect(apiSentSpy.firstCall.args[0]).to.containSubset(request);
+      expect(apiReceivedSpy.firstCall.args[0]).to.containSubset(response);
+      expect(apiStarSpy.firstCall.args[0]).to.equal('sent');
+      expect(apiStarSpy.firstCall.args[1]).to.containSubset(request);
+      expect(apiStarSpy.secondCall.args[0]).to.equal('received');
+      expect(apiStarSpy.secondCall.args[1]).to.containSubset(response);
+    }));
   });
 });

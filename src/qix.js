@@ -68,6 +68,14 @@ import ApiCache from './api-cache';
  */
 
 /**
+ * Handle JSON-RPC requests/responses for this API. Generally used in debugging purposes.
+ * traffic:* will handle all websocket messages, traffic:sent will handle outgoing messages
+ * and traffic:received will handle incoming messages.
+ * @event API#traffic
+ * @type {Object}
+ */
+
+/**
 * Qix service.
 */
 class Qix {
