@@ -61,6 +61,6 @@
     "rollup-plugin-node-resolve": "3.4.0",
     "rollup-plugin-uglify": "6.0.0",
     "scriptappy-from-jsdoc": "0.6.0",
-    "ws": "6.1.1"
+    "ws": "6.1.2"
   }
 }
