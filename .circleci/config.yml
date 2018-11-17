@@ -21,16 +21,16 @@ jobs:
           name: Lint source code
           command: npm run -s lint
       - run:
+          name: Check if API specification should be updated
+          command: |
+            npm run scriptappy
+            git diff --exit-code --name-only docs/api-spec.json
+      - run:
           name: Create npm package
           command: |
             npm run -s build
             npm pack
             mv enigma*.tgz enigma.tgz
-      - run:
-          name: Check if API specification should be updated
-          command: |
-            npm run scriptappy
-            git diff --exit-code --name-only docs/api-spec.json
       - setup_remote_docker
       - run:
           name: Execute all tests
@@ -43,7 +43,7 @@ jobs:
             docker cp . $TEST_CONTAINER_ID:/
             docker exec $TEST_CONTAINER_ID /bin/sh -c 'apk update && apk add --no-cache socat bash'
             docker exec -d $TEST_CONTAINER_ID /bin/bash -c "socat TCP-LISTEN:9076,fork TCP:$ENGINE_IP:9076"
-            docker exec $TEST_CONTAINER_ID /bin/bash -c 'npm run -s test'
+            docker exec $TEST_CONTAINER_ID /bin/bash -c 'npm run test'
             docker exec $TEST_CONTAINER_ID /bin/bash -c 'test/examples/run.sh'
             if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then
               docker cp $TEST_CONTAINER_ID:/coverage .
