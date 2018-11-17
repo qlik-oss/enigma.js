@@ -44,11 +44,11 @@ jobs:
             docker exec $TEST_CONTAINER_ID /bin/sh -c 'apk update && apk add --no-cache socat bash'
             docker exec -d $TEST_CONTAINER_ID /bin/bash -c "socat TCP-LISTEN:9076,fork TCP:$ENGINE_IP:9076"
             docker exec $TEST_CONTAINER_ID /bin/bash -c 'npm run test'
-            docker exec $TEST_CONTAINER_ID /bin/bash -c 'test/examples/run.sh'
             if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then
               docker cp $TEST_CONTAINER_ID:/coverage .
               echo "Uploading coverage results to coveralls.io..."
               cat ./coverage/lcov.info | npx coveralls
             fi
+            docker exec $TEST_CONTAINER_ID /bin/bash -c 'test/examples/run.sh'
       - store_artifacts:
           path: coverage
