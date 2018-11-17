@@ -38,9 +38,9 @@
   "devDependencies": {
     "@after-work.js/aw": "5.1.1",
     "@after-work.js/transform": "5.1.1",
-    "@babel/core": "7.1.5",
+    "@babel/core": "7.1.6",
     "@babel/plugin-transform-modules-commonjs": "7.1.0",
-    "@babel/preset-env": "7.1.5",
+    "@babel/preset-env": "7.1.6",
     "babel-plugin-istanbul": "5.1.0",
     "coveralls": "3.0.2",
     "cross-env": "5.2.0",
