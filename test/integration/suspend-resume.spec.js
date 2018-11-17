@@ -93,4 +93,19 @@ describe('QIX Suspend/Resume', () => {
       expect(closed.calledOnce).to.equal(false);
     }));
   });
+
+  it('should close session even when status code is unknown', () => {
+    config.suspendOnClose = false;
+    const suspended = sinon.spy();
+    const closed = sinon.spy();
+    const session = Qix.create(config);
+    session.on('suspended', suspended);
+    session.on('closed', closed);
+    return session.open().then(() => session.rpc.close(4029)).then(() => new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    }).then(() => {
+      expect(suspended.callCount).to.equal(0);
+      expect(closed.calledOnce).to.equal(true);
+    }));
+  });
 });
