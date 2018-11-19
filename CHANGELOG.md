@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.0
+
+### New features
+
+- Traffic events on generated APIs which allows a developer to listen to handle-specific traffic for e.g. debugging purposes or tracking raw responses. See [documentation](https://github.com/qlik-oss/enigma.js/blob/master/docs/api.md#event-trafficsent-1).
+
 ## 2.3.2
 
 - Added `error.code` with value `-1` when requests are rejected due to closed socket.
