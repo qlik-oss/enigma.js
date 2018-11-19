@@ -59,7 +59,6 @@ class Session {
   * @type {Object}
   */
 
-
   constructor(options) {
     const session = this;
     Object.assign(session, options);
@@ -144,10 +143,16 @@ class Session {
   * @emits Session#traffic
   * @param {String} dir The traffic direction, sent or received.
   * @param {Object} data JSONRPC request/response/WebSocket message.
+  * @param {Number} handle The associated handle.
   */
-  onRpcTraffic(dir, data) {
+  onRpcTraffic(dir, data, handle) {
     this.emit('traffic:*', dir, data);
     this.emit(`traffic:${dir}`, data);
+    const api = this.apis.getApi(handle);
+    if (api) {
+      api.emit('traffic:*', dir, data);
+      api.emit(`traffic:${dir}`, data);
+    }
   }
 
   /**

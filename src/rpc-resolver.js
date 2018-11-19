@@ -5,9 +5,10 @@ import Events from './event-emitter';
  * @private
  */
 class RPCResolver {
-  constructor(id, resolve, reject) {
+  constructor(id, handle, resolve, reject) {
     Events.mixin(this);
     this.id = id;
+    this.handle = handle;
     this.resolve = resolve;
     this.reject = reject;
   }

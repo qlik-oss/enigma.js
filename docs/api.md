@@ -42,6 +42,9 @@ Table of contents
   - [`api.handle`](#apihandle)
   - [Event: `changed`](#event-changed)
   - [Event: `closed`](#event-closed-1)
+  - [Event: `traffic:sent`](#event-trafficsent-1)
+  - [Event: `traffic:received`](#event-trafficreceived-1)
+  - [Event: `traffic:*`](#event-traffic-1)
 - [Sense utilities API](#sense-utilities-api)
   - [Configuration](#configuration-1)
   - [`SenseUtilities.buildUrl()`](#senseutilitiesbuildurlconfig)
@@ -566,6 +569,48 @@ Example:
 api.on('closed', () => {
   /* do something in your application, perhaps route your user to an overview page */
 });
+```
+
+[Back to top](#api-documentation)
+
+### Event: `traffic:sent`
+
+Handle outgoing websocket messages for a specific generated API.
+
+Generally used in debugging purposes.
+
+Example:
+
+```js
+api.on('traffic:sent', (req) => console.log(req));
+```
+
+[Back to top](#api-documentation)
+
+### Event: `traffic:received`
+
+Handle incoming websocket messages for a specific generated API.
+
+Generally used in debugging purposes.
+
+Example:
+
+```js
+api.on('traffic:received', (res) => console.log(res));
+```
+
+[Back to top](#api-documentation)
+
+### Event: `traffic:*`
+
+Handle all websocket messages for a specific generated API.
+
+Generally used in debugging purposes.
+
+Example:
+
+```js
+api.on('traffic:*', (direction, msg) => console.log(direction, msg));
 ```
 
 [Back to top](#api-documentation)

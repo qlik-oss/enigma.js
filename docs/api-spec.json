@@ -239,6 +239,11 @@
           "description": "Handle closed API. The closed event is triggered whenever QIX Engine considers an API closed.\nIt usually means that it no longer exist in the QIX Engine document or session.",
           "kind": "event",
           "params": []
+        },
+        "traffic": {
+          "description": "Handle JSON-RPC requests/responses for this API. Generally used in debugging purposes.\ntraffic:* will handle all websocket messages, traffic:sent will handle outgoing messages\nand traffic:received will handle incoming messages.",
+          "kind": "event",
+          "params": []
         }
       }
     },
