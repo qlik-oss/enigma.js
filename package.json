@@ -44,7 +44,7 @@
     "babel-plugin-istanbul": "5.1.0",
     "coveralls": "3.0.2",
     "cross-env": "5.2.0",
-    "eslint": "5.11.0",
+    "eslint": "5.11.1",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.14.0",
     "extend": "3.0.2",
