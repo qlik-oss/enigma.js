@@ -26,6 +26,10 @@ jobs:
             npm run scriptappy
             git diff --exit-code --name-only docs/api-spec.json
       - run:
+          name: Build
+          command: |
+            npm run -s build
+      - run:
           name: Execute all tests
           command: |
             npm run test
