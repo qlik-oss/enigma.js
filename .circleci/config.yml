@@ -4,8 +4,8 @@ jobs:
     working_directory: ~/enigma.js
     docker:
       - image: circleci/node:8.15.0
-    environment:
-      - NPM_CONFIG_LOGLEVEL=warn
+      - image: qlikcore/engine:12.300.0
+        command: -S AcceptEULA=yes
     steps:
       - checkout
       - restore_cache:
@@ -26,31 +26,20 @@ jobs:
             npm run scriptappy
             git diff --exit-code --name-only docs/api-spec.json
       - run:
-          name: Create npm package
+          name: Build
           command: |
             npm run -s build
-            npm pack
-            mv enigma*.tgz enigma.tgz
-      - setup_remote_docker
       - run:
           name: Execute all tests
           command: |
-            ENGINE_VERSION=$(curl -s "https://registry.hub.docker.com/v2/repositories/qlikcore/engine/tags/" | docker run -i stedolan/jq -r '."results"[0]["name"]' 2>/dev/null)
-            echo "Will start Qlik Associative Engine version '$ENGINE_VERSION'"
-            ENGINE_CONTAINER_ID=$(docker run -d qlikcore/engine:$ENGINE_VERSION -S AcceptEULA=yes)
-            ENGINE_IP=$(docker inspect -f '{{ .NetworkSettings.IPAddress }}' $ENGINE_CONTAINER_ID)
-            TEST_CONTAINER_ID=$(docker run -d node:8.11.1-alpine tail -f /dev/null)
-            HOME_DIR=/home/circleci/enigma.js
-            docker exec $TEST_CONTAINER_ID mkdir -p $HOME_DIR
-            docker cp . $TEST_CONTAINER_ID:$HOME_DIR
-            docker exec $TEST_CONTAINER_ID /bin/sh -c 'apk update && apk add --no-cache socat bash'
-            docker exec -d $TEST_CONTAINER_ID /bin/bash -c "socat TCP-LISTEN:9076,fork TCP:$ENGINE_IP:9076"
-            docker exec $TEST_CONTAINER_ID /bin/bash -c "cd $HOME_DIR && npm run test"
-            docker exec $TEST_CONTAINER_ID /bin/bash -c "cd $HOME_DIR && test/examples/run.sh"
+            npm run test
             if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then
-              docker cp $TEST_CONTAINER_ID:$HOME_DIR/coverage .
               echo "Uploading coverage results to coveralls.io..."
-              cat ./coverage/lcov.info | npx coveralls
+              cat coverage/lcov.info | npx coveralls
             fi
+      - run:
+          name: Verify examples
+          command:
+            test/examples/run.sh
       - store_artifacts:
           path: coverage
