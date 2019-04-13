@@ -46,7 +46,7 @@
     "cross-env": "5.2.0",
     "eslint": "5.16.0",
     "eslint-config-airbnb-base": "13.1.0",
-    "eslint-plugin-import": "2.16.0",
+    "eslint-plugin-import": "2.17.1",
     "extend": "3.0.2",
     "jsdoc": "3.5.5",
     "node-event-emitter": "0.0.1",
