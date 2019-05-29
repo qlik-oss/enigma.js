@@ -399,13 +399,13 @@
         }
       },
       "events": {
-        "opened": {
-          "description": "Handle opened state. This event is triggered whenever the websocket is connected and ready for\ncommunication.",
+        "notification": {
+          "description": "Handle all JSON-RPC notification event, 'notification:*. Or handle a specific JSON-RPC\nnotification event, 'notification:OnConnected'. These events depend on the product you use QIX\nEngine from.",
           "kind": "event",
           "params": []
         },
-        "closed": {
-          "description": "Handle closed state. This event is triggered when the underlying websocket is closed and\nconfig.suspendOnClose is false.",
+        "traffic": {
+          "description": "Handle websocket messages. Generally used in debugging purposes. traffic:* will handle all\nwebsocket messages, traffic:sent will handle outgoing messages and traffic:received will handle\nincoming messages.",
           "kind": "event",
           "params": []
         },
@@ -426,18 +426,18 @@
             }
           ]
         },
+        "opened": {
+          "description": "Handle opened state. This event is triggered whenever the websocket is connected and ready for\ncommunication.",
+          "kind": "event",
+          "params": []
+        },
         "resumed": {
           "description": "Handle resumed state. This event is triggered when the session was properly resumed. It is\nuseful in scenarios where you for example can close blocking modal dialogs and allow the user\nto interact with your application again.",
           "kind": "event",
           "params": []
         },
-        "notification": {
-          "description": "Handle all JSON-RPC notification event, 'notification:*. Or handle a specific JSON-RPC\nnotification event, 'notification:OnConnected'. These events depend on the product you use QIX\nEngine from.",
-          "kind": "event",
-          "params": []
-        },
-        "traffic": {
-          "description": "Handle websocket messages. Generally used in debugging purposes. traffic:* will handle all\nwebsocket messages, traffic:sent will handle outgoing messages and traffic:received will handle\nincoming messages.",
+        "closed": {
+          "description": "Handle closed state. This event is triggered when the underlying websocket is closed and\nconfig.suspendOnClose is false.",
           "kind": "event",
           "params": []
         }

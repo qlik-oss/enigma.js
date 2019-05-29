@@ -10,40 +10,6 @@ let cacheId = 0;
  */
 class Session {
   /**
-   * Handle opened state. This event is triggered whenever the websocket is connected and ready for
-   * communication.
-   * @event Session#opened
-   * @type {Object}
-   */
-
-  /**
-   * Handle closed state. This event is triggered when the underlying websocket is closed and
-   * config.suspendOnClose is false.
-   * @event Session#closed
-   * @type {Object}
-   */
-
-  /**
-   * Handle suspended state. This event is triggered in two cases (listed below). It is useful
-   * in scenarios where you for example want to block interaction in your application until you
-   * are resumed again. If config.suspendOnClose is true and there was a network disconnect
-   * (socked closed) or if you ran session.suspend().
-   * @event Session#suspended
-   * @type {Object}
-   * @param {Object} evt Event object.
-   * @param {String} evt.initiator String indication what triggered the suspended state. Possible
-   * values network, manual.
-   */
-
-  /**
-   * Handle resumed state. This event is triggered when the session was properly resumed. It is
-   * useful in scenarios where you for example can close blocking modal dialogs and allow the user
-   * to interact with your application again.
-   * @event Session#resumed
-   * @type {Object}
-   */
-
-  /**
    * Handle all JSON-RPC notification event, 'notification:*. Or handle a specific JSON-RPC
    * notification event, 'notification:OnConnected'. These events depend on the product you use QIX
    * Engine from.
@@ -96,6 +62,17 @@ class Session {
   * @param {Event} evt WebSocket close event.
   */
   onRpcClosed(evt) {
+  /**
+   * Handle suspended state. This event is triggered in two cases (listed below). It is useful
+   * in scenarios where you for example want to block interaction in your application until you
+   * are resumed again. If config.suspendOnClose is true and there was a network disconnect
+   * (socked closed) or if you ran session.suspend().
+   * @event Session#suspended
+   * @type {Object}
+   * @param {Object} evt Event object.
+   * @param {String} evt.initiator String indication what triggered the suspended state. Possible
+   * values network, manual.
+   */
     if (this.suspendResume.isSuspended) {
       return;
     }
@@ -199,6 +176,12 @@ class Session {
   * @returns {Promise<Object>} Eventually resolved if the connection was successful.
   */
   open() {
+  /**
+   * Handle opened state. This event is triggered whenever the websocket is connected and ready for
+   * communication.
+   * @event Session#opened
+   * @type {Object}
+   */
     if (!this.globalPromise) {
       const args = {
         handle: -1,
@@ -264,6 +247,13 @@ class Session {
   * of those steps, or when onlyIfAttached is true and a new session was created.
   */
   resume(onlyIfAttached) {
+  /**
+   * Handle resumed state. This event is triggered when the session was properly resumed. It is
+   * useful in scenarios where you for example can close blocking modal dialogs and allow the user
+   * to interact with your application again.
+   * @event Session#resumed
+   * @type {Object}
+   */
     return this.suspendResume.resume(onlyIfAttached).then((value) => {
       this.emit('resumed');
       return value;
@@ -278,6 +268,12 @@ class Session {
   * @returns {Promise<Object>} Eventually resolved when the websocket has been closed.
   */
   close() {
+  /**
+   * Handle closed state. This event is triggered when the underlying websocket is closed and
+   * config.suspendOnClose is false.
+   * @event Session#closed
+   * @type {Object}
+   */
     this.globalPromise = undefined;
     return this.rpc.close().then(evt => this.emit('closed', evt));
   }
