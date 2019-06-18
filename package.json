@@ -51,16 +51,16 @@
     "jsdoc": "3.6.2",
     "node-event-emitter": "0.0.1",
     "rimraf": "2.6.3",
-    "rollup": "1.14.5",
+    "rollup": "1.15.6",
     "rollup-plugin-babel": "4.3.2",
     "rollup-plugin-commonjs": "10.0.0",
-    "rollup-plugin-filesize": "6.1.0",
+    "rollup-plugin-filesize": "6.1.1",
     "rollup-plugin-license": "0.9.0",
     "rollup-plugin-node-builtins": "2.1.2",
     "rollup-plugin-node-globals": "1.4.0",
-    "rollup-plugin-node-resolve": "5.0.1",
+    "rollup-plugin-node-resolve": "5.0.3",
     "rollup-plugin-uglify": "6.0.2",
     "scriptappy-from-jsdoc": "0.6.0",
-    "ws": "7.0.0"
+    "ws": "7.0.1"
   }
 }
