@@ -7,7 +7,7 @@ describe('RPC', () => {
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
-    rpc = new RPC({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url, false) });
+    rpc = new RPC({ Promise, url: 'http://localhost:4848', createSocket: (url) => new SocketMock(url, false) });
   });
 
   afterEach(() => {

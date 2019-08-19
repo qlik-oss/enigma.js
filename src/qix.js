@@ -143,7 +143,7 @@ class Qix {
 
     if (typeof config.createSocket !== 'function' && typeof WebSocket === 'function') {
       // eslint-disable-next-line no-undef
-      config.createSocket = url => new WebSocket(url);
+      config.createSocket = (url) => new WebSocket(url);
     }
 
     if (typeof config.suspendOnClose === 'undefined') {

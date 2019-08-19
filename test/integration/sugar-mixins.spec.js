@@ -27,7 +27,7 @@ describe('Sugar mixins', () => {
       getList(listDef) {
         return this.getObject(listDef.qInfo.qId)
           .catch(() => this.createSessionObject(listDef))
-          .then(obj => obj.getLayout());
+          .then((obj) => obj.getLayout());
       },
       createSheet(title, description, thumbnail) {
         return this.createObject({
@@ -90,7 +90,7 @@ describe('Sugar mixins', () => {
     return qixGlobal.createSessionApp()
       .then((a) => { app = a; })
       .then(() => app.getList(listDef))
-      .then(list => expect(list.qAppObjectList.qItems.length).to.equal(0))
+      .then((list) => expect(list.qAppObjectList.qItems.length).to.equal(0))
       .then(() => app.createSheet(sheetName))
       .then((s) => { sheet = s; })
       .then(() => app.getList(listDef))
@@ -112,9 +112,9 @@ describe('Sugar mixins', () => {
     return qixGlobal.prepareSessionApp(ctrl00)
       .then((a) => { app = a; })
       .then(() => app.getField('Alpha'))
-      .then(field => field.selectAll())
+      .then((field) => field.selectAll())
       .then(() => app.getList(listDef))
-      .then(list => expect(list.qSelectionObject.qSelections[0].qSelectedCount).to.equal(26));
+      .then((list) => expect(list.qSelectionObject.qSelections[0].qSelectedCount).to.equal(26));
   }).timeout(HIGH_TIMEOUT);
 
   it('should create and list measures', () => {
@@ -152,7 +152,7 @@ describe('Sugar mixins', () => {
       .then(() => app.createMeasure(measureDef))
       .then((m) => { measure = m; })
       .then(() => app.getList(listDef))
-      .then(list => expect(measure.id).to.equal(list.qMeasureList.qItems[0].qInfo.qId));
+      .then((list) => expect(measure.id).to.equal(list.qMeasureList.qItems[0].qInfo.qId));
   }).timeout(HIGH_TIMEOUT);
 
   it('should load script and list fields', () => {
@@ -169,9 +169,9 @@ describe('Sugar mixins', () => {
     };
 
     return qixGlobal.prepareSessionApp(ctrl00)
-      .then(app => app.getList(listDef))
-      .then(list => list.qFieldList.qItems.filter(qField => qField.qIsHidden !== true))
-      .then(userFields => expect(userFields.length).to.equal(12));
+      .then((app) => app.getList(listDef))
+      .then((list) => list.qFieldList.qItems.filter((qField) => qField.qIsHidden !== true))
+      .then((userFields) => expect(userFields.length).to.equal(12));
   }).timeout(HIGH_TIMEOUT);
 
   it('should create and list dimensions', () => {
@@ -217,7 +217,7 @@ describe('Sugar mixins', () => {
       .then(() => app.createDimension(dimensionDef))
       .then((d) => { dimension = d; })
       .then(() => app.getList(listDef))
-      .then(list => expect(dimension.id).to.equal(list.qDimensionList.qItems[0].qInfo.qId));
+      .then((list) => expect(dimension.id).to.equal(list.qDimensionList.qItems[0].qInfo.qId));
   }).timeout(HIGH_TIMEOUT);
 
   it('should list created Variable', () => {
@@ -250,7 +250,7 @@ describe('Sugar mixins', () => {
       .then(() => app.createVariableEx(variableDef))
       .then((v) => { variable = v; })
       .then(() => app.getList(listDef))
-      .then(list => list.qVariableList.qItems.filter(v => v.qIsReserved !== true))
-      .then(userVariables => expect(userVariables[0].qInfo.qId).to.equal(variable.id));
+      .then((list) => list.qVariableList.qItems.filter((v) => v.qIsReserved !== true))
+      .then((userVariables) => expect(userVariables[0].qInfo.qId).to.equal(variable.id));
   }).timeout(HIGH_TIMEOUT);
 });

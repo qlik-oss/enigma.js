@@ -18,7 +18,7 @@ describe('QIX Global', () => {
 
     config.schema = schema;
     config.url = 'ws://mocked:1337/app/engineData';
-    config.createSocket = url => new SocketMock(url);
+    config.createSocket = (url) => new SocketMock(url);
 
     config.mixins = [{
       types: 'Global',

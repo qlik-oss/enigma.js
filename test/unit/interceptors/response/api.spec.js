@@ -13,7 +13,7 @@ describe('Response interceptor: API', () => {
 
   it('should return rejected promise when handle/type is null', () => {
     const response = { qHandle: null, qType: null };
-    return apiInterceptor(session, {}, response).catch(err => expect(err).to.be.an('error'));
+    return apiInterceptor(session, {}, response).catch((err) => expect(err).to.be.an('error'));
   });
 
   it('should leave response untouched if handle/type is missing', () => {

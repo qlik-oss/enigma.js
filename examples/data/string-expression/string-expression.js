@@ -21,7 +21,7 @@ const session = createSession();
 // Open the session and create a session document:
 session
   .open()
-  .then(global => global.createSessionApp())
+  .then((global) => global.createSessionApp())
   .then((doc) => {
     // Load in some data into the session document:
     doc
@@ -30,8 +30,8 @@ session
       // We create a string expression using
       // a field in the data we loaded:
       .then(() => doc.createObject(properties))
-      .then(object => object.getLayout())
-      .then(layout => console.log('Evaluated string expression:', JSON.stringify(layout.expr, null, '  ')))
+      .then((object) => object.getLayout())
+      .then((layout) => console.log('Evaluated string expression:', JSON.stringify(layout.expr, null, '  ')))
       .then(() => session.close());
   })
   .catch((error) => {

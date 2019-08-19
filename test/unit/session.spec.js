@@ -19,7 +19,7 @@ describe('Session', () => {
     const defaultRpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
-      createSocket: url => new SocketMock(url, throwError),
+      createSocket: (url) => new SocketMock(url, throwError),
     });
     apis = new ApiCache();
     suspendResume = new SuspendResume({ Promise, rpc: rpc || defaultRpc, apis });
@@ -42,7 +42,7 @@ describe('Session', () => {
   beforeEach(() => {
     createSession();
     sandbox = sinon.createSandbox();
-    SocketMock.on('created', socket => socket.open());
+    SocketMock.on('created', (socket) => socket.open());
   });
 
   afterEach(() => {
@@ -115,7 +115,7 @@ describe('Session', () => {
       const rpc = new RPCMock({
         Promise,
         url: 'http://localhost:4848',
-        createSocket: url => new SocketMock(url),
+        createSocket: (url) => new SocketMock(url),
       });
       createSession(false, rpc);
       sinon.stub(rpc, 'send').callsFake((data) => {
@@ -133,7 +133,7 @@ describe('Session', () => {
       const rpc = new RPCMock({
         Promise,
         url: 'http://localhost:4848',
-        createSocket: url => new SocketMock(url),
+        createSocket: (url) => new SocketMock(url),
       });
       createSession(false, rpc);
       session.config.protocol.foo = 'bar';
@@ -150,7 +150,7 @@ describe('Session', () => {
       const rpc = new RPCMock({
         Promise,
         url: 'http://localhost:4848',
-        createSocket: url => new SocketMock(url),
+        createSocket: (url) => new SocketMock(url),
       });
       createSession(false, rpc);
       session.config.protocol.delta = true;
@@ -167,7 +167,7 @@ describe('Session', () => {
       const rpc = new RPCMock({
         Promise,
         url: 'http://localhost:4848',
-        createSocket: url => new SocketMock(url),
+        createSocket: (url) => new SocketMock(url),
       });
       const spy = sinon.spy();
       createSession(false, rpc, false, { executeRequests: (s, p) => p, executeResponses: spy });
@@ -184,7 +184,7 @@ describe('Session', () => {
     const rpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
-      createSocket: url => new SocketMock(url),
+      createSocket: (url) => new SocketMock(url),
     });
     const rpcSpy = sinon.spy(rpc, 'on');
     createSession(false, rpc);
@@ -196,7 +196,7 @@ describe('Session', () => {
     const rpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
-      createSocket: url => new SocketMock(url),
+      createSocket: (url) => new SocketMock(url),
     });
     createSession(false, rpc);
     const spy = sinon.spy(session, 'emit');
@@ -208,7 +208,7 @@ describe('Session', () => {
     const rpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
-      createSocket: url => new SocketMock(url),
+      createSocket: (url) => new SocketMock(url),
     });
     createSession(false, rpc);
     const spy = sinon.spy(session, 'emit');
@@ -222,7 +222,7 @@ describe('Session', () => {
     const rpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
-      createSocket: url => new SocketMock(url),
+      createSocket: (url) => new SocketMock(url),
     });
     createSession(false, rpc);
     session.removeAllListeners();
@@ -235,13 +235,13 @@ describe('Session', () => {
 
     rpc.emit('message', { change: [1, 2, 3] });
     expect(emit.calledThrice).to.equal(true);
-    emit.getCalls().forEach(call => expect(call.args[0]).to.equal('changed'));
+    emit.getCalls().forEach((call) => expect(call.args[0]).to.equal('changed'));
 
     emit.resetHistory();
 
     rpc.emit('message', { close: [1, 2, 3] });
     expect(emit.calledThrice).to.equal(true);
-    emit.getCalls().forEach(call => expect(call.args[0]).to.equal('closed'));
+    emit.getCalls().forEach((call) => expect(call.args[0]).to.equal('closed'));
     expect(removeAllListeners.calledThrice).to.equal(true);
   });
 
@@ -249,7 +249,7 @@ describe('Session', () => {
     const rpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
-      createSocket: url => new SocketMock(url),
+      createSocket: (url) => new SocketMock(url),
     });
     createSession(false, rpc);
     const emit = sinon.spy(session, 'emit');
@@ -262,7 +262,7 @@ describe('Session', () => {
     const rpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
-      createSocket: url => new SocketMock(url),
+      createSocket: (url) => new SocketMock(url),
     });
     createSession(false, rpc);
     session.getObjectApi = () => {};
@@ -292,7 +292,7 @@ describe('Session', () => {
     it('should chain as normal', () => {
       const promise = Promise.resolve('baz');
       Session.addToPromiseChain(promise, 'foo', 'bar');
-      const p1 = promise.then(s => `${s}1`);
+      const p1 = promise.then((s) => `${s}1`);
       return expect(p1).to.eventually.equal('baz1');
     });
   });

@@ -18,8 +18,8 @@ describe('Suspend/Resume', () => {
   });
 
   beforeEach(() => {
-    SocketMock.on('created', socket => socket.open());
-    rpc = new RPC({ Promise, url: 'http://localhost:4848', createSocket: url => new SocketMock(url, false) });
+    SocketMock.on('created', (socket) => socket.open());
+    rpc = new RPC({ Promise, url: 'http://localhost:4848', createSocket: (url) => new SocketMock(url, false) });
     apis = new ApiCache({ Promise, schema: {} });
     suspendResume = new SuspendResume({ Promise, rpc, apis });
     const { reopen } = suspendResume;
@@ -54,7 +54,7 @@ describe('Suspend/Resume', () => {
         createApi(2, 'GenericObject', 2),
       ];
 
-      apisToClose.concat([createApi(-1, 'Global')]).forEach(api => apis.add(api.handle, api));
+      apisToClose.concat([createApi(-1, 'Global')]).forEach((api) => apis.add(api.handle, api));
 
       SocketMock.on('created', (socket) => {
         socket.intercept('GetActiveDoc').return({ error: { message: 'Oh, no!' } });
@@ -65,7 +65,7 @@ describe('Suspend/Resume', () => {
         .then(() => suspendResume.resume(false))
         .then(() => {
           expect(apis.getApis().length).to.equal(1);
-          apisToClose.forEach(api => expect(api.emit).to.have.been.calledWith('closed'));
+          apisToClose.forEach((api) => expect(api.emit).to.have.been.calledWith('closed'));
         });
     });
 
@@ -82,7 +82,7 @@ describe('Suspend/Resume', () => {
       ];
 
       apisToChange.concat(apisToClose).concat([createApi(-1, 'Global')])
-        .forEach(api => apis.add(api.handle, api));
+        .forEach((api) => apis.add(api.handle, api));
 
       SocketMock.on('created', (socket) => {
         socket.intercept('GetActiveDoc').return({ result: { qReturn: { qHandle: 101 } } });
@@ -95,20 +95,20 @@ describe('Suspend/Resume', () => {
       return suspendResume.suspend()
         .then(() => suspendResume.resume(true))
         .catch(() => {
-          apisToChange.forEach(api => expect(api.emit.notCalled).to.equal(true));
-          apisToClose.forEach(api => expect(api.emit.notCalled).to.equal(true));
+          apisToChange.forEach((api) => expect(api.emit.notCalled).to.equal(true));
+          apisToClose.forEach((api) => expect(api.emit.notCalled).to.equal(true));
         })
         .then(() => suspendResume.resume(false))
         .then(() => {
           expect(apis.getApis().length).to.equal(4);
-          apisToChange.forEach(api => expect(api.emit).to.have.been.calledWith('changed'));
-          apisToClose.forEach(api => expect(api.emit).to.have.been.calledWith('closed'));
+          apisToChange.forEach((api) => expect(api.emit).to.have.been.calledWith('changed'));
+          apisToClose.forEach((api) => expect(api.emit).to.have.been.calledWith('closed'));
         });
     });
 
     it('should return SESSION_CREATED when reopen hits the timeout', () => {
       const reopen = suspendResume.reopen(25, true);
-      return reopen.then(state => expect(state).to.equal('SESSION_CREATED'));
+      return reopen.then((state) => expect(state).to.equal('SESSION_CREATED'));
     });
 
     it('should return SESSION_ATTACHED when it receives the session attached notification', () => {
@@ -118,7 +118,7 @@ describe('Suspend/Resume', () => {
         { method: 'OnConnected', params: { qSessionState: 'SESSION_ATTACHED' } },
       ), 25);
 
-      return reopen.then(state => expect(state).to.equal('SESSION_ATTACHED'));
+      return reopen.then((state) => expect(state).to.equal('SESSION_ATTACHED'));
     });
   });
 });

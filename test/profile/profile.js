@@ -41,7 +41,7 @@ async function next() {
     const session = enigma.create({
       schema,
       url: 'ws://localhost:9076/app/engineData',
-      createSocket: url => new WebSocket(url, { headers: { 'X-Qlik-Session': iterationNumber } }),
+      createSocket: (url) => new WebSocket(url, { headers: { 'X-Qlik-Session': iterationNumber } }),
     });
 
     async function createObject(doc, objectNumber) {

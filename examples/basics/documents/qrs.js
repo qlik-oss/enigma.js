@@ -38,10 +38,11 @@ const requestOptions = {
 // eslint-disable-next-line no-restricted-globals
 const getAppsFromQRS = () => new Promise((resolve, reject) => {
   const xrfKey = 'abcdefghijklmnop';
-  const xhrOptions = Object.assign({}, requestOptions, {
+  const xhrOptions = {
+    ...requestOptions,
     host: senseHost,
     path: `/${proxyPrefix}/qrs/app?xrfkey=${xrfKey}`,
-  });
+  };
   xhrOptions.headers['X-Qlik-Xrfkey'] = xrfKey;
   const req = https.request(xhrOptions, (res) => {
     let data = '';
@@ -58,7 +59,7 @@ const openFirstApp = (apps) => {
     // eslint-disable-next-line no-restricted-globals
     return Promise.reject(new Error('No available apps'));
   }
-  console.log('Available apps for this user:', apps.map(app => `${app.id} (${app.name})`).join(', '));
+  console.log('Available apps for this user:', apps.map((app) => `${app.id} (${app.name})`).join(', '));
   const firstAppId = apps[0].id;
   return enigma.create({
     schema,
@@ -66,8 +67,8 @@ const openFirstApp = (apps) => {
     // authentication:
     url: `wss://${senseHost}/${proxyPrefix}/app/${firstAppId}`,
     // Please notice the requestOptions parameter when creating the websocket:
-    createSocket: url => new WebSocket(url, requestOptions),
-  }).open().then(global => global.openDoc(firstAppId)).then((app) => {
+    createSocket: (url) => new WebSocket(url, requestOptions),
+  }).open().then((global) => global.openDoc(firstAppId)).then((app) => {
     console.log(`Opened app ${app.id}`);
     app.session.close();
   });

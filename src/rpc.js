@@ -152,8 +152,8 @@ class RPC {
   registerResolver(id, handle, resolve, reject) {
     const resolver = new RPCResolver(id, handle, resolve, reject);
     this.resolvers[id] = resolver;
-    resolver.on('resolved', resolvedId => this.unregisterResolver(resolvedId));
-    resolver.on('rejected', rejectedId => this.unregisterResolver(rejectedId));
+    resolver.on('resolved', (resolvedId) => this.unregisterResolver(resolvedId));
+    resolver.on('rejected', (rejectedId) => this.unregisterResolver(rejectedId));
   }
 
   /**
