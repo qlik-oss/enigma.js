@@ -18,7 +18,7 @@ describe('Response interceptor: Delta', () => {
     response = {
       result: { qReturn: { foo: {} } }, delta: true,
     };
-    Object.keys(deltaInterceptor.sessions).forEach(key => delete deltaInterceptor.sessions[key]);
+    Object.keys(deltaInterceptor.sessions).forEach((key) => delete deltaInterceptor.sessions[key]);
   });
 
   it('should throw when response is not an array of patches', () => expect(() => deltaInterceptor(session, request, response)).to.throw('Unexpected RPC response, expected array of patches'));

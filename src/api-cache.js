@@ -40,7 +40,7 @@ class ApiCache extends KeyValueCache {
   * @returns {Array} The list of entries including `handle` and `api` properties for each entry.
   */
   getApis() {
-    return super.getAll().map(entry => ({
+    return super.getAll().map((entry) => ({
       handle: entry.key,
       api: entry.value.api,
     }));
@@ -54,7 +54,7 @@ class ApiCache extends KeyValueCache {
   * @returns {Array} The list of entries including `handle` and `api` properties for each entry.
   */
   getApisByType(type) {
-    return this.getApis().filter(entry => entry.api.type === type);
+    return this.getApis().filter((entry) => entry.api.type === type);
   }
 }
 

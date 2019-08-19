@@ -96,10 +96,10 @@ class Session {
       return;
     }
     if (response.change) {
-      response.change.forEach(handle => this.emitHandleChanged(handle));
+      response.change.forEach((handle) => this.emitHandleChanged(handle));
     }
     if (response.close) {
-      response.close.forEach(handle => this.emitHandleClosed(handle));
+      response.close.forEach((handle) => this.emitHandleClosed(handle));
     }
   }
 
@@ -211,7 +211,7 @@ class Session {
     request.id = this.rpc.createRequestId();
     const promise = this.intercept.executeRequests(this, this.Promise.resolve(request))
       .then((augmentedRequest) => {
-        const data = Object.assign({}, this.config.protocol, augmentedRequest);
+        const data = { ...this.config.protocol, ...augmentedRequest };
         // the outKey value is used by multiple-out interceptor, at some point
         // we need to refactor that implementation and figure out how to transport
         // this value without hijacking the JSONRPC request object:
@@ -275,7 +275,7 @@ class Session {
    * @type {Object}
    */
     this.globalPromise = undefined;
-    return this.rpc.close().then(evt => this.emit('closed', evt));
+    return this.rpc.close().then((evt) => this.emit('closed', evt));
   }
 
   /**

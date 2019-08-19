@@ -75,13 +75,13 @@ const session = enigma.create({
   schema,
   mixins: [docMixin],
   url: 'ws://localhost:9076/app/engineData',
-  createSocket: url => new WebSocket(url),
+  createSocket: (url) => new WebSocket(url),
 });
 
 session.open()
-  .then(global => global.createSessionApp())
-  .then(doc => doc.tweet().then(() => doc.createObject({ qInfo: { qType: 'custom-type' } })))
-  .then(object => console.log(`Created object with type ${object.genericType} and id ${object.id}`))
+  .then((global) => global.createSessionApp())
+  .then((doc) => doc.tweet().then(() => doc.createObject({ qInfo: { qType: 'custom-type' } })))
+  .then((object) => console.log(`Created object with type ${object.genericType} and id ${object.id}`))
   .catch((error) => {
     console.log('Something went wrong:', error);
     process.exit(1);

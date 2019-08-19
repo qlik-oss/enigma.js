@@ -20,7 +20,7 @@ describe('QIX Suspend/Resume', () => {
     config = {
       schema: Schema,
       url: buildUrl(),
-      createSocket: url => new WebSocket(url),
+      createSocket: (url) => new WebSocket(url),
     };
   });
 
@@ -28,7 +28,7 @@ describe('QIX Suspend/Resume', () => {
     let handleBeforeResume;
     let propertiesBeforeResume;
 
-    return Qix.create(config).open().then(global => global.createSessionApp().then(app => app.createObject({ qInfo: { qId: 'OBJ01', qType: 'abc' } })
+    return Qix.create(config).open().then((global) => global.createSessionApp().then((app) => app.createObject({ qInfo: { qId: 'OBJ01', qType: 'abc' } })
       .then(() => app.destroyObject('OBJ01'))
       .then(() => app.createObject({ qInfo: { qId: 'OBJ02', qType: 'abc' } }))
       .then((obj) => {
@@ -39,7 +39,7 @@ describe('QIX Suspend/Resume', () => {
           .then(() => global.session.resume(false))
           .then(() => expect(handleBeforeResume).to.not.equal(obj.handle))
           .then(() => obj.getProperties())
-          .then(props => expect(propertiesBeforeResume).to.deep.equal(props))
+          .then((props) => expect(propertiesBeforeResume).to.deep.equal(props))
           .then(() => global.session.close());
       })));
   });
@@ -72,10 +72,10 @@ describe('QIX Suspend/Resume', () => {
       .then(() => app.getAppProperties())
       // verify that we have reconnected to a fresh app, since we never saved
       // this property it shouldn't exist in a new one:
-      .then(props => expect(props.test).to.equal(undefined))
+      .then((props) => expect(props.test).to.equal(undefined))
       .then(() => global.deleteApp(app.id))
       .then(() => session.close())
-      .catch(error => session.close().then(() => Promise.reject(error)))
+      .catch((error) => session.close().then(() => Promise.reject(error)))
       .then(() => expect(closed.callCount >= 1).to.equal(true));
   });
 

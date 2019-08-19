@@ -46,7 +46,7 @@ angular.module('app', []).component('app', {
         this.connected = true;
 
         global.createSessionApp()
-          .then(app => app.setScript(SCRIPT)
+          .then((app) => app.setScript(SCRIPT)
             .then(() => app.doReload())
             .then(() => {
               const barchartProperties = {

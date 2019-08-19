@@ -19,9 +19,9 @@ describe('QIX Doc', () => {
 
     config.schema = schema;
     config.url = 'ws://mocked:1337/app/engineData';
-    config.createSocket = url => new SocketMock(url);
+    config.createSocket = (url) => new SocketMock(url);
 
-    return Qix.create(config).open().then(global => global.openDoc('my-app')).then((doc) => {
+    return Qix.create(config).open().then((global) => global.openDoc('my-app')).then((doc) => {
       qixDoc = doc;
     });
   });
@@ -54,7 +54,7 @@ describe('QIX Doc', () => {
       });
     });
     it('should return a barchart GenericObject with the expected members', () => {
-      const keys = Object.keys(schema.structs.GenericObject).map(key => key
+      const keys = Object.keys(schema.structs.GenericObject).map((key) => key
         .substring(0, 1).toLowerCase() + key.substring(1));
       expect(Object.keys(Object.getPrototypeOf(barchartObject))).to.include.members(keys);
       expect(barchartObject.type).to.equal('GenericObject');

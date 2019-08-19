@@ -28,7 +28,7 @@ const userId = 'your-sense-user';
 const certificatesPath = './';
 
 // Helper function to read the contents of the certificate files:
-const readCert = filename => fs.readFileSync(path.resolve(__dirname, certificatesPath, filename));
+const readCert = (filename) => fs.readFileSync(path.resolve(__dirname, certificatesPath, filename));
 
 const session = enigma.create({
   schema,
@@ -36,7 +36,7 @@ const session = enigma.create({
   // Notice the non-standard second parameter here, this is how you pass in
   // additional configuration to the 'ws' npm library, if you use a different
   // library you may configure this differently:
-  createSocket: url => new WebSocket(url, {
+  createSocket: (url) => new WebSocket(url, {
     ca: [readCert('root.pem')],
     key: readCert('client_key.pem'),
     cert: readCert('client.pem'),
@@ -49,7 +49,7 @@ const session = enigma.create({
 session.open().then((global) => {
   console.log('Session was opened successfully');
   return global.getDocList().then((list) => {
-    const apps = list.map(app => `${app.qDocId} (${app.qTitle || 'No title'})`).join(', ');
+    const apps = list.map((app) => `${app.qDocId} (${app.qTitle || 'No title'})`).join(', ');
     console.log(`Apps on this Engine that the configured user can open: ${apps}`);
     session.close();
   });

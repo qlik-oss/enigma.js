@@ -12,7 +12,7 @@ const bindSession = (session) => {
   if (!sessions[session.id]) {
     const cache = {};
     sessions[session.id] = cache;
-    session.on('traffic:received', data => data.close && data.close.forEach(handle => delete cache[handle]));
+    session.on('traffic:received', (data) => data.close && data.close.forEach((handle) => delete cache[handle]));
     session.on('closed', () => delete sessions[session.id]);
   }
 };

@@ -9,7 +9,7 @@ function getDefaultConfig() {
   return {
     schema,
     url: `${protocol}://${host}:${port}/app/engineData/identity/${+new Date()}`,
-    createSocket: url => new WebSocket(url),
+    createSocket: (url) => new WebSocket(url),
   };
 }
 

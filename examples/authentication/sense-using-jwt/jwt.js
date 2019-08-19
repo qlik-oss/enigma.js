@@ -38,7 +38,7 @@ const config = {
   url: `wss://${senseHost}/${proxyPrefix}/app/engineData`,
   // Notice how the signed JWT is passed in the 'Authorization' header using the
   // 'Bearer' schema:
-  createSocket: url => new WebSocket(url, {
+  createSocket: (url) => new WebSocket(url, {
     headers: { Authorization: `Bearer ${signedToken}` },
   }),
 };
@@ -48,7 +48,7 @@ const session = enigma.create(config);
 session.open().then((global) => {
   console.log('Session was opened successfully');
   return global.getDocList().then((list) => {
-    const apps = list.map(app => `${app.qDocId} (${app.qTitle || 'No title'})`).join(', ');
+    const apps = list.map((app) => `${app.qDocId} (${app.qTitle || 'No title'})`).join(', ');
     console.log(`Apps on this Engine that the configured user can open: ${apps}`);
     session.close();
   });

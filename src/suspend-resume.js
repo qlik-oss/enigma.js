@@ -99,11 +99,11 @@ class SuspendResume {
   restoreDocObjects(doc, closed, changed) {
     const tasks = [];
     const apis = this.apis.getApis()
-      .map(entry => entry.api)
-      .filter(api => api.type !== 'Global' && api.type !== 'Doc');
+      .map((entry) => entry.api)
+      .filter((api) => api.type !== 'Global' && api.type !== 'Doc');
 
     if (!doc) {
-      apis.forEach(api => closed.push(api));
+      apis.forEach((api) => closed.push(api));
       return this.Promise.resolve();
     }
 
@@ -158,7 +158,7 @@ class SuspendResume {
     return this.restoreRpcConnection(onlyIfAttached)
       .then(() => this.restoreGlobal(changed))
       .then(() => this.restoreDoc(closed, changed))
-      .then(doc => this.restoreDocObjects(doc, closed, changed))
+      .then((doc) => this.restoreDocObjects(doc, closed, changed))
       .then(() => {
         this.isSuspended = false;
         this.apis.clear();
@@ -173,7 +173,7 @@ class SuspendResume {
           }
         });
       })
-      .catch(err => this.rpc.close().then(() => this.Promise.reject(err)));
+      .catch((err) => this.rpc.close().then(() => this.Promise.reject(err)));
   }
 
   /**

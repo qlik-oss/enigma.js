@@ -1,6 +1,6 @@
 const createSession = require('../../session');
 
-createSession().open().then(global => global.createSessionApp().then((doc) => {
+createSession().open().then((global) => global.createSessionApp().then((doc) => {
   console.log('Document: API fetched');
 
   const update = () => {

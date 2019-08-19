@@ -19,7 +19,7 @@ AutoGenerate 1000000
 const session = enigma.create({
   schema,
   url: 'ws://localhost:9076/app/engineData',
-  createSocket: url => new WebSocket(url),
+  createSocket: (url) => new WebSocket(url),
   responseInterceptors: [{
     // We only want to handle failed responses from QIX Engine:
     onRejected: function retryAbortedError(sessionReference, request, error) {
@@ -55,7 +55,7 @@ session.open().then((global) => {
       console.log('Document: Data loaded');
       // Evaluate something from the data model:
       const evaluate = doc.evaluate('COUNT(Value)')
-        .then(result => console.log(`Expression evaluated: ${result}`));
+        .then((result) => console.log(`Expression evaluated: ${result}`));
       // While the expression is being calculated, fire away a call that would
       // potentially invalidate the data model calculation:
       const invalidate = doc.clearAll().then(() => doc.clearAll()).then(() => doc.clearAll());

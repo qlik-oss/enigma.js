@@ -46,7 +46,7 @@ export default function paintBarchart(element, layout) {
   }
 
   const nbrDecimals = 1;
-  const data = layout.qHyperCube.qDataPages[0].qMatrix.map(item => ({
+  const data = layout.qHyperCube.qDataPages[0].qMatrix.map((item) => ({
     name: item[0].qText,
     value: roundNumber(setNaNToZero(item[1].qNum), nbrDecimals),
   }));
@@ -59,7 +59,7 @@ export default function paintBarchart(element, layout) {
 
   chart.selectAll('*').remove();
 
-  x.domain([0, d3.max(data, d => d.value)]);
+  x.domain([0, d3.max(data, (d) => d.value)]);
 
   chart.attr('height', barHeight * data.length);
 
@@ -73,12 +73,12 @@ export default function paintBarchart(element, layout) {
     .attr('x', 0)
     .attr('y', barHeight / 2)
     .attr('dy', '.35em')
-    .text(d => d.name);
+    .text((d) => d.name);
 
   bar.append('rect')
     .style('fill', '#4477aa')
     .attr('x', 150)
-    .attr('width', d => x(d.value))
+    .attr('width', (d) => x(d.value))
     .attr('height', barHeight - 1);
 
   if (layout.labels) {
@@ -87,7 +87,7 @@ export default function paintBarchart(element, layout) {
       .attr('x', 153)
       .attr('y', barHeight / 2)
       .attr('dy', '.35em')
-      .text(d => (x(d.value) > 25 * nbrDecimals ? d.value : ''));
+      .text((d) => (x(d.value) > 25 * nbrDecimals ? d.value : ''));
   }
 
   bar.on('mouseover', (dataPoint) => {

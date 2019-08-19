@@ -17,7 +17,7 @@ const session = createSession();
 // Open the session and create a session document:
 session
   .open()
-  .then(global => global.createSessionApp())
+  .then((global) => global.createSessionApp())
   .then((doc) => {
     const tasks = [];
 
@@ -38,8 +38,8 @@ session
     // eslint-disable-next-line no-restricted-globals
     return Promise.all(tasks).then(() => doc
       .createObject(properties)
-      .then(object => object.getLayout())
-      .then(layout => console.log('App object list:', JSON.stringify(layout, null, '  ')))
+      .then((object) => object.getLayout())
+      .then((layout) => console.log('App object list:', JSON.stringify(layout, null, '  ')))
       .then(() => session.close()));
   })
   .catch((error) => {

@@ -45,15 +45,15 @@ const session = enigma.create({
   schema,
   mixins: [mixin],
   url: 'ws://localhost:9076/app/engineData',
-  createSocket: url => new WebSocket(url),
+  createSocket: (url) => new WebSocket(url),
 });
 
 // Uncomment to see the websocket traffic:
 // session.on('traffic:*', (direction, data) => console.log(`Traffic (${direction}):`, data));
 
 session.open()
-  .then(global => global.createSessionApp())
-  .then(doc => doc.createObject({ qInfo: { qType: 'custom-type' } }))
+  .then((global) => global.createSessionApp())
+  .then((doc) => doc.createObject({ qInfo: { qType: 'custom-type' } }))
   .then((object) => {
     object.getLayout();
     object.getLayout();
