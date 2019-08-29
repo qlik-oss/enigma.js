@@ -7,7 +7,7 @@ import enigma from 'enigma.js';
 import schema from 'json-loader!../node_modules/enigma.js/schemas/12.20.0.json';
 import template from 'raw-loader!./app.html';
 import csv from 'raw-loader!../data.csv';
-import paintBarchart from './chart';
+import chart from './chart';
 
 const SCRIPT = `LOAD * Inline [
   ${csv}
@@ -26,7 +26,7 @@ angular.module('app', []).component('app', {
     let object = null;
 
     const paintChart = (layout) => {
-      paintBarchart(document.getElementById('bar-chart-container'), layout);
+      chart(document.getElementById('bar-chart-container'), layout);
       this.painted = true;
     };
 

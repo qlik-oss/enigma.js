@@ -1,5 +1,5 @@
-import JSONPatch from '../../json-patch';
-import KeyValueCache from '../../cache';
+import JSONPatch from '../json-patch';
+import KeyValueCache from '../key-value-cache';
 
 const sessions = {};
 
@@ -70,7 +70,7 @@ const patchValue = (session, handle, cacheId, patches) => {
 * @param {Object} response The response.
 * @returns {Object} Returns the patched response
 */
-export default function deltaInterceptor(session, request, response) {
+export default function deltaResponseInterceptor(session, request, response) {
   const { delta, result } = response;
   if (delta) {
     // when delta is on the response data is expected to be an array of patches:
@@ -87,4 +87,4 @@ export default function deltaInterceptor(session, request, response) {
 }
 
 // export object reference for testing purposes:
-deltaInterceptor.sessions = sessions;
+deltaResponseInterceptor.sessions = sessions;

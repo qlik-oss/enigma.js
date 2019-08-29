@@ -15,7 +15,7 @@ describe('Session', () => {
     executeResponses: (sess, promise) => promise,
   };
 
-  const createSession = (throwError, rpc, suspendOnClose = false, intercept) => {
+  const createSession = (throwError, rpc, intercept, suspendOnClose = false) => {
     const defaultRpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
@@ -170,7 +170,7 @@ describe('Session', () => {
         createSocket: (url) => new SocketMock(url),
       });
       const spy = sinon.spy();
-      createSession(false, rpc, false, { executeRequests: (s, p) => p, executeResponses: spy });
+      createSession(false, rpc, { executeRequests: (s, p) => p, executeResponses: spy });
 
       return session.send({
         method: 'a', handle: 1, params: [], delta: false, xyz: 'xyz',
@@ -327,7 +327,7 @@ describe('Session', () => {
     });
 
     it('should set session as suspended when suspendOnClose is true', () => {
-      createSession(false, null, true);
+      createSession(false, null, null, true);
       apis.add(-1, { on: sinon.stub() });
       const spy = sinon.spy();
       session.on('suspended', spy);

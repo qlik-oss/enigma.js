@@ -102,7 +102,8 @@ function compare(a, b) {
       }
     });
     return isIdentical;
-  } if (isArray(a) && isArray(b)) {
+  }
+  if (isArray(a) && isArray(b)) {
     if (a.length !== b.length) {
       return false;
     }
@@ -132,7 +133,8 @@ function patchArray(original, newA, basePath) {
   function findIndex(a, id, idx) {
     if (a[idx] && isUndef(a[idx].qInfo)) {
       return null;
-    } if (a[idx] && a[idx].qInfo.qId === id) {
+    }
+    if (a[idx] && a[idx].qInfo.qId === id) {
       // shortcut if identical
       return idx;
     }

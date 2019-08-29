@@ -1,5 +1,5 @@
 import Schema from '../../src/schema';
-import KeyValueCache from '../../src/cache';
+import KeyValueCache from '../../src/key-value-cache';
 
 describe('Schema', () => {
   let config;

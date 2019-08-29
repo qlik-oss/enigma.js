@@ -26,12 +26,12 @@ async function next() {
   }
 
   async function run(iterationNumber) {
-    async function cleanup(session, err) {
+    async function cleanup(innerSession, err) {
       if (err) {
         console.error(err);
       }
 
-      await session.close();
+      await innerSession.close();
 
       if (enableHeap) {
         heapdump.writeSnapshot(`./${stamp}-iteration-${iterationNumber}.heapsnapshot`);

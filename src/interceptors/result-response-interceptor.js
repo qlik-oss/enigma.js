@@ -6,6 +6,6 @@
 * @param {Object} response - The response.
 * @returns {Object} - Returns the result property on the response
 */
-export default function resultInterceptor(session, request, response) {
+export default function resultResponseInterceptor(session, request, response) {
   return response.result;
 }

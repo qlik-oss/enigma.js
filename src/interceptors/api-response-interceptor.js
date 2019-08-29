@@ -7,7 +7,7 @@
 * @param {Object} response - The response.
 * @returns {Object} - Returns the generated API
 */
-export default function apiInterceptor(session, request, response) {
+export default function apiResponseInterceptor(session, request, response) {
   if (response.qHandle && response.qType) {
     return session.getObjectApi({
       handle: response.qHandle,

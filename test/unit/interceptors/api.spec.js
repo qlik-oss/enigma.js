@@ -1,4 +1,4 @@
-import apiInterceptor from '../../../../src/interceptors/response/api';
+import apiInterceptor from '../../../src/interceptors/api-response-interceptor';
 
 // eslint-disable-next-line no-restricted-globals
 const session = { config: { Promise }, getObjectApi: sinon.stub().returns('dummy') };

@@ -9,7 +9,7 @@ const RETURN_KEY = 'qReturn';
 * @param {Object} response - The response.
 * @returns {Object} - Returns the result property on the response
 */
-export default function outParamInterceptor(session, request, response) {
+export default function outParamResponseInterceptor(session, request, response) {
   if (request.method === 'CreateSessionApp' || request.method === 'CreateSessionAppFromApp') {
     // this method returns multiple out params that we need
     // to normalize before processing the response further:

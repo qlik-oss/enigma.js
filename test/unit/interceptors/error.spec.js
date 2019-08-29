@@ -1,4 +1,4 @@
-import errorInterceptor from '../../../../src/interceptors/response/error';
+import errorInterceptor from '../../../src/interceptors/error-response-interceptor';
 
 // eslint-disable-next-line no-restricted-globals
 const session = { config: { Promise } };
