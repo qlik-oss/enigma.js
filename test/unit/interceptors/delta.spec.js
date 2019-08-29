@@ -1,5 +1,5 @@
-import ApiCache from '../../../../src/api-cache';
-import deltaInterceptor from '../../../../src/interceptors/response/delta';
+import ApiCache from '../../../src/api-cache';
+import deltaInterceptor from '../../../src/interceptors/delta-response-interceptor';
 
 describe('Response interceptor: Delta', () => {
   let request;

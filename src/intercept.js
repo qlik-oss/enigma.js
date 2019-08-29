@@ -1,9 +1,9 @@
-import deltaRequest from './interceptors/request/delta';
-import apiResponse from './interceptors/response/api';
-import deltaResponse from './interceptors/response/delta';
-import errorResponse from './interceptors/response/error';
-import outParamResponse from './interceptors/response/out-param';
-import resultResponse from './interceptors/response/result';
+import deltaRequest from './interceptors/delta-request-interceptor';
+import apiResponse from './interceptors/api-response-interceptor';
+import deltaResponse from './interceptors/delta-response-interceptor';
+import errorResponse from './interceptors/error-response-interceptor';
+import outParamResponse from './interceptors/out-param-response-interceptor';
+import resultResponse from './interceptors/result-response-interceptor';
 
 /**
  * Interceptors is a concept similar to mixins, but run on a lower level. The interceptor concept

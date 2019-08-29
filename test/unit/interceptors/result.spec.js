@@ -1,4 +1,4 @@
-import resultInterceptor from '../../../../src/interceptors/response/result';
+import resultInterceptor from '../../../src/interceptors/result-response-interceptor';
 
 describe('Response interceptor: Result', () => {
   const response = { result: { foo: {} } };

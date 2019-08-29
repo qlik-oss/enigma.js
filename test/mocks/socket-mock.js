@@ -1,4 +1,4 @@
-import KeyValueCache from '../../src/cache';
+import KeyValueCache from '../../src/key-value-cache';
 import Events from '../../src/event-emitter';
 
 export default class SocketMock {

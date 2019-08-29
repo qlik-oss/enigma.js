@@ -1,4 +1,4 @@
-import outParamInterceptor from '../../../../src/interceptors/response/out-param';
+import outParamInterceptor from '../../../src/interceptors/out-param-response-interceptor';
 
 describe('Response interceptor: Out param', () => {
   it('should append missing qGenericId for CreateSessionApp', () => {

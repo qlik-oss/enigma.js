@@ -1,4 +1,4 @@
-import KeyValueCache from './cache';
+import KeyValueCache from './key-value-cache';
 import Events from './event-emitter';
 
 const { hasOwnProperty } = Object.prototype;

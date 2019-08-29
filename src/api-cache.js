@@ -1,4 +1,4 @@
-import KeyValueCache from './cache';
+import KeyValueCache from './key-value-cache';
 
 /**
 * API cache for instances of QIX types, e.g. GenericObject.

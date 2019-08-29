@@ -22,8 +22,6 @@ import QueryString from 'querystring';
 function replaceLeadingAndTrailingSlashes(str) {
   return str.replace(/(^[/]+)|([/]+$)/g, '');
 }
-
-
 class SenseUtilities {
   /**
   * Ensures that the configuration has defaults set.
@@ -89,7 +87,7 @@ class SenseUtilities {
 
     if (route) {
       url += `/${replaceLeadingAndTrailingSlashes(route)}`;
-    } else if (appId && appId !== '') {
+    } else if (appId) {
       url += `/app/${encodeURIComponent(appId)}`;
     }
 

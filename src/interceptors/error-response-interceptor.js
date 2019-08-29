@@ -6,7 +6,7 @@
 * @param {Object} response - The response.
 * @returns {Object} - Returns the defined error for an error, else the response.
 */
-export default function errorInterceptor(session, request, response) {
+export default function errorResponseInterceptor(session, request, response) {
   if (typeof response.error !== 'undefined') {
     const data = response.error;
     const error = new Error(data.message);

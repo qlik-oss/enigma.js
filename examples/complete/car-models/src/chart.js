@@ -27,7 +27,7 @@ function showTooltip(text, point) {
   currentTooltip.style.left = `${(point.x - currentTooltip.clientWidth) / 2}px`;
 }
 
-export default function paintBarchart(element, layout) {
+export default function chart(element, layout) {
   if (!(layout.qHyperCube
     && layout.qHyperCube.qDataPages
     && layout.qHyperCube.qDataPages[0]
@@ -55,15 +55,15 @@ export default function paintBarchart(element, layout) {
 
   const x = d3.scaleLinear().range([0, width]);
 
-  const chart = d3.select(element.querySelector('svg')).attr('width', width);
+  const d3chart = d3.select(element.querySelector('svg')).attr('width', width);
 
-  chart.selectAll('*').remove();
+  d3chart.selectAll('*').remove();
 
   x.domain([0, d3.max(data, (d) => d.value)]);
 
-  chart.attr('height', barHeight * data.length);
+  d3chart.attr('height', barHeight * data.length);
 
-  const bar = chart.selectAll('g')
+  const bar = d3chart.selectAll('g')
     .data(data)
     .enter().append('g')
     .attr('transform', (d, i) => `translate(0,${i * barHeight})`);
