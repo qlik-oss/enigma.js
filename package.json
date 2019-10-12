@@ -44,7 +44,7 @@
     "@joseph184/rollup-plugin-node-builtins": "2.1.4",
     "babel-plugin-istanbul": "5.2.0",
     "coveralls": "3.0.7",
-    "cross-env": "5.2.1",
+    "cross-env": "6.0.3",
     "eslint": "6.5.1",
     "eslint-config-airbnb-base": "14.0.0",
     "eslint-plugin-import": "2.18.2",
