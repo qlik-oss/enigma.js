@@ -11,94 +11,46 @@
   },
   "entries": {},
   "definitions": {
-    "Interceptor": {
-      "description": "Interceptors is a concept similar to mixins, but run on a lower level. The interceptor concept\ncan augment either the requests (i.e. before sent to QIX Engine), or the responses (i.e. after\nQIX Engine has sent a response). The interceptor promises runs in parallel to the regular\npromises used in enigma.js, which means that it can be really useful when you want to normalize\nbehaviors in your application.",
+    "API": {
+      "description": "The API for generated APIs depends on the QIX Engine schema you pass into your Configuration,\nand on what QIX struct the API has.",
       "kind": "interface",
-      "entries": {}
-    },
-    "InterceptorRequest": {
-      "implements": [
-        {
-          "type": "#/definitions/Interceptor"
-        }
-      ],
-      "kind": "class",
-      "constructor": {
-        "kind": "function",
-        "params": []
-      },
       "entries": {
-        "onFulfilled": {
-          "description": "This method is invoked when a request is about to be sent to QIX Engine.",
-          "kind": "function",
-          "params": [
-            {
-              "name": "session",
-              "description": "The session executing the interceptor.",
-              "type": "#/definitions/Session"
-            },
-            {
-              "name": "request",
-              "description": "The JSON-RPC request that will be sent.",
-              "type": "Object"
-            }
-          ]
-        }
-      }
-    },
-    "InterceptorResponse": {
-      "implements": [
-        {
-          "type": "#/definitions/Interceptor"
-        }
-      ],
-      "kind": "class",
-      "constructor": {
-        "kind": "function",
-        "params": []
-      },
-      "entries": {
-        "onRejected": {
-          "description": "This method is invoked when a previous interceptor has rejected the\npromise, use this to handle for example errors before they are sent into mixins.",
-          "kind": "function",
-          "params": [
-            {
-              "name": "session",
-              "description": "The session executing the interceptor. You may use .retry() to retry\nsending it to QIX Engine.",
-              "type": "#/definitions/Session"
-            },
-            {
-              "name": "request",
-              "description": "The JSON-RPC request resulting in this error.",
-              "type": "Object"
-            },
-            {
-              "name": "error",
-              "description": "Whatever the previous interceptor is rejected with.",
-              "type": "Object"
-            }
-          ]
+        "id": {
+          "description": "Contains the unique identifier for this API.",
+          "type": "string"
         },
-        "onFulfilled": {
-          "description": "This method is invoked when a promise has been successfully resolved,\nuse this to modify the result or reject the promise chain before it is sent\nto mixins.",
-          "kind": "function",
-          "params": [
-            {
-              "name": "session",
-              "description": "The session executing the interceptor.",
-              "type": "#/definitions/Session"
-            },
-            {
-              "name": "request",
-              "description": "The JSON-RPC request resulting in this response.",
-              "type": "Object"
-            },
-            {
-              "name": "result",
-              "description": "Whatever the previous interceptor is resolved with.",
-              "type": "Object"
-            }
-          ]
+        "type": {
+          "description": "Contains the schema class name for this API.",
+          "type": "string"
+        },
+        "genericType": {
+          "description": "Corresponds to the qInfo.qType property on the generic object's\nproperties object.",
+          "type": "string"
+        },
+        "session": {
+          "description": "Contains a reference to the session that this API belongs to.",
+          "type": "#/definitions/Session"
+        },
+        "handle": {
+          "description": "Contains the handle QIX Engine assigned to the API. Used interally in\nenigma.js for caches and JSON-RPC requests.",
+          "type": "number"
+        }
+      },
+      "events": {
+        "changed": {
+          "description": "Handle changes on the API. The changed event is triggered whenever enigma.js or QIX Engine has\nidentified potential changes on the underlying properties or hypercubes and you should re-fetch\nyour data.",
+          "kind": "event",
+          "params": []
+        },
+        "closed": {
+          "description": "Handle closed API. The closed event is triggered whenever QIX Engine considers an API closed.\nIt usually means that it no longer exist in the QIX Engine document or session.",
+          "kind": "event",
+          "params": []
+        },
+        "traffic": {
+          "description": "Handle JSON-RPC requests/responses for this API. Generally used in debugging purposes.\ntraffic:* will handle all websocket messages, traffic:sent will handle outgoing messages\nand traffic:received will handle incoming messages.",
+          "kind": "event",
+          "params": []
         }
       }
     },
@@ -167,6 +119,97 @@
         }
       }
     },
+    "Interceptor": {
+      "description": "Interceptors is a concept similar to mixins, but run on a lower level. The interceptor concept\ncan augment either the requests (i.e. before sent to QIX Engine), or the responses (i.e. after\nQIX Engine has sent a response). The interceptor promises runs in parallel to the regular\npromises used in enigma.js, which means that it can be really useful when you want to normalize\nbehaviors in your application.",
+      "kind": "interface",
+      "entries": {}
+    },
+    "InterceptorRequest": {
+      "implements": [
+        {
+          "type": "#/definitions/Interceptor"
+        }
+      ],
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "params": []
+      },
+      "entries": {
+        "onFulfilled": {
+          "description": "This method is invoked when a request is about to be sent to QIX Engine.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "session",
+              "description": "The session executing the interceptor.",
+              "type": "#/definitions/Session"
+            },
+            {
+              "name": "request",
+              "description": "The JSON-RPC request that will be sent.",
+              "type": "Object"
+            }
+          ]
+        }
+      }
+    },
+    "InterceptorResponse": {
+      "implements": [
+        {
+          "type": "#/definitions/Interceptor"
+        }
+      ],
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "params": []
+      },
+      "entries": {
+        "onFulfilled": {
+          "description": "This method is invoked when a promise has been successfully resolved,\nuse this to modify the result or reject the promise chain before it is sent\nto mixins.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "session",
+              "description": "The session executing the interceptor.",
+              "type": "#/definitions/Session"
+            },
+            {
+              "name": "request",
+              "description": "The JSON-RPC request resulting in this response.",
+              "type": "Object"
+            },
+            {
+              "name": "result",
+              "description": "Whatever the previous interceptor is resolved with.",
+              "type": "Object"
+            }
+          ]
+        },
+        "onRejected": {
+          "description": "This method is invoked when a previous interceptor has rejected the\npromise, use this to handle for example errors before they are sent into mixins.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "session",
+              "description": "The session executing the interceptor. You may use .retry() to retry\nsending it to QIX Engine.",
+              "type": "#/definitions/Session"
+            },
+            {
+              "name": "request",
+              "description": "The JSON-RPC request resulting in this error.",
+              "type": "Object"
+            },
+            {
+              "name": "error",
+              "description": "Whatever the previous interceptor is rejected with.",
+              "type": "Object"
+            }
+          ]
+        }
+      }
+    },
     "Mixin": {
       "description": "Mixin object to extend/augment the QIX Engine API",
       "kind": "interface",
@@ -204,49 +247,6 @@
         }
       }
     },
-    "API": {
-      "description": "The API for generated APIs depends on the QIX Engine schema you pass into your Configuration,\nand on what QIX struct the API has.",
-      "kind": "interface",
-      "entries": {
-        "id": {
-          "description": "Contains the unique identifier for this API.",
-          "type": "string"
-        },
-        "type": {
-          "description": "Contains the schema class name for this API.",
-          "type": "string"
-        },
-        "genericType": {
-          "description": "Corresponds to the qInfo.qType property on the generic object's\nproperties object.",
-          "type": "string"
-        },
-        "session": {
-          "description": "Contains a reference to the session that this API belongs to.",
-          "type": "#/definitions/Session"
-        },
-        "handle": {
-          "description": "Contains the handle QIX Engine assigned to the API. Used interally in\nenigma.js for caches and JSON-RPC requests.",
-          "type": "number"
-        }
-      },
-      "events": {
-        "changed": {
-          "description": "Handle changes on the API. The changed event is triggered whenever enigma.js or QIX Engine has\nidentified potential changes on the underlying properties or hypercubes and you should re-fetch\nyour data.",
-          "kind": "event",
-          "params": []
-        },
-        "closed": {
-          "description": "Handle closed API. The closed event is triggered whenever QIX Engine considers an API closed.\nIt usually means that it no longer exist in the QIX Engine document or session.",
-          "kind": "event",
-          "params": []
-        },
-        "traffic": {
-          "description": "Handle JSON-RPC requests/responses for this API. Generally used in debugging purposes.\ntraffic:* will handle all websocket messages, traffic:sent will handle outgoing messages\nand traffic:received will handle incoming messages.",
-          "kind": "event",
-          "params": []
-        }
-      }
-    },
     "Qix": {
       "description": "Qix service.",
       "kind": "class",
@@ -275,6 +275,71 @@
     },
     "SenseConfiguration": {
       "description": "The Qlik Sense configuration object.",
+      "kind": "object",
+      "entries": {
+        "appId": {
+          "description": "The app id. If omitted, only the global object is returned.\n                           Otherwise both global and app object are returned.",
+          "optional": true,
+          "type": "string"
+        },
+        "noData": {
+          "description": "Whether to open the app without data.",
+          "optional": true,
+          "defaultValue": false,
+          "type": "boolean"
+        },
+        "secure": {
+          "description": "Set to false if an unsecure WebSocket should be used.",
+          "optional": true,
+          "defaultValue": true,
+          "type": "boolean"
+        },
+        "host": {
+          "description": "Host address.",
+          "optional": true,
+          "type": "string"
+        },
+        "port": {
+          "description": "Port to connect to.",
+          "optional": true,
+          "type": "number"
+        },
+        "prefix": {
+          "description": "The absolute base path to use when connecting.\n                            Used for proxy prefixes.",
+          "optional": true,
+          "defaultValue": "\"/\"",
+          "type": "string"
+        },
+        "subpath": {
+          "description": "The subpath.",
+          "optional": true,
+          "defaultValue": "\"\"",
+          "type": "string"
+        },
+        "route": {
+          "description": "Used to instruct Proxy to route to the correct receiver.",
+          "optional": true,
+          "defaultValue": "\"\"",
+          "type": "string"
+        },
+        "identity": {
+          "description": "Identity to use.",
+          "optional": true,
+          "defaultValue": "\"\"",
+          "type": "string"
+        },
+        "urlParams": {
+          "description": "Used to add parameters to the WebSocket URL.",
+          "optional": true,
+          "defaultValue": "{}",
+          "type": "Object"
+        },
+        "ttl": {
+          "description": "A value in seconds that QIX Engine should keep the session\n                            alive after socket disconnect (only works if QIX Engine supports it).",
+          "optional": true,
+          "type": "number"
+        }
+      },
       "type": "Object"
     },
     "SenseUtilities.buildUrl": {
@@ -300,6 +365,25 @@
         "params": []
       },
       "entries": {
+        "close": {
+          "description": "Closes the websocket and cleans up internal caches, also triggers the closed event\non all generated APIs. Note that you have to manually invoke this when you want to\nclose a session and config.suspendOnClose is true.",
+          "kind": "function",
+          "params": [],
+          "returns": {
+            "description": "Eventually resolved when the websocket has been closed.",
+            "type": "Promise",
+            "generics": [
+              {
+                "type": "Object"
+              }
+            ]
+          },
+          "emits": [
+            {
+              "type": "#/definitions/Session/events/closed"
+            }
+          ]
+        },
         "open": {
           "description": "Establishes the websocket against the configured URL and returns the Global instance.",
           "kind": "function",
@@ -316,6 +400,31 @@
           "emits": [
             {
               "type": "#/definitions/Session/events/opened"
+            }
+          ]
+        },
+        "resume": {
+          "description": "Resumes a previously suspended enigma.js session by re-creating the websocket and,\nif possible, re-open the document as well as refreshing the internal cashes. If successful,\nchanged events will be triggered on all generated APIs, and on the ones it was unable to\nrestore, the closed event will be triggered.",
+          "kind": "function",
+          "params": [
+            {
+              "name": "onlyIfAttached",
+              "description": "If true, resume only if the session was re-attached properly.",
+              "type": "boolean"
+            }
+          ],
+          "returns": {
+            "description": "Eventually resolved when the websocket (and potentially the\npreviously opened document, and generated APIs) has been restored, rejected when it fails any\nof those steps, or when onlyIfAttached is true and a new session was created.",
+            "type": "Promise",
+            "generics": [
+              {
+                "type": "Object"
+              }
+            ]
+          },
+          "emits": [
+            {
+              "type": "#/definitions/Session/events/resumed"
             }
           ]
         },
@@ -352,60 +461,26 @@
               "type": "#/definitions/Session/events/suspended"
             }
           ]
-        },
-        "resume": {
-          "description": "Resumes a previously suspended enigma.js session by re-creating the websocket and,\nif possible, re-open the document as well as refreshing the internal cashes. If successful,\nchanged events will be triggered on all generated APIs, and on the ones it was unable to\nrestore, the closed event will be triggered.",
-          "kind": "function",
-          "params": [
-            {
-              "name": "onlyIfAttached",
-              "description": "If true, resume only if the session was re-attached properly.",
-              "type": "boolean"
-            }
-          ],
-          "returns": {
-            "description": "Eventually resolved when the websocket (and potentially the\npreviously opened document, and generated APIs) has been restored, rejected when it fails any\nof those steps, or when onlyIfAttached is true and a new session was created.",
-            "type": "Promise",
-            "generics": [
-              {
-                "type": "Object"
-              }
-            ]
-          },
-          "emits": [
-            {
-              "type": "#/definitions/Session/events/resumed"
-            }
-          ]
-        },
-        "close": {
-          "description": "Closes the websocket and cleans up internal caches, also triggers the closed event\non all generated APIs. Note that you have to manually invoke this when you want to\nclose a session and config.suspendOnClose is true.",
-          "kind": "function",
-          "params": [],
-          "returns": {
-            "description": "Eventually resolved when the websocket has been closed.",
-            "type": "Promise",
-            "generics": [
-              {
-                "type": "Object"
-              }
-            ]
-          },
-          "emits": [
-            {
-              "type": "#/definitions/Session/events/closed"
-            }
-          ]
         }
       },
       "events": {
+        "closed": {
+          "description": "Handle closed state. This event is triggered when the underlying websocket is closed and\nconfig.suspendOnClose is false.",
+          "kind": "event",
+          "params": []
+        },
         "notification": {
           "description": "Handle all JSON-RPC notification event, 'notification:*. Or handle a specific JSON-RPC\nnotification event, 'notification:OnConnected'. These events depend on the product you use QIX\nEngine from.",
           "kind": "event",
           "params": []
         },
-        "traffic": {
-          "description": "Handle websocket messages. Generally used in debugging purposes. traffic:* will handle all\nwebsocket messages, traffic:sent will handle outgoing messages and traffic:received will handle\nincoming messages.",
+        "opened": {
+          "description": "Handle opened state. This event is triggered whenever the websocket is connected and ready for\ncommunication.",
+          "kind": "event",
+          "params": []
+        },
+        "resumed": {
+          "description": "Handle resumed state. This event is triggered when the session was properly resumed. It is\nuseful in scenarios where you for example can close blocking modal dialogs and allow the user\nto interact with your application again.",
           "kind": "event",
           "params": []
         },
@@ -426,18 +501,8 @@
             }
           ]
         },
-        "opened": {
-          "description": "Handle opened state. This event is triggered whenever the websocket is connected and ready for\ncommunication.",
-          "kind": "event",
-          "params": []
-        },
-        "resumed": {
-          "description": "Handle resumed state. This event is triggered when the session was properly resumed. It is\nuseful in scenarios where you for example can close blocking modal dialogs and allow the user\nto interact with your application again.",
-          "kind": "event",
-          "params": []
-        },
-        "closed": {
-          "description": "Handle closed state. This event is triggered when the underlying websocket is closed and\nconfig.suspendOnClose is false.",
+        "traffic": {
+          "description": "Handle websocket messages. Generally used in debugging purposes. traffic:* will handle all\nwebsocket messages, traffic:sent will handle outgoing messages and traffic:received will handle\nincoming messages.",
           "kind": "event",
           "params": []
         }
