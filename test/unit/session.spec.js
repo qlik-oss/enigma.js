@@ -273,6 +273,24 @@ describe('Session', () => {
     expect(close.calledOnce).to.equal(true);
   });
 
+  it('should close with supplied error code', () => {
+    const code = 4000;
+    const reason = 'Custom application error'
+    const rpc = new RPCMock({
+      Promise,
+      url: 'http://localhost:4848',
+      createSocket: (url) => new SocketMock(url),
+    });
+    createSession(false, rpc);
+    session.getObjectApi = () => {};
+    session.open();
+    const close = sinon.spy(rpc, 'close');
+    const closePromise = session.close(code, reason);
+    expect(closePromise).to.be.an.instanceOf(Promise);
+    expect(close.calledOnce).to.equal(true);
+    expect(close).to.be.calledWith(code, reason);
+  });
+
   describe('addToPromiseChain', () => {
     it('should add value on promise', () => {
       const promise = Promise.resolve();

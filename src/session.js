@@ -265,9 +265,11 @@ class Session {
   * on all generated APIs. Note that you have to manually invoke this when you want to
   * close a session and config.suspendOnClose is true.
   * @emits Session#closed
+  * @param {Number} [code=1000] - The reason code for closing the connection.
+  * @param {String} [reason=""] - The human readable string describing why the connection is closed.
   * @returns {Promise<Object>} Eventually resolved when the websocket has been closed.
   */
-  close() {
+  close(code = 1000, reason = '') {
   /**
    * Handle closed state. This event is triggered when the underlying websocket is closed and
    * config.suspendOnClose is false.
@@ -275,7 +277,7 @@ class Session {
    * @type {Object}
    */
     this.globalPromise = undefined;
-    return this.rpc.close().then((evt) => this.emit('closed', evt));
+    return this.rpc.close(code, reason).then((evt) => this.emit('closed', evt));
   }
 
   /**
