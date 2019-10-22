@@ -368,7 +368,22 @@
         "close": {
           "description": "Closes the websocket and cleans up internal caches, also triggers the closed event\non all generated APIs. Note that you have to manually invoke this when you want to\nclose a session and config.suspendOnClose is true.",
           "kind": "function",
-          "params": [],
+          "params": [
+            {
+              "name": "code",
+              "description": "The reason code for closing the connection.",
+              "optional": true,
+              "defaultValue": 1000,
+              "type": "number"
+            },
+            {
+              "name": "reason",
+              "description": "The human readable string describing why the connection is closed.",
+              "optional": true,
+              "defaultValue": "\"\"",
+              "type": "string"
+            }
+          ],
           "returns": {
             "description": "Eventually resolved when the websocket has been closed.",
             "type": "Promise",
