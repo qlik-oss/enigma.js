@@ -275,7 +275,7 @@ describe('Session', () => {
 
   it('should close with supplied error code', () => {
     const code = 4000;
-    const reason = 'Custom application error'
+    const reason = 'Custom application error';
     const rpc = new RPCMock({
       Promise,
       url: 'http://localhost:4848',
