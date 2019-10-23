@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.1
+
+- fix: allow code and reason on session close to pass through (#656)
+
 ## 2.4.0
 
 ### New features
