@@ -1,5 +1,8 @@
 import originalExtend from 'extend';
 
+import createEnigmaError from './error';
+import errorCodes from '../error-codes';
+
 const extend = originalExtend.bind(null, true);
 const JSONPatch = {};
 const { isArray } = Array;
@@ -290,7 +293,7 @@ JSONPatch.apply = function apply(original, patches) {
         emptyObject(target);
         extend(target, patch.value);
       } else if (!parent) {
-        throw new Error('Patchee is not an object we can patch');
+        throw createEnigmaError(errorCodes.PATCH_HAS_NO_PARENT, 'Patchee is not an object we can patch');
       } else {
         // simple value
         parent[key] = patch.value;
