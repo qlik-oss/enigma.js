@@ -119,6 +119,29 @@
         }
       }
     },
+    "EnigmaError": {
+      "description": "Error containing a custom error code.",
+      "extends": [
+        {
+          "type": "Error"
+        }
+      ],
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "params": []
+      },
+      "entries": {
+        "code": {
+          "description": "The error code",
+          "type": "number"
+        },
+        "enigmaError": {
+          "defaultValue": true,
+          "type": "boolean"
+        }
+      }
+    },
     "Interceptor": {
       "description": "Interceptors is a concept similar to mixins, but run on a lower level. The interceptor concept\ncan augment either the requests (i.e. before sent to QIX Engine), or the responses (i.e. after\nQIX Engine has sent a response). The interceptor promises runs in parallel to the regular\npromises used in enigma.js, which means that it can be really useful when you want to normalize\nbehaviors in your application.",
       "kind": "interface",
