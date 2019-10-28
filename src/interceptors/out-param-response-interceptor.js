@@ -13,7 +13,7 @@ export default function outParamResponseInterceptor(session, request, response) 
   if (request.method === 'CreateSessionApp' || request.method === 'CreateSessionAppFromApp') {
     // this method returns multiple out params that we need
     // to normalize before processing the response further:
-    response[RETURN_KEY].qGenericId = response[RETURN_KEY].qGenericId || response.qSessionAppId;
+    response[RETURN_KEY].qGenericId = response.qSessionAppId || response[RETURN_KEY].qGenericId;
   } else if (request.method === 'GetInteract') {
     // this method returns a qReturn value when it should only return
     // meta.outKey:
