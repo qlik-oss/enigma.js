@@ -3,7 +3,7 @@
   "info": {
     "name": "enigma.js",
     "description": "JavaScript library for consuming Qlik backend services",
-    "version": "2.4.1",
+    "version": "2.5.0",
     "license": "MIT",
     "stability": "stable",
     "x-qlik-visibility": "public",
