@@ -119,6 +119,94 @@
         }
       }
     },
+    "EnigmaError": {
+      "description": "Error containing a custom error code.",
+      "extends": [
+        {
+          "type": "Error"
+        }
+      ],
+      "kind": "class",
+      "constructor": {
+        "kind": "function",
+        "params": []
+      },
+      "entries": {
+        "code": {
+          "description": "The error code as defined by `errorCodes`",
+          "type": "number"
+        },
+        "enigmaError": {
+          "defaultValue": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "errorCodes": {
+      "kind": "object",
+      "entries": {
+        "NOT_CONNECTED": {
+          "description": "You're trying to send data on a socket that's not created",
+          "defaultValue": -1,
+          "type": "number"
+        },
+        "OBJECT_NOT_FOUND": {
+          "description": "The object you're trying to fetch does not exist",
+          "defaultValue": -2,
+          "type": "number"
+        },
+        "EXPECTED_ARRAY_OF_PATCHES": {
+          "description": "You're trying to send data on a socket that's not created",
+          "defaultValue": -3,
+          "type": "number"
+        },
+        "PATCH_HAS_NO_PARENT": {
+          "description": "Patchee is not an object we can patch",
+          "defaultValue": -4,
+          "type": "number"
+        },
+        "ENTRY_ALREADY_DEFINED": {
+          "description": "This entry is already defined with another key",
+          "defaultValue": -5,
+          "type": "number"
+        },
+        "NO_CONFIG_SUPPLIED": {
+          "description": "You need to supply a configuration",
+          "defaultValue": -6,
+          "type": "number"
+        },
+        "PROMISE_REQUIRED": {
+          "description": "There's no promise object available (polyfill required?)",
+          "defaultValue": -7,
+          "type": "number"
+        },
+        "SCHEMA_STRUCT_TYPE_NOT_FOUND": {
+          "description": "The schema struct type you requested does not exist",
+          "defaultValue": -8,
+          "type": "number"
+        },
+        "SCHEMA_MIXIN_CANT_OVERRIDE_FUNCTION": {
+          "description": "Can't override this function",
+          "defaultValue": -9,
+          "type": "number"
+        },
+        "SCHEMA_MIXIN_EXTEND_NOT_ALLOWED": {
+          "description": "Extend is not allowed for this mixin",
+          "defaultValue": -10,
+          "type": "number"
+        },
+        "SESSION_SUSPENDED": {
+          "description": "Session suspended - no interaction allowed",
+          "defaultValue": -11,
+          "type": "number"
+        },
+        "SESSION_NOT_ATTACHED": {
+          "description": "onlyIfAttached supplied, but you got SESSION_CREATED",
+          "defaultValue": -12,
+          "type": "number"
+        }
+      }
+    },
     "Interceptor": {
       "description": "Interceptors is a concept similar to mixins, but run on a lower level. The interceptor concept\ncan augment either the requests (i.e. before sent to QIX Engine), or the responses (i.e. after\nQIX Engine has sent a response). The interceptor promises runs in parallel to the regular\npromises used in enigma.js, which means that it can be really useful when you want to normalize\nbehaviors in your application.",
       "kind": "interface",

@@ -1,5 +1,5 @@
 import createEnigmaError from './error';
-import errorCodes from '../error-codes';
+import errorCodes from './error-codes';
 
 const ON_ATTACHED_TIMEOUT_MS = 5000;
 const RPC_CLOSE_MANUAL_SUSPEND = 4000;

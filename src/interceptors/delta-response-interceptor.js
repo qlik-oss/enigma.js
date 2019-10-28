@@ -2,7 +2,7 @@ import JSONPatch from '../json-patch';
 import KeyValueCache from '../key-value-cache';
 
 import createEnigmaError from '../error';
-import errorCodes from '../../error-codes';
+import errorCodes from '../error-codes';
 
 const sessions = {};
 
