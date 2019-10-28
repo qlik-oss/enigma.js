@@ -32,6 +32,7 @@
     "/sense-utilities.js.map",
     "/sense-utilities.min.js",
     "/sense-utilities.min.js.map",
+    "/error-codes.js",
     "/schemas"
   ],
   "main": "enigma.js",

@@ -2,7 +2,7 @@ import Events from './event-emitter';
 import RPCResolver from './rpc-resolver';
 
 import createEnigmaError from './error';
-import errorCodes from '../error-codes';
+import errorCodes from './error-codes';
 
 /**
 * This class handles remote procedure calls on a web socket.

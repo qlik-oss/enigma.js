@@ -2,7 +2,7 @@ import KeyValueCache from './key-value-cache';
 import Events from './event-emitter';
 
 import createEnigmaError from './error';
-import errorCodes from '../error-codes';
+import errorCodes from './error-codes';
 
 const { hasOwnProperty } = Object.prototype;
 

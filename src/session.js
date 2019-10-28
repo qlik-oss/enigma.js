@@ -1,7 +1,7 @@
 import EventEmitter from './event-emitter';
 
 import createEnigmaError from './error';
-import errorCodes from '../error-codes';
+import errorCodes from './error-codes';
 
 const RPC_CLOSE_NORMAL = 1000;
 const RPC_CLOSE_MANUAL_SUSPEND = 4000;
