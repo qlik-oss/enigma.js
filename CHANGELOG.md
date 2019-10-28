@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.5.0
+
+### New features
+
+- Thrown errors now contain an error code (#661)
+
+### Fixes
+
+- prefer sessionid in session app creation methods (#662)
+
 ## 2.4.1
 
 - fix: allow code and reason on session close to pass through (#656)
