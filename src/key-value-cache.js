@@ -1,3 +1,6 @@
+import createEnigmaError from './error';
+import errorCodes from '../error-codes';
+
 /**
 * Key-value cache
 * @private
@@ -17,7 +20,7 @@ class KeyValueCache {
   add(key, entry) {
     key += '';
     if (typeof this.entries[key] !== 'undefined') {
-      throw new Error(`Entry already defined with key ${key}`);
+      throw createEnigmaError(errorCodes.ENTRY_ALREADY_DEFINED, `Entry already defined with key ${key}`);
     }
     this.entries[key] = entry;
   }

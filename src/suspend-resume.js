@@ -1,3 +1,6 @@
+import createEnigmaError from './error';
+import errorCodes from '../error-codes';
+
 const ON_ATTACHED_TIMEOUT_MS = 5000;
 const RPC_CLOSE_MANUAL_SUSPEND = 4000;
 
@@ -30,7 +33,7 @@ class SuspendResume {
   restoreRpcConnection(onlyIfAttached) {
     return this.reopen(ON_ATTACHED_TIMEOUT_MS).then((sessionState) => {
       if (sessionState === 'SESSION_CREATED' && onlyIfAttached) {
-        return this.Promise.reject(new Error('Not attached'));
+        return this.Promise.reject(createEnigmaError(errorCodes.SESSION_NOT_ATTACHED, 'Not attached'));
       }
       return this.Promise.resolve();
     });

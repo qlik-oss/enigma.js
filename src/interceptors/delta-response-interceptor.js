@@ -1,6 +1,9 @@
 import JSONPatch from '../json-patch';
 import KeyValueCache from '../key-value-cache';
 
+import createEnigmaError from '../error';
+import errorCodes from '../../error-codes';
+
 const sessions = {};
 
 /**
@@ -76,7 +79,7 @@ export default function deltaResponseInterceptor(session, request, response) {
     // when delta is on the response data is expected to be an array of patches:
     Object.keys(result).forEach((key) => {
       if (!Array.isArray(result[key])) {
-        throw new Error('Unexpected RPC response, expected array of patches');
+        throw createEnigmaError(errorCodes.EXPECTED_ARRAY_OF_PATCHES, 'Unexpected RPC response, expected array of patches');
       }
       result[key] = patchValue(session, request.handle, `${request.method}-${key}`, result[key]);
     });

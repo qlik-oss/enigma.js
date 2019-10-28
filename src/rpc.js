@@ -1,6 +1,9 @@
 import Events from './event-emitter';
 import RPCResolver from './rpc-resolver';
 
+import createEnigmaError from './error';
+import errorCodes from '../error-codes';
+
 /**
 * This class handles remote procedure calls on a web socket.
 * @private
@@ -164,8 +167,7 @@ class RPC {
   */
   send(data) {
     if (!this.socket || this.socket.readyState !== this.socket.OPEN) {
-      const error = new Error('Not connected');
-      error.code = -1;
+      const error = createEnigmaError(errorCodes.NOT_CONNECTED, 'Not connected');
       return this.Promise.reject(error);
     }
     if (!data.id) {

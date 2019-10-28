@@ -1,6 +1,9 @@
 import KeyValueCache from './key-value-cache';
 import Events from './event-emitter';
 
+import createEnigmaError from './error';
+import errorCodes from '../error-codes';
+
 const { hasOwnProperty } = Object.prototype;
 
 /**
@@ -84,7 +87,7 @@ class Schema {
       return entry;
     }
     if (!this.schema.structs[type]) {
-      throw new Error(`${type} not found`);
+      throw createEnigmaError(errorCodes.SCHEMA_STRUCT_TYPE_NOT_FOUND, `${type} not found`);
     }
     const factory = this.generateApi(type, this.schema.structs[type]);
     this.types.add(type, factory);
@@ -191,13 +194,13 @@ class Schema {
               return override[key].apply(this, [baseFn.bind(this), ...args]);
             };
           } else {
-            throw new Error(`No function to override. Type: ${type} function: ${key}`);
+            throw createEnigmaError(errorCodes.SCHEMA_MIXIN_CANT_OVERRIDE_FUNCTION, `No function to override. Type: ${type} function: ${key}`);
           }
         });
         Object.keys(extend).forEach((key) => {
           // handle overrides
           if (typeof api[key] === 'function' && typeof extend[key] === 'function') {
-            throw new Error(`Extend is not allowed for this mixin. Type: ${type} function: ${key}`);
+            throw createEnigmaError(errorCodes.SCHEMA_MIXIN_EXTEND_NOT_ALLOWED, `Extend is not allowed for this mixin. Type: ${type} function: ${key}`);
           } else {
             api[key] = extend[key];
           }

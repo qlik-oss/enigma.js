@@ -5,6 +5,9 @@ import SuspendResume from './suspend-resume';
 import Intercept from './intercept';
 import ApiCache from './api-cache';
 
+import createEnigmaError from './error';
+import errorCodes from '../error-codes';
+
 /**
  * The enigma.js configuration object.
  * @interface Configuration
@@ -133,12 +136,12 @@ class Qix {
   */
   static configureDefaults(config) {
     if (!config) {
-      throw new Error('You need to supply a configuration.');
+      throw createEnigmaError(errorCodes.NO_CONFIG_SUPPLIED, 'You need to supply a configuration.');
     }
 
     // eslint-disable-next-line no-restricted-globals
     if (!config.Promise && typeof Promise === 'undefined') {
-      throw new Error('Your environment has no Promise implementation. You must provide a Promise implementation in the config.');
+      throw createEnigmaError(errorCodes.PROMISE_REQUIRED, 'Your environment has no Promise implementation. You must provide a Promise implementation in the config.');
     }
 
     if (typeof config.createSocket !== 'function' && typeof WebSocket === 'function') {

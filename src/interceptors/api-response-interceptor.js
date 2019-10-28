@@ -1,3 +1,6 @@
+import createEnigmaError from '../error';
+import errorCodes from '../../error-codes';
+
 /**
 * Response interceptor for generating APIs. Handles the quirks of engine not
 * returning an error when an object is missing.
@@ -17,7 +20,8 @@ export default function apiResponseInterceptor(session, request, response) {
     });
   }
   if (response.qHandle === null && response.qType === null) {
-    return session.config.Promise.reject(new Error('Object not found'));
+    const error = createEnigmaError(errorCodes.OBJECT_NOT_FOUND, 'Object not found');
+    return session.config.Promise.reject(error);
   }
   return response;
 }

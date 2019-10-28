@@ -1,5 +1,8 @@
 import EventEmitter from './event-emitter';
 
+import createEnigmaError from './error';
+import errorCodes from '../error-codes';
+
 const RPC_CLOSE_NORMAL = 1000;
 const RPC_CLOSE_MANUAL_SUSPEND = 4000;
 
@@ -206,7 +209,7 @@ class Session {
   */
   send(request) {
     if (this.suspendResume.isSuspended) {
-      return this.Promise.reject(new Error('Session suspended'));
+      return this.Promise.reject(createEnigmaError(errorCodes.SESSION_SUSPENDED, 'Session suspended'));
     }
     request.id = this.rpc.createRequestId();
     const promise = this.intercept.executeRequests(this, this.Promise.resolve(request))
