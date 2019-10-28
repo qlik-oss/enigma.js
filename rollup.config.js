@@ -61,4 +61,12 @@ const senseUtilities = createConfig({
   },
 });
 
-export default [enigma, senseUtilities];
+const errorCodes = createConfig({
+  input: 'src/error-codes.js',
+  output: {
+    file: 'error-codes.js',
+    name: 'error-codes',
+  },
+});
+
+export default [enigma, senseUtilities, errorCodes];

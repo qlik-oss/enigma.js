@@ -1,5 +1,5 @@
 import createEnigmaError from '../error';
-import errorCodes from '../../error-codes';
+import errorCodes from '../error-codes';
 
 /**
 * Response interceptor for generating APIs. Handles the quirks of engine not

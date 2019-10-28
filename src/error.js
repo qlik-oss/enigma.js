@@ -2,7 +2,7 @@
 /**
  * Error containing a custom error code.
  * @extends Error
- * @property {number} code The error code
+ * @property {number} code The error code as defined by `errorCodes`
  * @property {boolean} enigmaError=true
  */
 class EnigmaError extends Error {
@@ -15,7 +15,7 @@ class EnigmaError extends Error {
 
 /**
  * Create an enigmaError
- * @param {Number} code A proper error code from ../error-codes.js
+ * @param {Number} code A proper error code from `errorCodes`
  * @param {String} name A message/name of the enigmaError.
  * @returns {EnigmaError}
  */

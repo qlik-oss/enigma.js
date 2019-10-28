@@ -1,7 +1,7 @@
 import originalExtend from 'extend';
 
 import createEnigmaError from './error';
-import errorCodes from '../error-codes';
+import errorCodes from './error-codes';
 
 const extend = originalExtend.bind(null, true);
 const JSONPatch = {};

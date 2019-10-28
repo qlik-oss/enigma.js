@@ -6,7 +6,7 @@ import Intercept from './intercept';
 import ApiCache from './api-cache';
 
 import createEnigmaError from './error';
-import errorCodes from '../error-codes';
+import errorCodes from './error-codes';
 
 /**
  * The enigma.js configuration object.
