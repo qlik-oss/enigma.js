@@ -48,6 +48,7 @@ Table of contents
 - [Sense utilities API](#sense-utilities-api)
   - [Configuration](#configuration-1)
   - [`SenseUtilities.buildUrl()`](#senseutilitiesbuildurlconfig)
+- [Error handling](#error-handling)
 
 ---
 
