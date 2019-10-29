@@ -14,7 +14,7 @@ const errorCodes = {
    */
   OBJECT_NOT_FOUND: -2,
   /**
-   * You're trying to send data on a socket that's not created
+   * Unexpected RPC response, expected array of patches
    * @type {number}
    */
   EXPECTED_ARRAY_OF_PATCHES: -3,
