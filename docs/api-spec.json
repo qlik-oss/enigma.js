@@ -156,7 +156,7 @@
           "type": "number"
         },
         "EXPECTED_ARRAY_OF_PATCHES": {
-          "description": "You're trying to send data on a socket that's not created",
+          "description": "Unexpected RPC response, expected array of patches",
           "defaultValue": -3,
           "type": "number"
         },
