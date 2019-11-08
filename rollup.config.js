@@ -66,6 +66,7 @@ const errorCodes = createConfig({
   output: {
     file: 'error-codes.js',
     name: 'error-codes',
+    sourcemap: false,
   },
 });
 
