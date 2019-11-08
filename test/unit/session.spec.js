@@ -333,6 +333,17 @@ describe('Session', () => {
       expect(spy.callCount).to.equal(0);
     });
 
+    it('should not close socket and emit suspended for rpc codes 1000, 4000 and 4001', () => {
+      [1000, 4000, 4001].forEach((code) => {
+        suspendResume.isSuspended = false;
+        const spy = sinon.spy();
+        session.on('suspended', spy);
+        session.on('closed', spy);
+        session.onRpcClosed({ code });
+        expect(spy.callCount).to.equal(0);
+      });
+    });
+
     it('should close socket and emit suspended', () => {
       const spy = sinon.spy();
       const stub = sinon.stub(session.rpc, 'close').returns(Promise.resolve());
