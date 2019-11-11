@@ -5,7 +5,6 @@ import errorCodes from './error-codes';
 
 const RPC_CLOSE_NORMAL = 1000;
 const RPC_CLOSE_MANUAL_SUSPEND = 4000;
-const RPC_CLOSE_IDLE_TIMEOUT = 4001;
 
 let cacheId = 0;
 
@@ -80,11 +79,7 @@ class Session {
     if (this.suspendResume.isSuspended) {
       return;
     }
-    if ([
-      RPC_CLOSE_NORMAL,
-      RPC_CLOSE_MANUAL_SUSPEND,
-      RPC_CLOSE_IDLE_TIMEOUT,
-    ].indexOf(evt.code) !== -1) {
+    if (evt.code === RPC_CLOSE_NORMAL || evt.code === RPC_CLOSE_MANUAL_SUSPEND) {
       return;
     }
     if (this.config.suspendOnClose) {
