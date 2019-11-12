@@ -256,7 +256,7 @@ session.close().then(() => console.log('Session was properly closed'));
 
 [Back to top](#api-documentation)
 
-### `session.suspend()`
+### `session.suspend([code=4000, reason=''])`
 
 Returns a promise.
 
