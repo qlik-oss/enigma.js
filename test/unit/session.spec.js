@@ -291,6 +291,24 @@ describe('Session', () => {
     expect(close).to.be.calledWith(code, reason);
   });
 
+  it('should suspend with supplied error code', () => {
+    const code = 4000;
+    const reason = 'Custom application error';
+    const rpc = new RPCMock({
+      Promise,
+      url: 'http://localhost:4848',
+      createSocket: (url) => new SocketMock(url),
+    });
+    createSession(false, rpc);
+    session.getObjectApi = () => {};
+    session.open();
+    const suspend = sinon.spy(session.suspendResume, 'suspend');
+    const suspendPromise = session.suspend(code, reason);
+    expect(suspendPromise).to.be.an.instanceOf(Promise);
+    expect(suspend.calledOnce).to.equal(true);
+    expect(suspend).to.be.calledWith(code, reason);
+  });
+
   describe('addToPromiseChain', () => {
     it('should add value on promise', () => {
       const promise = Promise.resolve();

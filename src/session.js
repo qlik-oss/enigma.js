@@ -231,11 +231,14 @@ class Session {
   * Suspends the enigma.js session by closing the websocket and rejecting all method calls
   * until is has been resumed again.
   * @emits Session#suspended
+  * @param {Number} [code=4000] - The reason code for suspending the connection.
+  * @param {String} [reason=""] - The human readable string describing
+  * why the connection is suspended.
   * @returns {Promise<Object>} Eventually resolved when the websocket has been closed.
   */
-  suspend() {
-    return this.suspendResume.suspend()
-      .then(() => this.emit('suspended', { initiator: 'manual' }));
+  suspend(code = 4000, reason = '') {
+    return this.suspendResume.suspend(code, reason)
+      .then(() => this.emit('suspended', { initiator: 'manual', code, reason }));
   }
 
   /**

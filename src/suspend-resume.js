@@ -137,10 +137,12 @@ class SuspendResume {
   /**
   * Set the instance as suspended.
   * @private
+  * @param {Number} [code=4000] - The reason code for closing the connection.
+  * @param {String} [reason=""] - The human readable string describing why the connection is closed.
   */
-  suspend() {
+  suspend(code = 4000, reason = '') {
     this.isSuspended = true;
-    return this.rpc.close(RPC_CLOSE_MANUAL_SUSPEND);
+    return this.rpc.close(code, reason);
   }
 
   /**
