@@ -559,7 +559,7 @@
             },
             {
               "name": "reason",
-              "description": "The human readable string describing why the connection is suspended.",
+              "description": "The human readable string describing\nwhy the connection is suspended.",
               "optional": true,
               "defaultValue": "\"\"",
               "type": "string"
