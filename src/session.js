@@ -84,7 +84,7 @@ class Session {
     }
     if (this.config.suspendOnClose) {
       const { code, reason } = evt;
-      this.suspendResume.suspend(code, reason).then(() => this.emit('suspended', {
+      this.suspendResume.suspend().then(() => this.emit('suspended', {
         initiator: 'network',
         code,
         reason,
