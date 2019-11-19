@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.6.1
+
+### Fixes
+
+- chore(deps): update dependency rollup to v1.27.0 (#676)
+- fix(session): no echo code on suspend in rpcClosed (#675)
+
 ## 2.6.0
 
 ### New features
