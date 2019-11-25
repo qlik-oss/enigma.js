@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.6.2
+
+### Fixes
+
+- fix: no undefined error on closed resolver (#678)
+- chore(deps): pdate minor and patch (#679)
+- chore(deps): update qlikcore/engine docker tag to v12.515.0 (#680)
+
 ## 2.6.1
 
 ### Fixes
