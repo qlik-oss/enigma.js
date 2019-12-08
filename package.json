@@ -41,7 +41,7 @@
     "@after-work.js/transform": "6.0.10",
     "@babel/core": "7.7.5",
     "@babel/plugin-transform-modules-commonjs": "7.7.5",
-    "@babel/preset-env": "7.7.5",
+    "@babel/preset-env": "7.7.6",
     "@joseph184/rollup-plugin-node-builtins": "2.1.4",
     "babel-plugin-istanbul": "5.2.0",
     "coveralls": "3.0.9",
