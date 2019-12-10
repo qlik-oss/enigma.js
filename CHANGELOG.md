@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.6.2 / 2.6.3
+
+### Fixes
+
+- fix: no undefined error on closed resolver (#678)
+- chore(deps): pdate minor and patch (#679)
+- chore(deps): update qlikcore/engine docker tag to v12.515.0 (#680)
+
+## 2.6.1
+
+### Fixes
+
+- chore(deps): update dependency rollup to v1.27.0 (#676)
+- fix(session): no echo code on suspend in rpcClosed (#675)
+
+## 2.6.0
+
+### New features
+
+- feat: send code and reason through suspend chain (#673)
+
+### Fixes
+
+- chore(deps): update dependency rollup to v1.26.4 (#671)
+- chore(deps): update minor and patch (#670)
+- chore(deps): update dependency rollup to v1.26.3 (#668)
+- chore(deps): update minor and patch (#667)
+- chore: dont generate source maps for error-codes (#666)
+- fix(error-codes): wrong description (#664)
+
 ## 2.5.0
 
 ### New features

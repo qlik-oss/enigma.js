@@ -6,49 +6,50 @@
 
 Table of contents
 
-- [`enigma.create()`](#enigmacreateconfig)
-- [Configuration](#configuration)
-- [Mixins](#mixins)
-  - [`mixin.init()`](#mixininitargs)
-  - [`mixin.extend.myNonExistingMethod()`](#mixinextendmynonexistingmethodparam1-param2-)
-  - [`mixin.override.someExistingMethod()`](#mixinoverridesomeexistingmethodbase-param1-param2-)
-- [Interceptors](#interceptors)
-  - [Requests](#requests)
-    - [`interceptor.onFulfilled()`](#interceptoronfulfilledsession-request)
-  - [Responses](#responses)
-    - [`interceptor.onRejected()`](#interceptoronrejectedsession-request-error)
-    - [`interceptor.onFulfilled()`](#interceptoronfulfilledsession-request-result)
-- [Session API](#session-api)
-  - [`session.config`](#sessionconfig)
-  - [`session.open()`](#sessionopen)
-  - [`session.close()`](#sessionclose)
-  - [`session.suspend()`](#sessionsuspend)
-  - [`session.resume()`](#sessionresumeonlyifattachedfalse)
-  - [Event: `opened`](#event-opened)
-  - [Event: `closed`](#event-closed)
-  - [Event: `suspended`](#event-suspended)
-  - [Event: `resumed`](#event-resumed)
-  - [Event: `notification:<name>`](#event-notificationname)
-  - [Event: `notification:*`](#event-notification)
-  - [Event: `traffic:sent`](#event-trafficsent)
-  - [Event: `traffic:received`](#event-trafficreceived)
-  - [Event: `traffic:*`](#event-traffic)
-- [Generated API](#generated-api)
-  - [`promise.requestId`](#promiserequestid)
-  - [`api.id`](#apiid)
-  - [`api.type`](#apitype)
-  - [`api.genericType`](#apigenerictype)
-  - [`api.session`](#apisession)
-  - [`api.handle`](#apihandle)
-  - [Event: `changed`](#event-changed)
-  - [Event: `closed`](#event-closed-1)
-  - [Event: `traffic:sent`](#event-trafficsent-1)
-  - [Event: `traffic:received`](#event-trafficreceived-1)
-  - [Event: `traffic:*`](#event-traffic-1)
-- [Sense utilities API](#sense-utilities-api)
-  - [Configuration](#configuration-1)
-  - [`SenseUtilities.buildUrl()`](#senseutilitiesbuildurlconfig)
-- [Error handling](#error-handling)
+- [API documentation](#api-documentation)
+  - [`enigma.create(config)`](#enigmacreateconfig)
+  - [Configuration](#configuration)
+  - [Mixins](#mixins)
+    - [`mixin.init(args)`](#mixininitargs)
+    - [`mixin.extend.myNonExistingMethod(param1, param2, ...)`](#mixinextendmynonexistingmethodparam1-param2)
+    - [`mixin.override.someExistingMethod(base, param1, param2, ...)`](#mixinoverridesomeexistingmethodbase-param1-param2)
+  - [Interceptors](#interceptors)
+    - [Requests](#requests)
+      - [`interceptor.onFulfilled(session, request)`](#interceptoronfulfilledsession-request)
+    - [Responses](#responses)
+      - [`interceptor.onRejected(session, request, error)`](#interceptoronrejectedsession-request-error)
+      - [`interceptor.onFulfilled(session, request, result)`](#interceptoronfulfilledsession-request-result)
+  - [Session API](#session-api)
+    - [`session.config`](#sessionconfig)
+    - [`session.open()`](#sessionopen)
+    - [`session.close()`](#sessionclose)
+    - [`session.suspend([code=4000, reason=''])`](#sessionsuspendcode4000-reason)
+    - [`session.resume([onlyIfAttached=false])`](#sessionresumeonlyifattachedfalse)
+    - [Event: `opened`](#event-opened)
+    - [Event: `closed`](#event-closed)
+    - [Event: `suspended`](#event-suspended)
+    - [Event: `resumed`](#event-resumed)
+    - [Event: `notification:<name>`](#event-notificationname)
+    - [Event: `notification:*`](#event-notification)
+    - [Event: `traffic:sent`](#event-trafficsent)
+    - [Event: `traffic:received`](#event-trafficreceived)
+    - [Event: `traffic:*`](#event-traffic)
+  - [Generated API](#generated-api)
+    - [`promise.requestId`](#promiserequestid)
+    - [`api.id`](#apiid)
+    - [`api.type`](#apitype)
+    - [`api.genericType`](#apigenerictype)
+    - [`api.session`](#apisession)
+    - [`api.handle`](#apihandle)
+    - [Event: `changed`](#event-changed)
+    - [Event: `closed`](#event-closed-1)
+    - [Event: `traffic:sent`](#event-trafficsent-1)
+    - [Event: `traffic:received`](#event-trafficreceived-1)
+    - [Event: `traffic:*`](#event-traffic-1)
+  - [Sense utilities API](#sense-utilities-api)
+    - [Configuration](#configuration-1)
+    - [`SenseUtilities.buildUrl(config)`](#senseutilitiesbuildurlconfig)
+  - [Error handling](#error-handling)
 
 ---
 
@@ -256,7 +257,7 @@ session.close().then(() => console.log('Session was properly closed'));
 
 [Back to top](#api-documentation)
 
-### `session.suspend()`
+### `session.suspend([code=4000, reason=''])`
 
 Returns a promise.
 
@@ -662,7 +663,7 @@ const session = enigma.create({ schema, url });
 ## Error handling
 
 There are multiple types of errors that can occur, native WebSocket errors (See [CloseEvent](https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent)),
-QIX errors and native enigma.js errors. For the enigma.js errors, you can import `enigma.js/error-codes.js` or refer to the list below. 
+QIX errors and native enigma.js errors. For the enigma.js errors, you can import `enigma.js/error-codes.js` or refer to the list below.
 All native enigma.js errors have the property `Error.enigmaError = true`. These may occur thrown or in rejected promises.
 
 | Property                              | Code     | Description |

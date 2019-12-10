@@ -3,7 +3,7 @@
   "info": {
     "name": "enigma.js",
     "description": "JavaScript library for consuming Qlik backend services",
-    "version": "2.5.0",
+    "version": "2.6.3",
     "license": "MIT",
     "stability": "stable",
     "x-qlik-visibility": "public",
@@ -549,7 +549,22 @@
         "suspend": {
           "description": "Suspends the enigma.js session by closing the websocket and rejecting all method calls\nuntil is has been resumed again.",
           "kind": "function",
-          "params": [],
+          "params": [
+            {
+              "name": "code",
+              "description": "The reason code for suspending the connection.",
+              "optional": true,
+              "defaultValue": 4000,
+              "type": "number"
+            },
+            {
+              "name": "reason",
+              "description": "The human readable string describing\nwhy the connection is suspended.",
+              "optional": true,
+              "defaultValue": "\"\"",
+              "type": "string"
+            }
+          ],
           "returns": {
             "description": "Eventually resolved when the websocket has been closed.",
             "type": "Promise",
