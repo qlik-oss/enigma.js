@@ -9,6 +9,7 @@ You are more than welcome to contribute to enigma.js! Follow these guidelines an
  - [Developing](#developing)
  - [Git guidelines](#git)
  - [Signing the CLA](#cla)
+ - [Releasing](#releasing)
 
 ## <a name="code-of-conduct"></a> Code of conduct
 
@@ -139,3 +140,11 @@ Some examples of good commit messages:
 ## <a name="cla"></a> Signing the CLA
 
 We need you to sign our Contributor License Agreement (CLA) before we can accept your Pull Request. Visit this link for more information: https://github.com/qlik-oss/open-source/blob/master/sign-cla.md.
+
+## Releasing
+1. Check commits since the last release
+2. Summarize commited changes in CHANGELOG.md
+3. Run `npm version major` (or `minor` or `patch`) depending on the changes that have been made
+4. Create a new branch with the new version & changelog and put a PR up for review
+5. When the PR is merged, push a tag with the new version to github
+6. Checkout the master branch, pull it and run `npm publish` to publish to NPM

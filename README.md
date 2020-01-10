@@ -13,6 +13,7 @@ enigma.js is a library that helps you communicate with Qlik QIX Engine. Examples
 - [API documentation for v1.x](https://github.com/qlik-oss/enigma.js/tree/v1.x/docs#overview)
 - [Migrating from v1.x](./docs/migrate-v1.md#migrating-from-version-1x)
 - [Contributing](./.github/CONTRIBUTING.md#contributing-to-enigmajs)
+- [Releasing](./.github/CONTRIBUTING.md#releasing)
 - [Runnable examples](./examples/README.md#runnable-examples)
 
 ---
