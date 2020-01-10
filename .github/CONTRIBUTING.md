@@ -142,9 +142,9 @@ Some examples of good commit messages:
 We need you to sign our Contributor License Agreement (CLA) before we can accept your Pull Request. Visit this link for more information: https://github.com/qlik-oss/open-source/blob/master/sign-cla.md.
 
 ## Releasing
-0. Check that commits since last release
-1. Add changes to CHANGELOG.md
-2. Run `npm version major` (or `minor` or `patch`) depending on the changes that have been made
-3. Create a new branch with the changes and put a PR up for review
-4. When the PR is merged, push a tag with the new version to github. 
-5. Checkout the master branch, pull it and run `npm publish` to publish to NPM
+1. Check commits since the last release
+2. Summarize commited changes in CHANGELOG.md
+3. Run `npm version major` (or `minor` or `patch`) depending on the changes that have been made
+4. Create a new branch with the new version & changelog and put a PR up for review
+5. When the PR is merged, push a tag with the new version to github
+6. Checkout the master branch, pull it and run `npm publish` to publish to NPM
