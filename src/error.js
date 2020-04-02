@@ -15,6 +15,7 @@ class EnigmaError extends Error {
 
 /**
  * Create an enigmaError
+ * @private
  * @param {Number} code A proper error code from `errorCodes`
  * @param {String} name A message/name of the enigmaError.
  * @returns {EnigmaError}

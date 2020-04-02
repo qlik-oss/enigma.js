@@ -1,6 +1,17 @@
 
 /**
+ * This is a list of error codes that can be thrown from enigma.js API calls.
+ * @see EnigmaError
  * @enum
+ * @example <caption>Handling an enigma.js error</caption>
+ * const { NOT_CONNECTED } = require('enigma.js/error-codes');
+ * try {
+ *   const layout = await model.getLayout();
+ * } catch (err) {
+ *   if (err.code === NOT_CONNECTED) {
+ *     console.log('Tried to communicate on a session that is closed');
+ *   }
+ * }
  */
 const errorCodes = {
   /**

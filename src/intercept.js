@@ -15,13 +15,46 @@ import resultResponse from './interceptors/result-response-interceptor';
  */
 
 /**
-  * @class InterceptorRequest
-  * @implements {Interceptor}
-  */
+ * @class InterceptorRequest
+ * @implements {Interceptor}
+ * @example <caption>Implement a request interceptor</caption>
+ * const enigma = require('enigma.js');
+ * const WebSocket = require('ws');
+ * const schema = require('enigma.js/schemas/12.20.0.json');
+ *
+ * const session = enigma.create({
+ *   schema,
+ *   url: 'ws://localhost:9076/app/engineData',
+ *   createSocket: (url) => new WebSocket(url),
+ *   requestInterceptors: [{
+ *     onFulfilled: function logRequest(sessionReference, request) {
+ *       console.log('Request being sent', request);
+ *       return request;
+ *     }
+ *   },
+ * });
+ */
 
 /**
  * @class InterceptorResponse
  * @implements {Interceptor}
+ * @example <caption>Implement a request interceptor</caption>
+ * const enigma = require('enigma.js');
+ * const WebSocket = require('ws');
+ * const schema = require('enigma.js/schemas/12.20.0.json');
+ *
+ * const session = enigma.create({
+ *   schema,
+ *   url: 'ws://localhost:9076/app/engineData',
+ *   createSocket: (url) => new WebSocket(url),
+ *   responseInterceptors: [{
+ *     onRejected: function logError(sessionReference, request, error) {
+ *       console.log('Error returned from QIX engine', error, 'Originating request:', request);
+ *       // throw error so it's continued to be rejected:
+ *       throw error;
+ *     }
+ *   },
+ * });
  */
 
 /**
@@ -84,7 +117,7 @@ class Intercept {
   executeRequests(session, promise) {
     return this.request.reduce((interception, interceptor) => {
       const intercept = interceptor.onFulfilled
-      && interceptor.onFulfilled.bind(this, session);
+        && interceptor.onFulfilled.bind(this, session);
       return interception.then(intercept);
     }, promise);
   }
@@ -103,7 +136,7 @@ class Intercept {
       interceptor.onFulfilled && interceptor.onFulfilled.bind(this, session, request),
       interceptor.onRejected && interceptor.onRejected.bind(this, session, request),
     ),
-    promise);
+      promise);
   }
 }
 

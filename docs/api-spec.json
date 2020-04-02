@@ -12,7 +12,7 @@
   "entries": {},
   "definitions": {
     "API": {
-      "description": "The API for generated APIs depends on the QIX Engine schema you pass into your Configuration,\nand on what QIX struct the API has.",
+      "description": "The API for generated APIs depends on the QIX Engine schema you pass into your Configuration, and\non what QIX struct the API has.\n\nAll API calls made using the generated APIs will return promises which are either resolved or\nrejected depending on how the QIX Engine responds.",
       "kind": "interface",
       "entries": {
         "id": {
@@ -36,21 +36,33 @@
           "type": "number"
         }
       },
+      "examples": [
+        "<caption>Example using `global` and `generic object` struct APIs</caption>\nglobal.openDoc('my-document.qvf').then((doc) => {\n  doc.createObject({ qInfo: { qType: 'my-object' } }).then(api => { });\n  doc.getObject('object-id').then(api => { });\n  doc.getBookmark('bookmark-id').then(api => { });\n});"
+      ],
       "events": {
         "changed": {
           "description": "Handle changes on the API. The changed event is triggered whenever enigma.js or QIX Engine has\nidentified potential changes on the underlying properties or hypercubes and you should re-fetch\nyour data.",
           "kind": "event",
-          "params": []
+          "params": [],
+          "examples": [
+            "<caption>Bind the `changed` event</caption>\napi.on('changed', () => {\n  api.getLayout().then(layout => { });\n});"
+          ]
         },
         "closed": {
           "description": "Handle closed API. The closed event is triggered whenever QIX Engine considers an API closed.\nIt usually means that it no longer exist in the QIX Engine document or session.",
           "kind": "event",
-          "params": []
+          "params": [],
+          "examples": [
+            "<caption>Bind the `closed` event</caption>\napi.on('closed', () => {\n  console.log(api.id, 'was closed');\n});"
+          ]
         },
         "traffic": {
-          "description": "Handle JSON-RPC requests/responses for this API. Generally used in debugging purposes.\ntraffic:* will handle all websocket messages, traffic:sent will handle outgoing messages\nand traffic:received will handle incoming messages.",
+          "description": "Handle JSON-RPC requests/responses for this API. Generally used in debugging purposes.\n`traffic:*` will handle all websocket messages, `traffic:sent` will handle outgoing messages\nand `traffic:received` will handle incoming messages.",
           "kind": "event",
-          "params": []
+          "params": [],
+          "examples": [
+            "<caption>Bind the traffic events</caption>\n// bind both in- and outbound traffic to console.log:\napi.on('traffic:*', console.log);\n// bind outbound traffic to console.log:\napi.on('traffic:sent', console.log);\n// bind inbound traffic to console.log:\napi.on('traffic:received', console.log);"
+          ]
         }
       }
     },
@@ -117,7 +129,10 @@
             }
           }
         }
-      }
+      },
+      "examples": [
+        "<caption>Example defining a configuration object</caption>\nconst enigma = require('enigma.js');\nconst WebSocket = require('ws');\nconst bluebird = require('bluebird');\nconst schema = require('enigma.js/schemas/12.20.0.json');\n\nconst config = {\n schema,\n url: 'ws://localhost:4848/app/engineData',\n createSocket: url => new WebSocket(url),\n Promise: bluebird,\n suspendOnClose: true,\n mixins: [{ types: ['Global'], init: () => console.log('Mixin ran') }],\n protocol: { delta: false },\n};\n\nenigma.create(config).open().then((global) => {\n  // global === QIX global interface\n  process.exit(0);\n});"
+      ]
     },
     "EnigmaError": {
       "description": "Error containing a custom error code.",
@@ -143,6 +158,7 @@
       }
     },
     "errorCodes": {
+      "description": "This is a list of error codes that can be thrown from enigma.js API calls.",
       "kind": "object",
       "entries": {
         "NOT_CONNECTED": {
@@ -205,7 +221,10 @@
           "defaultValue": -12,
           "type": "number"
         }
-      }
+      },
+      "examples": [
+        "<caption>Handling an enigma.js error</caption>\nconst { NOT_CONNECTED } = require('enigma.js/error-codes');\ntry {\n  const layout = await model.getLayout();\n} catch (err) {\n  if (err.code === NOT_CONNECTED) {\n    console.log('Tried to communicate on a session that is closed');\n  }\n}"
+      ]
     },
     "Interceptor": {
       "description": "Interceptors is a concept similar to mixins, but run on a lower level. The interceptor concept\ncan augment either the requests (i.e. before sent to QIX Engine), or the responses (i.e. after\nQIX Engine has sent a response). The interceptor promises runs in parallel to the regular\npromises used in enigma.js, which means that it can be really useful when you want to normalize\nbehaviors in your application.",
@@ -240,7 +259,10 @@
             }
           ]
         }
-      }
+      },
+      "examples": [
+        "<caption>Implement a request interceptor</caption>\nconst enigma = require('enigma.js');\nconst WebSocket = require('ws');\nconst schema = require('enigma.js/schemas/12.20.0.json');\n\nconst session = enigma.create({\n  schema,\n  url: 'ws://localhost:9076/app/engineData',\n  createSocket: (url) => new WebSocket(url),\n  requestInterceptors: [{\n    onFulfilled: function logRequest(sessionReference, request) {\n      console.log('Request being sent', request);\n      return request;\n    }\n  },\n});"
+      ]
     },
     "InterceptorResponse": {
       "implements": [
@@ -296,10 +318,13 @@
             }
           ]
         }
-      }
+      },
+      "examples": [
+        "<caption>Implement a request interceptor</caption>\nconst enigma = require('enigma.js');\nconst WebSocket = require('ws');\nconst schema = require('enigma.js/schemas/12.20.0.json');\n\nconst session = enigma.create({\n  schema,\n  url: 'ws://localhost:9076/app/engineData',\n  createSocket: (url) => new WebSocket(url),\n  responseInterceptors: [{\n    onRejected: function logError(sessionReference, request, error) {\n      console.log('Error returned from QIX engine', error, 'Originating request:', request);\n      // throw error so it's continued to be rejected:\n      throw error;\n    }\n  },\n});"
+      ]
     },
     "Mixin": {
-      "description": "Mixin object to extend/augment the QIX Engine API",
+      "description": "The mixin concept allows you to add or override QIX Engine API functionality. A mixin is\nbasically a JavaScript object describing which types it modifies, and a list of functions\nfor extending and overriding the API for those types.\n\nQIX Engine types like for example GenericObject, Doc, GenericBookmark, are supported but\nalso custom GenericObject types such as barchart, story and myCustomType. An API will get\nboth their generic type as well as custom type mixins applied.\n\nMixins that are bound to several different types can find the current API type in the\n`genericType` or `type` members. `this.type` would for instance return `GenericObject` and\n`this.genericType` would return `barchart`.\n\nSee the Mixins examples on how to use it, below is an outline of what the mixin API consists of.",
       "kind": "interface",
       "entries": {
         "types": {
@@ -357,12 +382,15 @@
           "returns": {
             "description": "Returns a new QIX session.",
             "type": "#/definitions/Session"
-          }
+          },
+          "examples": [
+            "<caption>Example minimal session creation</caption>\nconst enigma = require('enigma.js');\nconst schema = require('enigma.js/schemas/12.20.0.json');\nconst WebSocket = require('ws');\nconst config = {\n  schema,\n  url: 'ws://localhost:9076/app/engineData',\n  createSocket: url => new WebSocket(url),\n};\nconst session = enigma.create(config);"
+          ]
         }
       }
     },
     "SenseConfiguration": {
-      "description": "The Qlik Sense configuration object.",
+      "description": "This object describes the configuration that is sent into `buildUrl(config)`.",
       "kind": "object",
       "entries": {
         "appId": {
@@ -443,7 +471,10 @@
       "returns": {
         "description": "Returns the websocket URL.",
         "type": "string"
-      }
+      },
+      "examples": [
+        "<caption>Example of building and using a Qlik Sense Windows-compatible WebSocket URL</caption>\nconst enigma = require('enigma.js');\nconst schema = require('enigma.js/schemas/12.20.0.json');\nconst SenseUtilities = require('enigma.js/sense-utilities');\nconst url = SenseUtilities.buildUrl({ host: 'my-sense-host', appId: 'some-app' });\nconst session = enigma.create({ schema, url });"
+      ]
     },
     "Session": {
       "description": "The QIX Engine session object",
@@ -485,6 +516,9 @@
             {
               "type": "#/definitions/Session/events/closed"
             }
+          ],
+          "examples": [
+            "<caption>Closing a session</caption>\nsession.close().then(() => {\n  console.log('Session was closed');\n});"
           ]
         },
         "open": {
@@ -504,6 +538,9 @@
             {
               "type": "#/definitions/Session/events/opened"
             }
+          ],
+          "examples": [
+            "<caption>Opening a sesssion</caption>\nsession.open().then(() => {\n  console.log('Session was opened');\n});"
           ]
         },
         "resume": {
@@ -529,6 +566,9 @@
             {
               "type": "#/definitions/Session/events/resumed"
             }
+          ],
+          "examples": [
+            "<caption>Resuming a session</caption>\nsession.resume(true).then(() => {\n  console.log('Session was resumed by re-attaching');\n});"
           ]
         },
         "send": {
@@ -578,6 +618,9 @@
             {
               "type": "#/definitions/Session/events/suspended"
             }
+          ],
+          "examples": [
+            "<caption>Suspending a session</caption>\nsession.suspend().then(() => {\n  console.log('Session was suspended');\n});"
           ]
         }
       },
@@ -585,22 +628,34 @@
         "closed": {
           "description": "Handle closed state. This event is triggered when the underlying websocket is closed and\nconfig.suspendOnClose is false.",
           "kind": "event",
-          "params": []
+          "params": [],
+          "examples": [
+            "<caption>Handling session closed</caption>\nsession.on('closed', () => {\n  console.log('Session was closed, clean up!');\n});"
+          ]
         },
         "notification": {
           "description": "Handle all JSON-RPC notification event, 'notification:*. Or handle a specific JSON-RPC\nnotification event, 'notification:OnConnected'. These events depend on the product you use QIX\nEngine from.",
           "kind": "event",
-          "params": []
+          "params": [],
+          "examples": [
+            "<caption>Bind the notification events</caption>\n// bind all notifications to console.log:\nsession.on('notification:*', console.log);\n// bind a specific notification to console.log:\nsession.on('notification:OnConnected', console.log);"
+          ]
         },
         "opened": {
-          "description": "Handle opened state. This event is triggered whenever the websocket is connected and ready for\ncommunication.",
+          "description": "Handle opened state. This event is triggered whenever the websocket is connected and\nready for communication.",
           "kind": "event",
-          "params": []
+          "params": [],
+          "examples": [
+            "<caption>Bind the session opened event</caption>\nsession.on('opened', () => {\n  console.log('Session was opened');\n});"
+          ]
         },
         "resumed": {
           "description": "Handle resumed state. This event is triggered when the session was properly resumed. It is\nuseful in scenarios where you for example can close blocking modal dialogs and allow the user\nto interact with your application again.",
           "kind": "event",
-          "params": []
+          "params": [],
+          "examples": [
+            "<caption>Handling session resumed</caption>\nsession.on('resumed', () => {\n  console.log('Session was resumed, we can close that \"reconnecting\" dialog now');\n});"
+          ]
         },
         "suspended": {
           "description": "Handle suspended state. This event is triggered in two cases (listed below). It is useful\nin scenarios where you for example want to block interaction in your application until you\nare resumed again. If config.suspendOnClose is true and there was a network disconnect\n(socked closed) or if you ran session.suspend().",
@@ -617,12 +672,18 @@
                 }
               }
             }
+          ],
+          "examples": [
+            "<caption>Handling session suspended</caption>\nsession.on('suspended', () => {\n  console.log('Session was suspended, retrying...');\n  session.resume();\n});"
           ]
         },
         "traffic": {
-          "description": "Handle websocket messages. Generally used in debugging purposes. traffic:* will handle all\nwebsocket messages, traffic:sent will handle outgoing messages and traffic:received will handle\nincoming messages.",
+          "description": "Handle websocket messages. Generally used in debugging purposes. `traffic:*` will handle all\nwebsocket messages, `traffic:sent` will handle outgoing messages and `traffic:received` will\nhandle incoming messages.",
           "kind": "event",
-          "params": []
+          "params": [],
+          "examples": [
+            "<caption>Bind the traffic events</caption>\n// bind both in- and outbound traffic to console.log:\nsession.on('traffic:*', console.log);\n// bind outbound traffic to console.log:\nsession.on('traffic:sent', console.log);\n// bind inbound traffic to console.log:\nsession.on('traffic:received', console.log);"
+          ]
         }
       }
     }
