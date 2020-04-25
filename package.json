@@ -44,7 +44,7 @@
     "@babel/preset-env": "7.9.5",
     "@joseph184/rollup-plugin-node-builtins": "2.1.4",
     "babel-plugin-istanbul": "6.0.0",
-    "coveralls": "3.0.11",
+    "coveralls": "3.1.0",
     "cross-env": "7.0.2",
     "eslint": "6.8.0",
     "eslint-config-airbnb-base": "14.1.0",
@@ -54,7 +54,7 @@
     "node-event-emitter": "0.0.1",
     "querystring": "0.2.0",
     "rimraf": "3.0.2",
-    "rollup": "2.6.1",
+    "rollup": "2.7.2",
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-filesize": "7.0.0",
@@ -63,6 +63,6 @@
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-uglify": "6.0.4",
     "scriptappy-from-jsdoc": "0.7.0",
-    "ws": "7.2.3"
+    "ws": "7.2.5"
   }
 }
