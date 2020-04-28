@@ -1,6 +1,6 @@
-
 /**
  * This is a list of error codes that can be thrown from enigma.js API calls.
+ * @entry
  * @see EnigmaError
  * @enum
  * @example <caption>Handling an enigma.js error</caption>

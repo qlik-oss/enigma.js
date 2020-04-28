@@ -13,7 +13,7 @@ import errorCodes from './error-codes';
  * @interface Configuration
  * @property {Object} schema Object containing the specification for the API to generate.
  * Corresponds to a specific version of the QIX Engine API.
- * @property {String} url String containing a proper websocker URL to QIX Engine.
+ * @property {String} url String containing a proper websocket URL to QIX Engine.
  * @property {Function} [createSocket] A function to use when instantiating the WebSocket,
  * mandatory for Node.js.
  * @property {Object} [Promise] ES6-compatible Promise library.
@@ -136,16 +136,13 @@ import errorCodes from './error-codes';
  * api.on('traffic:received', console.log);
  */
 
-/**
-* Qix service.
-*/
-class Qix {
+class Enigma {
   /**
-  * Function used to get a session.
-  * @private
-  * @param {Configuration} config The configuration object for this session.
-  * @returns {Session} Returns a session instance.
-  */
+   * Function used to get a session.
+   * @private
+   * @param {Configuration} config The configuration object for this session.
+   * @returns {Session} Returns a session instance.
+   */
   static getSession(config) {
     const {
       createSocket,
@@ -171,29 +168,6 @@ class Qix {
       suspendResume,
     });
     return session;
-  }
-
-  /**
-  * Function used to create a QIX session.
-  * @param {Configuration} config The configuration object for the QIX session.
-  * @returns {Session} Returns a new QIX session.
-  * @example <caption>Example minimal session creation</caption>
-  * const enigma = require('enigma.js');
-  * const schema = require('enigma.js/schemas/12.20.0.json');
-  * const WebSocket = require('ws');
-  * const config = {
-  *   schema,
-  *   url: 'ws://localhost:9076/app/engineData',
-  *   createSocket: url => new WebSocket(url),
-  * };
-  * const session = enigma.create(config);
-  */
-  static create(config) {
-    Qix.configureDefaults(config);
-    config.mixins.forEach((mixin) => {
-      config.definition.registerMixin(mixin);
-    });
-    return Qix.getSession(config);
   }
 
   /**
@@ -228,6 +202,30 @@ class Qix {
     config.mixins = config.mixins || [];
     config.definition = config.definition || new Schema(config);
   }
+
+  /**
+  * Function used to create a QIX session.
+  * @entry
+  * @param {Configuration} config The configuration object for the QIX session.
+  * @returns {Session} Returns a new QIX session.
+  * @example <caption>Example minimal session creation</caption>
+  * const enigma = require('enigma.js');
+  * const schema = require('enigma.js/schemas/12.20.0.json');
+  * const WebSocket = require('ws');
+  * const config = {
+  *   schema,
+  *   url: 'ws://localhost:9076/app/engineData',
+  *   createSocket: url => new WebSocket(url),
+  * };
+  * const session = enigma.create(config);
+  */
+  static create(config) {
+    Enigma.configureDefaults(config);
+    config.mixins.forEach((mixin) => {
+      config.definition.registerMixin(mixin);
+    });
+    return Enigma.getSession(config);
+  }
 }
 
-export default Qix;
+export default Enigma;

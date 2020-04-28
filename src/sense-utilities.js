@@ -22,6 +22,7 @@ import QueryString from 'querystring';
 function replaceLeadingAndTrailingSlashes(str) {
   return str.replace(/(^[/]+)|([/]+$)/g, '');
 }
+
 class SenseUtilities {
   /**
   * Ensures that the configuration has defaults set.
@@ -49,9 +50,10 @@ class SenseUtilities {
 
   /**
   * Function used to build an URL.
+  * @entry
   * @param {SenseConfiguration} urlConfig - The URL configuration object.
   * @returns {String} Returns the websocket URL.
-  * @example <caption>Example of building and using a Qlik Sense Windows-compatible WebSocket URL</caption>
+  * @example <caption>Example of building and using a Qlik Sense-compatible WebSocket URL</caption>
   * const enigma = require('enigma.js');
   * const schema = require('enigma.js/schemas/12.20.0.json');
   * const SenseUtilities = require('enigma.js/sense-utilities');

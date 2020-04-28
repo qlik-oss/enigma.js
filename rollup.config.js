@@ -46,7 +46,7 @@ const createConfig = (overrides) => {
 };
 
 const enigma = createConfig({
-  input: 'src/qix.js',
+  input: 'src/enigma.js',
   output: {
     file: 'enigma.js',
     name: 'enigma',

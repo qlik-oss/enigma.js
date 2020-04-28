@@ -1,4 +1,4 @@
-import Qix from '../../src/qix';
+import enigma from '../../src/enigma';
 import utils from './utils';
 
 describe('qix-logging', () => {
@@ -14,7 +14,7 @@ describe('qix-logging', () => {
   before(() => {
     const config = utils.getDefaultConfig();
     sandbox = sinon.createSandbox();
-    const session = Qix.create(config);
+    const session = enigma.create(config);
     sentSpy = sinon.spy();
     receivedSpy = sinon.spy();
     starSpy = sinon.spy();

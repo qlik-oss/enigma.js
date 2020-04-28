@@ -1,5 +1,5 @@
 import schema from '../../schemas/12.20.0.json';
-import Qix from '../../src/qix';
+import enigma from '../../src/enigma';
 import SocketMock from '../mocks/socket-mock';
 
 describe('QIX Global', () => {
@@ -29,14 +29,14 @@ describe('QIX Global', () => {
       },
     }];
 
-    return Qix.create(config).open().then((global) => {
+    return enigma.create(config).open().then((global) => {
       qixGlobal = global;
     });
   });
 
   afterEach(() => {
     SocketMock.removeAllListeners();
-    qixGlobal.session.on('error', () => {}); // Swallow the error
+    qixGlobal.session.on('error', () => { }); // Swallow the error
     return qixGlobal.session.close().then(() => {
       sandbox.restore();
     });

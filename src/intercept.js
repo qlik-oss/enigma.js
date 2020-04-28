@@ -135,8 +135,7 @@ class Intercept {
     return this.response.reduce((interception, interceptor) => interception.then(
       interceptor.onFulfilled && interceptor.onFulfilled.bind(this, session, request),
       interceptor.onRejected && interceptor.onRejected.bind(this, session, request),
-    ),
-      promise);
+    ), promise);
   }
 }
 

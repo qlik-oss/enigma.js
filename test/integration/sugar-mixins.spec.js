@@ -1,4 +1,4 @@
-import Qix from '../../src/qix';
+import enigma from '../../src/enigma';
 import utils from './utils';
 import ctrl00 from './load-scripts/ctrl00';
 
@@ -57,7 +57,7 @@ describe('Sugar mixins', () => {
     const config = utils.getDefaultConfig();
     config.mixins = [globalMixin, docMixin];
 
-    return Qix.create(config).open().then((global) => {
+    return enigma.create(config).open().then((global) => {
       qixGlobal = global;
     });
   });
