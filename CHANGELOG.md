@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.7.0
+
+- feat: added new schema, 12.612.0
+- fix: malformed api specification
+
 ## 2.6.2 / 2.6.3
 
 ### Fixes
