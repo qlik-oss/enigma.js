@@ -142,9 +142,13 @@ Some examples of good commit messages:
 We need you to sign our Contributor License Agreement (CLA) before we can accept your Pull Request. Visit this link for more information: https://github.com/qlik-oss/open-source/blob/master/sign-cla.md.
 
 ## Releasing
-1. Check commits since the last release
-2. Summarize commited changes in CHANGELOG.md
-3. Run `npm version major` (or `minor` or `patch`) depending on the changes that have been made
-4. Create a new branch with the new version & changelog and put a PR up for review
-5. When the PR is merged, push a tag with the new version to github
-6. Checkout the master branch, pull it and run `npm publish` to publish to NPM
+
+1. Create a branch, for example `git checkout -b next-release`
+1. Review commits since the last release
+1. Update `CHANGELOG.md` with a summary of changes and commit it
+1. Run `npm version --no-git-tag-version major` (or `minor` or `patch`) depending on the changes that have been made
+1. Check if there are changes to the API specification `docs/api-docs.json` (usually version number bump), commit it
+1. Create a PR, and merge it when reviewed
+1. Pull latest changes from `master` branch, `git checkout master && git pull`
+1. Tag using the same version number as from your PR (remember the `v` prefix, for example `v2.7.0`): `git tag -a v2.7.0 -m "Release v2.7.0" && git push --tags`
+1. And finally, run `npm run build && npm publish` to publish the npm package
