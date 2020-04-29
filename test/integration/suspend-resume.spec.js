@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import WebSocket from 'ws';
-import Qix from '../../src/qix';
+import enigma from '../../src/enigma';
 import Schema from '../../schemas/12.20.0.json';
 
 function generateId() {
@@ -28,7 +28,7 @@ describe('QIX Suspend/Resume', () => {
     let handleBeforeResume;
     let propertiesBeforeResume;
 
-    return Qix.create(config).open().then((global) => global.createSessionApp().then((app) => app.createObject({ qInfo: { qId: 'OBJ01', qType: 'abc' } })
+    return enigma.create(config).open().then((global) => global.createSessionApp().then((app) => app.createObject({ qInfo: { qId: 'OBJ01', qType: 'abc' } })
       .then(() => app.destroyObject('OBJ01'))
       .then(() => app.createObject({ qInfo: { qId: 'OBJ02', qType: 'abc' } }))
       .then((obj) => {
@@ -48,7 +48,7 @@ describe('QIX Suspend/Resume', () => {
     config.url = buildUrl(0);
     const suspended = sinon.spy();
     const closed = sinon.spy();
-    const session = Qix.create(config);
+    const session = enigma.create(config);
     session.on('suspended', suspended);
     session.on('closed', closed);
     const id = generateId();
@@ -83,7 +83,7 @@ describe('QIX Suspend/Resume', () => {
     config.suspendOnClose = true;
     const suspended = sinon.spy();
     const closed = sinon.spy();
-    const session = Qix.create(config);
+    const session = enigma.create(config);
     session.on('suspended', suspended);
     session.on('closed', closed);
     return session.open().then(() => session.rpc.close(4029)).then(() => new Promise((resolve) => {
@@ -98,7 +98,7 @@ describe('QIX Suspend/Resume', () => {
     config.suspendOnClose = false;
     const suspended = sinon.spy();
     const closed = sinon.spy();
-    const session = Qix.create(config);
+    const session = enigma.create(config);
     session.on('suspended', suspended);
     session.on('closed', closed);
     return session.open().then(() => session.rpc.close(4029)).then(() => new Promise((resolve) => {

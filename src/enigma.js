@@ -13,7 +13,7 @@ import errorCodes from './error-codes';
  * @interface Configuration
  * @property {Object} schema Object containing the specification for the API to generate.
  * Corresponds to a specific version of the QIX Engine API.
- * @property {String} url String containing a proper websocker URL to QIX Engine.
+ * @property {String} url String containing a proper websocket URL to QIX Engine.
  * @property {Function} [createSocket] A function to use when instantiating the WebSocket,
  * mandatory for Node.js.
  * @property {Object} [Promise] ES6-compatible Promise library.
@@ -28,10 +28,43 @@ import errorCodes from './error-codes';
  * @property {Object} [protocol={}] An object containing additional JSON-RPC request parameters.
  * @property {Boolean} [protocol.delta=true] Set to false to disable the use of the
  * bandwidth-reducing delta protocol.
+ * @example <caption>Example defining a configuration object</caption>
+ * const enigma = require('enigma.js');
+ * const WebSocket = require('ws');
+ * const bluebird = require('bluebird');
+ * const schema = require('enigma.js/schemas/12.20.0.json');
+ *
+ * const config = {
+ *  schema,
+ *  url: 'ws://localhost:4848/app/engineData',
+ *  createSocket: url => new WebSocket(url),
+ *  Promise: bluebird,
+ *  suspendOnClose: true,
+ *  mixins: [{ types: ['Global'], init: () => console.log('Mixin ran') }],
+ *  protocol: { delta: false },
+ * };
+ *
+ * enigma.create(config).open().then((global) => {
+ *   // global === QIX global interface
+ *   process.exit(0);
+ * });
  */
 
 /**
- * Mixin object to extend/augment the QIX Engine API
+ * The mixin concept allows you to add or override QIX Engine API functionality. A mixin is
+ * basically a JavaScript object describing which types it modifies, and a list of functions
+ * for extending and overriding the API for those types.
+ *
+ * QIX Engine types like for example GenericObject, Doc, GenericBookmark, are supported but
+ * also custom GenericObject types such as barchart, story and myCustomType. An API will get
+ * both their generic type as well as custom type mixins applied.
+ *
+ * Mixins that are bound to several different types can find the current API type in the
+ * `genericType` or `type` members. `this.type` would for instance return `GenericObject` and
+ * `this.genericType` would return `barchart`.
+ *
+ * See the Mixins examples on how to use it, below is an outline of what the mixin API consists of.
+ *
  * @interface Mixin
  * @property {String|Array<String>} types String or array of strings containing the API-types that
  * will be mixed in.
@@ -43,8 +76,12 @@ import errorCodes from './error-codes';
  */
 
 /**
- * The API for generated APIs depends on the QIX Engine schema you pass into your Configuration,
- * and on what QIX struct the API has.
+ * The API for generated APIs depends on the QIX Engine schema you pass into your Configuration, and
+ * on what QIX struct the API has.
+ *
+ * All API calls made using the generated APIs will return promises which are either resolved or
+ * rejected depending on how the QIX Engine responds.
+ *
  * @interface API
  * @property {String} id Contains the unique identifier for this API.
  * @property {String} type Contains the schema class name for this API.
@@ -53,6 +90,12 @@ import errorCodes from './error-codes';
  * @property {Session} session Contains a reference to the session that this API belongs to.
  * @property {Number} handle Contains the handle QIX Engine assigned to the API. Used interally in
  * enigma.js for caches and JSON-RPC requests.
+ * @example <caption>Example using `global` and `generic object` struct APIs</caption>
+ * global.openDoc('my-document.qvf').then((doc) => {
+ *   doc.createObject({ qInfo: { qType: 'my-object' } }).then(api => { });
+ *   doc.getObject('object-id').then(api => { });
+ *   doc.getBookmark('bookmark-id').then(api => { });
+ * });
  */
 
 /**
@@ -61,6 +104,10 @@ import errorCodes from './error-codes';
  * your data.
  * @event API#changed
  * @type {Object}
+ * @example <caption>Bind the `changed` event</caption>
+ * api.on('changed', () => {
+ *   api.getLayout().then(layout => { });
+ * });
  */
 
 /**
@@ -68,26 +115,34 @@ import errorCodes from './error-codes';
  * It usually means that it no longer exist in the QIX Engine document or session.
  * @event API#closed
  * @type {Object}
+ * @example <caption>Bind the `closed` event</caption>
+ * api.on('closed', () => {
+ *   console.log(api.id, 'was closed');
+ * });
  */
 
 /**
  * Handle JSON-RPC requests/responses for this API. Generally used in debugging purposes.
- * traffic:* will handle all websocket messages, traffic:sent will handle outgoing messages
- * and traffic:received will handle incoming messages.
+ * `traffic:*` will handle all websocket messages, `traffic:sent` will handle outgoing messages
+ * and `traffic:received` will handle incoming messages.
  * @event API#traffic
  * @type {Object}
+ * @example <caption>Bind the traffic events</caption>
+ * // bind both in- and outbound traffic to console.log:
+ * api.on('traffic:*', console.log);
+ * // bind outbound traffic to console.log:
+ * api.on('traffic:sent', console.log);
+ * // bind inbound traffic to console.log:
+ * api.on('traffic:received', console.log);
  */
 
-/**
-* Qix service.
-*/
-class Qix {
+class Enigma {
   /**
-  * Function used to get a session.
-  * @private
-  * @param {Configuration} config The configuration object for this session.
-  * @returns {Session} Returns a session instance.
-  */
+   * Function used to get a session.
+   * @private
+   * @param {Configuration} config The configuration object for this session.
+   * @returns {Session} Returns a session instance.
+   */
   static getSession(config) {
     const {
       createSocket,
@@ -113,19 +168,6 @@ class Qix {
       suspendResume,
     });
     return session;
-  }
-
-  /**
-  * Function used to create a QIX session.
-  * @param {Configuration} config The configuration object for the QIX session.
-  * @returns {Session} Returns a new QIX session.
-  */
-  static create(config) {
-    Qix.configureDefaults(config);
-    config.mixins.forEach((mixin) => {
-      config.definition.registerMixin(mixin);
-    });
-    return Qix.getSession(config);
   }
 
   /**
@@ -160,6 +202,30 @@ class Qix {
     config.mixins = config.mixins || [];
     config.definition = config.definition || new Schema(config);
   }
+
+  /**
+  * Function used to create a QIX session.
+  * @entry
+  * @param {Configuration} config The configuration object for the QIX session.
+  * @returns {Session} Returns a new QIX session.
+  * @example <caption>Example minimal session creation</caption>
+  * const enigma = require('enigma.js');
+  * const schema = require('enigma.js/schemas/12.20.0.json');
+  * const WebSocket = require('ws');
+  * const config = {
+  *   schema,
+  *   url: 'ws://localhost:9076/app/engineData',
+  *   createSocket: url => new WebSocket(url),
+  * };
+  * const session = enigma.create(config);
+  */
+  static create(config) {
+    Enigma.configureDefaults(config);
+    config.mixins.forEach((mixin) => {
+      config.definition.registerMixin(mixin);
+    });
+    return Enigma.getSession(config);
+  }
 }
 
-export default Qix;
+export default Enigma;

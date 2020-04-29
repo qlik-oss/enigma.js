@@ -6,3 +6,4 @@ examples/run.js
 # distribution files:
 /enigma.*
 /sense-utilities.*
+/error-codes.*

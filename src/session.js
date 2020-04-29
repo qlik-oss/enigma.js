@@ -18,15 +18,27 @@ class Session {
    * Engine from.
    * @event Session#notification
    * @type {Object}
+   * @example <caption>Bind the notification events</caption>
+   * // bind all notifications to console.log:
+   * session.on('notification:*', console.log);
+   * // bind a specific notification to console.log:
+   * session.on('notification:OnConnected', console.log);
    */
 
   /**
-  * Handle websocket messages. Generally used in debugging purposes. traffic:* will handle all
-  * websocket messages, traffic:sent will handle outgoing messages and traffic:received will handle
-  * incoming messages.
-  * @event Session#traffic
-  * @type {Object}
-  */
+   * Handle websocket messages. Generally used in debugging purposes. `traffic:*` will handle all
+   * websocket messages, `traffic:sent` will handle outgoing messages and `traffic:received` will
+   * handle incoming messages.
+   * @event Session#traffic
+   * @type {Object}
+   * @example <caption>Bind the traffic events</caption>
+   * // bind both in- and outbound traffic to console.log:
+   * session.on('traffic:*', console.log);
+   * // bind outbound traffic to console.log:
+   * session.on('traffic:sent', console.log);
+   * // bind inbound traffic to console.log:
+   * session.on('traffic:received', console.log);
+   */
 
   constructor(options) {
     const session = this;
@@ -65,17 +77,22 @@ class Session {
   * @param {Event} evt WebSocket close event.
   */
   onRpcClosed(evt) {
-  /**
-   * Handle suspended state. This event is triggered in two cases (listed below). It is useful
-   * in scenarios where you for example want to block interaction in your application until you
-   * are resumed again. If config.suspendOnClose is true and there was a network disconnect
-   * (socked closed) or if you ran session.suspend().
-   * @event Session#suspended
-   * @type {Object}
-   * @param {Object} evt Event object.
-   * @param {String} evt.initiator String indication what triggered the suspended state. Possible
-   * values network, manual.
-   */
+    /**
+     * Handle suspended state. This event is triggered in two cases (listed below). It is useful
+     * in scenarios where you for example want to block interaction in your application until you
+     * are resumed again. If config.suspendOnClose is true and there was a network disconnect
+     * (socked closed) or if you ran session.suspend().
+     * @event Session#suspended
+     * @type {Object}
+     * @param {Object} evt Event object.
+     * @param {String} evt.initiator String indication what triggered the suspended state. Possible
+     * values network, manual.
+     * @example <caption>Handling session suspended</caption>
+     * session.on('suspended', () => {
+     *   console.log('Session was suspended, retrying...');
+     *   session.resume();
+     * });
+     */
     if (this.suspendResume.isSuspended) {
       return;
     }
@@ -162,7 +179,7 @@ class Session {
    * @param {String} args.type QIX type of the backend object. Can for example
    *                           be "Doc" or "GenericVariable".
    * @param {String} args.genericType Custom type of the backend object, if defined in qInfo.
-   * @returns {*} Returns the generated and possibly augmented API.
+   * @returns {Object} Returns the generated and possibly augmented API.
    */
   getObjectApi(args) {
     const {
@@ -182,14 +199,22 @@ class Session {
   * Establishes the websocket against the configured URL and returns the Global instance.
   * @emits Session#opened
   * @returns {Promise<Object>} Eventually resolved if the connection was successful.
+  * @example <caption>Opening a sesssion</caption>
+  * session.open().then(() => {
+  *   console.log('Session was opened');
+  * });
   */
   open() {
-  /**
-   * Handle opened state. This event is triggered whenever the websocket is connected and ready for
-   * communication.
-   * @event Session#opened
-   * @type {Object}
-   */
+    /**
+     * Handle opened state. This event is triggered whenever the websocket is connected and
+     * ready for communication.
+     * @event Session#opened
+     * @type {Object}
+     * @example <caption>Bind the session opened event</caption>
+     * session.on('opened', () => {
+     *   console.log('Session was opened');
+     * });
+     */
     if (!this.globalPromise) {
       const args = {
         handle: -1,
@@ -240,6 +265,10 @@ class Session {
   * @param {String} [reason=""] - The human readable string describing
   * why the connection is suspended.
   * @returns {Promise<Object>} Eventually resolved when the websocket has been closed.
+  * @example <caption>Suspending a session</caption>
+  * session.suspend().then(() => {
+  *   console.log('Session was suspended');
+  * });
   */
   suspend(code = 4000, reason = '') {
     return this.suspendResume.suspend(code, reason)
@@ -256,15 +285,23 @@ class Session {
   * @returns {Promise<Object>} Eventually resolved when the websocket (and potentially the
   * previously opened document, and generated APIs) has been restored, rejected when it fails any
   * of those steps, or when onlyIfAttached is true and a new session was created.
+  * @example <caption>Resuming a session</caption>
+  * session.resume(true).then(() => {
+  *   console.log('Session was resumed by re-attaching');
+  * });
   */
   resume(onlyIfAttached) {
-  /**
-   * Handle resumed state. This event is triggered when the session was properly resumed. It is
-   * useful in scenarios where you for example can close blocking modal dialogs and allow the user
-   * to interact with your application again.
-   * @event Session#resumed
-   * @type {Object}
-   */
+    /**
+     * Handle resumed state. This event is triggered when the session was properly resumed. It is
+     * useful in scenarios where you for example can close blocking modal dialogs and allow the user
+     * to interact with your application again.
+     * @event Session#resumed
+     * @type {Object}
+     * @example <caption>Handling session resumed</caption>
+     * session.on('resumed', () => {
+     *   console.log('Session was resumed, we can close that "reconnecting" dialog now');
+     * });
+     */
     return this.suspendResume.resume(onlyIfAttached).then((value) => {
       this.emit('resumed');
       return value;
@@ -279,14 +316,22 @@ class Session {
   * @param {Number} [code=1000] - The reason code for closing the connection.
   * @param {String} [reason=""] - The human readable string describing why the connection is closed.
   * @returns {Promise<Object>} Eventually resolved when the websocket has been closed.
+  * @example <caption>Closing a session</caption>
+  * session.close().then(() => {
+  *   console.log('Session was closed');
+  * });
   */
   close(code = 1000, reason = '') {
-  /**
-   * Handle closed state. This event is triggered when the underlying websocket is closed and
-   * config.suspendOnClose is false.
-   * @event Session#closed
-   * @type {Object}
-   */
+    /**
+     * Handle closed state. This event is triggered when the underlying websocket is closed and
+     * config.suspendOnClose is false.
+     * @event Session#closed
+     * @type {Object}
+     * @example <caption>Handling session closed</caption>
+     * session.on('closed', () => {
+     *   console.log('Session was closed, clean up!');
+     * });
+     */
     this.globalPromise = undefined;
     return this.rpc.close(code, reason).then((evt) => this.emit('closed', evt));
   }
