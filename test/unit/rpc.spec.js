@@ -186,7 +186,12 @@ describe('RPC', () => {
     };
     rpc.onError({ dummy: 123 });
 
+
+    const mockError = new Error('Socket error');
+    mockError.code = -1;
+    mockError.enigmaError = true;
+
     expect(rejectWith.callCount).to.equal(2);
-    expect(rejectWith).to.be.calledWith({ code: -1, message: 'Socket error' });
+    expect(rejectWith).to.be.calledWith(mockError);
   });
 });
