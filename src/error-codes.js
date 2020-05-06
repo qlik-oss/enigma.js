@@ -15,7 +15,7 @@
  */
 const errorCodes = {
   /**
-   * You're trying to send data on a socket that's not created
+   * You're trying to send data on a socket that's not connected
    * @type {number}
    */
   NOT_CONNECTED: -1,
