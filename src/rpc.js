@@ -69,7 +69,7 @@ class RPC {
     if (this.resolvers && this.resolvers.closed) {
       this.resolvers.closed.resolveWith(event);
     }
-    this.rejectAllOutstandingResolvers({ code: -1, message: 'Socket closed' });
+    this.rejectAllOutstandingResolvers(createEnigmaError(errorCodes.NOT_CONNECTED, 'Socket closed'));
   }
 
   /**
@@ -101,7 +101,7 @@ class RPC {
       // as run-time ones:
       this.emit('socket-error', event);
     }
-    this.rejectAllOutstandingResolvers({ code: -1, message: 'Socket error' });
+    this.rejectAllOutstandingResolvers(createEnigmaError(errorCodes.NOT_CONNECTED, 'Socket error'));
   }
 
   /**
