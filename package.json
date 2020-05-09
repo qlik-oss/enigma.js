@@ -54,7 +54,7 @@
     "node-event-emitter": "0.0.1",
     "querystring": "0.2.0",
     "rimraf": "3.0.2",
-    "rollup": "2.7.6",
+    "rollup": "2.8.2",
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-filesize": "8.0.2",
