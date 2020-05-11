@@ -33,7 +33,7 @@
       "kind": "object",
       "entries": {
         "NOT_CONNECTED": {
-          "description": "You're trying to send data on a socket that's not created",
+          "description": "You're trying to send data on a socket that's not connected",
           "defaultValue": -1,
           "type": "number"
         },
