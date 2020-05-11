@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.1
+
+- fix: corrected the "Socket closed" and "Socket error" to be true enigma errors (#739)
+
 ## 2.7.0
 
 - feat: added new schema, 12.612.0
