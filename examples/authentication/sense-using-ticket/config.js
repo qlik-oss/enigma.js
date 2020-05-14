@@ -1,20 +1,20 @@
-const https = require('https')
+const https = require('https');
 const crypto = require('crypto');
-const path = require('path');
 const fs = require('fs');
 
-const xrfkey = function (size, chars) {
+const xrfkey = (function generateXrfkey(size, chars) {
   size = size || 16;
   chars = chars || 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
 
-  var rnd = crypto.randomBytes(size), value = new Array(size), len = chars.length;
+  const rnd = crypto.randomBytes(size); const value = new Array(size); const
+    len = chars.length;
 
-  for (var i = 0; i < size; i++) {
-    value[i] = chars[rnd[i] % len]
-  };
+  for (let i = 0; i < size; i += 1) {
+    value[i] = chars[rnd[i] % len];
+  }
 
   return value.join('');
-}();
+}());
 
 module.exports = {
   // Your Sense Enterprise installation hostname
@@ -30,15 +30,15 @@ module.exports = {
   // The user to use when creating the session:
   userId: 'your-sense-user',
   // URL to the QPS there the ticket is retrived
-  ticketURL: function () { return `https://${this.host}:${this.proxyPort}/qps${this.virtualProxy}/ticket?xrfkey=${xrfkey}` },
+  ticketURL() { return `https://${this.host}:${this.proxyPort}/qps${this.virtualProxy}/ticket?xrfkey=${xrfkey}`; },
   // Body sent in the ticket request
-  ticketReqBody: function () {
+  ticketReqBody() {
     return {
-      "UserDirectory": this.userDirectory,
-      "UserId": this.userId,
-      'Attributes': [],
-      'TargetId': '',
-    }
+      UserDirectory: this.userDirectory,
+      UserId: this.userId,
+      Attributes: [],
+      TargetId: '',
+    };
   },
   // Config used for the ticket request
   ticketReqConfig: {
@@ -52,24 +52,5 @@ module.exports = {
       cert: fs.readFileSync('./client.pem'),
       // passphrase: "secret",
     }),
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  },
+};

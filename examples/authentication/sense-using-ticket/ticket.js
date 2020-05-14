@@ -21,10 +21,10 @@ let possibleEnigmaErr;
       },
     }),
   });
-  
+
   // Catch possible errors sent on WebSocket
   session.on('traffic:received', (res) => {
-    if (res.params && res.params.severity === 'fatal'){
+    if (res.params && res.params.severity === 'fatal') {
       possibleEnigmaErr = res.params.message;
     }
   });
@@ -38,19 +38,10 @@ let possibleEnigmaErr;
   const apps = list.map((app) => `\n\t${app.qDocId} (${app.qTitle || 'No title'})`).join(', ');
   console.log(`\nApps on this Engine that the configured user can open: ${apps}`);
   session.close();
-
-})().catch(err => {
+})().catch((err) => {
   if (err.enigmaError) {
     console.error('Enigma error:', possibleEnigmaErr || err);
   } else {
     console.log(err);
   }
 });
-
-
-
-
-
-
-
-
