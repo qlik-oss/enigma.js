@@ -28,6 +28,7 @@ $ npm install
 - #### Authentication
   - [Sense using certificates](./authentication/sense-using-certificates#readme)
   - [Sense using JSON Web Token](./authentication/sense-using-jwt#readme)
+  - [Sense using ticket](./authentication/sense-using-ticket#readme)
 - #### Basics
   - [Handling events](./basics/events#readme)
   - [List apps in Sense QRS and open document](./basics/documents#readme)
