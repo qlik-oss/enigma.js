@@ -8,8 +8,7 @@ limitation of 5 concurrent sessions per user (and some cool-down time per closed
 session as well).
 
 Please note that this approach uses root certificates that can be used to impersonate
-_anyone_ in your Qlik Sense Enterprise deployment, be careful. It also bypasses the
-Qlik Sense Proxy authentication/load-balancing.
+_anyone_ in your Qlik Sense Enterprise deployment, be careful.
 
 ## Prerequisites
 
@@ -27,6 +26,7 @@ code with the appropriate parameters in `./config.js` (comments in the example c
 
 * [Qlik Sense Help: Exporting certificates](http://help.qlik.com/en-US/sense/June2017/Subsystems/ManagementConsole/Content/export-certificates.htm)
 * [Qlik Sense Help: Certificate architecture](http://help.qlik.com/en-US/sense/June2017/Subsystems/PlanningQlikSenseDeployments/Content/Deployment/Server-Security-Authentication-Certificate-Trust-Architecture.htm)
+* [Qlik Sense Help: Ticket solution](https://help.qlik.com/en-US/sense/June2019/Subsystems/PlanningQlikSenseDeployments/Content/Sense_Deployment/Server-Security-Authentication-Solutions-Ticket-Solution.htm)
 
 ---
 

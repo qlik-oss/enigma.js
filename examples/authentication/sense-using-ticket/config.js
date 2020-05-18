@@ -1,20 +1,7 @@
 const https = require('https');
-const crypto = require('crypto');
 const fs = require('fs');
 
-const xrfkey = (function generateXrfkey(size, chars) {
-  size = size || 16;
-  chars = chars || 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
-
-  const rnd = crypto.randomBytes(size); const value = new Array(size); const
-    len = chars.length;
-
-  for (let i = 0; i < size; i += 1) {
-    value[i] = chars[rnd[i] % len];
-  }
-
-  return value.join('');
-}());
+const xrfKey = 'abcdefghijklmnop';
 
 module.exports = {
   // Your Sense Enterprise installation hostname
@@ -30,7 +17,7 @@ module.exports = {
   // The user to use when creating the session:
   userId: 'your-sense-user',
   // URL to the QPS there the ticket is retrived
-  ticketURL() { return `https://${this.host}:${this.proxyPort}/qps${this.virtualProxy}/ticket?xrfkey=${xrfkey}`; },
+  ticketURL() { return `https://${this.host}:${this.proxyPort}/qps${this.virtualProxy}/ticket?xrfkey=${xrfKey}`; },
   // Body sent in the ticket request
   ticketReqBody() {
     return {
@@ -44,7 +31,7 @@ module.exports = {
   ticketReqConfig: {
     headers: {
       'Content-Type': 'application/json',
-      'X-Qlik-Xrfkey': xrfkey,
+      'X-Qlik-Xrfkey': xrfKey,
     },
     httpsAgent: new https.Agent({
       ca: [fs.readFileSync('./root.pem')],
