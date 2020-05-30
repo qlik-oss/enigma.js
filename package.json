@@ -39,9 +39,9 @@
   "devDependencies": {
     "@after-work.js/aw": "6.0.13",
     "@after-work.js/transform": "6.0.13",
-    "@babel/core": "7.10.1",
+    "@babel/core": "7.10.2",
     "@babel/plugin-transform-modules-commonjs": "7.10.1",
-    "@babel/preset-env": "7.10.1",
+    "@babel/preset-env": "7.10.2",
     "@joseph184/rollup-plugin-node-builtins": "2.1.4",
     "babel-plugin-istanbul": "6.0.0",
     "coveralls": "3.1.0",
