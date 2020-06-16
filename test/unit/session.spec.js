@@ -257,7 +257,6 @@ describe('Session', () => {
     expect(emit).to.have.been.calledWith('socket-error', 'fubar');
   });
 
-
   it('should close', () => {
     const rpc = new RPCMock({
       Promise,
