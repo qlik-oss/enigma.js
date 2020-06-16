@@ -1,6 +1,5 @@
 import Events from '../../src/event-emitter';
 
-
 describe('EventEmitter', () => {
   it('should add events', () => {
     const obj = {};

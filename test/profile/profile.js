@@ -53,7 +53,6 @@ async function next() {
       return doc.destroyObject(obj.id);
     }
 
-
     try {
       const global = await session.open();
       const doc = await global.createSessionApp();

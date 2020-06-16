@@ -1,4 +1,3 @@
-
 /**
  * Error containing a custom error code.
  * @extends Error
