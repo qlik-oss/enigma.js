@@ -39,7 +39,7 @@
   "devDependencies": {
     "@after-work.js/aw": "6.0.13",
     "@after-work.js/transform": "6.0.13",
-    "@babel/core": "7.10.4",
+    "@babel/core": "7.10.5",
     "@babel/plugin-transform-modules-commonjs": "7.10.4",
     "@babel/preset-env": "7.10.4",
     "@joseph184/rollup-plugin-node-builtins": "2.1.4",
