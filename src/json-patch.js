@@ -284,10 +284,14 @@ JSONPatch.apply = function apply(original, patches) {
         }
         parent.splice(+key, patch.op === 'add' ? 0 : 1, patch.value);
       } else if (isArray(target) && isArray(patch.value)) {
-        const newValues = patch.value.slice();
         // keep array reference if possible...
         target.length = 0;
-        target.push(...newValues);
+
+        const chunkSize = 1000;
+        for (let i = 0; i < patch.value.length; i += chunkSize) {
+          const chunk = patch.value.slice(i, i + chunkSize);
+          target.push(...chunk);
+        }
       } else if (isObject(target) && isObject(patch.value)) {
         // keep object reference if possible...
         emptyObject(target);
