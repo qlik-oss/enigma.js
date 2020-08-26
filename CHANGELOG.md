@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.2
+
+- fix massive arrays breaking the json patch
+
 ## 2.7.1
 
 - fix: corrected the "Socket closed" and "Socket error" to be true enigma errors (#739)
