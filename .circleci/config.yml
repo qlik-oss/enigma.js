@@ -3,8 +3,8 @@ jobs:
   build:
     working_directory: ~/enigma.js
     docker:
-      - image: circleci/node:12.20.2
-      - image: qlikcore/engine:12.887.0
+      - image: circleci/node:12.21.0
+      - image: qlikcore/engine:12.925.0
         command: -S AcceptEULA=yes
     steps:
       - checkout
