@@ -79,8 +79,8 @@ class Session {
   onRpcClosed(evt) {
     /**
      * Handles suspended state. This event is triggered in two cases (listed below). It is useful
-     * in scenarios where, for example, you want to block interaction with your application until you
-     * resume again. Or, if config.suspendOnClose is true and there was a network disconnect
+     * in scenarios where, for example, you want to block interaction with your application until
+	 * you resume again. Or, if config.suspendOnClose is true and there was a network disconnect
      * (socket closed) or if you ran session.suspend().
      * @event Session#suspended
      * @type {Object}
@@ -283,8 +283,8 @@ class Session {
   * @emits Session#resumed
   * @param {Boolean} onlyIfAttached If true, resume only if the session was reattached properly.
   * @returns {Promise<Object>} Eventually resolved when the websocket (and potentially the
-  * previously opened document, and generated APIs) has been restored; it is rejected when it fails any
-  * of those steps, or when onlyIfAttached is true and a new session was created.
+  * previously opened document, and generated APIs) has been restored; it is rejected when it fails
+  * any of those steps, or when onlyIfAttached is true and a new session was created.
   * @example <caption>Resuming a session</caption>
   * session.resume(true).then(() => {
   *   console.log('Session was resumed by re-attaching');
@@ -293,8 +293,8 @@ class Session {
   resume(onlyIfAttached) {
     /**
      * Handles resumed state. This event is triggered when the session was properly resumed. It is
-     * useful in scenarios where, for example, you can close blocking modal dialogs and allow the user
-     * to interact with your application again.
+     * useful in scenarios where, for example, you can close blocking modal dialogs and allow the
+	 * user to interact with your application again.
      * @event Session#resumed
      * @type {Object}
      * @example <caption>Handling session resumed</caption>
