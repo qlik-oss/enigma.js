@@ -80,7 +80,7 @@ class Session {
     /**
      * Handles suspended state. This event is triggered in two cases (listed below). It is useful
      * in scenarios where, for example, you want to block interaction with your application until
-	 * you resume again. Or, if config.suspendOnClose is true and there was a network disconnect
+     * you resume again. Or, if config.suspendOnClose is true and there was a network disconnect
      * (socket closed) or if you ran session.suspend().
      * @event Session#suspended
      * @type {Object}
@@ -294,7 +294,7 @@ class Session {
     /**
      * Handles resumed state. This event is triggered when the session was properly resumed. It is
      * useful in scenarios where, for example, you can close blocking modal dialogs and allow the
-	 * user to interact with your application again.
+     * user to interact with your application again.
      * @event Session#resumed
      * @type {Object}
      * @example <caption>Handling session resumed</caption>
