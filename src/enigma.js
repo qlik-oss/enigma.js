@@ -55,15 +55,15 @@ import errorCodes from './error-codes';
  * basically a JavaScript object describing which types it modifies, and a list of functions
  * for extending and overriding the API for those types.
  *
- * QIX Engine types like for example GenericObject, Doc, GenericBookmark, are supported but
+ * QIX Engine types like, for example, GenericObject, Doc, GenericBookmark, are supported but
  * also custom GenericObject types such as barchart, story and myCustomType. An API will get
  * both their generic type as well as custom type mixins applied.
  *
  * Mixins that are bound to several different types can find the current API type in the
- * `genericType` or `type` members. `this.type` would for instance return `GenericObject` and
+ * `genericType` or `type` members. `this.type` would, for instance, return `GenericObject` and
  * `this.genericType` would return `barchart`.
  *
- * See the Mixins examples on how to use it, below is an outline of what the mixin API consists of.
+ * See the Mixins examples on how to use it. Below is an outline of what the mixin API consists of.
  *
  * @interface Mixin
  * @property {String|Array<String>} types String or array of strings containing the API-types that
@@ -72,14 +72,14 @@ import errorCodes from './error-codes';
  * specified API.
  * @property {Object} [override] Object literal containing the methods to override existing methods.
  * @property {Function} [init] Init function that, if defined, will run when an API is instantiated.
- * It runs with Promise and API object as parameters
+ * It runs with Promise and API object as parameters.
  */
 
 /**
  * The API for generated APIs depends on the QIX Engine schema you pass into your Configuration, and
  * on what QIX struct the API has.
  *
- * All API calls made using the generated APIs will return promises which are either resolved or
+ * All API calls made using the generated APIs will return promises that are either resolved or
  * rejected depending on how the QIX Engine responds.
  *
  * @interface API
@@ -99,7 +99,7 @@ import errorCodes from './error-codes';
  */
 
 /**
- * Handle changes on the API. The changed event is triggered whenever enigma.js or QIX Engine has
+ * Handles changes on the API. The changed event is triggered whenever enigma.js or QIX Engine has
  * identified potential changes on the underlying properties or hypercubes and you should re-fetch
  * your data.
  * @event API#changed
@@ -111,8 +111,8 @@ import errorCodes from './error-codes';
  */
 
 /**
- * Handle closed API. The closed event is triggered whenever QIX Engine considers an API closed.
- * It usually means that it no longer exist in the QIX Engine document or session.
+ * Handles closed API. The closed event is triggered whenever QIX Engine considers an API closed.
+ * It usually means that it no longer exists in the QIX Engine document or session.
  * @event API#closed
  * @type {Object}
  * @example <caption>Bind the `closed` event</caption>
@@ -122,7 +122,7 @@ import errorCodes from './error-codes';
  */
 
 /**
- * Handle JSON-RPC requests/responses for this API. Generally used in debugging purposes.
+ * Handles JSON-RPC requests/responses for this API. Generally used in debugging purposes.
  * `traffic:*` will handle all websocket messages, `traffic:sent` will handle outgoing messages
  * and `traffic:received` will handle incoming messages.
  * @event API#traffic

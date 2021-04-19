@@ -3,7 +3,7 @@ import QueryString from 'querystring';
 /**
 * This object describes the configuration that is sent into `buildUrl(config)`.
 * @typedef {Object} SenseConfiguration
-* @property {String} [appId] The app id. If omitted, only the global object is returned.
+* @property {String} [appId] The app ID. If omitted, only the global object is returned.
 *                            Otherwise both global and app object are returned.
 * @property {Boolean} [noData=false] Whether to open the app without data.
 * @property {Boolean} [secure=true] Set to false if an unsecure WebSocket should be used.
@@ -49,7 +49,7 @@ class SenseUtilities {
   }
 
   /**
-  * Function used to build an URL.
+  * Function used to build a URL.
   * @entry
   * @param {SenseConfiguration} urlConfig - The URL configuration object.
   * @returns {String} Returns the websocket URL.
