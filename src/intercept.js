@@ -6,9 +6,9 @@ import outParamResponse from './interceptors/out-param-response-interceptor';
 import resultResponse from './interceptors/result-response-interceptor';
 
 /**
- * Interceptors is a concept similar to mixins, but run on a lower level. The interceptor concept
+ * Interceptor is a concept similar to mixins, but runs on a lower level. The interceptor concept
  * can augment either the requests (i.e. before sent to QIX Engine), or the responses (i.e. after
- * QIX Engine has sent a response). The interceptor promises runs in parallel to the regular
+ * QIX Engine has sent a response). The interceptor promises run in parallel to the regular
  * promises used in enigma.js, which means that it can be really useful when you want to normalize
  * behaviors in your application.
  * @interface Interceptor
@@ -66,7 +66,7 @@ import resultResponse from './interceptors/result-response-interceptor';
 
 /**
  * This method is invoked when a previous interceptor has rejected the
- * promise, use this to handle for example errors before they are sent into mixins.
+ * promise; use this to handle, for example, errors before they are sent into mixins.
  * @function InterceptorResponse#onRejected
  * @param {Session} session The session executing the interceptor. You may use .retry() to retry
  * sending it to QIX Engine.
@@ -75,7 +75,7 @@ import resultResponse from './interceptors/result-response-interceptor';
  */
 
 /**
- * This method is invoked when a promise has been successfully resolved,
+ * This method is invoked when a promise has been successfully resolved;
  * use this to modify the result or reject the promise chain before it is sent
  * to mixins.
  * @function InterceptorResponse#onFulfilled

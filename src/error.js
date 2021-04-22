@@ -1,7 +1,7 @@
 /**
  * Error containing a custom error code.
  * @extends Error
- * @property {number} code The error code as defined by `errorCodes`
+ * @property {number} code The error code as defined by `errorCodes`.
  * @property {boolean} enigmaError=true
  */
 class EnigmaError extends Error {
