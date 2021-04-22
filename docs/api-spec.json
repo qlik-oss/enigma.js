@@ -33,62 +33,62 @@
       "kind": "object",
       "entries": {
         "NOT_CONNECTED": {
-          "description": "You're trying to send data on a socket that's not connected",
+          "description": "You're trying to send data on a socket that's not connected.",
           "defaultValue": -1,
           "type": "number"
         },
         "OBJECT_NOT_FOUND": {
-          "description": "The object you're trying to fetch does not exist",
+          "description": "The object you're trying to fetch does not exist.",
           "defaultValue": -2,
           "type": "number"
         },
         "EXPECTED_ARRAY_OF_PATCHES": {
-          "description": "Unexpected RPC response, expected array of patches",
+          "description": "Unexpected RPC response, expected array of patches.",
           "defaultValue": -3,
           "type": "number"
         },
         "PATCH_HAS_NO_PARENT": {
-          "description": "Patchee is not an object we can patch",
+          "description": "Not an object that can be patched.",
           "defaultValue": -4,
           "type": "number"
         },
         "ENTRY_ALREADY_DEFINED": {
-          "description": "This entry is already defined with another key",
+          "description": "This entry is already defined with another key.",
           "defaultValue": -5,
           "type": "number"
         },
         "NO_CONFIG_SUPPLIED": {
-          "description": "You need to supply a configuration",
+          "description": "You need to supply a configuration.",
           "defaultValue": -6,
           "type": "number"
         },
         "PROMISE_REQUIRED": {
-          "description": "There's no promise object available (polyfill required?)",
+          "description": "There's no promise object available (polyfill required?).",
           "defaultValue": -7,
           "type": "number"
         },
         "SCHEMA_STRUCT_TYPE_NOT_FOUND": {
-          "description": "The schema struct type you requested does not exist",
+          "description": "The schema struct type you requested does not exist.",
           "defaultValue": -8,
           "type": "number"
         },
         "SCHEMA_MIXIN_CANT_OVERRIDE_FUNCTION": {
-          "description": "Can't override this function",
+          "description": "Can't override this function.",
           "defaultValue": -9,
           "type": "number"
         },
         "SCHEMA_MIXIN_EXTEND_NOT_ALLOWED": {
-          "description": "Extend is not allowed for this mixin",
+          "description": "Extend is not allowed for this mixin.",
           "defaultValue": -10,
           "type": "number"
         },
         "SESSION_SUSPENDED": {
-          "description": "Session suspended - no interaction allowed",
+          "description": "Session suspended - no interaction allowed.",
           "defaultValue": -11,
           "type": "number"
         },
         "SESSION_NOT_ATTACHED": {
-          "description": "onlyIfAttached supplied, but you got SESSION_CREATED",
+          "description": "onlyIfAttached supplied, but you got SESSION_CREATED.",
           "defaultValue": -12,
           "type": "number"
         }
@@ -98,7 +98,7 @@
       ]
     },
     "SenseUtilities.buildUrl": {
-      "description": "Function used to build an URL.",
+      "description": "Function used to build a URL.",
       "kind": "function",
       "params": [
         {
@@ -118,7 +118,7 @@
   },
   "definitions": {
     "API": {
-      "description": "The API for generated APIs depends on the QIX Engine schema you pass into your Configuration, and\non what QIX struct the API has.\n\nAll API calls made using the generated APIs will return promises which are either resolved or\nrejected depending on how the QIX Engine responds.",
+      "description": "The API for generated APIs depends on the QIX Engine schema you pass into your Configuration, and\non what QIX struct the API has.\n\nAll API calls made using the generated APIs will return promises that are either resolved or\nrejected depending on how the QIX Engine responds.",
       "kind": "interface",
       "entries": {
         "id": {
@@ -147,7 +147,7 @@
       ],
       "events": {
         "changed": {
-          "description": "Handle changes on the API. The changed event is triggered whenever enigma.js or QIX Engine has\nidentified potential changes on the underlying properties or hypercubes and you should re-fetch\nyour data.",
+          "description": "Handles changes on the API. The changed event is triggered whenever enigma.js or QIX Engine has\nidentified potential changes on the underlying properties or hypercubes and you should re-fetch\nyour data.",
           "kind": "event",
           "params": [],
           "examples": [
@@ -155,7 +155,7 @@
           ]
         },
         "closed": {
-          "description": "Handle closed API. The closed event is triggered whenever QIX Engine considers an API closed.\nIt usually means that it no longer exist in the QIX Engine document or session.",
+          "description": "Handles closed API. The closed event is triggered whenever QIX Engine considers an API closed.\nIt usually means that it no longer exists in the QIX Engine document or session.",
           "kind": "event",
           "params": [],
           "examples": [
@@ -163,7 +163,7 @@
           ]
         },
         "traffic": {
-          "description": "Handle JSON-RPC requests/responses for this API. Generally used in debugging purposes.\n`traffic:*` will handle all websocket messages, `traffic:sent` will handle outgoing messages\nand `traffic:received` will handle incoming messages.",
+          "description": "Handles JSON-RPC requests/responses for this API. Generally used in debugging purposes.\n`traffic:*` will handle all websocket messages, `traffic:sent` will handle outgoing messages\nand `traffic:received` will handle incoming messages.",
           "kind": "event",
           "params": [],
           "examples": [
@@ -254,7 +254,7 @@
       },
       "entries": {
         "code": {
-          "description": "The error code as defined by `errorCodes`",
+          "description": "The error code as defined by `errorCodes`.",
           "type": "number"
         },
         "enigmaError": {
@@ -264,7 +264,7 @@
       }
     },
     "Interceptor": {
-      "description": "Interceptors is a concept similar to mixins, but run on a lower level. The interceptor concept\ncan augment either the requests (i.e. before sent to QIX Engine), or the responses (i.e. after\nQIX Engine has sent a response). The interceptor promises runs in parallel to the regular\npromises used in enigma.js, which means that it can be really useful when you want to normalize\nbehaviors in your application.",
+      "description": "Interceptor is a concept similar to mixins, but runs on a lower level. The interceptor concept\ncan augment either the requests (i.e. before sent to QIX Engine), or the responses (i.e. after\nQIX Engine has sent a response). The interceptor promises run in parallel to the regular\npromises used in enigma.js, which means that it can be really useful when you want to normalize\nbehaviors in your application.",
       "kind": "interface",
       "entries": {}
     },
@@ -314,7 +314,7 @@
       },
       "entries": {
         "onFulfilled": {
-          "description": "This method is invoked when a promise has been successfully resolved,\nuse this to modify the result or reject the promise chain before it is sent\nto mixins.",
+          "description": "This method is invoked when a promise has been successfully resolved;\nuse this to modify the result or reject the promise chain before it is sent\nto mixins.",
           "kind": "function",
           "params": [
             {
@@ -335,7 +335,7 @@
           ]
         },
         "onRejected": {
-          "description": "This method is invoked when a previous interceptor has rejected the\npromise, use this to handle for example errors before they are sent into mixins.",
+          "description": "This method is invoked when a previous interceptor has rejected the\npromise; use this to handle, for example, errors before they are sent into mixins.",
           "kind": "function",
           "params": [
             {
@@ -361,7 +361,7 @@
       ]
     },
     "Mixin": {
-      "description": "The mixin concept allows you to add or override QIX Engine API functionality. A mixin is\nbasically a JavaScript object describing which types it modifies, and a list of functions\nfor extending and overriding the API for those types.\n\nQIX Engine types like for example GenericObject, Doc, GenericBookmark, are supported but\nalso custom GenericObject types such as barchart, story and myCustomType. An API will get\nboth their generic type as well as custom type mixins applied.\n\nMixins that are bound to several different types can find the current API type in the\n`genericType` or `type` members. `this.type` would for instance return `GenericObject` and\n`this.genericType` would return `barchart`.\n\nSee the Mixins examples on how to use it, below is an outline of what the mixin API consists of.",
+      "description": "The mixin concept allows you to add or override QIX Engine API functionality. A mixin is\nbasically a JavaScript object describing which types it modifies, and a list of functions\nfor extending and overriding the API for those types.\n\nQIX Engine types like, for example, GenericObject, Doc, GenericBookmark, are supported but\nalso custom GenericObject types such as barchart, story and myCustomType. An API will get\nboth their generic type as well as custom type mixins applied.\n\nMixins that are bound to several different types can find the current API type in the\n`genericType` or `type` members. `this.type` would, for instance, return `GenericObject` and\n`this.genericType` would return `barchart`.\n\nSee the Mixins examples on how to use it. Below is an outline of what the mixin API consists of.",
       "kind": "interface",
       "entries": {
         "types": {
@@ -391,7 +391,7 @@
           "type": "Object"
         },
         "init": {
-          "description": "Init function that, if defined, will run when an API is instantiated.\nIt runs with Promise and API object as parameters",
+          "description": "Init function that, if defined, will run when an API is instantiated.\nIt runs with Promise and API object as parameters.",
           "optional": true,
           "type": "function"
         }
@@ -402,7 +402,7 @@
       "kind": "object",
       "entries": {
         "appId": {
-          "description": "The app id. If omitted, only the global object is returned.\n                           Otherwise both global and app object are returned.",
+          "description": "The app ID. If omitted, only the global object is returned.\n                           Otherwise both global and app object are returned.",
           "optional": true,
           "type": "string"
         },
@@ -467,7 +467,7 @@
       "type": "Object"
     },
     "Session": {
-      "description": "The QIX Engine session object",
+      "description": "The QIX Engine session object.",
       "kind": "class",
       "constructor": {
         "kind": "function",
@@ -475,7 +475,7 @@
       },
       "entries": {
         "close": {
-          "description": "Closes the websocket and cleans up internal caches, also triggers the closed event\non all generated APIs. Note that you have to manually invoke this when you want to\nclose a session and config.suspendOnClose is true.",
+          "description": "Closes the websocket and cleans up internal caches. Also triggers the closed event\non all generated APIs. Note that you have to manually invoke this when you want to\nclose a session and config.suspendOnClose is true.",
           "kind": "function",
           "params": [
             {
@@ -534,17 +534,17 @@
           ]
         },
         "resume": {
-          "description": "Resumes a previously suspended enigma.js session by re-creating the websocket and,\nif possible, re-open the document as well as refreshing the internal cashes. If successful,\nchanged events will be triggered on all generated APIs, and on the ones it was unable to\nrestore, the closed event will be triggered.",
+          "description": "Resumes a previously suspended enigma.js session by recreating the websocket and,\nif possible, reopen the document as well as refreshing the internal cashes. If successful,\nchanged events will be triggered on all generated APIs, and on the ones it was unable to\nrestore, the closed event will be triggered.",
           "kind": "function",
           "params": [
             {
               "name": "onlyIfAttached",
-              "description": "If true, resume only if the session was re-attached properly.",
+              "description": "If true, resume only if the session was reattached properly.",
               "type": "boolean"
             }
           ],
           "returns": {
-            "description": "Eventually resolved when the websocket (and potentially the\npreviously opened document, and generated APIs) has been restored, rejected when it fails any\nof those steps, or when onlyIfAttached is true and a new session was created.",
+            "description": "Eventually resolved when the websocket (and potentially the\npreviously opened document, and generated APIs) has been restored; it is rejected when it fails\nany of those steps, or when onlyIfAttached is true and a new session was created.",
             "type": "Promise",
             "generics": [
               {
@@ -577,7 +577,7 @@
           }
         },
         "suspend": {
-          "description": "Suspends the enigma.js session by closing the websocket and rejecting all method calls\nuntil is has been resumed again.",
+          "description": "Suspends the enigma.js session by closing the websocket and rejecting all method calls\nuntil it is has resumed again.",
           "kind": "function",
           "params": [
             {
@@ -616,7 +616,7 @@
       },
       "events": {
         "closed": {
-          "description": "Handle closed state. This event is triggered when the underlying websocket is closed and\nconfig.suspendOnClose is false.",
+          "description": "Handles closed state. This event is triggered when the underlying websocket is closed and\nconfig.suspendOnClose is false.",
           "kind": "event",
           "params": [],
           "examples": [
@@ -624,7 +624,7 @@
           ]
         },
         "notification": {
-          "description": "Handle all JSON-RPC notification event, 'notification:*. Or handle a specific JSON-RPC\nnotification event, 'notification:OnConnected'. These events depend on the product you use QIX\nEngine from.",
+          "description": "Handles all JSON-RPC notification events, 'notification:* or handles a specific JSON-RPC\nnotification event, 'notification:OnConnected'. These events depend on the product from which\nyou use QIX Engine.",
           "kind": "event",
           "params": [],
           "examples": [
@@ -632,7 +632,7 @@
           ]
         },
         "opened": {
-          "description": "Handle opened state. This event is triggered whenever the websocket is connected and\nready for communication.",
+          "description": "Handles opened state. This event is triggered whenever the websocket is connected and\nready for communication.",
           "kind": "event",
           "params": [],
           "examples": [
@@ -640,7 +640,7 @@
           ]
         },
         "resumed": {
-          "description": "Handle resumed state. This event is triggered when the session was properly resumed. It is\nuseful in scenarios where you for example can close blocking modal dialogs and allow the user\nto interact with your application again.",
+          "description": "Handles resumed state. This event is triggered when the session was properly resumed. It is\nuseful in scenarios where, for example, you can close blocking modal dialogs and allow the\nuser to interact with your application again.",
           "kind": "event",
           "params": [],
           "examples": [
@@ -648,7 +648,7 @@
           ]
         },
         "suspended": {
-          "description": "Handle suspended state. This event is triggered in two cases (listed below). It is useful\nin scenarios where you for example want to block interaction in your application until you\nare resumed again. If config.suspendOnClose is true and there was a network disconnect\n(socked closed) or if you ran session.suspend().",
+          "description": "Handles suspended state. This event is triggered in two cases (listed below). It is useful\nin scenarios where, for example, you want to block interaction with your application until\nyou resume again. Or, if config.suspendOnClose is true and there was a network disconnect\n(socket closed) or if you ran session.suspend().",
           "kind": "event",
           "params": [
             {
@@ -668,7 +668,7 @@
           ]
         },
         "traffic": {
-          "description": "Handle websocket messages. Generally used in debugging purposes. `traffic:*` will handle all\nwebsocket messages, `traffic:sent` will handle outgoing messages and `traffic:received` will\nhandle incoming messages.",
+          "description": "Handles websocket messages. Generally used for debugging purposes. `traffic:*` will handle all\nwebsocket messages, `traffic:sent` will handle outgoing messages, and `traffic:received` will\nhandle incoming messages.",
           "kind": "event",
           "params": [],
           "examples": [
