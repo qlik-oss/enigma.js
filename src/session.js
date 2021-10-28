@@ -239,7 +239,7 @@ class Session {
   */
   send(request) {
     if (this.suspendResume.isSuspended) {
-      return this.Promise.reject(createEnigmaError(errorCodes.SESSION_SUSPENDED, 'Session suspended'));
+      return this.Promise.reject(createEnigmaError(errorCodes.SESSION_SUSPENDED, 'Session suspended', this.rpc.closeEvent));
     }
     request.id = this.rpc.createRequestId();
     const promise = this.intercept.executeRequests(this, this.Promise.resolve(request))
