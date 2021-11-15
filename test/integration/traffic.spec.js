@@ -55,7 +55,7 @@ describe('qix-logging', () => {
 
     // the delay is to guarantee we don't get a race condition
     // between or first request and the 'OnConnected' notification:
-    const delay = (t) => new Promise((r) => setTimeout(r, t));
+    const delay = (t) => new Promise((r) => { setTimeout(r, t); });
     return delay(100).then(() => qixGlobal.allowCreateApp().then(() => {
       // all session traffic:
       // we have traffic:received for OnConnected notification before (so second received
