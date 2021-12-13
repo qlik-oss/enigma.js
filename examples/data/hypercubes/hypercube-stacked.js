@@ -34,7 +34,7 @@ const session = createSession();
 
 // Open the session and create a session document:
 session.open()
-  .then((global) => global.createSessionApp())
+  .then((global) => global.getActiveDoc())
   .then((doc) => doc.setScript(qlikScript)
     .then(() => doc.doReload())
     // Create a generic object with a hypercube stacked definition containing two dimensions and one measure
