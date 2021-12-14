@@ -1,15 +1,21 @@
+import dotenv from 'dotenv';
+import crypto from 'crypto';
 import WebSocket from 'ws';
 import schema from '../../schemas/12.170.2.json';
 
-function getDefaultConfig() {
-  const host = 'localhost';
-  const port = 9076;
-  const protocol = 'ws';
+dotenv.config();
 
+function getDefaultConfig(ttl = false) {
+  const host = process.env.QCS_HOST;
+  const protocol = 'wss';
+  const randomId = crypto.randomBytes(20).toString('hex');
+  const ttlPath = ttl ? `/ttl/${ttl}` : '';
   return {
     schema,
-    url: `${protocol}://${host}:${port}/app/engineData/identity/${+new Date()}`,
-    createSocket: (url) => new WebSocket(url),
+    url: `${protocol}://${host}/app/SessionApp_${randomId}${ttlPath}`,
+    createSocket: (url) => new WebSocket(url, {
+      headers: { Authorization: `Bearer ${process.env.QCS_API_KEY}` },
+    }),
   };
 }
 

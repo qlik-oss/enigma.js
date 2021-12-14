@@ -2,6 +2,8 @@ const enigma = require('enigma.js');
 const schema = require('enigma.js/schemas/12.20.0.json');
 const WebSocket = require('ws');
 
+require('dotenv').config();
+
 const mixin = {
   types: ['custom-type'],
 
@@ -44,15 +46,17 @@ const mixin = {
 const session = enigma.create({
   schema,
   mixins: [mixin],
-  url: 'ws://localhost:9076/app/engineData',
-  createSocket: (url) => new WebSocket(url),
+  url: `wss://${process.env.QCS_HOST}/app/SessionApp_1234`,
+  createSocket: (url) => new WebSocket(url, {
+    headers: { Authorization: `Bearer ${process.env.QCS_API_KEY}` },
+  }),
 });
 
 // Uncomment to see the websocket traffic:
 // session.on('traffic:*', (direction, data) => console.log(`Traffic (${direction}):`, data));
 
 session.open()
-  .then((global) => global.createSessionApp())
+  .then((global) => global.getActiveDoc())
   .then((doc) => doc.createObject({ qInfo: { qType: 'custom-type' } }))
   .then((object) => {
     object.getLayout();

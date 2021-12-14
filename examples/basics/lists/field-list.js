@@ -21,7 +21,7 @@ const session = createSession();
 // Open the session and create a session document:
 session
   .open()
-  .then((global) => global.createSessionApp())
+  .then((global) => global.getActiveDoc())
   .then((doc) => doc
     .setScript(script)
     .then(() => doc.doReload())

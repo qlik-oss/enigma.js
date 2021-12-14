@@ -28,7 +28,7 @@ function print(tableContent) {
 let sessionApp;
 
 session.open()
-  .then((global) => global.createSessionApp())
+  .then((global) => global.getActiveDoc())
   .then((app) => {
     sessionApp = app;
     return app.setScript(script);

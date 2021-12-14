@@ -35,7 +35,7 @@ const session = createSession();
 // session.on('traffic:*', (direction, data) => console.log(`Session: Traffic (${direction}): ${JSON.stringify(data)}`));
 
 // Open the session and create a session document:
-session.open().then((global) => global.createSessionApp()).then((doc) => {
+session.open().then((global) => global.getActiveDoc()).then((doc) => {
   // Load in some data into the session document:
   doc.setScript(qlikScript).then(() => doc.doReload())
     // We create a generic object with a list object definition using

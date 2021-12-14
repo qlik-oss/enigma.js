@@ -18,7 +18,7 @@ session.on('traffic:*', (direction, data) => console.log(`Session: Traffic (${di
 session.on('suspended', (event) => console.log(`Session: Suspended, initiator: ${event.initiator}`));
 session.on('resumed', () => console.log('Session: Resumed'));
 
-session.open().then((global) => global.createSessionApp().then((doc) => {
+session.open().then((global) => global.getActiveDoc().then((doc) => {
   console.log(`Session: Document id: ${doc.id}`);
   return session.suspend().then(() => {
     console.log('Session: suspend() completed');
