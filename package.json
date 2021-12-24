@@ -47,7 +47,7 @@
     "coveralls": "3.1.1",
     "cross-env": "7.0.3",
     "dotenv": "10.0.0",
-    "eslint": "8.4.1",
+    "eslint": "8.5.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.25.3",
     "extend": "3.0.2",
@@ -55,7 +55,7 @@
     "node-event-emitter": "0.0.1",
     "querystring": "0.2.1",
     "rimraf": "3.0.2",
-    "rollup": "2.61.1",
+    "rollup": "2.62.0",
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-filesize": "9.1.1",
@@ -64,6 +64,6 @@
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-uglify": "6.0.4",
     "scriptappy-from-jsdoc": "0.7.0",
-    "ws": "8.3.0"
+    "ws": "8.4.0"
   }
 }
