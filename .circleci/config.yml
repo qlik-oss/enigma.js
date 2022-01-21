@@ -83,11 +83,11 @@ jobs:
             ghcr.io/qlik-download/api-compliance
 workflow:
  version: 2
-  build-all:
-    jobs:
-      - build
-      - api-governance:
-          context: api-compliance
-          requires:
-            - build
+ build-all:
+   jobs:
+     - build
+     - api-governance:
+         context: api-compliance
+         requires:
+           - build
 
