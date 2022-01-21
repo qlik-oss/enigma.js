@@ -41,3 +41,43 @@ jobs:
             test/examples/run.sh
       - store_artifacts:
           path: coverage
+  api-governance:
+    steps:
+      - attach_workspace:
+          at: ~/enigmajs
+      - run:
+          name: Create version.txt
+          command: |
+              set -x
+              if [ -n "${CIRCLE_TAG}" ]; then
+                  version=${CIRCLE_TAG#v}
+              else
+                  version=$(git describe --tags --abbrev=7 --match "v*")
+                  version=${version#v}
+              fi
+              echo "$version" > ./version.txt
+              echo "Building $version"
+      - run:
+          name: Prepare API Compliance
+          command: |
+            docker pull ghcr.io/qlik-download/api-compliance
+            docker create -v /specs --name specs alpine:3.4 /bin/true
+            cd ~/enigmajs && docker cp ./docs/api-spec.json specs:/specs
+      - run:
+          name: Run API Compliance
+          command: >
+            VER=$(cat ./version.txt)
+            docker run --volumes-from specs
+            -e SPEC_PATHS="0f0b4c98-db9c-46c7-8958-2a98bd15a946@/specs/api-spec.json"
+            -e COMMIT_SHA="$CIRCLE_SHA1"
+            -e RELEASE_TAG="$VER"
+            -e CREDENTIALS_S3_SECRETKEY="$APICULTURIST_S3"
+            -e CREDENTIALS_GITHUB="$APICULTURIST_GITHUB"
+            -e CREDENTIALS_COLONY="$APICULTURIST_TOKEN"
+            ghcr.io/qlik-download/api-compliance
+workflow:
+  api-governance:
+    context: api-compliance
+    requires:
+      - build
+  
