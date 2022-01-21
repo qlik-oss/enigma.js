@@ -1,9 +1,14 @@
 version: 2
+
+defaults: &defaults
+  working_directory: ~/enigma.js
+  # Available images https://hub.docker.com/r/circleci/node/tags/
+  docker:
+    - image: circleci/node:12.22.7
+    
 jobs:
   build:
-    working_directory: ~/enigma.js
-    docker:
-      - image: circleci/node:12.22.7
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -42,11 +47,10 @@ jobs:
       - store_artifacts:
           path: coverage
   api-governance:
-    docker:
-      - image: circleci/node:12.22.7
+    <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/enigmajs
+          at: ~/enigma.js
       - run:
           name: Create version.txt
           command: |
@@ -64,7 +68,7 @@ jobs:
           command: |
             docker pull ghcr.io/qlik-download/api-compliance
             docker create -v /specs --name specs alpine:3.4 /bin/true
-            cd ~/enigmajs && docker cp ./docs/api-spec.json specs:/specs
+            cd ~/enigma.js && docker cp ./docs/api-spec.json specs:/specs
       - run:
           name: Run API Compliance
           command: >
@@ -78,8 +82,12 @@ jobs:
             -e CREDENTIALS_COLONY="$APICULTURIST_TOKEN"
             ghcr.io/qlik-download/api-compliance
 workflow:
-  api-governance:
-    context: api-compliance
-    requires:
+ version: 2
+  build-all:
+    jobs:
       - build
-  
+      - api-governance:
+          context: api-compliance
+          requires:
+            - build
+
