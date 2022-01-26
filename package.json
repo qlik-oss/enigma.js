@@ -51,7 +51,7 @@
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.25.4",
     "extend": "3.0.2",
-    "jsdoc": "3.6.7",
+    "jsdoc": "3.6.8",
     "node-event-emitter": "0.0.1",
     "querystring": "0.2.1",
     "rimraf": "3.0.2",
