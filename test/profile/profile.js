@@ -1,4 +1,4 @@
-/* eslint no-console: 0, no-loop-func: 0, import/no-unresolved: 0, no-restricted-globals: 0 */
+/* eslint no-console: 0, import/no-unresolved: 0, no-restricted-globals: 0, import/extensions:0 */
 
 const WebSocket = require('ws');
 const heapdump = require('heapdump');

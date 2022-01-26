@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.3
+- feat: new schema, 12.936.0
+- chore: editorial doc updates
+
 ## 2.7.2
 
 - fix massive arrays breaking the json patch

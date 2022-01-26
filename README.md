@@ -47,7 +47,6 @@ Read more:
 
 * [High-level concepts: Schemas](./docs/concepts.md#schemas-the-qix-interface) for more information about how they work.
 * [schemas/](/schemas) for the available schemas.
-* [API Insights on Qlik Sense Help](https://api-insights.qlik.com/#/manifest) to identify your QIX Engine API version.
 
 ### Usage
 

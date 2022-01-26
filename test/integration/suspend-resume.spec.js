@@ -1,34 +1,18 @@
-import crypto from 'crypto';
-import WebSocket from 'ws';
 import enigma from '../../src/enigma';
-import Schema from '../../schemas/12.20.0.json';
+import utils from './utils';
 
-function generateId() {
-  return crypto.randomBytes(20).toString('hex');
-}
-
-function buildUrl(ttl) {
-  ttl = typeof ttl !== 'undefined' ? ttl : 5;
-  return `ws://localhost:9076/app/engineData/ttl/${ttl}/identity/${generateId()}`;
-}
-
-// N.B. This test will only pass when run towards an engine supporting the session TTL feature.
 describe('QIX Suspend/Resume', () => {
   let config;
 
   beforeEach(() => {
-    config = {
-      schema: Schema,
-      url: buildUrl(),
-      createSocket: (url) => new WebSocket(url),
-    };
+    config = utils.getDefaultConfig(5);
   });
 
-  it('should suspend and resume by reattaching', () => {
+  it('should suspend and resume by reattaching', async () => {
     let handleBeforeResume;
     let propertiesBeforeResume;
 
-    return enigma.create(config).open().then((global) => global.createSessionApp().then((app) => app.createObject({ qInfo: { qId: 'OBJ01', qType: 'abc' } })
+    return enigma.create(config).open().then((global) => global.getActiveDoc().then((app) => app.createObject({ qInfo: { qId: 'OBJ01', qType: 'abc' } })
       .then(() => app.destroyObject('OBJ01'))
       .then(() => app.createObject({ qInfo: { qId: 'OBJ02', qType: 'abc' } }))
       .then((obj) => {
@@ -45,23 +29,20 @@ describe('QIX Suspend/Resume', () => {
   });
 
   it('should suspend and resume by reopening the previous document', () => {
-    config.url = buildUrl(0);
+    config = utils.getDefaultConfig(0);
     const suspended = sinon.spy();
     const closed = sinon.spy();
     const session = enigma.create(config);
     session.on('suspended', suspended);
     session.on('closed', closed);
-    const id = generateId();
     let global;
     let app;
 
     return session.open()
       // save ref to global API:
       .then((g) => { global = g; })
-      // create our test app:
-      .then(() => global.createApp(id))
       // open our test app:
-      .then(() => global.openDoc(id))
+      .then(() => global.getActiveDoc())
       // save ref to app API:
       .then((a) => { app = a; })
       // set a dummy property that we don't save:
@@ -70,10 +51,7 @@ describe('QIX Suspend/Resume', () => {
       .then(() => expect(suspended.calledOnce).to.equal(true))
       .then(() => global.session.resume())
       .then(() => app.getAppProperties())
-      // verify that we have reconnected to a fresh app, since we never saved
-      // this property it shouldn't exist in a new one:
-      .then((props) => expect(props.test).to.equal(undefined))
-      .then(() => global.deleteApp(app.id))
+      .then((props) => expect(props.test).to.equal(true))
       .then(() => session.close())
       .catch((error) => session.close().then(() => Promise.reject(error)))
       .then(() => expect(closed.callCount >= 1).to.equal(true));

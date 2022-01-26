@@ -12,7 +12,7 @@ describe('Sugar mixins', () => {
     extend: {
       prepareSessionApp(script) {
         let app;
-        return this.createSessionApp()
+        return this.getActiveDoc()
           .then((a) => { app = a; })
           .then(() => app.setScript(script))
           .then(() => app.doReload(0, false, false))
@@ -87,7 +87,7 @@ describe('Sugar mixins', () => {
     let app;
     let sheet;
 
-    return qixGlobal.createSessionApp()
+    return qixGlobal.getActiveDoc()
       .then((a) => { app = a; })
       .then(() => app.getList(listDef))
       .then((list) => expect(list.qAppObjectList.qItems.length).to.equal(0))

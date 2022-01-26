@@ -2,6 +2,14 @@
 
 This example will show you how to create three different types of hypercubes (straight, pivot and stacked), make a selection and retrieve the data in it.
 
+> **Note:**: Before running the examples, make sure you have a valid Qlik Cloud tenant host and API key in your environment variables
+> ```
+> QCS_HOST=<tenant>.qlikcloud.com
+> QCS_API_KEY=<APIkey>
+> ```
+> - How to obtain an API key? [click here](https://qlik.dev/tutorials/generate-your-first-api-key)
+> - Session Apps in Qlik Cloud? [click here](https://qlik.dev/apis/json-rpc/qix#session-apps)
+
 ## Runnable code
 
 * [Straight hypercube](./hypercube-straight.js)
