@@ -63,7 +63,7 @@ jobs:
       - store_artifacts:
           path: coverage
   api-governance:
-    working_directory: ~/enigma.js  
+    <<: *defaults
     steps:
       - setup_remote_docker:
           version: 19.03.13
