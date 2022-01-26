@@ -1,6 +1,8 @@
 const enigma = require('enigma.js');
 const WebSocket = require('ws');
 
+require('dotenv').config();
+
 const schema = require('enigma.js/schemas/12.20.0.json');
 
 // How many consecutive times we should retry before failing, try lowering this
@@ -18,8 +20,10 @@ AutoGenerate 1000000
 
 const session = enigma.create({
   schema,
-  url: 'ws://localhost:9076/app/engineData',
-  createSocket: (url) => new WebSocket(url),
+  url: `wss://${process.env.QCS_HOST}/app/SessionApp_1234`,
+  createSocket: (url) => new WebSocket(url, {
+    headers: { Authorization: `Bearer ${process.env.QCS_API_KEY}` },
+  }),
   responseInterceptors: [{
     // We only want to handle failed responses from QIX Engine:
     onRejected: function retryAbortedError(sessionReference, request, error) {
@@ -47,7 +51,7 @@ const session = enigma.create({
 // session.on('traffic:*', (direction, data) => console.log(`Traffic (${direction}):`, data));
 
 session.open().then((global) => {
-  global.createSessionApp().then((doc) => {
+  global.getActiveDoc().then((doc) => {
     console.log('Document: Opened');
     // We prep the document with some data to make sure QIX Engine is calculating
     // when we do another call that will cause aborted requests:

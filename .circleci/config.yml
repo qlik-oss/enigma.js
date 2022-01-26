@@ -1,11 +1,14 @@
 version: 2
+
+defaults: &defaults
+  working_directory: ~/enigma.js
+  # Available images https://hub.docker.com/r/circleci/node/tags/
+  docker:
+    - image: circleci/node:12.22.7
+    
 jobs:
-  build:
-    working_directory: ~/enigma.js
-    docker:
-      - image: circleci/node:12.22.7
-      - image: qlikcore/engine:12.1126.0
-        command: -S AcceptEULA=yes
+  install:
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -20,11 +23,27 @@ jobs:
       - run:
           name: Lint source code
           command: npm run -s lint
+      - persist_to_workspace:
+          root: ~/enigma.js
+          paths: 
+            - .
+  check-api-specs:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/enigma.js
       - run:
           name: Check if API specification should be updated
           command: |
             npm run scriptappy
             git diff --exit-code --name-only docs/api-spec.json
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/enigma.js
       - run:
           name: Build
           command: |
@@ -43,3 +62,44 @@ jobs:
             test/examples/run.sh
       - store_artifacts:
           path: coverage
+  api-governance:
+    <<: *defaults
+    steps:
+      - setup_remote_docker:
+          version: 19.03.13
+      - attach_workspace:
+          at: ~/enigma.js
+      - run:
+          name: Prepare API Compliance
+          command: |
+            docker pull ghcr.io/qlik-download/api-compliance
+            docker create -v /specs --name specs alpine:3.4 /bin/true
+            cd ~/enigma.js && docker cp ./docs/api-spec.json specs:/specs
+      - run:
+          name: Run API Compliance
+          command: >
+            VER=$(cat package.json | jq .version)
+            docker run --volumes-from specs
+            -e SPEC_PATHS="0f0b4c98-db9c-46c7-8958-2a98bd15a946@/specs/api-spec.json"
+            -e COMMIT_SHA="$CIRCLE_SHA1"
+            -e RELEASE_TAG="$VER"
+            -e CREDENTIALS_S3_SECRETKEY="$APICULTURIST_S3"
+            -e CREDENTIALS_GITHUB="$APICULTURIST_GITHUB"
+            -e CREDENTIALS_COLONY="$APICULTURIST_TOKEN"
+            ghcr.io/qlik-download/api-compliance
+workflows:
+ version: 2
+ build-all:
+   jobs:
+     - install
+     - check-api-specs:
+         requires: 
+           - install
+     - build:
+         requires:
+           - check-api-specs
+     - api-governance:
+         context: api-compliance
+         requires:
+           - check-api-specs
+

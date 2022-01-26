@@ -2,6 +2,8 @@ const enigma = require('enigma.js');
 const schema = require('enigma.js/schemas/12.20.0.json');
 const WebSocket = require('ws');
 
+require('dotenv').config();
+
 let ConfiguredPromise = null;
 
 const docMixin = {
@@ -74,12 +76,14 @@ const docMixin = {
 const session = enigma.create({
   schema,
   mixins: [docMixin],
-  url: 'ws://localhost:9076/app/engineData',
-  createSocket: (url) => new WebSocket(url),
+  url: `wss://${process.env.QCS_HOST}/app/SessionApp_1234`,
+  createSocket: (url) => new WebSocket(url, {
+    headers: { Authorization: `Bearer ${process.env.QCS_API_KEY}` },
+  }),
 });
 
 session.open()
-  .then((global) => global.createSessionApp())
+  .then((global) => global.getActiveDoc())
   .then((doc) => doc.tweet().then(() => doc.createObject({ qInfo: { qType: 'custom-type' } })))
   .then((object) => console.log(`Created object with type ${object.genericType} and id ${object.id}`))
   .catch((error) => {

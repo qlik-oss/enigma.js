@@ -7,6 +7,7 @@
 *.orig
 .DS_Store
 jsconfig.json
+.env
 
 # generated folders & files:
 .idea/
