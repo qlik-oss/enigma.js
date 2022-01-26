@@ -64,6 +64,7 @@ jobs:
           path: coverage
   api-governance:
     <<: *defaults
+    machine: true
     steps:
       - attach_workspace:
           at: ~/enigma.js
