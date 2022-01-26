@@ -64,8 +64,9 @@ jobs:
           path: coverage
   api-governance:
     working_directory: ~/enigma.js  
-    machine: true
     steps:
+      - setup_remote_docker:
+          version: 19.03.13
       - attach_workspace:
           at: ~/enigma.js
       - run:
