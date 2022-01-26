@@ -8,8 +8,8 @@ defaults: &defaults
     
 jobs:
   install:
-  <<: *defaults
-  steps:
+    <<: *defaults
+    steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
