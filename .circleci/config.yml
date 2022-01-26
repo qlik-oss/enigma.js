@@ -7,9 +7,9 @@ defaults: &defaults
     - image: circleci/node:12.22.7
     
 jobs:
-  build:
-    <<: *defaults
-    steps:
+  install:
+  <<: *defaults
+  steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
@@ -23,11 +23,27 @@ jobs:
       - run:
           name: Lint source code
           command: npm run -s lint
+      - persist_to_workspace:
+          root: ~/enigma.js
+          paths: 
+            - .
+  check-api-specs:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/enigma.js
       - run:
           name: Check if API specification should be updated
           command: |
             npm run scriptappy
             git diff --exit-code --name-only docs/api-spec.json
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/enigma.js
       - run:
           name: Build
           command: |
@@ -73,9 +89,15 @@ workflows:
  version: 2
  build-all:
    jobs:
-     - build
+     - install
+     - check-api-specs:
+         requires: 
+           - install
+     - build:
+         requires:
+           - check-api-specs
      - api-governance:
          context: api-compliance
          requires:
-           - build
+           - check-api-specs
 
