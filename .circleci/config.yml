@@ -63,7 +63,7 @@ jobs:
       - store_artifacts:
           path: coverage
   api-governance:
-    <<: *defaults
+    working_directory: ~/enigma.js  
     machine: true
     steps:
       - attach_workspace:
