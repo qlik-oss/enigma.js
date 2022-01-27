@@ -78,7 +78,7 @@ jobs:
       - run:
           name: Run API Compliance
           command: >
-            cd ~/enigma.js && VER=$(cat package.json | jq .version) && cd -
+            cd ~/enigma.js && VER=$(cat "v" package.json | jq .version) && cd -
             
             SERVICE_VERSION="v${VER}"
             
