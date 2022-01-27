@@ -78,7 +78,7 @@ jobs:
       - run:
           name: Run API Compliance
           command: >
-            VER=$(cat package.json | jq .version)
+            cd ~/enigma.js && VER=$(cat package.json | jq .version) && cd -
             docker run --volumes-from specs
             -e SPEC_PATHS="0f0b4c98-db9c-46c7-8958-2a98bd15a946@/specs/api-spec.json"
             -e COMMIT_SHA="$CIRCLE_SHA1"
