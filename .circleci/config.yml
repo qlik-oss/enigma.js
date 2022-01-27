@@ -79,13 +79,11 @@ jobs:
           name: Run API Compliance
           command: >
             cd ~/enigma.js && VER=$(cat "v" package.json | jq .version) && cd -
-            
-            SERVICE_VERSION="v${VER}"
-            
+                        
             docker run --volumes-from specs
             -e SPEC_PATHS="0f0b4c98-db9c-46c7-8958-2a98bd15a946@/specs/api-spec.json"
             -e COMMIT_SHA="$CIRCLE_SHA1"
-            -e RELEASE_TAG="$SERVICE_VERSION"
+            -e RELEASE_TAG="$VER"
             -e CREDENTIALS_S3_SECRETKEY="$APICULTURIST_S3"
             -e CREDENTIALS_GITHUB="$APICULTURIST_GITHUB"
             -e CREDENTIALS_COLONY="$APICULTURIST_TOKEN"
