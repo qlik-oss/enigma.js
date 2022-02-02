@@ -19,7 +19,7 @@ export default function apiResponseInterceptor(session, request, response) {
       genericType: response.qGenericType,
     });
   }
-  if (!response || (response.qHandle === null && response.qType === null)) {
+  if (response && response.qHandle === null && response.qType === null) {
     const error = createEnigmaError(errorCodes.OBJECT_NOT_FOUND, 'Object not found');
     return session.config.Promise.reject(error);
   }
