@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.7.4
+## 2.8.0
 
 - fix: response parameters for StoreTempSelectionState
 
