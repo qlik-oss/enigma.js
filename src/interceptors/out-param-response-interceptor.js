@@ -14,9 +14,10 @@ export default function outParamResponseInterceptor(session, request, response) 
     // this method returns multiple out params that we need
     // to normalize before processing the response further:
     response[RETURN_KEY].qGenericId = response.qSessionAppId || response[RETURN_KEY].qGenericId;
-  } else if (request.method === 'GetInteract') {
+  } else if (request.method === 'GetInteract' || request.method === 'StoreTempSelectionState') {
     // this method returns a qReturn value when it should only return
-    // meta.outKey:
+    // meta.outKey: GetInteract
+    // qId: StoreTempSelectionState
     delete response[RETURN_KEY];
   }
 
