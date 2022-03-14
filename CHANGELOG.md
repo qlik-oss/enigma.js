@@ -1,6 +1,11 @@
 # Changelog
 
+## 2.8.0
+
+- fix: response parameters for StoreTempSelectionState
+
 ## 2.7.3
+
 - feat: new schema, 12.936.0
 - chore: editorial doc updates
 
@@ -140,6 +145,7 @@ See [migration guide](https://github.com/qlik-oss/enigma.js/blob/master/docs/mig
 ## 1.2.0
 
 ### Features
+
 - Suspend/Resume: It is now possible to suspend an resume qix sessions. See [session.md](https://github.com/qlik-oss/enigma.js/blob/master/docs/qix/session.md#sessions).
 
 ## 1.1.1
