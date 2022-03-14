@@ -11,7 +11,7 @@ import errorCodes from '../error-codes';
 * @returns {Object} - Returns the generated API
 */
 export default function apiResponseInterceptor(session, request, response) {
-  if (response.qHandle && response.qType) {
+  if (response && response.qHandle && response.qType) {
     return session.getObjectApi({
       handle: response.qHandle,
       type: response.qType,
@@ -19,7 +19,7 @@ export default function apiResponseInterceptor(session, request, response) {
       genericType: response.qGenericType,
     });
   }
-  if (response.qHandle === null && response.qType === null) {
+  if (response && response.qHandle === null && response.qType === null) {
     const error = createEnigmaError(errorCodes.OBJECT_NOT_FOUND, 'Object not found');
     return session.config.Promise.reject(error);
   }
