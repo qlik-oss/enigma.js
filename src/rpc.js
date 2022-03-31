@@ -23,6 +23,7 @@ class RPC {
     this.resolvers = {};
     this.requestId = 0;
     this.openedPromise = undefined;
+    this.closeEvent = undefined;
   }
 
   /**
@@ -66,10 +67,11 @@ class RPC {
   */
   onClose(event) {
     this.emit('closed', event);
+    this.closeEvent = event;
     if (this.resolvers && this.resolvers.closed) {
       this.resolvers.closed.resolveWith(event);
     }
-    this.rejectAllOutstandingResolvers(createEnigmaError(errorCodes.NOT_CONNECTED, 'Socket closed'));
+    this.rejectAllOutstandingResolvers(createEnigmaError(errorCodes.NOT_CONNECTED, 'Socket closed', event));
   }
 
   /**
@@ -101,7 +103,7 @@ class RPC {
       // as run-time ones:
       this.emit('socket-error', event);
     }
-    this.rejectAllOutstandingResolvers(createEnigmaError(errorCodes.NOT_CONNECTED, 'Socket error'));
+    this.rejectAllOutstandingResolvers(createEnigmaError(errorCodes.NOT_CONNECTED, 'Socket error', event));
   }
 
   /**
@@ -169,7 +171,7 @@ class RPC {
   */
   send(data) {
     if (!this.socket || this.socket.readyState !== this.socket.OPEN) {
-      const error = createEnigmaError(errorCodes.NOT_CONNECTED, 'Not connected');
+      const error = createEnigmaError(errorCodes.NOT_CONNECTED, 'Not connected', this.closeEvent);
       return this.Promise.reject(error);
     }
     if (!data.id) {
