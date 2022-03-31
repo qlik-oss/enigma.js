@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.9.0
+- fix: handle undefined response in apiResponseInterceptor
+- feat: new schema, 12.1306.0
+
 ## 2.8.0
 
 - fix: response parameters for StoreTempSelectionState
