@@ -260,6 +260,11 @@
         "enigmaError": {
           "defaultValue": true,
           "type": "boolean"
+        },
+        "original": {
+          "description": "the websocket event that is the source of the error.",
+          "optional": true,
+          "type": "Object"
         }
       }
     },
