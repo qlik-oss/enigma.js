@@ -10,11 +10,19 @@ const RETURN_KEY = 'qReturn';
 * @returns {Object} - Returns the result property on the response
 */
 export default function outParamResponseInterceptor(session, request, response) {
-  if (request.method === 'CreateSessionApp' || request.method === 'CreateSessionAppFromApp') {
+  if (
+    request.method === "CreateSessionApp" ||
+    request.method === "CreateSessionAppFromApp"
+  ) {
     // this method returns multiple out params that we need
     // to normalize before processing the response further:
-    response[RETURN_KEY].qGenericId = response.qSessionAppId || response[RETURN_KEY].qGenericId;
-  } else if (request.method === 'GetInteract' || request.method === 'StoreTempSelectionState') {
+    response[RETURN_KEY].qGenericId =
+      response.qSessionAppId || response[RETURN_KEY].qGenericId;
+  } else if (
+    request.method === "GetInteract" ||
+    request.method === "StoreTempSelectionState" ||
+    request.method === "CreateTemporaryBookmark"
+  ) {
     // this method returns a qReturn value when it should only return
     // meta.outKey: GetInteract
     // qId: StoreTempSelectionState
