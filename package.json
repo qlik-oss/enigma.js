@@ -54,7 +54,7 @@
     "jsdoc": "4.0.0",
     "node-event-emitter": "0.0.1",
     "querystring": "0.2.1",
-    "rimraf": "3.0.2",
+    "rimraf": "4.1.2",
     "rollup": "2.75.7",
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-commonjs": "10.1.0",
