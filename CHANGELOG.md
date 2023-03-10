@@ -17,12 +17,14 @@
 - chore: add newest schema (#976)
 
 ## 2.10.0
+
 - feat: new schema, 12.1477.0
 - fix: response parameters for CreateTemporaryBookmark
 - chore(deps): bump terser from 5.10.0 to 5.14.2
 - chore(deps): update minor and patch
 
 ## 2.9.0
+
 - fix: handle undefined response in apiResponseInterceptor
 - feat: new schema, 12.1306.0
 
