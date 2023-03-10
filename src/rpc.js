@@ -115,7 +115,7 @@ class RPC {
     const data = JSON.parse(event.data);
     const resolver = this.resolvers[data.id] || {};
     this.emit('traffic', 'received', data, resolver.handle);
-    if (typeof data.id !== 'undefined') {
+    if (typeof data.id !== 'undefined' && this.resolvers[data.id]) {
       this.emit('message', data);
       this.resolvers[data.id].resolveWith(data);
     } else {
