@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.11.0 bug
+
+- fix: replaces uglify with terser rollup plugin (#972)
+- fix: dont emit message if resolver undefined (@simonmcmillan - #968)
+
+- chore(deps): bump qs from 6.5.2 to 6.5.3 (#966)
+- chore(deps): bump decode-uri-component from 0.2.0 to 0.2.2 (#965)
+- chore(deps): update dependency jsdoc to v4 (#964)
+- chore(deps): bump jpeg-js and @after-work.js/aw (#961)
+- chore(deps): bump json5 from 1.0.1 to 1.0.2 (#967)
+- chore(deps): bump http-cache-semantics from 4.1.0 to 4.1.1 (#971)
+- chore(deps): update dependency rimraf to v4 (#969)
+- chore(deps): update minor and patch (#957)
+- chore(deps): update dependency rollup-plugin-license to v3 (#963)
+- chore: add newest schema (#976)
+
 ## 2.10.0
 - feat: new schema, 12.1477.0
 - fix: response parameters for CreateTemporaryBookmark
