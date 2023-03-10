@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.11.0 bug
+## 2.11.0
 
 - fix: replaces uglify with terser rollup plugin (#972)
 - fix: dont emit message if resolver undefined (@simonmcmillan - #968)
