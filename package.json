@@ -1,6 +1,6 @@
 {
   "name": "enigma.js",
-  "version": "2.10.0",
+  "version": "2.11.0",
   "description": "JavaScript library for consuming Qlik backend services",
   "author": "QlikTech International AB",
   "license": "MIT",
