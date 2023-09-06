@@ -234,7 +234,7 @@ declare namespace EnigmaJS {
     /** Custom type of the backend object, if defined in qInfo. */
     genericType: string;
     /** The QIX Engine session object. */
-    session: RpcSession;
+    session: Session;
     /** Handle of the backend object. */
     handle: number;
     /** represents the returned value from engine */
