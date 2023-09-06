@@ -20,5 +20,8 @@ jsdoc/
 examples/run.js
 /enigma.js*
 /enigma.min*
-/sense-utilities.*
-/error-codes.*
+/sense-utilities.js
+/sense-utilities.js.map
+/sense-utilities.min.*
+/error-codes.js
+/error-codes.min.js
