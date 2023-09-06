@@ -19,8 +19,8 @@ declare class SenseUtilities {
   /**
    * Function used to build a URL.
    *
-   * @param {SenseConfiguration} urlConfig - The URL configuration object.
-   * @returns {string} Returns the websocket URL.
+   * @param urlConfig - The URL configuration object.
+   * @returns Returns the websocket URL.
    *
    * @example
    * import SenseUtilities from 'sense-utilities';
