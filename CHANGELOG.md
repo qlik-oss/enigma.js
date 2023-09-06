@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.12.0
+
+- feat: add types for enigma npm package (#983)
+- feat: add latest engine schema, 12.1823.0 (#984)
+
+- chore(deps-dev): bump word-wrap from 1.2.3 to 1.2.5 (#982)
+- chore(deps): update dependency rimraf to v5 (#979)
+- chore(deps): update minor and patch (#978)
+- chore(deps): update dependency rimraf to v4.4.0 (#974)
+- chore(deps): update dependency rollup-plugin-filesize to v10 (#975)
+
 ## 2.11.0
 
 - fix: replaces uglify with terser rollup plugin (#972)
