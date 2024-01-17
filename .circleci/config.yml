@@ -4,7 +4,7 @@ defaults: &defaults
   working_directory: ~/enigma.js
   # Available images https://hub.docker.com/r/circleci/node/tags/
   docker:
-    - image: circleci/node:21.5.0
+    - image: cimg/node:21.5.0
 
 jobs:
   install:
