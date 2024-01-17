@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.13.0
+
+- fix: guard against empty patch array (#994)
+
+- chore(deps): update minor and patch (#986)
+
 ## 2.12.0
 
 - feat: add types for enigma npm package (#983)
