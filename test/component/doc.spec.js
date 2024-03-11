@@ -1,4 +1,4 @@
-import schema from '../../schemas/12.20.0.json';
+import schema from '../../schemas/12.2015.0.json';
 import enigma from '../../src/enigma';
 import SocketMock from '../mocks/socket-mock';
 
