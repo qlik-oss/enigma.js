@@ -42,15 +42,15 @@
   "devDependencies": {
     "@after-work.js/aw": "7.0.0-alpha.1",
     "@after-work.js/transform": "6.0.14",
-    "@babel/core": "7.23.7",
+    "@babel/core": "7.24.0",
     "@babel/plugin-transform-modules-commonjs": "7.23.3",
-    "@babel/preset-env": "7.23.8",
+    "@babel/preset-env": "7.24.0",
     "@joseph184/rollup-plugin-node-builtins": "2.1.4",
     "babel-plugin-istanbul": "6.1.1",
     "coveralls": "3.1.1",
     "cross-env": "7.0.3",
-    "dotenv": "16.3.1",
-    "eslint": "8.56.0",
+    "dotenv": "16.4.5",
+    "eslint": "8.57.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.29.1",
     "extend": "3.0.2",
@@ -62,11 +62,11 @@
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-filesize": "10.0.0",
-    "rollup-plugin-license": "3.2.0",
+    "rollup-plugin-license": "3.3.1",
     "rollup-plugin-node-globals": "1.4.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-terser": "7.0.2",
     "scriptappy-from-jsdoc": "0.7.0",
-    "ws": "8.13.0"
+    "ws": "8.16.0"
   }
 }
