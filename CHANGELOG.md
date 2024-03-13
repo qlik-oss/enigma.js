@@ -1,9 +1,13 @@
 # Changelog
 
+## 2.14.0
+
+- chore(deps): update minor and patch (#996)
+- chore: add latest engine schema (#997)
+
 ## 2.13.0
 
 - fix: guard against empty patch array (#994)
-
 - chore(deps): update minor and patch (#986)
 
 ## 2.12.0
