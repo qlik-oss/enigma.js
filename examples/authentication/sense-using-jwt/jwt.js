@@ -6,6 +6,20 @@ const jwt = require('jsonwebtoken');
 
 const schema = require('enigma.js/schemas/12.2027.0.json');
 
+const getCsrfToken = async (host, auth) => {
+  try {
+    const res = await fetch(`${host}/qps/csrftoken`, {
+      headers: {
+        Authorization: `Bearer ${auth}`,
+      },
+    });
+    return res.headers.get('QLIK_CSRF_TOKEN');
+  } catch (err) {
+    console.log('Failed to fetch csrf-token', err);
+  }
+  return '';
+};
+
 (async () => {
   // Your Sense Enterprise installation hostname:
   const senseHost = 'localhost';
@@ -34,8 +48,8 @@ const schema = require('enigma.js/schemas/12.2027.0.json');
   // Sign the token using the RS256 algorithm:
   const signedToken = jwt.sign(token, key, { algorithm: 'RS256' });
 
-  const csrfToken = await getCsrfToken(signedToken);
-  const csrfQuery = csrfToken ? `&qlik-csrf-token=${csrfToken}` : "";
+  const csrfToken = await getCsrfToken(`https://${senseHost}/${proxyPrefix}`, signedToken);
+  const csrfQuery = csrfToken ? `&qlik-csrf-token=${csrfToken}` : '';
 
   const config = {
     schema,
@@ -60,16 +74,4 @@ const schema = require('enigma.js/schemas/12.2027.0.json');
     console.log('Failed to open session and/or retrieve the app list:', error);
     process.exit(1);
   });
-})()
-
-const getCsrfToken = async (auth) => {
-  try {
-    const res = await fetch(`${host}/qps/csrftoken`, {
-      headers: {
-        Authorization: `Bearer ${jwt}`
-      }
-    })
-    return res.headers.get("QLIK_CSRF_TOKEN")
-  } catch {}
-  return ""
-}
+})();
