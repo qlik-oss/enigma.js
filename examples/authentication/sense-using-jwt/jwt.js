@@ -4,55 +4,72 @@ const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 
-const schema = require('enigma.js/schemas/12.20.0.json');
+const schema = require('enigma.js/schemas/12.2027.0.json');
 
-// Your Sense Enterprise installation hostname:
-const senseHost = 'localhost';
+(async () => {
+  // Your Sense Enterprise installation hostname:
+  const senseHost = 'localhost';
 
-// Your configured virtual proxy prefix for JWT authentication:
-const proxyPrefix = 'jwt';
+  // Your configured virtual proxy prefix for JWT authentication:
+  const proxyPrefix = 'jwt';
 
-// The Sense Enterprise-configured user directory for the user you want to identify
-// as:
-const userDirectory = 'your-sense-user-directory';
+  // The Sense Enterprise-configured user directory for the user you want to identify
+  // as:
+  const userDirectory = 'your-sense-user-directory';
 
-// The user to use when creating the session:
-const userId = 'your-sense-user';
+  // The user to use when creating the session:
+  const userId = 'your-sense-user';
 
-// The Sense Enterprise-configured JWT structure. Change the attributes to match
-// your configuration:
-const token = {
-  directory: userDirectory,
-  user: userId,
-};
+  // The Sense Enterprise-configured JWT structure. Change the attributes to match
+  // your configuration:
+  const token = {
+    directory: userDirectory,
+    user: userId,
+  };
 
-// Path to the private key used for JWT signing:
-const privateKeyPath = './keys/private.key';
-const key = fs.readFileSync(path.resolve(__dirname, privateKeyPath));
+  // Path to the private key used for JWT signing:
+  const privateKeyPath = './keys/private.key';
+  const key = fs.readFileSync(path.resolve(__dirname, privateKeyPath));
 
-// Sign the token using the RS256 algorithm:
-const signedToken = jwt.sign(token, key, { algorithm: 'RS256' });
+  // Sign the token using the RS256 algorithm:
+  const signedToken = jwt.sign(token, key, { algorithm: 'RS256' });
 
-const config = {
-  schema,
-  url: `wss://${senseHost}/${proxyPrefix}/app/engineData`,
-  // Notice how the signed JWT is passed in the 'Authorization' header using the
-  // 'Bearer' schema:
-  createSocket: (url) => new WebSocket(url, {
-    headers: { Authorization: `Bearer ${signedToken}` },
-  }),
-};
+  const csrfToken = await getCsrfToken(signedToken);
+  const csrfQuery = csrfToken ? `&qlik-csrf-token=${csrfToken}` : "";
 
-const session = enigma.create(config);
+  const config = {
+    schema,
+    url: `wss://${senseHost}/${proxyPrefix}/app/engineData${csrfQuery}`,
+    // Notice how the signed JWT is passed in the 'Authorization' header using the
+    // 'Bearer' schema:
+    createSocket: (url) => new WebSocket(url, {
+      headers: { Authorization: `Bearer ${signedToken}` },
+    }),
+  };
 
-session.open().then((global) => {
-  console.log('Session was opened successfully');
-  return global.getDocList().then((list) => {
-    const apps = list.map((app) => `${app.qDocId} (${app.qTitle || 'No title'})`).join(', ');
-    console.log(`Apps on this Engine that the configured user can open: ${apps}`);
-    session.close();
+  const session = enigma.create(config);
+
+  session.open().then((global) => {
+    console.log('Session was opened successfully');
+    return global.getDocList().then((list) => {
+      const apps = list.map((app) => `${app.qDocId} (${app.qTitle || 'No title'})`).join(', ');
+      console.log(`Apps on this Engine that the configured user can open: ${apps}`);
+      session.close();
+    });
+  }).catch((error) => {
+    console.log('Failed to open session and/or retrieve the app list:', error);
+    process.exit(1);
   });
-}).catch((error) => {
-  console.log('Failed to open session and/or retrieve the app list:', error);
-  process.exit(1);
-});
+})()
+
+const getCsrfToken = async (auth) => {
+  try {
+    const res = await fetch(`${host}/qps/csrftoken`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    return res.headers.get("QLIK_CSRF_TOKEN")
+  } catch {}
+  return ""
+}
