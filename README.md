@@ -5,6 +5,7 @@
 
 enigma.js is a library that helps you communicate with Qlik QIX Engine. Examples of use may be building your own browser-based analytics tools, back-end services, or command-line scripts.
 
+
 ---
 
 - [Getting started](#getting-started)
