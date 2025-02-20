@@ -13,7 +13,7 @@ const getCsrfToken = async (host, auth) => {
         Authorization: `Bearer ${auth}`,
       },
     });
-    return res.headers.get('QLIK_CSRF_TOKEN');
+    return res.headers.get('qlik-csrf-token');
   } catch (err) {
     console.log('Failed to fetch csrf-token', err);
   }
