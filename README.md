@@ -66,9 +66,11 @@ const schema = require('enigma.js/schemas/12.20.0.json');
 // create a new session:
 const session = enigma.create({
   schema,
+  // URL to running QIX Engine - might require additional parameters for authentication - see examples
   url: 'ws://localhost:9076/app/engineData',
   createSocket: url => new WebSocket(url),
 });
+
 
 // bind traffic events to log what is sent and received on the socket:
 session.on('traffic:sent', data => console.log('sent:', data));
@@ -89,7 +91,7 @@ And then run it:
 node my-file.js
 ```
 
-You may need to adjust the code so the URL points towards your running QIX Engine.
+You may need to adjust the code so the URL points towards your running QIX Engine as well as handle any authentication needed.
 
 ![/getting-started.gif](/getting-started.gif)
   
@@ -105,7 +107,7 @@ Create a HTML file `index.html` and insert the following example content:
     .then(schema => {
       const session = enigma.create({
         schema,
-        // Change the url to point to your QIX instance
+        // Change the url to point to your QIX instance - might require additional parameters for authentication - see examples
         url: 'ws://localhost:9076/app/engineData',
         createSocket: url => new WebSocket(url)
       })
