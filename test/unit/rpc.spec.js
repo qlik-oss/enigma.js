@@ -194,4 +194,36 @@ describe('RPC', () => {
     expect(errArg.code).to.be.equal(-1);
     expect(errArg.message).to.be.equal('Socket error');
   });
+
+  it('should emit socket-error with parse-error type when receiving malformed JSON', (done) => {
+    const malformedJson = '{"invalid": "json with \x00 control character"}';
+
+    rpc.once('socket-error', (error) => {
+      expect(error.type).to.equal('parse-error');
+      expect(error.message).to.equal('Failed to parse WebSocket message');
+      expect(error.error).to.be.instanceOf(SyntaxError);
+      expect(error.rawData).to.equal(malformedJson);
+      done();
+    });
+
+    rpc.open().then(() => {
+      rpc.socket.message({ data: malformedJson });
+    });
+    rpc.socket.open();
+  });
+
+  it('should not throw when receiving malformed JSON', (done) => {
+    const malformedJson = 'not valid json at all';
+
+    rpc.once('socket-error', () => {
+      // If we reach here without throwing, the test passes
+      done();
+    });
+
+    rpc.open().then(() => {
+      // This should not throw an uncaught exception
+      expect(() => rpc.socket.message({ data: malformedJson })).to.not.throw();
+    });
+    rpc.socket.open();
+  });
 });
