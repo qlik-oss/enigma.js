@@ -112,14 +112,23 @@ class RPC {
   * @param {Object} event - The event describing the message.
   */
   onMessage(event) {
-    const data = JSON.parse(event.data);
-    const resolver = this.resolvers[data.id] || {};
-    this.emit('traffic', 'received', data, resolver.handle);
-    if (typeof data.id !== 'undefined' && this.resolvers[data.id]) {
-      this.emit('message', data);
-      this.resolvers[data.id].resolveWith(data);
-    } else {
-      this.emit(data.params ? 'notification' : 'message', data);
+    try {
+      const data = JSON.parse(event.data);
+      const resolver = this.resolvers[data.id] || {};
+      this.emit('traffic', 'received', data, resolver.handle);
+      if (typeof data.id !== 'undefined' && this.resolvers[data.id]) {
+        this.emit('message', data);
+        this.resolvers[data.id].resolveWith(data);
+      } else {
+        this.emit(data.params ? 'notification' : 'message', data);
+      }
+    } catch (error) {
+      this.emit('socket-error', {
+        type: 'parse-error',
+        message: 'Failed to parse WebSocket message',
+        error,
+        rawData: event.data,
+      });
     }
   }
 
