@@ -1,4 +1,4 @@
 {
-  "extends": ["github>qlik-oss/renovate-config"],
+  "extends": ["local>qlik-oss/renovate-config"],
   "rebaseStalePrs": true
 }
