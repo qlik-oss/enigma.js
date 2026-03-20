@@ -1,7 +1,4 @@
 {
-  "extends": [
-    "qlik-oss",
-    "qlik-oss:groupMinorPatch"
-  ],
+  "extends": ["github>qlik-oss/renovate-config"],
   "rebaseStalePrs": true
 }
