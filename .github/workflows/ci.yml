@@ -1,0 +1,141 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+    tags: ["v*"]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run lint
+
+  api:
+    name: API Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Determine version
+        if: >
+          github.event_name != 'pull_request' ||
+          github.event.pull_request.head.repo.full_name == github.repository
+        id: version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            version="${GITHUB_REF#refs/tags/v}"
+          else
+            version=$(git describe --tags --abbrev=7 --match "v*" 2>/dev/null || echo "0.0.0")
+            version="${version#v}"
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Building ${version}"
+      - name: Prepare API Compliance
+        if: >
+          github.event_name != 'pull_request' ||
+          github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          docker pull ghcr.io/qlik-download/api-compliance
+          docker create -v /specs --name specs alpine:3.4 /bin/true
+          docker cp ./docs/api-spec.json specs:/specs
+      - name: Run API Compliance
+        if: >
+          github.event_name != 'pull_request' ||
+          github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          CREDENTIALS_S3_SECRETKEY: ${{ secrets.APICULTURIST_S3 }}
+          CREDENTIALS_GITHUB: ${{ secrets.APICULTURIST_GITHUB }}
+          CREDENTIALS_COLONY: ${{ secrets.APICULTURIST_TOKEN }}
+          COMMIT_SHA: ${{ github.sha }}
+          RELEASE_TAG: v${{ steps.version.outputs.version }}
+        run: |
+          docker run --volumes-from specs \
+            -e SPEC_PATHS="0f0b4c98-db9c-46c7-8958-2a98bd15a946@/specs/api-spec.json" \
+            -e COMMIT_SHA="$COMMIT_SHA" \
+            -e RELEASE_TAG="$RELEASE_TAG" \
+            -e CREDENTIALS_S3_SECRETKEY="$CREDENTIALS_S3_SECRETKEY" \
+            -e CREDENTIALS_GITHUB="$CREDENTIALS_GITHUB" \
+            -e CREDENTIALS_COLONY="$CREDENTIALS_COLONY" \
+            ghcr.io/qlik-download/api-compliance
+
+  build-and-unit:
+    name: Build, Unit and Component Tests
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Run unit tests
+        run: npm run test:unit
+      - name: Upload unit coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          flag-name: unit
+          parallel: true
+      - name: Run component tests
+        run: npm run test:component
+      - name: Upload component coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          flag-name: component
+          parallel: true
+      - run: npm run scriptappy
+      - name: Check if API specification is up to date
+        run: git diff --exit-code docs/api-spec.json
+
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-slim
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    env:
+      QCS_HOST: ${{ vars.QCS_HOST }}
+      QCS_API_KEY: ${{ secrets.QCS_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - name: Run integration tests
+        run: npm run test:integration
+      - name: Upload integration coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          flag-name: integration
+          parallel: true
+      - name: Verify examples
+        run: test/examples/run.sh
+
+  coveralls:
+    name: Coveralls Finished
+    runs-on: ubuntu-slim
+    needs: [build-and-unit, integration]
+    if: always()
+    steps:
+      - name: Coveralls finished
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
+          carryforward: "unit,component,integration"

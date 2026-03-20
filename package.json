@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c && cross-env NODE_ENV=production rollup -c",
-    "test": "aw -c test/aw.config.json",
+    "test": "aw -c test/aw.config.json --mocha.timeout 5000",
     "test:watch": "aw -c test/aw.config.json -w",
     "test:unit": "aw -c test/aw.config.json --glob test/unit/{,**/}*.spec.js",
     "test:unit:watch": "aw -c test/aw.config.json --glob test/unit/{,**/}*.spec.js -w",

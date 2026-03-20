@@ -111,7 +111,7 @@ git push -u myfork my-feature-or-bugfix
 
 Before creating a Pull Request, make sure the following items are satisfied:
 
-- CircleCI is green
+- GitHub Actions CI is green
 - Commit message format is followed
 - [CLA](#cla) is signed
 
