@@ -133,7 +133,7 @@ There are currently no conventions on how to format commit messages. We'd like y
 Some examples of good commit messages:
 
 - _Fix outKey being sent in all requests._
-- _Bump after-work.js to 0.12.9_
+- _Migrate tests from after-work to Vitest._
 - _Rename communication module to registry_
 
 

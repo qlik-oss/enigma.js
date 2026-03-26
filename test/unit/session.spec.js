@@ -67,14 +67,14 @@ describe('Session', () => {
     expect(anotherOpen).to.equal(open);
   });
 
-  it("should call reject callback if connection can't be established", (done) => {
+  it("should call reject callback if connection can't be established", async () => {
     createSession(true);
-    session.open().then(() => {}, () => { done(); });
+    await expect(session.open()).to.be.rejected;
   });
 
-  it("should call catch reject callback if connection can't be established", (done) => {
+  it("should call catch reject callback if connection can't be established", async () => {
     createSession(true);
-    session.open().catch(() => { done(); });
+    await expect(session.open()).to.be.rejected;
   });
 
   describe('listeners', () => {

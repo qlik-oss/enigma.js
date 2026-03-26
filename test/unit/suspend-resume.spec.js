@@ -18,13 +18,21 @@ describe('Suspend/Resume', () => {
   });
 
   beforeEach(() => {
-    SocketMock.on('created', (socket) => socket.open());
     rpc = new RPC({ Promise, url: 'http://localhost:4848', createSocket: (url) => new SocketMock(url, false) });
+    const rpcOpen = rpc.open.bind(rpc);
+    rpc.open = (force = false) => {
+      const openedPromise = rpcOpen(force);
+      if (rpc.socket && rpc.socket.readyState !== rpc.socket.OPEN) {
+        rpc.socket.readyState = rpc.socket.OPEN;
+        rpc.onOpen();
+      }
+      return openedPromise;
+    };
     apis = new ApiCache({ Promise, schema: {} });
     suspendResume = new SuspendResume({ Promise, rpc, apis });
     const { reopen } = suspendResume;
     suspendResume.reopen = (val, force) => reopen.call(suspendResume, force ? val : 5);
-    return rpc.open();
+    rpc.open();
   });
 
   afterEach(() => {
@@ -32,23 +40,31 @@ describe('Suspend/Resume', () => {
   });
 
   describe('Suspend', () => {
-    it('should set state when manually suspended', () => suspendResume.suspend().then(() => expect(suspendResume.isSuspended).to.equal(true)));
+    it('should set state when manually suspended', async () => {
+      await suspendResume.suspend();
+      expect(suspendResume.isSuspended).to.equal(true);
+    });
   });
 
   describe('Resume', () => {
-    it('should reject created sessions when onlyIfAttached is true', () => {
-      const p = suspendResume.suspend().then(() => suspendResume.resume(true));
-      expect(p).to.eventually.be.rejectedWith('Not attached');
+    it('should reject created sessions when onlyIfAttached is true', async () => {
+      await suspendResume.suspend();
+      try {
+        await suspendResume.resume(true);
+        throw new Error('Expected resume(true) to reject when session is created');
+      } catch (err) {
+        expect(err.message).to.equal('Not attached');
+      }
     });
 
-    it('should restore global', () => {
+    it('should restore global', async () => {
       apis.add(-1, createApi(-1, 'Global'));
-      return suspendResume.suspend()
-        .then(() => suspendResume.resume())
-        .then(() => expect(apis.getApi(-1).emit.notCalled).to.equal(true));
+      await suspendResume.suspend();
+      await suspendResume.resume();
+      expect(apis.getApi(-1).emit.notCalled).to.equal(true);
     });
 
-    it('should close doc', () => {
+    it('should close doc', async () => {
       const apisToClose = [
         createApi(1, 'Doc', 1),
         createApi(2, 'GenericObject', 2),
@@ -61,15 +77,13 @@ describe('Suspend/Resume', () => {
         socket.intercept('OpenDoc').return({ error: { message: 'Oh, no!' } });
       });
 
-      return suspendResume.suspend()
-        .then(() => suspendResume.resume(false))
-        .then(() => {
-          expect(apis.getApis().length).to.equal(1);
-          apisToClose.forEach((api) => expect(api.emit).to.have.been.calledWith('closed'));
-        });
+      await suspendResume.suspend();
+      await suspendResume.resume(false);
+      expect(apis.getApis().length).to.equal(1);
+      apisToClose.forEach((api) => expect(api.emit).to.have.been.calledWith('closed'));
     });
 
-    it('should restore doc and objects', () => {
+    it('should restore doc and objects', async () => {
       const apisToChange = [
         createApi(1, 'Doc', 1),
         createApi(2, 'GenericObject', 2),
@@ -92,33 +106,33 @@ describe('Suspend/Resume', () => {
         socket.intercept('GetBookmark').return({ result: { qReturn: { qHandle: null } } });
       });
 
-      return suspendResume.suspend()
-        .then(() => suspendResume.resume(true))
-        .catch(() => {
-          apisToChange.forEach((api) => expect(api.emit.notCalled).to.equal(true));
-          apisToClose.forEach((api) => expect(api.emit.notCalled).to.equal(true));
-        })
-        .then(() => suspendResume.resume(false))
-        .then(() => {
-          expect(apis.getApis().length).to.equal(4);
-          apisToChange.forEach((api) => expect(api.emit).to.have.been.calledWith('changed'));
-          apisToClose.forEach((api) => expect(api.emit).to.have.been.calledWith('closed'));
-        });
+      await suspendResume.suspend();
+      try {
+        await suspendResume.resume(true);
+      } catch (err) {
+        apisToChange.forEach((api) => expect(api.emit.notCalled).to.equal(true));
+        apisToClose.forEach((api) => expect(api.emit.notCalled).to.equal(true));
+      }
+      await suspendResume.resume(false);
+      expect(apis.getApis().length).to.equal(4);
+      apisToChange.forEach((api) => expect(api.emit).to.have.been.calledWith('changed'));
+      apisToClose.forEach((api) => expect(api.emit).to.have.been.calledWith('closed'));
     });
 
-    it('should return SESSION_CREATED when reopen hits the timeout', () => {
-      const reopen = suspendResume.reopen(25, true);
-      return reopen.then((state) => expect(state).to.equal('SESSION_CREATED'));
+    it('should return SESSION_CREATED when reopen hits the timeout', async () => {
+      const state = await suspendResume.reopen(25, true);
+      expect(state).to.equal('SESSION_CREATED');
     });
 
-    it('should return SESSION_ATTACHED when it receives the session attached notification', () => {
-      const reopen = suspendResume.reopen(1000000, true);
+    it('should return SESSION_ATTACHED when it receives the session attached notification', async () => {
+      const reopenPromise = suspendResume.reopen(1000000, true);
       setTimeout(() => rpc.emit(
         'notification',
         { method: 'OnConnected', params: { qSessionState: 'SESSION_ATTACHED' } },
       ), 25);
 
-      return reopen.then((state) => expect(state).to.equal('SESSION_ATTACHED'));
+      const state = await reopenPromise;
+      expect(state).to.equal('SESSION_ATTACHED');
     });
   });
 });

@@ -98,7 +98,7 @@ describe('Sugar mixins', () => {
         expect(list.qAppObjectList.qItems.length).to.equal(1);
         expect(list.qAppObjectList.qItems[0].qInfo.qId).to.equal(sheet.id);
       });
-  }).timeout(HIGH_TIMEOUT);
+  }, HIGH_TIMEOUT);
 
   it('should load script and make selections', () => {
     const listDef = {
@@ -115,7 +115,7 @@ describe('Sugar mixins', () => {
       .then((field) => field.selectAll())
       .then(() => app.getList(listDef))
       .then((list) => expect(list.qSelectionObject.qSelections[0].qSelectedCount).to.equal(26));
-  }).timeout(HIGH_TIMEOUT);
+  }, HIGH_TIMEOUT);
 
   it('should create and list measures', () => {
     const listDef = {
@@ -153,7 +153,7 @@ describe('Sugar mixins', () => {
       .then((m) => { measure = m; })
       .then(() => app.getList(listDef))
       .then((list) => expect(measure.id).to.equal(list.qMeasureList.qItems[0].qInfo.qId));
-  }).timeout(HIGH_TIMEOUT);
+  }, HIGH_TIMEOUT);
 
   it('should load script and list fields', () => {
     const listDef = {
@@ -172,7 +172,7 @@ describe('Sugar mixins', () => {
       .then((app) => app.getList(listDef))
       .then((list) => list.qFieldList.qItems.filter((qField) => qField.qIsHidden !== true))
       .then((userFields) => expect(userFields.length).to.equal(12));
-  }).timeout(HIGH_TIMEOUT);
+  }, HIGH_TIMEOUT);
 
   it('should create and list dimensions', () => {
     const listDef = {
@@ -218,7 +218,7 @@ describe('Sugar mixins', () => {
       .then((d) => { dimension = d; })
       .then(() => app.getList(listDef))
       .then((list) => expect(dimension.id).to.equal(list.qDimensionList.qItems[0].qInfo.qId));
-  }).timeout(HIGH_TIMEOUT);
+  }, HIGH_TIMEOUT);
 
   it('should list created Variable', () => {
     const listDef = {
@@ -252,5 +252,5 @@ describe('Sugar mixins', () => {
       .then(() => app.getList(listDef))
       .then((list) => list.qVariableList.qItems.filter((v) => v.qIsReserved !== true))
       .then((userVariables) => expect(userVariables[0].qInfo.qId).to.equal(variable.id));
-  }).timeout(HIGH_TIMEOUT);
+  }, HIGH_TIMEOUT);
 });

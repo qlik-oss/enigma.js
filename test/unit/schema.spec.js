@@ -139,12 +139,13 @@ describe('Schema', () => {
     });
   });
   describe('generateDefaultApi', () => {
-    it('should add method', (done) => {
+    it('should add method', () => {
       const target = {};
       const source = { Foo: { In: [], Out: [] } };
       definition.generateDefaultApi(target, source);
-      sinon.stub(target, 'foo').callsFake(done);
+      const stub = sinon.stub(target, 'foo');
       target.foo();
+      expect(stub.calledOnce).to.equal(true);
     });
 
     it('should call send with correct parameters', () => {
