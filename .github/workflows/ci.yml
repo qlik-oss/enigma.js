@@ -15,8 +15,8 @@ jobs:
     name: Lint
     runs-on: ubuntu-slim
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: "24"
           cache: "npm"
@@ -27,7 +27,7 @@ jobs:
     name: API Compliance
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
       - name: Determine version
@@ -76,8 +76,8 @@ jobs:
     name: Build, Unit and Component Tests
     runs-on: ubuntu-slim
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: "24"
           cache: "npm"
@@ -87,14 +87,14 @@ jobs:
       - name: Run unit tests
         run: npm run test:unit
       - name: Upload unit coverage to Coveralls
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           flag-name: unit
           parallel: true
       - name: Run component tests
         run: npm run test:component
       - name: Upload component coverage to Coveralls
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           flag-name: component
           parallel: true
@@ -112,8 +112,8 @@ jobs:
       QCS_HOST: ${{ vars.QCS_HOST }}
       QCS_API_KEY: ${{ secrets.QCS_API_KEY }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: "24"
           cache: "npm"
@@ -121,7 +121,7 @@ jobs:
       - name: Run integration tests
         run: npm run test:integration
       - name: Upload integration coverage to Coveralls
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           flag-name: integration
           parallel: true
@@ -135,7 +135,7 @@ jobs:
     if: always()
     steps:
       - name: Coveralls finished
-        uses: coverallsapp/github-action@v2
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           parallel-finished: true
           carryforward: "unit,component,integration"
