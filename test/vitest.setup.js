@@ -1,14 +1,8 @@
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  chai,
-} from 'vitest';
-import sinon from 'sinon';
-import chaiAsPromised from 'chai-as-promised';
-import chaiSubset from 'chai-subset';
-import sinonChai from 'sinon-chai';
+import { afterAll, afterEach, beforeAll, beforeEach, chai } from "vitest";
+import sinon from "sinon";
+import chaiAsPromised from "chai-as-promised";
+import chaiSubset from "chai-subset";
+import sinonChai from "sinon-chai";
 
 chai.use(chaiAsPromised);
 chai.use(chaiSubset);

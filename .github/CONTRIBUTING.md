@@ -2,14 +2,14 @@
 
 You are more than welcome to contribute to enigma.js! Follow these guidelines and you will be ready to start:
 
- - [Code of conduct](#code-of-conduct)
- - [Bugs](#bugs)
- - [Features](#features)
- - [Documentation](#documentation)
- - [Developing](#developing)
- - [Git guidelines](#git)
- - [Signing the CLA](#cla)
- - [Releasing](#releasing)
+- [Code of conduct](#code-of-conduct)
+- [Bugs](#bugs)
+- [Features](#features)
+- [Documentation](#documentation)
+- [Developing](#developing)
+- [Git guidelines](#git)
+- [Signing the CLA](#cla)
+- [Releasing](#releasing)
 
 ## <a name="code-of-conduct"></a> Code of conduct
 
@@ -25,7 +25,6 @@ Features can be requested by adding issues in the repository. If the feature inc
 please be prepared to discuss the changes with us so we can cooperate on how to best include them.
 
 Submit your feature by creating a Pull Request, following the [GIT guidelines](#git). Include any related documentation changes.
-
 
 ## <a name="documentation"></a> Documentation changes
 
@@ -121,7 +120,6 @@ If the branch has merge conflicts or has been outdated, please do a rebase again
 
 _WARNING: Squashing or reverting commits and force-pushing thereafter may remove GitHub comments on code that were previously made by you or others in your commits. Avoid any form of rebasing unless necessary._
 
-
 ### Commit message format
 
 There are currently no conventions on how to format commit messages. We'd like you to follow some rules on the content however:
@@ -135,7 +133,6 @@ Some examples of good commit messages:
 - _Fix outKey being sent in all requests._
 - _Migrate tests from after-work to Vitest._
 - _Rename communication module to registry_
-
 
 ## <a name="cla"></a> Signing the CLA
 
