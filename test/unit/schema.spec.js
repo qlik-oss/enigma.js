@@ -1,7 +1,7 @@
-import Schema from "../../src/schema";
-import KeyValueCache from "../../src/key-value-cache";
+import Schema from '../../src/schema';
+import KeyValueCache from '../../src/key-value-cache';
 
-describe("Schema", () => {
+describe('Schema', () => {
   let config;
   let definition;
 
@@ -14,73 +14,66 @@ describe("Schema", () => {
     definition = new Schema(config);
   });
 
-  it("should be a constructor", () => {
-    expect(Schema).to.be.a("function");
+  it('should be a constructor', () => {
+    expect(Schema).to.be.a('function');
     expect(Schema).to.throw();
   });
 
-  it("should add a definition", () => {
+  it('should add a definition', () => {
     expect(definition.schema).to.deep.equal(config.schema);
     expect(definition.types).to.be.an.instanceOf(KeyValueCache);
   });
 
-  it("should generate a type", () => {
-    const factory = definition.generate("Foo");
-    expect(factory).to.be.a("function");
+  it('should generate a type', () => {
+    const factory = definition.generate('Foo');
+    expect(factory).to.be.a('function');
   });
 
-  it("should throw if type is not defined", () => {
-    expect(definition.generate.bind(definition, "Foo1")).to.throw();
+  it('should throw if type is not defined', () => {
+    expect(definition.generate.bind(definition, 'Foo1')).to.throw();
   });
 
-  it("should return cached type", () => {
-    const factory = definition.generate("Foo");
+  it('should return cached type', () => {
+    const factory = definition.generate('Foo');
     // what kind of test is this?
-    expect(definition.generate("Foo")).to.equal(factory);
+    expect(definition.generate('Foo')).to.equal(factory);
   });
 
-  describe("register mixin", () => {
+  describe('register mixin', () => {
     let mixin;
 
     beforeEach(() => {
-      mixin = {
-        types: "Foo",
-        extend: {
-          tweet() {
-            /* dummy */
-          },
-        },
-      };
+      mixin = { types: 'Foo', extend: { tweet() { /* dummy */ } } };
     });
 
-    it("should add mixins to cache", () => {
+    it('should add mixins to cache', () => {
       definition.registerMixin(mixin);
-      expect(definition.mixins.get("Foo").length).to.equal(1);
+      expect(definition.mixins.get('Foo').length).to.equal(1);
       definition.registerMixin(mixin);
-      expect(definition.mixins.get("Foo").length).to.equal(2);
+      expect(definition.mixins.get('Foo').length).to.equal(2);
     });
 
-    it("should silently accept a type as string", () => {
+    it('should silently accept a type as string', () => {
       delete mixin.types;
-      mixin.type = "Foo";
+      mixin.type = 'Foo';
       definition.registerMixin(mixin);
-      expect(definition.mixins.get("Foo").length).to.equal(1);
+      expect(definition.mixins.get('Foo').length).to.equal(1);
     });
 
-    it("should add the same mixin for several types", () => {
-      mixin.types = ["Foo", "Shoe"];
+    it('should add the same mixin for several types', () => {
+      mixin.types = ['Foo', 'Shoe'];
       definition.registerMixin(mixin);
-      expect(definition.mixins.get("Foo").length).to.equal(1);
-      expect(definition.mixins.get("Shoe").length).to.equal(1);
+      expect(definition.mixins.get('Foo').length).to.equal(1);
+      expect(definition.mixins.get('Shoe').length).to.equal(1);
     });
 
-    it("should not allow extend if method already exists", () => {
+    it('should not allow extend if method already exists', () => {
       mixin.extend = { bar() {} };
       definition.registerMixin(mixin);
-      expect(definition.generate.bind(definition, "Foo")).to.throw();
+      expect(definition.generate.bind(definition, 'Foo')).to.throw();
     });
 
-    it("should allow overrides if specified", () => {
+    it('should allow overrides if specified', () => {
       let baseArg;
       let fnArgs;
       mixin.override = {
@@ -90,72 +83,72 @@ describe("Schema", () => {
         },
       };
       definition.registerMixin(mixin);
-      const factory = definition.generate("Foo");
-      const api = factory({}, 0, "id", "custom");
-      api.bar("xyz");
-      expect(baseArg).to.be.a("function");
-      expect(fnArgs).to.equal("xyz");
+      const factory = definition.generate('Foo');
+      const api = factory({}, 0, 'id', 'custom');
+      api.bar('xyz');
+      expect(baseArg).to.be.a('function');
+      expect(fnArgs).to.equal('xyz');
     });
 
-    it("should allow override only if method is defined on base object", () => {
+    it('should allow override only if method is defined on base object', () => {
       delete mixin.extend;
       mixin.override = { tweet() {} };
       definition.registerMixin(mixin);
-      expect(definition.generate.bind(definition, "Foo")).to.throw();
+      expect(definition.generate.bind(definition, 'Foo')).to.throw();
     });
 
-    it("should mixin apis", () => {
+    it('should mixin apis', () => {
       definition.registerMixin(mixin);
-      const factory = definition.generate("Foo");
-      const obj = factory({}, 0, "id", "custom");
-      expect(obj.tweet).to.be.a("function");
+      const factory = definition.generate('Foo');
+      const obj = factory({}, 0, 'id', 'custom');
+      expect(obj.tweet).to.be.a('function');
     });
 
-    it("should only mixin once when type and custom type is equals", () => {
-      const spy = sinon.spy(definition, "mixinType");
+    it('should only mixin once when type and custom type is equals', () => {
+      const spy = sinon.spy(definition, 'mixinType');
 
-      definition.registerMixin("Foo", mixin);
-      const factory = definition.generate("Foo");
-      factory({}, 0, "id", "Foo");
+      definition.registerMixin('Foo', mixin);
+      const factory = definition.generate('Foo');
+      factory({}, 0, 'id', 'Foo');
 
       expect(spy.callCount).to.equals(1);
     });
 
-    it("call mixin init function with correct parameters", () => {
+    it('call mixin init function with correct parameters', () => {
       config.customProp = true;
       definition = new Schema(config);
       let mixinArgs = {};
-      mixin.types = ["custom"];
+      mixin.types = ['custom'];
       mixin.init = function init(initArgs) {
         mixinArgs = initArgs;
       };
       definition.registerMixin(mixin);
-      const factory = definition.generate("Foo");
-      factory({}, 0, "id", "custom");
+      const factory = definition.generate('Foo');
+      factory({}, 0, 'id', 'custom');
       expect(mixinArgs.config.Promise).to.be.equal(Promise);
       expect(mixinArgs.config.customProp).to.be.equal(true);
-      expect(mixinArgs.api.bar).to.be.a("function");
-      expect(mixinArgs.api.tweet).to.be.a("function");
+      expect(mixinArgs.api.bar).to.be.a('function');
+      expect(mixinArgs.api.tweet).to.be.a('function');
     });
 
-    it("should mixin multiple apis", () => {
-      mixin.types = ["Foo", "Bar"];
+    it('should mixin multiple apis', () => {
+      mixin.types = ['Foo', 'Bar'];
       definition.registerMixin(mixin);
-      expect(definition.mixins.get("Foo").length).to.equal(1);
-      expect(definition.mixins.get("Bar").length).to.equal(1);
+      expect(definition.mixins.get('Foo').length).to.equal(1);
+      expect(definition.mixins.get('Bar').length).to.equal(1);
     });
   });
-  describe("generateDefaultApi", () => {
-    it("should add method", () => {
+  describe('generateDefaultApi', () => {
+    it('should add method', () => {
       const target = {};
       const source = { Foo: { In: [], Out: [] } };
       definition.generateDefaultApi(target, source);
-      const stub = sinon.stub(target, "foo");
+      const stub = sinon.stub(target, 'foo');
       target.foo();
       expect(stub.calledOnce).to.equal(true);
     });
 
-    it("should call send with correct parameters", () => {
+    it('should call send with correct parameters', () => {
       const send = sinon.spy();
       const target = {
         handle: 1,
@@ -164,52 +157,52 @@ describe("Schema", () => {
       };
       const source = { Foo: { In: [], Out: [] } };
       definition.generateDefaultApi(target, source);
-      target.foo("123", {});
+      target.foo('123', {});
       expect(send).to.have.been.calledWith({
-        method: "Foo",
-        params: ["123", {}],
+        method: 'Foo',
+        params: ['123', {}],
         handle: 1,
         outKey: -1,
       });
     });
 
-    it("should call send with id and correct parameters", () => {
+    it('should call send with id and correct parameters', () => {
       const send = sinon.spy();
       const target = {
         handle: 1,
         session: { send },
       };
       const source = {
-        Foo: { In: [{ Name: "qId" }], Out: [] },
+        Foo: { In: [{ Name: 'qId' }], Out: [] },
       };
       definition.generateDefaultApi(target, source);
-      target.foo("123", {});
+      target.foo('123', {});
       expect(send).to.have.been.calledWith({
-        method: "Foo",
-        params: ["123", {}],
+        method: 'Foo',
+        params: ['123', {}],
         handle: 1,
         outKey: -1,
       });
     });
   });
 
-  describe("generate", () => {
-    it("should return a factory", () => {
-      const factory = definition.generate("Foo");
-      expect(factory).to.be.a("function");
+  describe('generate', () => {
+    it('should return a factory', () => {
+      const factory = definition.generate('Foo');
+      expect(factory).to.be.a('function');
     });
 
-    it("should create an api", () => {
-      const factory = definition.generate("Foo");
+    it('should create an api', () => {
+      const factory = definition.generate('Foo');
       const session = {};
-      const foo = factory(session, 1, "id", true);
-      expect(foo).to.be.an("object");
+      const foo = factory(session, 1, 'id', true);
+      expect(foo).to.be.an('object');
       expect(foo.session).to.equal(session);
       expect(foo.handle).to.equal(1);
-      expect(foo.id).to.equal("id");
+      expect(foo.id).to.equal('id');
     });
 
-    it("should configure types", () => {
+    it('should configure types', () => {
       config.schema = {
         structs: {
           Foo: {
@@ -218,95 +211,71 @@ describe("Schema", () => {
         },
       };
       definition = new Schema(config);
-      const factory = definition.generate("Foo");
+      const factory = definition.generate('Foo');
       const session = {};
       const foo = factory(session, 1, true);
-      expect(foo.bar2).to.be.a("function");
+      expect(foo.bar2).to.be.a('function');
     });
   });
 
-  describe("named parameters", () => {
+  describe('named parameters', () => {
     beforeEach(() => {
       const json = {
         structs: {
           Foo: {
             Bar: {
-              In: [
-                { Name: "param1", DefaultValue: "" },
-                { Name: "param2", DefaultValue: "" },
-                { Name: "param3", DefaultValue: "xyz" },
-              ],
+              In: [{ Name: 'param1', DefaultValue: '' },
+                { Name: 'param2', DefaultValue: '' },
+                { Name: 'param3', DefaultValue: 'xyz' }],
               Out: [],
             },
             Baz: {
-              In: [
-                {
-                  Name: "myBreakpoints",
-                  DefaultValue: [{ a: "", b: 0, c: false }],
-                },
-              ],
+              In: [{ Name: 'myBreakpoints', DefaultValue: [{ a: '', b: 0, c: false }] }],
               Out: [],
             },
           },
         },
       };
-      definition = new Schema({
-        Promise,
-        schema: json,
-        protocol: { delta: true },
-      });
+      definition = new Schema({ Promise, schema: json, protocol: { delta: true } });
     });
 
-    it("should call send with the correct parameter set", () => {
+    it('should call send with the correct parameter set', () => {
       let args;
-      const send = (request) => {
-        args = request.params;
-      };
-      const factory = definition.generate("Foo");
-      const api = factory({ send }, 1, "dummy", false, "dummy");
-      api.bar({ param1: "abc", param2: "def", param3: "ghi" });
-      expect(args).to.deep.equal(["abc", "def", "ghi"]);
-      api.bar("abc", "def");
-      expect(args).to.deep.equal(["abc", "def"]);
+      const send = (request) => { args = request.params; };
+      const factory = definition.generate('Foo');
+      const api = factory({ send }, 1, 'dummy', false, 'dummy');
+      api.bar({ param1: 'abc', param2: 'def', param3: 'ghi' });
+      expect(args).to.deep.equal(['abc', 'def', 'ghi']);
+      api.bar('abc', 'def');
+      expect(args).to.deep.equal(['abc', 'def']);
     });
 
-    it("should fill in default values when parameters are named", () => {
+    it('should fill in default values when parameters are named', () => {
       let args;
-      const send = (request) => {
-        args = request.params;
-      };
-      const factory = definition.generate("Foo");
-      const api = factory({ send }, 1, "dummy", false, "dummy");
-      api.bar({ param1: "abc", param2: "def" });
-      expect(args).to.deep.equal(["abc", "def", "xyz"]);
+      const send = (request) => { args = request.params; };
+      const factory = definition.generate('Foo');
+      const api = factory({ send }, 1, 'dummy', false, 'dummy');
+      api.bar({ param1: 'abc', param2: 'def' });
+      expect(args).to.deep.equal(['abc', 'def', 'xyz']);
     });
 
-    it("should NOT fill in default values when parameter is an array", () => {
+    it('should NOT fill in default values when parameter is an array', () => {
       let args;
-      const send = (request) => {
-        args = request.params;
-      };
-      const factory = definition.generate("Foo");
-      const api = factory({ send }, 1, "dummy", false, "dummy");
+      const send = (request) => { args = request.params; };
+      const factory = definition.generate('Foo');
+      const api = factory({ send }, 1, 'dummy', false, 'dummy');
       api.baz([]);
       expect(args).to.deep.equal([[]]);
     });
 
-    it("parameters should be passed as an array to mixins", () => {
+    it('parameters should be passed as an array to mixins', () => {
       let mixinArgs;
-      const mixin = {
-        types: "Foo",
-        override: {
-          bar: (_bar, ...args) => {
-            mixinArgs = args;
-          },
-        },
-      };
+      const mixin = { types: 'Foo', override: { bar: (_bar, ...args) => { mixinArgs = args; } } };
       definition.registerMixin(mixin);
-      const factory = definition.generate("Foo");
-      const api = factory({}, 0, "id", "custom");
-      api.bar({ param1: "abc", param2: "def", param3: "ghi" });
-      expect(mixinArgs).to.deep.equal(["abc", "def", "ghi"]);
+      const factory = definition.generate('Foo');
+      const api = factory({}, 0, 'id', 'custom');
+      api.bar({ param1: 'abc', param2: 'def', param3: 'ghi' });
+      expect(mixinArgs).to.deep.equal(['abc', 'def', 'ghi']);
     });
   });
 });
