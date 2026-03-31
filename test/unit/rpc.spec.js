@@ -49,129 +49,112 @@ describe('RPC', () => {
     expect(createSocket).to.have.been.calledWithExactly(rpc.url);
   });
 
-  it("should reject when trying to send a message if the socket isn't open", (done) => {
-    rpc.send().catch((err) => {
-      expect(err.code).to.equal(-1);
-      expect(err.message).to.equal('Not connected');
-      done();
-    });
+  it("should reject when trying to send a message if the socket isn't open", async () => {
+    await expect(rpc.send()).to.be.rejectedWith({ code: -1, message: 'Not connected' });
   });
 
-  it('should resolve the open promise when connection is established', (done) => {
-    rpc.open().then(() => { done(); });
+  it('should resolve the open promise when connection is established', async () => {
+    const openPromise = rpc.open();
     rpc.socket.open();
+    await expect(openPromise).to.be.fulfilled;
   });
 
-  it('should reject open promise if no connection is established', (done) => {
-    rpc.open().catch(() => { done(); });
+  it('should reject open promise if no connection is established', async () => {
+    const openPromise = rpc.open();
     rpc.socket.error({ message: 'error' });
+    await expect(openPromise).to.be.rejected;
   });
 
-  it('should emit error', (done) => {
-    rpc.once('socket-error', (error) => {
-      expect(error).to.equal('error');
-      done();
-    });
-    rpc.open().then(() => {
-      rpc.socket.error('error');
-    });
+  it('should emit error', async () => {
+    const onSocketError = sinon.spy();
+    rpc.once('socket-error', onSocketError);
+
+    const openPromise = rpc.open();
     rpc.socket.open();
+    await expect(openPromise).to.be.fulfilled;
+
+    rpc.socket.error('error');
+
+    expect(onSocketError).to.have.been.calledOnceWithExactly('error');
   });
 
-  it('should resolve the close promise when connection is lost', (done) => {
+  it('should resolve the close promise when connection is lost', async () => {
     const spy = sinon.spy(rpc, 'onClose');
-
-    const closed = () => {
-      expect(spy.calledOnce).to.equal(true);
-      done();
-    };
-
-    const opened = (getClosePromise) => {
-      getClosePromise().then(closed);
-      rpc.close();
-    };
-
-    rpc.open().then(opened);
+    const openPromise = rpc.open();
     rpc.socket.open();
+    await expect(openPromise).to.be.fulfilled;
+    const getClosePromise = await openPromise;
+    const closePromise = getClosePromise();
+    rpc.close();
+    await expect(closePromise).to.be.fulfilled;
+    await expect(spy).to.have.been.calledOnce;
   });
 
-  it('should resolve the close promise when connection is lost with specified code and reason', (done) => {
-    const closed = (result) => {
-      expect(result.code).to.equal(1000);
-      expect(result.reason).to.equal('SHUTDOWN');
-      done();
-    };
+  it('should resolve the close promise when connection is lost with specified code and reason', async () => {
+    const openPromise = rpc.open();
+    rpc.socket.open();
+    await expect(openPromise).to.be.fulfilled;
+    await expect(rpc.close(1000, 'SHUTDOWN')).to.become({ code: 1000, reason: 'SHUTDOWN' });
+  });
 
-    rpc.open().then(() => {
-      rpc.close(1000, 'SHUTDOWN').then(closed);
+  it('should resolve send promise when message arrives', async () => {
+    const request = { msg: 'hej' };
+    const openPromise = rpc.open();
+    rpc.socket.open();
+    await expect(openPromise).to.be.fulfilled;
+
+    const responsePromise = rpc.send(request);
+    rpc.socket.message({ data: JSON.stringify(request) });
+    const response = await responsePromise;
+
+    expect(response.msg).to.equal(request.msg);
+  });
+
+  it('should emit listeners', async () => {
+    const emit = sinon.spy(rpc, 'emit');
+    const openPromise = rpc.open();
+    rpc.socket.open();
+    await expect(openPromise).to.be.fulfilled;
+
+    rpc.socket.message({
+      data: JSON.stringify({
+        params: {
+          user: 'cam',
+        },
+      }),
     });
-
-    rpc.socket.open();
+    expect(emit).to.have.been.calledWith('notification', {
+      params: { user: 'cam' },
+    });
   });
 
-  it('should resolve send promise when message arrives', (done) => {
-    const request = { msg: 'hej' };
-    const opened = () => {
-      rpc.send(request).then((response) => {
-        expect(response.msg).to.equal(request.msg);
-        done();
-      });
-      rpc.socket.message({ data: JSON.stringify(request) });
-    };
-
-    rpc.open().then(opened);
-    rpc.socket.open();
-  });
-
-  it('should emit listeners', (done) => {
+  it('should emit message', async () => {
     const emit = sinon.spy(rpc, 'emit');
-
-    const opened = () => {
-      rpc.socket.message({
-        data: JSON.stringify({
-          params: {
-            user: 'cam',
-          },
-        }),
-      });
-      expect(emit).to.have.been.calledWith('notification', { params: { user: 'cam' } });
-      done();
-    };
-    rpc.open().then(opened);
+    const openPromise = rpc.open();
     rpc.socket.open();
+    await expect(openPromise).to.be.fulfilled;
+
+    rpc.socket.message({
+      data: JSON.stringify({
+        foo: 'bar',
+      }),
+    });
+    rpc.socket.close();
+    expect(emit).to.have.been.calledWith('message', { foo: 'bar' });
+    expect(emit).to.have.been.calledWith('closed');
   });
 
-  it('should emit message', (done) => {
-    const emit = sinon.spy(rpc, 'emit');
-
-    const opened = () => {
-      rpc.socket.message({
-        data: JSON.stringify({
-          foo: 'bar',
-        }),
-      });
-      rpc.socket.close();
-      expect(emit).to.have.been.calledWith('message', { foo: 'bar' });
-      expect(emit).to.have.been.calledWith('closed');
-      done();
-    };
-    rpc.open().then(opened);
-    rpc.socket.open();
-  });
-
-  it('should register request and unregister when message arrives', (done) => {
+  it('should register request and unregister when message arrives', async () => {
     const request = { msg: 'hej' };
-    const opened = () => {
-      rpc.send(request).then(() => {
-        expect(rpc.resolvers['1']).to.be.an('undefined');
-        done();
-      });
-      expect(rpc.resolvers['1']).to.be.an('object');
-      rpc.socket.message({ data: JSON.stringify(request) });
-    };
-
-    rpc.open().then(opened);
+    const openPromise = rpc.open();
     rpc.socket.open();
+    await expect(openPromise).to.be.fulfilled;
+
+    const responsePromise = rpc.send(request);
+    expect(rpc.resolvers['1']).to.be.an('object');
+    rpc.socket.message({ data: JSON.stringify(request) });
+    await responsePromise;
+    expect(rpc.resolvers['1']).to.be.an('undefined');
   });
 
   it('should reject all outstanding resolvers on error', () => {

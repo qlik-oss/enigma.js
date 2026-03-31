@@ -67,14 +67,9 @@ describe('Session', () => {
     expect(anotherOpen).to.equal(open);
   });
 
-  it("should call reject callback if connection can't be established", (done) => {
+  it("should call reject callback if connection can't be established", async () => {
     createSession(true);
-    session.open().then(() => {}, () => { done(); });
-  });
-
-  it("should call catch reject callback if connection can't be established", (done) => {
-    createSession(true);
-    session.open().catch(() => { done(); });
+    await expect(session.open()).to.be.rejected;
   });
 
   describe('listeners', () => {
@@ -86,16 +81,16 @@ describe('Session', () => {
       expect(spy).to.have.been.calledWithExactly({ prop: 'foo' });
     });
 
-    it('should emit the opened and closed events', () => {
+    it('should emit the opened and closed events', async () => {
       const openedCallback = sinon.spy();
       const closedCallback = sinon.spy();
       session.on('opened', openedCallback);
       session.on('closed', closedCallback);
       session.getObjectApi = () => {};
-      return session.open()
-        .then(() => expect(openedCallback.calledOnce).to.equal(true))
-        .then(() => session.close())
-        .then(() => expect(closedCallback.calledOnce).to.equal(true));
+      await session.open();
+      expect(openedCallback.calledOnce).to.equal(true);
+      await session.close();
+      expect(closedCallback.calledOnce).to.equal(true);
     });
   });
 
@@ -111,7 +106,7 @@ describe('Session', () => {
       expect(promise).to.have.property('requestId', 1);
     });
 
-    it('should return response argument if qHandle/qType are undefined', () => {
+    it('should return response argument if qHandle/qType are undefined', async () => {
       const rpc = new RPCMock({
         Promise,
         url: 'http://localhost:4848',
@@ -124,12 +119,11 @@ describe('Session', () => {
       });
 
       const request = {};
-      return session.send(request).then((response) => {
-        expect(response).to.deep.equal({ message: 'hello!' });
-      });
+      const response = await session.send(request);
+      expect(response).to.deep.equal({ message: 'hello!' });
     });
 
-    it('should add additional protocol parameters to request object', () => {
+    it('should add additional protocol parameters to request object', async () => {
       const rpc = new RPCMock({
         Promise,
         url: 'http://localhost:4848',
@@ -140,13 +134,13 @@ describe('Session', () => {
 
       const send = sinon.spy(rpc, 'send');
 
-      return session.send({
+      await session.send({
         method: 'a', handle: 1, params: [], delta: true, xyz: 'xyz',
-      })
-        .then(() => expect(send.lastCall.args[0].foo).to.equal('bar'));
+      });
+      expect(send.lastCall.args[0].foo).to.equal('bar');
     });
 
-    it('should honor delta blacklist', () => {
+    it('should honor delta blacklist', async () => {
       const rpc = new RPCMock({
         Promise,
         url: 'http://localhost:4848',
@@ -157,13 +151,13 @@ describe('Session', () => {
 
       const send = sinon.spy(rpc, 'send');
 
-      return session.send({
+      await session.send({
         method: 'a', handle: 1, params: [], delta: false, xyz: 'xyz',
-      })
-        .then(() => expect(send.lastCall.args[0].delta).to.equal(false));
+      });
+      expect(send.lastCall.args[0].delta).to.equal(false);
     });
 
-    it('should inject a retry method on request in intercept chain', () => {
+    it('should inject a retry method on request in intercept chain', async () => {
       const rpc = new RPCMock({
         Promise,
         url: 'http://localhost:4848',
@@ -172,11 +166,11 @@ describe('Session', () => {
       const spy = sinon.spy();
       createSession(false, rpc, { executeRequests: (s, p) => p, executeResponses: spy });
 
-      return session.send({
+      await session.send({
         method: 'a', handle: 1, params: [], delta: false, xyz: 'xyz',
-      })
-        .then(() => expect(spy.firstCall.lastArg.retry).to.be.a('function'))
-        .then(() => expect(spy.firstCall.lastArg.retry()).to.be.a('promise'));
+      });
+      expect(spy.firstCall.lastArg.retry).to.be.a('function');
+      expect(spy.firstCall.lastArg.retry()).to.be.a('promise');
     });
   });
 
@@ -324,11 +318,11 @@ describe('Session', () => {
       expect(p2.foo).to.equal('bar');
     });
 
-    it('should chain as normal', () => {
+    it('should chain as normal', async () => {
       const promise = Promise.resolve('baz');
       Session.addToPromiseChain(promise, 'foo', 'bar');
       const p1 = promise.then((s) => `${s}1`);
-      return expect(p1).to.eventually.equal('baz1');
+      await expect(p1).to.eventually.equal('baz1');
     });
   });
 
@@ -350,38 +344,34 @@ describe('Session', () => {
       expect(spy.callCount).to.equal(0);
     });
 
-    it('should close socket and emit suspended', () => {
+    it('should close socket and emit suspended', async () => {
       const spy = sinon.spy();
       const stub = sinon.stub(session.rpc, 'close').returns(Promise.resolve());
       session.on('suspended', spy);
-      return session.suspend().then(() => {
-        expect(suspendResume.isSuspended).to.equal(true);
-        expect(stub.calledOnce).to.equal(true);
-        expect(spy.calledOnce).to.equal(true);
-      });
+      await session.suspend();
+      expect(suspendResume.isSuspended).to.equal(true);
+      expect(stub.calledOnce).to.equal(true);
+      expect(spy.calledOnce).to.equal(true);
     });
 
-    it('should set session as suspended when suspendOnClose is true', () => {
+    it('should set session as suspended when suspendOnClose is true', async () => {
       createSession(false, null, null, true);
       apis.add(-1, { on: sinon.stub() });
       const spy = sinon.spy();
       session.on('suspended', spy);
-      return session.open()
-        .then(() => session.rpc.close(9999))
-        .then(() => {
-          expect(suspendResume.isSuspended).to.equal(true);
-          expect(spy.callCount).to.equal(1);
-        });
+      await session.open();
+      await session.rpc.close(9999);
+      expect(suspendResume.isSuspended).to.equal(true);
+      expect(spy.callCount).to.equal(1);
     });
 
-    it('should open socket and emit resumed', () => {
+    it('should open socket and emit resumed', async () => {
       const spy = sinon.spy();
       suspendResume.isSuspended = true;
       suspendResume.resume = () => Promise.resolve();
       session.on('resumed', spy);
-      return session.resume().then(() => {
-        expect(spy.calledOnce).to.equal(true);
-      });
+      await session.resume();
+      expect(spy.calledOnce).to.equal(true);
     });
   });
 
