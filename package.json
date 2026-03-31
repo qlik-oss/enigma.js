@@ -70,7 +70,7 @@
     "rollup-plugin-terser": "7.0.2",
     "scriptappy-from-jsdoc": "0.7.0",
     "sinon": "17.0.1",
-    "sinon-chai": "3.7.0",
+    "sinon-chai": "4.0.1",
     "vitest": "3.2.4",
     "ws": "8.20.0"
   }
