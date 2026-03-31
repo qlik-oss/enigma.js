@@ -45,7 +45,7 @@
     "@babel/plugin-transform-modules-commonjs": "7.28.6",
     "@babel/preset-env": "7.29.2",
     "@joseph184/rollup-plugin-node-builtins": "2.1.4",
-    "chai": "4.5.0",
+    "chai": "6.2.2",
     "chai-as-promised": "7.1.2",
     "chai-subset": "1.6.0",
     "babel-plugin-istanbul": "7.0.1",
