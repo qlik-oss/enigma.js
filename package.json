@@ -52,7 +52,7 @@
     "coveralls": "3.1.1",
     "cross-env": "10.1.0",
     "dotenv": "16.6.1",
-    "eslint": "8.57.1",
+    "eslint": "10.2.1",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.32.0",
     "extend": "3.0.2",
