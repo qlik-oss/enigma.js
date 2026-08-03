@@ -1,6 +1,6 @@
 ![](enigma.png)
 
-[![CircleCI](https://circleci.com/gh/qlik-oss/enigma.js.svg?style=shield)](https://circleci.com/gh/qlik-oss/enigma.js)
+[![CI](https://github.com/qlik-oss/enigma.js/actions/workflows/ci.yml/badge.svg)](https://github.com/qlik-oss/enigma.js/actions/workflows/ci.yml)
 [![Coverage Status](https://img.shields.io/coveralls/qlik-oss/enigma.js/master.svg)](https://coveralls.io/github/qlik-oss/enigma.js)
 
 enigma.js is a library that helps you communicate with Qlik QIX Engine. Examples of use may be building your own browser-based analytics tools, back-end services, or command-line scripts.
