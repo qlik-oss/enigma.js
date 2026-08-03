@@ -48,7 +48,7 @@
     "@rollup/plugin-commonjs": "29.0.3",
     "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-terser": "1.0.0",
-    "chai": "4.5.0",
+    "chai": "6.2.2",
     "chai-as-promised": "8.0.2",
     "chai-subset": "1.6.0",
     "babel-plugin-istanbul": "7.0.1",
