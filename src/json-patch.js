@@ -65,7 +65,7 @@ function getParent(data, str) {
   const parts = str.substring(1).split(seperator).slice(0, -1);
   let numPart;
 
-  parts.forEach((part, i) => {
+  parts.forEach((part) => {
     if (!isSafeKey(part)) {
       throw new Error(`Unsafe key in path: ${part}`);
     }
