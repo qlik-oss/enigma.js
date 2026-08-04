@@ -226,4 +226,43 @@ describe('JSON-Patch', () => {
       });
     });
   });
+
+  describe('Security - Prototype Pollution', () => {
+    test('apply throws for __proto__ as the final key', () => {
+      const patches = [{ op: 'add', path: '/__proto__', value: { polluted: true } }];
+      expect(() => JSONPatch.apply(patchee, patches)).toThrow();
+      expect({}.polluted).toBeUndefined();
+    });
+
+    test('apply throws for constructor as the final key', () => {
+      const patches = [{ op: 'add', path: '/constructor', value: { polluted: true } }];
+      expect(() => JSONPatch.apply(patchee, patches)).toThrow();
+    });
+
+    test('apply throws for prototype as the final key', () => {
+      const patches = [{ op: 'add', path: '/prototype', value: { polluted: true } }];
+      expect(() => JSONPatch.apply(patchee, patches)).toThrow();
+    });
+
+    test('apply throws for __proto__ in the middle of a path', () => {
+      const patches = [{ op: 'add', path: '/__proto__/polluted', value: true }];
+      expect(() => JSONPatch.apply(patchee, patches)).toThrow();
+      expect({}.polluted).toBeUndefined();
+    });
+
+    test('apply throws for __proto__ in move patch from path', () => {
+      const patches = [{ op: 'move', path: '/simpleString', from: '/__proto__' }];
+      expect(() => JSONPatch.apply(patchee, patches)).toThrow();
+    });
+
+    test('apply does not pollute Object.prototype via __proto__ path', () => {
+      const before = Object.prototype.polluted;
+      try {
+        JSONPatch.apply(patchee, [{ op: 'add', path: '/__proto__', value: { polluted: true } }]);
+      } catch (e) {
+        // expected to throw
+      }
+      expect(Object.prototype.polluted).toBe(before);
+    });
+  });
 });
