@@ -3,7 +3,6 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
 import terser from '@rollup/plugin-terser';
-import filesize from 'rollup-plugin-filesize';
 import license from 'rollup-plugin-license';
 import extend from 'extend';
 import { readFileSync } from 'fs';
@@ -30,7 +29,6 @@ const createConfig = (overrides) => {
         This library is licensed under MIT - See the LICENSE file for full details
       `,
       }),
-      filesize(),
     ],
   };
   extend(true, config, overrides);
