@@ -15,7 +15,7 @@ class KeyValueCache {
   * @private
   * @function KeyValueCache#add
   * @param {String} key The key representing an entry.
-  * @param {*} entry The entry to be added.
+  * @param {any} entry The entry to be added.
   */
   add(key, entry) {
     key += '';
@@ -30,7 +30,7 @@ class KeyValueCache {
   * @private
   * @function KeyValueCache#set
   * @param {String} key The key representing an entry.
-  * @param {*} entry The entry.
+  * @param {any} entry The entry.
   */
   set(key, entry) {
     key += '';
@@ -52,7 +52,7 @@ class KeyValueCache {
   * @private
   * @function KeyValueCache#get
   * @param {String} key The key representing an entry.
-  * @returns {*} The entry for the key.
+  * @returns {any} The entry for the key.
   */
   get(key) {
     return this.entries[key];
@@ -75,7 +75,7 @@ class KeyValueCache {
   * Gets a key for an entry.
   * @private
   * @function KeyValueCache#getKey
-  * @param {*} entry The entry to locate the key for.
+  * @param {any} entry The entry to locate the key for.
   * @returns {String} The key representing an entry.
   */
   getKey(entry) {

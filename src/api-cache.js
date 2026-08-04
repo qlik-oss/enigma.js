@@ -11,7 +11,7 @@ class ApiCache extends KeyValueCache {
   * @private
   * @function ApiCache#add
   * @param {Number} handle - The handle for the API.
-  * @param {*} api - The API.
+  * @param {any} api - The API.
   * @returns {{api: *}} The entry.
   */
   add(handle, api) {
@@ -26,7 +26,7 @@ class ApiCache extends KeyValueCache {
   * @private
   * @function ApiCache#getApi
   * @param {Number} handle - The handle for the API.
-  * @returns {*} The API for the handle.
+  * @returns {any} The API for the handle.
   */
   getApi(handle) {
     const entry = typeof handle !== 'undefined' ? this.get(handle.toString()) : undefined;

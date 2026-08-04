@@ -23,7 +23,7 @@ function toCamelCase(symbol) {
  * @param {Function} base The function that is being overriden. Will be
  *                        called with parameters in array-form.
  * @param {Object} defaults Parameter list and it's default values.
- * @param {*} params The parameters.
+ * @param {any} params The parameters.
  */
 function namedParamFacade(base, defaults, ...params) {
   if (params.length === 1 && typeof params[0] === 'object' && !Array.isArray(params[0])) {
