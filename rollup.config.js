@@ -1,15 +1,13 @@
 // rollup.config.js
-import resolve from 'rollup-plugin-node-resolve';
-// import nodeGlobals from 'rollup-plugin-node-globals';
-import nodeBuiltins from '@joseph184/rollup-plugin-node-builtins';
-import commonjs from 'rollup-plugin-commonjs';
-import babel from 'rollup-plugin-babel';
-import { terser } from 'rollup-plugin-terser';
-import filesize from 'rollup-plugin-filesize';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import babel from '@rollup/plugin-babel';
+import terser from '@rollup/plugin-terser';
 import license from 'rollup-plugin-license';
 import extend from 'extend';
+import { readFileSync } from 'fs';
 
-const pkg = require('./package.json');
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
 const createConfig = (overrides) => {
   const config = {
@@ -18,14 +16,11 @@ const createConfig = (overrides) => {
       sourcemap: true,
     },
     plugins: [
-      resolve({ jsnext: true, preferBuiltins: false }),
-      // nodeGlobals() is disabled right now due to a bug: https://github.com/calvinmetcalf/rollup-plugin-node-globals/issues/9
-      // nodeGlobals(),
-      nodeBuiltins(),
+      resolve({ preferBuiltins: false }),
       commonjs(),
       babel({
+        babelHelpers: 'bundled',
         exclude: 'node_modules/**',
-        externalHelpers: true,
       }),
       license({
         banner: `
@@ -34,7 +29,6 @@ const createConfig = (overrides) => {
         This library is licensed under MIT - See the LICENSE file for full details
       `,
       }),
-      filesize(),
     ],
   };
   extend(true, config, overrides);

@@ -40,6 +40,18 @@ function isSpecialProperty(obj, key) {
 }
 
 /**
+ * Checks whether a key is safe to use as a property name to prevent
+ * prototype pollution attacks.
+ *
+ * @private
+ * @param {String} key The key to check
+ * @returns {Boolean} Whether the key is safe to use
+ */
+function isSafeKey(key) {
+  return key !== '__proto__' && key !== 'constructor' && key !== 'prototype';
+}
+
+/**
 * Finds the parent object from a JSON-Pointer ("/foo/bar/baz" = "bar" is "baz" parent),
 * also creates the object structure needed.
 *
@@ -53,9 +65,9 @@ function getParent(data, str) {
   const parts = str.substring(1).split(seperator).slice(0, -1);
   let numPart;
 
-  parts.forEach((part, i) => {
-    if (i === parts.length) {
-      return;
+  parts.forEach((part) => {
+    if (!isSafeKey(part)) {
+      throw new Error(`Unsafe key in path: ${part}`);
     }
     numPart = +part;
     const newPart = !isNaN(numPart) ? [] : {};
@@ -270,6 +282,11 @@ JSONPatch.apply = function apply(original, patches) {
     let key = patch.path.split('/').splice(-1)[0];
     let target = key && isNaN(+key) ? parent[key] : parent[+key] || parent;
     const from = patch.from ? patch.from.split('/').splice(-1)[0] : null;
+
+    if (!isSafeKey(key) || (from !== null && !isSafeKey(from))) {
+      const unsafeKey = !isSafeKey(key) ? key : from;
+      throw new Error(`Unsafe key in patch path: ${unsafeKey}`);
+    }
 
     if (patch.path === '/') {
       parent = null;
