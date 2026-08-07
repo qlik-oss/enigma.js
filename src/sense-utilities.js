@@ -2,7 +2,7 @@ import QueryString from 'querystring';
 
 /**
 * This object describes the configuration that is sent into `buildUrl(config)`.
-* @typedef {Object} SenseConfiguration
+* @typedef {object} SenseConfiguration
 * @property {String} [appId] The app ID. If omitted, only the global object is returned.
 *                            Otherwise both global and app object are returned.
 * @property {Boolean} [noData=false] Whether to open the app without data.
