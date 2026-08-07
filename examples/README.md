@@ -7,10 +7,10 @@ you have a QIX Engine running locally (unless otherwise noted in the example).
 
 All example categories should have a `README.md` file containing:
 
-* High-level explanation (if needed)
-* Prerequisites (if more than stated above)
-* Instructions how to run (may be covered in Prerequisites)
-* Link to: `[Back to examples](/examples/README.md#runnable-examples)`
+- High-level explanation (if needed)
+- Prerequisites (if more than stated above)
+- Instructions how to run (may be covered in Prerequisites)
+- Link to: `[Back to examples](/examples/README.md#runnable-examples)`
 
 ---
 
@@ -18,7 +18,7 @@ Before getting started, you should run these commands in a terminal:
 
 ```bash
 $ cd examples
-$ npm install
+$ pnpm install
 ```
 
 ---

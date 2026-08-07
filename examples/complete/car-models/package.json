@@ -26,5 +26,6 @@
     "raw-loader": "^0.5.1",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.3"
-  }
+  },
+  "packageManager": "pnpm@11.20.0"
 }
