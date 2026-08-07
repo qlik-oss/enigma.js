@@ -24,14 +24,14 @@ enigma.js is a library that helps you communicate with Qlik QIX Engine. Examples
 
 Before continuing, make sure that you have these tools installed:
 
-* Node.js >= 4.0
-* Git bash if on Windows
+- Node.js >= 4.0
+- Git bash if on Windows
 
 And know of at least some of these web technologies:
 
-* JavaScript
-* Promises
-* Websockets
+- JavaScript
+- Promises
+- Websockets
 
 ### Schemas
 
@@ -45,44 +45,44 @@ is mapped to the QIX Engine API version.
 
 Read more:
 
-* [High-level concepts: Schemas](./docs/concepts.md#schemas-the-qix-interface) for more information about how they work.
-* [schemas/](/schemas) for the available schemas.
+- [High-level concepts: Schemas](./docs/concepts.md#schemas-the-qix-interface) for more information about how they work.
+- [schemas/](/schemas) for the available schemas.
 
 ### Usage
 
 First off, install enigma.js and a WebSocket library:
 
 ```sh
-npm i -S enigma.js ws
+pnpm i -S enigma.js ws
 ```
 
 Next, create a new file called `my-file.js` and put the following code into it:
 
 ```js
-const enigma = require('enigma.js');
-const WebSocket = require('ws');
-const schema = require('enigma.js/schemas/12.20.0.json');
+const enigma = require("enigma.js");
+const WebSocket = require("ws");
+const schema = require("enigma.js/schemas/12.20.0.json");
 
 // create a new session:
 const session = enigma.create({
   schema,
   // URL to running QIX Engine - might require additional parameters for authentication - see examples
-  url: 'ws://localhost:9076/app/engineData',
-  createSocket: url => new WebSocket(url),
+  url: "ws://localhost:9076/app/engineData",
+  createSocket: (url) => new WebSocket(url),
 });
 
-
 // bind traffic events to log what is sent and received on the socket:
-session.on('traffic:sent', data => console.log('sent:', data));
-session.on('traffic:received', data => console.log('received:', data));
+session.on("traffic:sent", (data) => console.log("sent:", data));
+session.on("traffic:received", (data) => console.log("received:", data));
 
 // open the socket and eventually receive the QIX global API, and then close
 // the session:
-session.open()
-  .then((/*global*/) => console.log('We are connected!'))
+session
+  .open()
+  .then((/*global*/) => console.log("We are connected!"))
   .then(() => session.close())
-  .then(() => console.log('Session closed'))
-  .catch(err => console.log('Something went wrong :(', err));
+  .then(() => console.log("Session closed"))
+  .catch((err) => console.log("Something went wrong :(", err));
 ```
 
 And then run it:
@@ -94,28 +94,29 @@ node my-file.js
 You may need to adjust the code so the URL points towards your running QIX Engine as well as handle any authentication needed.
 
 ![/getting-started.gif](/getting-started.gif)
-  
-You may also use a service like [unpkg](https://unpkg.com/#/) to test enigma.js directly in your browser without using Node.js for development purposes.  
+
+You may also use a service like [unpkg](https://unpkg.com/#/) to test enigma.js directly in your browser without using Node.js for development purposes.
 
 Create a HTML file `index.html` and insert the following example content:
 
 ```html
 <script src="https://unpkg.com/enigma.js/enigma.min.js"></script>
 <script>
-  fetch('https://unpkg.com/enigma.js/schemas/12.34.11.json')
-    .then(response => response.json())
-    .then(schema => {
+  fetch("https://unpkg.com/enigma.js/schemas/12.34.11.json")
+    .then((response) => response.json())
+    .then((schema) => {
       const session = enigma.create({
         schema,
         // Change the url to point to your QIX instance - might require additional parameters for authentication - see examples
-        url: 'ws://localhost:9076/app/engineData',
-        createSocket: url => new WebSocket(url)
-      })
+        url: "ws://localhost:9076/app/engineData",
+        createSocket: (url) => new WebSocket(url),
+      });
 
-      session.open()
-        .then(global => global.engineVersion())
-        .then(result => document.body.innerHTML = result.qComponentVersion)
-        .then(() => session.close())
+      session
+        .open()
+        .then((global) => global.engineVersion())
+        .then((result) => (document.body.innerHTML = result.qComponentVersion))
+        .then(() => session.close());
     });
 </script>
 ```

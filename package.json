@@ -16,8 +16,8 @@
     "lint": "eslint .",
     "jsdoc": "rimraf ./jsdoc && jsdoc ./src -c ./jsdoc-config.json -r -d ./jsdoc",
     "scriptappy": "sy from-jsdoc -c ./spec.config.js",
-    "preversion": "npm run test && npm run test:integration",
-    "version": "npm run build && npm run scriptappy"
+    "preversion": "pnpm run test && pnpm run test:integration",
+    "version": "pnpm run build && pnpm run scriptappy"
   },
   "repository": {
     "type": "git",
@@ -70,5 +70,6 @@
     "sinon-chai": "4.0.1",
     "vitest": "4.1.10",
     "ws": "8.21.1"
-  }
+  },
+  "packageManager": "pnpm@11.20.0"
 }

@@ -7,11 +7,11 @@ cd "$(dirname "$0")"
 cd ../../examples
 
 echo "Installing example dependencies..."
-npm install --no-save
+pnpm install --frozen-lockfile
 
 if [ -f ../enigma.tgz ]; then
   echo "Found local enigma.tgz file, installing..."
-  npm install ../enigma.tgz --no-save
+  pnpm install ../enigma.tgz --frozen-lockfile
 fi
 
 examples=(
@@ -32,7 +32,7 @@ examples=(
 for example in ${examples[@]}; do
 	echo
 	echo "Starting example: $example"
-        echo "process.on('unhandledRejection',error=>console.log(error)||process.exit(1));require('./$example');" > run.js
-        node run
+	echo "process.on('unhandledRejection',error=>console.log(error)||process.exit(1));require('./$example');" > run.js
+	node run
 	echo "Ending example: $example"
 done

@@ -16,12 +16,9 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: "24"
-          cache: "npm"
-      - run: npm ci
-      - run: npm run lint
+      - uses: pnpm/setup@c9883cc79df532ad1a7b81bf9ab944ceb090d65c # v2
+      - run: pnpm ci
+      - run: pnpm run lint
 
   api:
     name: API Compliance
@@ -77,28 +74,25 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: "24"
-          cache: "npm"
-      - run: npm ci
+      - uses: pnpm/setup@c9883cc79df532ad1a7b81bf9ab944ceb090d65c # v2
+      - run: pnpm ci
       - name: Build
-        run: npm run build
+        run: pnpm run build
       - name: Run unit tests
-        run: npm run test:unit
+        run: pnpm run test:unit
       - name: Upload unit coverage to Coveralls
         uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           flag-name: unit
           parallel: true
       - name: Run component tests
-        run: npm run test:component
+        run: pnpm run test:component
       - name: Upload component coverage to Coveralls
         uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
           flag-name: component
           parallel: true
-      - run: npm run scriptappy
+      - run: pnpm run scriptappy
       - name: Check if API specification is up to date
         run: git diff --exit-code docs/api-spec.json
 
@@ -113,13 +107,10 @@ jobs:
       QCS_API_KEY: ${{ secrets.QCS_API_KEY }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: "24"
-          cache: "npm"
-      - run: npm ci
+      - uses: pnpm/setup@c9883cc79df532ad1a7b81bf9ab944ceb090d65c # v2
+      - run: pnpm ci
       - name: Run integration tests
-        run: npm run test:integration
+        run: pnpm run test:integration
       - name: Upload integration coverage to Coveralls
         uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2
         with:
