@@ -68,7 +68,7 @@
     "rollup-plugin-license": "3.7.1",
     "sinon": "22.1.0",
     "sinon-chai": "4.0.1",
-    "vitest": "4.1.10",
+    "vitest": "4.1.11",
     "ws": "8.21.1"
   },
   "packageManager": "pnpm@11.20.0"
