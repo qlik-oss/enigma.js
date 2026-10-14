@@ -50,7 +50,7 @@
     "@rollup/plugin-terser": "1.0.0",
     "@scriptappy/cli": "0.10.6",
     "@scriptappy/from-jsdoc": "0.19.6",
-    "chai": "6.2.2",
+    "chai": "6.3.0",
     "chai-as-promised": "8.0.2",
     "chai-subset": "1.6.0",
     "babel-plugin-istanbul": "7.0.1",
