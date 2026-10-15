@@ -71,5 +71,5 @@
     "vitest": "4.1.11",
     "ws": "8.22.0"
   },
-  "packageManager": "pnpm@11.20.0"
+  "packageManager": "pnpm@11.28.5"
 }
