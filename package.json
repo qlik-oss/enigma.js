@@ -55,7 +55,7 @@
     "chai-subset": "1.6.0",
     "babel-plugin-istanbul": "7.0.1",
     "cross-env": "10.1.0",
-    "dotenv": "17.4.2",
+    "dotenv": "18.0.8",
     "eslint": "8.57.1",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.32.0",
