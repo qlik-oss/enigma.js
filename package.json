@@ -69,7 +69,7 @@
     "sinon": "22.1.0",
     "sinon-chai": "4.0.1",
     "vitest": "4.1.12",
-    "ws": "8.22.0"
+    "ws": "8.22.1"
   },
   "packageManager": "pnpm@11.28.7"
 }
