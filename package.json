@@ -41,7 +41,7 @@
   "main": "enigma.js",
   "devDependencies": {
     "@vitest/coverage-v8": "4.1.12",
-    "@babel/core": "7.29.7",
+    "@babel/core": "7.29.13",
     "@babel/plugin-transform-modules-commonjs": "7.29.7",
     "@babel/preset-env": "7.29.7",
     "@rollup/plugin-babel": "7.1.0",
